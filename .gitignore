@@ -1,0 +1,4 @@
+/vendor
+/src/DB/Config/connection.php
+/src/logs
+/.idea
