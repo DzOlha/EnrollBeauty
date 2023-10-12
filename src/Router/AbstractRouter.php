@@ -1,6 +1,6 @@
 <?php
 
-namespace Router;
+namespace Src\Router;
 
 abstract class AbstractRouter
 {

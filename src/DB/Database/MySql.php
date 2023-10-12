@@ -1,10 +1,10 @@
 <?php
 
-namespace DB\Database;
+namespace Src\DB\Database;
 
-use DB\IDatabase;
-use Helper\Logger\ILogger;
-use Helper\Logger\impl\MyLogger;
+use Src\DB\IDatabase;
+use Src\Helper\Logger\ILogger;
+use Src\Helper\Logger\impl\MyLogger;
 
 class MySql implements IDatabase
 {

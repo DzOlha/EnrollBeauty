@@ -1,13 +1,14 @@
 <?php
 
-namespace Router\Web;
+namespace Src\Router\Web;
 
-use Controller\Web\WebController;
-use Router\AbstractRouter;
+use Src\Controller\Web\WebController;
+use Src\Router\AbstractRouter;
 
 class WebRouter extends AbstractRouter
 {
     protected string|WebController $currentController = 'WebController';
+    protected string $type = 'Web';
     protected string $currentMethod = 'index';
     protected array $params = [];
 
@@ -21,25 +22,29 @@ class WebRouter extends AbstractRouter
         //
         $url = $this->getUrl();
 
-        $type = ucwords($url[1]) ?? 'Web';
+        if(isset($url[1]) && $url[1] !== '') {
+            $this->type = ucwords($url[1]);
+        }
 
-        if (isset($url[2])) {
-            if (file_exists(SRC . "/Controller/$type/" . $type.ucwords($url[2]) . 'Controller.php')) {
+        if (isset($url[2]) && $url[1] !== '') {
+            if (file_exists(SRC . "/Controller/".$this->type."/" . $this->type.ucwords($url[2]) . 'Controller.php')) {
                 //make the first letter of the controller name in uppercase format
-                $this->currentController = $type.ucwords($url[2]) . 'Controller';
+                $this->currentController = $this->type.ucwords($url[2]) . 'Controller';
                 unset($url[2]);
             }
         }
 
-        $controllerPath = sprintf("Src\\Controller\\$type\\%s", $this->currentController);
+        //$namespace = "Src\Controller\Web\WebController";
+        $controllerPath = sprintf('Src\Controller\\'.$this->type."\%s", $this->currentController);
+        //$controllerPath = $namespace;
         $this->currentController = new $controllerPath();
 
-        if (isset($url[3])) {
+        if (isset($url[3]) && $url[1] !== '') {
             if (method_exists($this->currentController, $url[3])) {
                 $this->currentMethod = $url[3];
                 unset($url[3]);
             } else {
-                $controllerPath = sprintf("Src\\Controller\\$type\\%s", 'PageController');
+                $controllerPath = sprintf("Src\\Controller\\".$this->type."\\%s", 'WebController');
                 $this->currentController = new $controllerPath();
             }
         }

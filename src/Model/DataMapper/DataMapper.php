@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\DataMapper;
+namespace Src\Model\DataMapper;
 
-use Model\DataSource\DataSource;
+use Src\Model\DataSource\DataSource;
 
 abstract class DataMapper
 {

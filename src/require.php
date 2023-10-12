@@ -2,7 +2,7 @@
 namespace Src;
 
 //session_start(); //session_destroy will be in the logout UserController
-use Router\Web\WebRouter;
+use Src\Router\Web\WebRouter;
 
 ini_set('max_execution_time', 100000);
 /**
@@ -22,4 +22,3 @@ require_once SRC.'/DB/Config/connection.php';
 
 $router = new WebRouter();
 $router->route();
-?>

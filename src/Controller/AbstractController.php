@@ -1,8 +1,8 @@
 <?php
 
-namespace Controller;
+namespace Src\Controller;
 
-use Model\DataMapper\DataMapper;
+use Src\Model\DataMapper\DataMapper;
 
 abstract class AbstractController
 {

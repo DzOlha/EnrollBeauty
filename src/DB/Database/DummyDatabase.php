@@ -1,8 +1,8 @@
 <?php
 
-namespace DB\Database;
+namespace Src\DB\Database;
 
-use DB\IDatabase;
+use Src\DB\IDatabase;
 
 class DummyDatabase implements IDatabase
 {

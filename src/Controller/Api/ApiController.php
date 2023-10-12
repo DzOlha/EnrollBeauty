@@ -1,13 +1,13 @@
 <?php
 
-namespace Controller\Api;
+namespace Src\Controller\Api;
 
-use Controller\AbstractController;
-use DB\Database\MySql;
+use Src\Controller\AbstractController;
+use Src\DB\Database\MySql;
 use JetBrains\PhpStorm\NoReturn;
-use Model\DataMapper\DataMapper;
-use Model\DataMapper\extends\MainDataMapper;
-use Model\DataSource\extends\MainDataSource;
+use Src\Model\DataMapper\DataMapper;
+use Src\Model\DataMapper\extends\MainDataMapper;
+use Src\Model\DataSource\extends\MainDataSource;
 
 class ApiController extends AbstractController
 {

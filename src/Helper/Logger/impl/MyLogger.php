@@ -1,8 +1,8 @@
 <?php
 
-namespace Helper\Logger\impl;
+namespace Src\Helper\Logger\impl;
 
-use Helper\Logger\ILogger;
+use Src\Helper\Logger\ILogger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 

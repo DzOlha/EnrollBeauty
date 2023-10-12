@@ -1,12 +1,12 @@
 <?php
 
-namespace Controller\Web;
+namespace Src\Controller\Web;
 
-use Controller\AbstractController;
-use DB\Database\MySql;
-use Model\DataMapper\DataMapper;
-use Model\DataMapper\extends\MainDataMapper;
-use Model\DataSource\extends\MainDataSource;
+use Src\Controller\AbstractController;
+use Src\DB\Database\MySql;
+use Src\Model\DataMapper\DataMapper;
+use Src\Model\DataMapper\extends\MainDataMapper;
+use Src\Model\DataSource\extends\MainDataSource;
 
 class WebController extends AbstractController
 {
@@ -18,8 +18,10 @@ class WebController extends AbstractController
      */
     public function view($view, $data = [], $arr = []): void
     {
-        if (file_exists($view . '.php')) {
-            require_once $view . '.php';
+        $viewPath = $view.'.php';
+
+        if (file_exists($viewPath)) {
+            require_once $viewPath;
         } else {
             exit('View does not exists!');
         }
@@ -29,6 +31,6 @@ class WebController extends AbstractController
         $data = [
             'title' => 'Hello Page'
         ];
-        $this->view(VIEW_FRONTEND, 'hello', $data);
+        $this->view(VIEW_FRONTEND.'hello', $data);
     }
 }

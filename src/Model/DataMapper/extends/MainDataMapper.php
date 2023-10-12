@@ -1,10 +1,10 @@
 <?php
 
-namespace Model\DataMapper\extends;
+namespace Src\Model\DataMapper\extends;
 
-use DB\IDatabase;
-use Model\DataMapper\DataMapper;
-use Model\DataSource\DataSource;
+use Src\DB\IDatabase;
+use Src\Model\DataMapper\DataMapper;
+use Src\Model\DataSource\DataSource;
 
 class MainDataMapper extends DataMapper
 {

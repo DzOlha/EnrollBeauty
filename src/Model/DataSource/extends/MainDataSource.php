@@ -1,9 +1,9 @@
 <?php
 
-namespace Model\DataSource\extends;
+namespace Src\Model\DataSource\extends;
 
-use DB\IDatabase;
-use Model\DataSource\DataSource;
+use Src\DB\IDatabase;
+use Src\Model\DataSource\DataSource;
 
 class MainDataSource extends DataSource
 {

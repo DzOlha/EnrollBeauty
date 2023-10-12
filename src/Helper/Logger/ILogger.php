@@ -1,6 +1,6 @@
 <?php
 
-namespace Helper\Logger;
+namespace Src\Helper\Logger;
 
 interface ILogger
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\DataSource;
+namespace Src\Model\DataSource;
 
-use DB\IDatabase;
+use Src\DB\IDatabase;
 
 abstract class DataSource
 {
