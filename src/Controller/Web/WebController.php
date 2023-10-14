@@ -29,8 +29,8 @@ class WebController extends AbstractController
 
     public function index() {
         $data = [
-            'title' => 'Hello Page'
+            'title' => 'Homepage'
         ];
-        $this->view(VIEW_FRONTEND.'hello', $data);
+        $this->view(VIEW_FRONTEND.'index', $data);
     }
 }
