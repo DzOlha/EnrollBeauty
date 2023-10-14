@@ -15,22 +15,25 @@ class WebRouter extends AbstractRouter
     public function route(): void
     {
         /**
-         * enroll.beauty/web/user/home
-         * enroll.beauty/api/admin/getSomething
-         * [     0        1    2      3]
+         * web/user/home
+         * api/admin/getSomething
+         * [0    1      2]
          */
         //
         $url = $this->getUrl();
+        //var_dump($url);
 
-        if(isset($url[1]) && $url[1] !== '') {
-            $this->type = ucwords($url[1]);
+        if(isset($url[0]) && $url[0] !== '') {
+            $this->type = ucwords($url[0]);
         }
 
-        if (isset($url[2]) && $url[1] !== '') {
-            if (file_exists(SRC . "/Controller/".$this->type."/" . $this->type.ucwords($url[2]) . 'Controller.php')) {
+        if (isset($url[1]) && $url[1] !== '') {
+            $filename = ucwords($url[1]).$this->type . 'Controller.php';
+            if (file_exists(SRC . "/Controller/". $this->type."/" . $filename)
+            ) {
                 //make the first letter of the controller name in uppercase format
-                $this->currentController = $this->type.ucwords($url[2]) . 'Controller';
-                unset($url[2]);
+                $this->currentController = ucwords($url[1]).$this->type. 'Controller';
+                unset($url[1]);
             }
         }
 
@@ -39,10 +42,10 @@ class WebRouter extends AbstractRouter
         //$controllerPath = $namespace;
         $this->currentController = new $controllerPath();
 
-        if (isset($url[3]) && $url[1] !== '') {
-            if (method_exists($this->currentController, $url[3])) {
-                $this->currentMethod = $url[3];
-                unset($url[3]);
+        if (isset($url[2]) && $url[2] !== '') {
+            if (method_exists($this->currentController, $url[2])) {
+                $this->currentMethod = $url[2];
+                unset($url[2]);
             } else {
                 $controllerPath = sprintf("Src\\Controller\\".$this->type."\\%s", 'WebController');
                 $this->currentController = new $controllerPath();
