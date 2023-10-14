@@ -1,0 +1,43 @@
+
+.register-button {
+    border-left: 1px solid white;
+}
+.login-button {
+    padding-right: 15px;
+    border-right: 1px solid white;
+    border-left: 1px solid white;
+}
+.register-button:hover, .login-button:hover {
+    color: white !important;
+    font-weight: bold;
+}
+.login-form {
+    /*margin-top: 160px;*/
+    padding: 5% 30% 10% 30%;
+}
+.registration-form {
+    /*margin-top: 160px;*/
+    padding: 3% 30% 10% 30%;
+}
+button[type="submit"] {
+    cursor: pointer;
+}
+@media(max-width: 1200px) {
+    .login-form, .registration-form {
+        padding: 10% 15% 10% 15%;
+    }
+
+    .register-button a, .login-button a {
+        text-align: center;
+        font-weight: bold;
+    }
+
+}
+@media(max-width: 600px) {
+    .registration-form {
+        padding: 20% 15% 20% 15%;
+    }
+    .login-form {
+        padding: 35% 15% 40% 15%;
+    }
+}
