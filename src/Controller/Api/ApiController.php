@@ -11,6 +11,11 @@ use Src\Model\DataSource\extends\MainDataSource;
 
 class ApiController extends AbstractController
 {
+    public function __construct()
+    {
+        $this->dataMapper = $this->dataMapper();
+    }
+
     public function getTypeDataMapper(): DataMapper
     {
         return new MainDataMapper(new MainDataSource(MySql::getInstance()));

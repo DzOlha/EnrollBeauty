@@ -7,7 +7,7 @@
     <meta name="description" content="Sylin - Beauty salon and Spa HTML Template" />
     <meta name="author" content="https://www.themetechmount.com/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>Sylin - Beauty salon and Spa HTML Template</title>
+    <title><?=$data['title']?></title>
 
     <!-- favicon icon -->
     <link rel="shortcut icon" href="/public/images/mockup/favicon.png" />
@@ -48,6 +48,6 @@
     <link rel="stylesheet" type="text/css" href="/public/css/mockup/responsive.css"/>
 
 <!--    CUSTOM CSS-->
-    <link rel="stylesheet" type="text/css" href="/public/css/custom/homepage.css"/>
+    <link rel="stylesheet" type="text/css" href="/public/css/custom/common/homepage.css"/>
 
 </head>

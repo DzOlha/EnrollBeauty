@@ -6,7 +6,7 @@
     }
 </style>
 
-<form id="ttm-quote-form" class="ttm-quote-form clearfix login-form" method="post" action="#">
+<form id="ttm-quote-form login-form" class="ttm-quote-form clearfix login-form" method="post" action="#">
     <h2 class="text-center">Login</h2>
     <div class="column">
             <div class="form-group">
@@ -22,12 +22,30 @@
     <div class="row">
         <div class="col-md-12 mt-10">
             <button type="submit"
-                    class="ttm-btn ttm-btn-color-skincolor ttm-btn-style-fill">
+                    class="ttm-btn ttm-btn-color-skincolor ttm-btn-style-fill"
+                    id="login-form-submit"
+                    >
                 Log In
             </button>
         </div>
     </div>
 </form>
 
-<?php require_once VIEW_COMMON."main_footer.php"?>
+<!--footer start-->
+<?php require_once VIEW_COMMON."footer.php"?>
+<!--footer end-->
+
+<!--back-to-top start-->
+<a id="totop" href="#top">
+    <i class="fa fa-angle-up"></i>
+</a>
+<!--back-to-top end-->
+
+</div><!-- page end -->
+
+<?php require_once VIEW_COMMON."footer_scripts.php"?>
+
+
+</body>
+</html>
 

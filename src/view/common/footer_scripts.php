@@ -18,3 +18,6 @@
 <script src="/public/revolution/mockup/js/slider.js"></script>
 
 <!-- Javascript end-->
+
+<!-- Alertify-->
+<script src="/public/js/custom/common/libs/alertify.min.js"></script>
