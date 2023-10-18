@@ -7,25 +7,6 @@ CREATE TABLE roles (
    name VARCHAR(50) UNIQUE NOT NULL,
    created_date DATETIME NOT NULL
 );
-CREATE TABLE users_social (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      Instagram VARCHAR(100),
-      TikTok VARCHAR(100),
-      Facebook VARCHAR(100),
-      YouTube VARCHAR(100),
-      Google VARCHAR(100)
-);
-
-CREATE TABLE users_setting (
-       id INT AUTO_INCREMENT PRIMARY KEY,
-       recovery_code VARCHAR(100),
-       date_of_sending DATETIME
-);
-
-CREATE TABLE users_photo (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     name VARCHAR(255)
-);
 
 CREATE TABLE users (
        id INT AUTO_INCREMENT PRIMARY KEY,
@@ -33,39 +14,37 @@ CREATE TABLE users (
        surname VARCHAR(50) NOT NULL,
        password VARCHAR(255) NOT NULL,
        email VARCHAR(100) UNIQUE NOT NULL,
-       social_id INT NOT NULL,
-       setting_id INT NOT NULL,
-       photo_id INT NOT NULL,
        created_date DATETIME NOT NULL,
        referral_parent_id INT,
        last_login_date DATETIME,
        role_id INT NOT NULL,
-       FOREIGN KEY (social_id) REFERENCES users_social(id),
-       FOREIGN KEY (setting_id) REFERENCES users_setting(id),
-       FOREIGN KEY (photo_id) REFERENCES users_photo(id),
        FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
-
-CREATE TABLE workers_photo (
-   id INT AUTO_INCREMENT PRIMARY KEY,
-   name VARCHAR(255)
+CREATE TABLE users_social (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      Instagram VARCHAR(100),
+      TikTok VARCHAR(100),
+      Facebook VARCHAR(100),
+      YouTube VARCHAR(100),
+      Google VARCHAR(100),
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE workers_social (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    Instagram VARCHAR(100),
-    LinkedIn VARCHAR(100),
-    Facebook VARCHAR(100),
-    Github VARCHAR(100),
-    Telegram VARCHAR(100),
-    YouTube VARCHAR(100),
-    TikTok VARCHAR(100)
+CREATE TABLE users_setting (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       user_id INT NOT NULL,
+       recovery_code VARCHAR(100),
+       date_of_sending DATETIME,
+       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-CREATE TABLE workers_setting (
-   id INT AUTO_INCREMENT PRIMARY KEY,
-   recovery_code VARCHAR(100),
-   date_of_sending DATETIME
+
+CREATE TABLE users_photo (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     user_id INT NOT NULL,
+     name VARCHAR(255),
+     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE departments (
@@ -90,16 +69,37 @@ CREATE TABLE workers (
      position_id INT NOT NULL,
      salary DECIMAL(10, 2),
      hours_working INT,
-     photo_id INT,
-     social_id INT NOT NULL,
-     setting_id INT NOT NULL,
      role_id INT NOT NULL,
      FOREIGN KEY (position_id) REFERENCES positions(id),
-     FOREIGN KEY (photo_id) REFERENCES workers_photo(id),
-     FOREIGN KEY (social_id) REFERENCES workers_social(id),
-     FOREIGN KEY (setting_id) REFERENCES workers_setting(id),
      FOREIGN KEY (role_id) REFERENCES roles(id)
 );
+CREATE TABLE workers_photo (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   worker_id INT NOT NULL,
+   name VARCHAR(255),
+   FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE
+);
+
+CREATE TABLE workers_social (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    worker_id INT NOT NULL,
+    Instagram VARCHAR(100),
+    LinkedIn VARCHAR(100),
+    Facebook VARCHAR(100),
+    Github VARCHAR(100),
+    Telegram VARCHAR(100),
+    YouTube VARCHAR(100),
+    TikTok VARCHAR(100),
+    FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE
+);
+CREATE TABLE workers_setting (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   worker_id INT NOT NULL,
+   recovery_code VARCHAR(100),
+   date_of_sending DATETIME,
+   FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE
+);
+
 CREATE TABLE documents (
        id INT AUTO_INCREMENT PRIMARY KEY,
        photo_name VARCHAR(255),

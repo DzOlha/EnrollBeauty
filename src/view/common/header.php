@@ -46,8 +46,10 @@
 
     <!-- responsive -->
     <link rel="stylesheet" type="text/css" href="/public/css/mockup/responsive.css"/>
+    <!--    Alertify css-->
+    <link rel="stylesheet" href="/public/css/custom/common/libs/alertify.min.css"/>
 
-<!--    CUSTOM CSS-->
+    <!--    CUSTOM CSS-->
     <link rel="stylesheet" type="text/css" href="/public/css/custom/common/homepage.css"/>
 
 </head>

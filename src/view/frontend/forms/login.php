@@ -11,17 +11,19 @@
     <div class="column">
             <div class="form-group">
                 <input name="email" type="email" placeholder="Email"
-                       required="required" class="form-control">
+                       required="required" class="form-control" id="email-input">
+                <div class="error" id="email-input-error"></div>
             </div>
             <div class="form-group">
                 <input name="password" type="password" placeholder="Password"
-                       required="required" class="form-control" >
+                       required="required" class="form-control" id="password-input">
+                <div class="error" id="password-input-error"></div>
             </div>
     </div>
 
     <div class="row">
         <div class="col-md-12 mt-10">
-            <button type="submit"
+            <button type="button"
                     class="ttm-btn ttm-btn-color-skincolor ttm-btn-style-fill"
                     id="login-form-submit"
                     >
@@ -45,6 +47,11 @@
 
 <?php require_once VIEW_COMMON."footer_scripts.php"?>
 
+<script src="/public/js/custom/common/classes/forms/Form.js"></script>
+<script src="/public/js/custom/common/classes/forms/LoginForm.js"></script>
+<script src="/public/js/custom/common/classes/Requestor.js"></script>
+
+<script src="/public/js/custom/frontend/forms/login.js"></script>
 
 </body>
 </html>

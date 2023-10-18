@@ -34,4 +34,12 @@ class UserWebController extends WebController
         ];
         $this->view(VIEW_FRONTEND . 'forms/registration', $data);
     }
+
+    public function account()
+    {
+        $data = [
+            'title' => 'Account'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/account', $data);
+    }
 }

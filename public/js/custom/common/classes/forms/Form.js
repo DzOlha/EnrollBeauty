@@ -1,7 +1,7 @@
 
 class Form {
-    constructor(formId, submitButtonId, submitActionUrl, requestorObject) {
-        this.formId = formId;
+    constructor(formClass, submitButtonId, submitActionUrl, requestorObject) {
+        this.formClass = formClass;
         this.submitButtonId = submitButtonId;
         this.submitActionUrl = submitActionUrl;
         this.requestor = requestorObject;
@@ -13,14 +13,94 @@ class Form {
     listenerSubmitForm = () => {
         let formRules = this.getRules();
         let formMessages = this.getMessages();
+        let formCurrentValue = this.collectDataToSend(true);
 
-        $(`#${this.formId}`).validate({
-            rules: formRules,
-            messages: formMessages,
-            submitHandler: this.handleFormSubmission.bind(this)
+        // Call the validation function and get the errors
+        const validationErrors = this.validateFormData(formCurrentValue, formRules, formMessages);
+
+        this.displayErrors(validationErrors);
+
+        // Check if there are no div.error elements with text content
+        const noErrorWithText = $("div.error").get().every(function(element) {
+            return $(element).text().trim() === '';
         });
+        console.log(noErrorWithText);
+
+        // Handle form submission if there are no errors
+        if (noErrorWithText) {
+            this.handleFormSubmission();
+        }
+
+        // Display the errors (you can customize how you want to display them)
+        // if (Object.keys(validationErrors).length > 0) {
+        //     console.log('Validation errors:');
+        //     for (const field in validationErrors) {
+        //         console.log(`${field}: ${validationErrors[field]}`);
+        //     }
+        // } else {
+        //     this.handleFormSubmission();
+        // }
     }
+    // Function to validate the form data
+    validateFormData(formData, rules, messages) {
+        const errors = {};
+
+        for (const key in formData) {
+            if (rules.hasOwnProperty(key)) {
+                const value = formData[key];
+                const fieldRules = rules[key];
+
+                for (const rule in fieldRules) {
+                    if (rule === 'required' && fieldRules[rule]) {
+                        if (!value) {
+                            errors[key] = messages[key].required;
+                        }
+                    } else if (rule === 'pattern' && fieldRules[rule]) {
+                        const pattern = fieldRules[rule];
+                        if (!pattern.test(value)) {
+                            errors[key] = messages[key].pattern;
+                        }
+                    } else if (rule === 'equalTo' && fieldRules[rule]) {
+                        const targetField = fieldRules[rule];
+                        if (value !== formData[targetField]) {
+                            errors[key] = messages[key].equalTo;
+                        }
+                    }
+                    if(!errors[key]) {
+                        errors[key] = '';
+                    }
+                }
+            }
+        }
+        return errors;
+    }
+
+    // Function to insert error messages into error containers
+    displayErrors(validationErrors) {
+        for (const field in validationErrors) {
+            const errorContainer = $(`#${field}-error`);
+            const input = $(`#${field}`);
+
+            /**
+             * Clear error highlighting and messages if there is no errors already
+             */
+            if(validationErrors[field] === '') {
+                input.removeClass('border-danger');
+                errorContainer.removeClass('text-danger');
+                errorContainer.text('');
+                continue;
+            }
+            /**
+             * Add error messages
+             */
+            input.addClass('border-danger');
+            errorContainer.addClass('text-danger');
+            errorContainer.text(validationErrors[field]);
+        }
+    }
+
     handleFormSubmission = () => {
+        console.log('submission');
         this.requestor.post(
             this.submitActionUrl,
             this.collectDataToSend(),
@@ -31,16 +111,16 @@ class Form {
 
     successCallbackSubmit(response) {}
     errorCallbackSubmit(message) {}
-    collectDataToSend() {}
+    collectDataToSend(idAssoc = false) {}
     getRules(){}
     getMessages(){}
 
     showErrorMessage(message) {
         alertify.set('notifier', 'position', 'top-center');
-        alertify.notify(message, 'error', 3);
+        alertify.error(message, 4);
     }
     showSuccessMessage(message) {
         alertify.set('notifier', 'position', 'top-center');
-        alertify.notify(message, 'success', 3);
+        alertify.success(message, 4);
     }
 }

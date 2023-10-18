@@ -21,3 +21,4 @@
 
 <!-- Alertify-->
 <script src="/public/js/custom/common/libs/alertify.min.js"></script>
+<!--<script src="/public/js/custom/common/libs/main.js"></script>-->

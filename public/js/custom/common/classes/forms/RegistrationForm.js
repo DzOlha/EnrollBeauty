@@ -1,3 +1,4 @@
+
 class RegistrationForm extends Form {
     constructor() {
         super(
@@ -11,20 +12,22 @@ class RegistrationForm extends Form {
         this.emailInputId = 'email-input';
         this.passwordInputId = 'password-input';
         this.confirmPasswordInputId = 'confirm-password-input';
+
+        this.loginUrl = "/web/user/login";
     }
 
     successCallbackSubmit(response) {
-        this.showSuccessMessage('You successfully created account! PLease, log in!');
+        this.showSuccessMessage(response.success);
         setTimeout(() => {
-            window.location.href = "/web/user/login";
-        }, 3000)
+            window.location.href = this.loginUrl;
+        }, 2000)
     }
 
     errorCallbackSubmit(message) {
         this.showErrorMessage(message);
     }
 
-    collectDataToSend() {
+    collectDataToSend(idAssoc = false) {
         let name = document.getElementById(this.nameInputId);
         if (name === null) return;
         name = name.value.trim();
@@ -45,12 +48,22 @@ class RegistrationForm extends Form {
         if (confirmPassword === null) return;
         confirmPassword = confirmPassword.value.trim();
 
+        if(idAssoc === true) {
+            let result = {};
+            result[this.nameInputId] = name;
+            result[this.surnameInputId] = surname;
+            result[this.emailInputId] = email;
+            result[this.passwordInputId] = password;
+            result[this.confirmPasswordInputId] = confirmPassword;
+
+            return result;
+        }
         return {
             'name': name,
             'surname': surname,
             'email': email,
             'password': password,
-            'confirm_password': confirmPassword
+            'confirm-password': confirmPassword
         };
     }
 
@@ -71,11 +84,11 @@ class RegistrationForm extends Form {
         };
         formRules[this.passwordInputId] = {
             required: true,
-            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/
+            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,30}$/
         };
         formRules[this.confirmPasswordInputId] = {
             required: true,
-            equalTo: `#${this.passwordInputId}`
+            equalTo: `${this.passwordInputId}`
         };
         return formRules;
     }
@@ -97,7 +110,8 @@ class RegistrationForm extends Form {
         };
         formMessages[this.passwordInputId] = {
             required: 'Please enter your password',
-            pattern: 'Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 to 30 characters long'
+            pattern: 'Password must contain at least one uppercase letter, one lowercase letter, ' +
+                '     one digit, one special character, and be between 8 to 30 characters long'
         };
         formMessages[this.confirmPasswordInputId] = {
             required: 'Please confirm your password',
