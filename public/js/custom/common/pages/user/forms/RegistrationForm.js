@@ -14,6 +14,12 @@ class RegistrationForm extends Form {
         this.confirmPasswordInputId = 'confirm-password-input';
 
         this.loginUrl = "/web/user/login";
+
+        $(`#${this.nameInputId}`).tooltip();
+        $(`#${this.surnameInputId}`).tooltip();
+        $(`#${this.emailInputId}`).tooltip();
+        $(`#${this.passwordInputId}`).tooltip();
+        $(`#${this.confirmPasswordInputId}`).tooltip();
     }
 
     successCallbackSubmit(response) {

@@ -49,6 +49,9 @@
     <!--    Alertify css-->
     <link rel="stylesheet" href="/public/css/custom/common/libs/alertify.min.css"/>
 
+<!--    PowerTip-->
+    <link rel="stylesheet" href="/public/css/custom/common/libs/jquery.powertip.min.css"/>
+
     <!--    CUSTOM CSS-->
     <link rel="stylesheet" type="text/css" href="/public/css/custom/common/homepage.css"/>
 

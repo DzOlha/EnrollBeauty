@@ -4,6 +4,9 @@
     .ttm-stickable-header-w {
         position: relative !important;
     }
+    body {
+        background: #f4f4f2;
+    }
 </style>
 
 <form id="ttm-quote-form login-form" class="ttm-quote-form clearfix login-form" method="post" action="#">
