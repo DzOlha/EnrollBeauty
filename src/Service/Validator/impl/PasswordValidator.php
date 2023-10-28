@@ -15,6 +15,7 @@ class PasswordValidator implements IValidator
             return true;
         }
         return false;
+
     }
 
 }

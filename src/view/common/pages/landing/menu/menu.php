@@ -61,16 +61,29 @@
                                 </li>
                                 <li><a href="contact-us.html">CONTACT US</a></li>
 
+                                <?php if(!isset($_SESSION['user_id'])) {?>
                                 <li class="register-button">
-                                    <a href="<?=ENROLL_BEAUTY_URL_HTTPS_ROOT."web/user/registration"?>">
+                                    <a href="/web/user/registration">
                                         Register
                                     </a>
                                 </li>
                                 <li class="login-button">
-                                    <a href="<?=ENROLL_BEAUTY_URL_HTTPS_ROOT."web/user/login"?>">
+                                    <a href="/web/user/login">
                                         Log In
                                     </a>
                                 </li>
+                                <?php } else {?>
+                                <li class="register-button">
+                                    <a href="/web/user/logout">
+                                        Log Out
+                                    </a>
+                                </li>
+                                <li class="login-button">
+                                    <a href="/web/user/account">
+                                        Profile
+                                    </a>
+                                </li>
+                                <?php } ?>
                             </ul>
 
                         </nav>

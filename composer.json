@@ -6,7 +6,8 @@
         "phuml/phuml": "^5.2",
         "monolog/monolog": "^3.3",
         "guzzlehttp/guzzle": "^7.5",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "twbs/bootstrap": "5.3.2"
     },
     "autoload": {
       "psr-4": {

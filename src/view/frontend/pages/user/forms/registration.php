@@ -1,5 +1,5 @@
 
-<?php require_once VIEW_COMMON."main_header.php"?>
+<?php require_once VIEW_COMMON."pages/landing/header/header.php"?>
 <style>
     .ttm-stickable-header-w {
         position: relative !important;
@@ -71,7 +71,7 @@
 </form>
 
 <!--footer start-->
-<?php require_once VIEW_COMMON."footer.php"?>
+<?php require_once VIEW_COMMON."pages/landing/footer/footer.php"?>
 <!--footer end-->
 
 <!--back-to-top start-->
@@ -82,19 +82,19 @@
 
 </div><!-- page end -->
 
-<?php require_once VIEW_COMMON."footer_scripts.php"?>
+<?php require_once VIEW_COMMON."pages/landing/footer/footer_scripts.php"?>
 
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
 <script nomodule src="/public/js/custom/common/libs/jquery.powertip.min.js"></script>
 
-<script src="/public/js/custom/common/classes/forms/Form.js"></script>
-<script src="/public/js/custom/common/classes/forms/RegistrationForm.js"></script>
-<script src="/public/js/custom/common/classes/Requestor.js"></script>
+<script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
+<script src="/public/js/custom/common/pages/user/forms/RegistrationForm.js"></script>
+<script src="/public/js/custom/common/pages/Requestor.js"></script>
 
 
-<script src="/public/js/custom/frontend/forms/registration.js"></script>
+<script src="/public/js/custom/frontend/user/forms/registration.js"></script>
 
 </body>
 </html>

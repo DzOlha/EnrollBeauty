@@ -7,6 +7,16 @@
         padding-left: 10px;
     }
 </style>
+<!-- InternalFileupload css-->
+<link href="/public/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>
+
+<!-- InternalFancy uploader css-->
+<link href="/public/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
+
+
+<link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
+
+
 <body class="ltr main-body leftmenu">
 
 <!-- Loader -->
@@ -67,10 +77,10 @@
                 <!-- Page Header -->
                 <div class="page-header">
                     <div>
-                        <h2 class="main-content-title tx-24 mg-b-5">Calendar</h2>
+                        <h2 class="main-content-title tx-24 mg-b-5"><?=$data['page_name']?></h2>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Apps</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Calendar</li>
+                            <li class="breadcrumb-item"><a href="#"><?=$data['title']?></a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><?=$data['page_name']?></li>
                         </ol>
                     </div>
                     <div class="d-flex">
@@ -82,44 +92,217 @@
 
                 <!-- Row -->
                 <div class="row row-sm">
-                    <div class="col-sm-12 col-md-12">
-                        <div class="card custom-card">
-                            <div class="card-body">
-                                <div class="row" id="wrap">
-                                    <div class="col-xl-2" id="external-events">
-                                        <h4>Draggable Events</h4>
-                                        <div id="external-events-list">
-                                            <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event">
-                                                <div class="fc-event-main">My Event 1</div>
-                                            </div>
-                                            <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event">
-                                                <div class="fc-event-main">My Event 2</div>
-                                            </div>
-                                            <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event">
-                                                <div class="fc-event-main">My Event 3</div>
-                                            </div>
-                                            <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event">
-                                                <div class="fc-event-main">My Event 4</div>
-                                            </div>
-                                            <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event">
-                                                <div class="fc-event-main">My Event 5</div>
-                                            </div>
-                                        </div>
-                                        <p>
-                                            <input type="checkbox" id="drop-remove" />
-                                            <label for="drop-remove">remove after drop</label>
-                                        </p>
-                                    </div>
-                                    <div class="col-xl-10" id="calendar-wrap">
-                                        <div id="calendar"></div>
-                                    </div>
-                                </div>
+                    <div class="col-sm-12 col-md-8 profile-homepage-user-info">
+                        <div class="col-sm-12 col-md-12 user-info-wrapper">
+                            <input type="file" class="dropify upload-img" id="user-photo-input"
+                                   accept=".jpg"
+                                   name="user-photo" data-height="150"
+                                   data-default-file="/public/images/custom/system/nophoto.jpg"
+                                   disabled="disabled"
+                            />
+                            <div class="user-name-surname-wrapper">
+                                <span id="name-large">Name</span>
+                                <span id="surname-large">Surname</span>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="row row-sm mt-10 gx-20 cards-wrapper">
+                    <div class="col-md-3">
+                        <a href="/web/user/profile/settings">
+                            <div class="card custom-card">
+                                <div class="card-header p-3 tx-medium my-auto tx-white">
+                                    <i class="si si-settings" data-bs-toggle="tooltip" title=""
+                                       data-bs-original-title="si-settings" aria-label="si-settings"></i>
+                                    Settings
+                                </div>
+                                <div class="card-body">
+                                    <p class="mg-b-0"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-3">
+                        <a href="/web/user/profile/history">
+                            <div class="card custom-card">
+                                <div class="card-header p-3 tx-medium my-auto tx-white">
+                                    <i class="fa fa-history" data-bs-toggle="tooltip" title=""
+                                       data-bs-original-title="fa fa-history"
+                                       aria-label="fa fa-history"></i>
+                                    History
+                                </div>
+                                <div class="card-body">
+                                    <p class="mg-b-0"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-3">
+                        <a href="/web/user/profile/statistics">
+                            <div class="card custom-card">
+                                <div class="card-header p-3 tx-medium my-auto tx-white">
+                                    <i class="ti-bar-chart-alt sidemenu-icon menu-icon "></i>
+                                    Statistics
+                                </div>
+                                <div class="card-body">
+                                    <p class="mg-b-0"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    </div>
+
+                <div class="row row-sm appointmets-wrapper mt-40">
+                    <h3 class="pl-20">Coming Appointments</h3>
+                    <div class="table-responsive my-data-table">
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="card custom-card" id="dataTableLoader">
+                                <div class="card-body">
+                                    <div>
+                                        <h6 class="main-content-label mb-1">Please wait</h6>
+                                        <p class="text-muted card-sub-title">information is loading...</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="lds-facebook"><div></div><div></div><div></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table id="data-table"
+                               class="table card-table table-striped table-vcenter text-nowrap mb-0">
+                            <thead>
+                            <tr>
+                                <th class="wd-lg-8p">
+                                    <span class="arrow_column active">
+                                        ID
+                                        <img src="/public/images/custom/system/icons/arrows_down.svg"
+                                             id="id_arrow"
+                                             class="sort_arrow"
+                                             data-column="id" data-order="asc">
+                                    </span>
+                                </th>
+                                <th class="wd-lg-8p">
+                                    <span class="arrow_column">
+                                        Service
+                                        <img src="" id="img_arrow" class="sort_arrow"
+                                             data-column="name" data-order="">
+                                    </span>
+                                </th>
+                                <th class="wd-lg-20p">
+                                    <span class="arrow_column">
+                                        Worker
+                                        <img src="" id="login_arrow" class="sort_arrow"
+                                             data-column="login" data-order="">
+                                    </span>
+                                </th>
+                                <th class="wd-lg-20p">
+                                    <span class="arrow_column">
+                                        Affiliate Address
+                                        <img src="" id="email_arrow" class="sort_arrow"
+                                             data-column="email" data-order="">
+                                    </span>
+                                </th>
+                                <th class="wd-lg-10p">
+                                    <span class="arrow_column">
+                                        Date
+                                        <img src="" id="email_arrow" class="sort_arrow"
+                                             data-column="email" data-order="">
+                                    </span>
+                                </th>
+                                <th class="wd-lg-2p">
+                                    <span class="arrow_column">
+                                        Start
+                                        <img src="" id="email_arrow" class="sort_arrow"
+                                             data-column="email" data-order="">
+                                    </span>
+                                </th>
+                                <th class="wd-lg-2p">
+                                    <span class="arrow_column">
+                                        End
+                                        <img src="" id="email_arrow" class="sort_arrow"
+                                             data-column="email" data-order="">
+                                    </span>
+                                </th>
+                                <th class="wd-lg-10p">
+                                    <span class="arrow_column">
+                                        Price
+                                        <img src="" id="created_arrow" class="sort_arrow"
+                                             data-column="time_reg" data-order="">
+                                    </span>
+                                </th>
+
+                                <th class="wd-lg-5p">
+                                    <span class="arrow_column">
+                                        Action
+                                    </span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="table-body">
+                            <tr>
+                                <td>1</td>
+                                <td>Brown Coloring</td>
+                                <td>Irena Karpa</td>
+                                <td>Kyiv, str. Independent 89</td>
+                                <td>2 November</td>
+                                <td>12:00</td>
+                                <td>13:30</td>
+                                <td>30 USD</td>
+                                <td>
+                                    <a class="btn ripple btn-manage"
+                                       href="">
+                                        <i class="fe fe-eye me-2"></i>
+                                        Manage
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Brown Coloring</td>
+                                <td>Irena Karpa</td>
+                                <td>Kyiv, str. Freedom 33</td>
+                                <td>7 November</td>
+                                <td>12:00</td>
+                                <td>13:30</td>
+                                <td>22 USD</td>
+                                <td>
+                                    <a class="btn ripple btn-manage"
+                                       href="">
+                                        <i class="fe fe-eye me-2"></i>
+                                        Manage
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Brown Coloring</td>
+                                <td>Irena Karpa</td>
+                                <td>Kyiv, str. Brave 13</td>
+                                <td>15 November</td>
+                                <td>12:00</td>
+                                <td>13:30</td>
+                                <td>29 USD</td>
+                                <td>
+                                    <a class="btn ripple btn-manage"
+                                       href="">
+                                        <i class="fe fe-eye me-2"></i>
+                                        Manage
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ul class="pagination mt-4 mb-0 float-end">
+                    </ul>
+
+
+                </div>
+
                 <!-- End Row -->
-        </div>
+            </div>
             </div>
                 <!--footer start-->
                 <?php require_once VIEW_COMMON."pages/landing/footer/footer_widget.php"?>
@@ -134,109 +317,8 @@
     </div>
     <!-- End Main Content-->
 
-    <!-- Main Footer-->
-<!--    --><?php //require_once VIEW_COMMON."pages/user/profile/footer/footer.php"?>
-    <!--End Footer-->
-
-    <!-- Modal -->
-    <div aria-hidden="true" class="modal main-modal-calendar-schedule" id="modalSetSchedule" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title">Create New Event</h6><button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    <form action="calendar.html" id="mainFormCalendar" method="post" name="mainFormCalendar">
-                        <div class="form-group">
-                            <input class="form-control" placeholder="Add title" type="text">
-                        </div>
-                        <div class="form-group d-flex align-items-center">
-                            <label class="rdiobox mg-r-60"><input checked name="etype" type="radio" value="event"> <span>Event</span></label> <label class="rdiobox"><input name="etype" type="radio" value="reminder"> <span>Reminder</span></label>
-                        </div>
-                        <div class="form-group mg-t-30">
-                            <label class="tx-13 mg-b-5 tx-gray-600">Start Date</label>
-                            <div class="row row-xs">
-                                <div class="col-7">
-                                    <input class="form-control" id="mainEventStartDate" placeholder="Select date" type="text" value="">
-                                </div><!-- col-7 -->
-                                <div class="col-5">
-                                    <select class="select2 form-control main-event-time" data-placeholder="Select time" id="mainEventStartTime">
-                                        <option label="Select time">
-                                            Select time
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="tx-13 mg-b-5 tx-gray-600">End Date</label>
-                            <div class="row row-xs">
-                                <div class="col-7">
-                                    <input class="form-control" id="EventEndDate" placeholder="Select date" type="text" value="">
-                                </div><!-- col-7 -->
-                                <div class="col-5">
-                                    <select class="select2 form-control main-event-time" data-placeholder="Select time" id="EventEndTime">
-                                        <option label="Select time">
-                                            Select time
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" placeholder="Write some description (optional)" rows="2"></textarea>
-                        </div>
-                        <div class="d-flex mg-t-15 mg-lg-t-30">
-                            <button class="btn btn-main-primary pd-x-25 mg-r-5" type="submit">Save</button> <a class="btn btn-light" data-bs-dismiss="modal" href="">Discard</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Modal -->
-
-    <!-- Modal -->
-    <div aria-hidden="true" class="modal main-modal-calendar-event" id="modalCalendarEvent" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <nav class="nav nav-modal-event">
-                        <a class="nav-link" href="#"><i class="icon ion-md-open"></i></a>
-                        <a class="nav-link" href="#"><i class="icon ion-md-trash"></i></a>
-                        <a class="nav-link" data-bs-dismiss="modal" href="#">
-                            <i class="icon ion-md-close"></i></a>
-                    </nav>
-                </div>
-                <div class="modal-body">
-                    <div class="row row-sm">
-                        <div class="col-sm-6">
-                            <label class="tx-13 tx-gray-600 mg-b-2">Start Date</label>
-                            <p class="event-start-date"></p>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="tx-13 mg-b-2">End Date</label>
-                            <p class="event-end-date"></p>
-                        </div>
-                    </div>
-                    <label class="tx-13 tx-gray-600 mg-b-2">Description</label>
-                    <p class="event-desc tx-gray-900 mg-b-30"></p>
-                    <a class="btn btn-secondary wd-80" data-bs-dismiss="modal" href="">Close</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Modal -->
-
-    <!-- Sidebar -->
-
-    <!-- End Sidebar -->
-
 </div>
 <!-- End Page -->
-
-<!-- Back-to-top -->
-<!--<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>-->
 
 <!-- Jquery js-->
 <script src="/public/assets/plugins/jquery/jquery.min.js"></script>
@@ -268,9 +350,13 @@
 <script src="/public/assets/js/sticky.js"></script>
 
 <!-- Full-calendar js-->
-<script src='/public/assets/plugins/fullcalendar/fullcalendar.min.js'></script>
-<script src="/public/assets/js/calendar-events.js"></script>
-<script src="/public/assets/js/calendar.js"></script>
+<!--<script src='/public/assets/plugins/fullcalendar/fullcalendar.min.js'></script>-->
+<!--<script src="/public/assets/js/calendar-events.js"></script>-->
+<!--<script src="/public/assets/js/calendar.js"></script>-->
+
+<!-- Internal Fileuploads js-->
+<script src="/public/assets/plugins/fileuploads/js/fileupload.js"></script>
+<script src="/public/assets/plugins/fileuploads/js/file-upload.js"></script>
 
 <!-- Custom js -->
 <script src="/public/assets/js/custom.js"></script>

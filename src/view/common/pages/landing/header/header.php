@@ -1,4 +1,4 @@
-<?php require_once VIEW_COMMON."header.php"?>
+<?php require_once VIEW_COMMON."pages/landing/header/head.php"?>
 <body>
 
 <!--page start-->
@@ -18,10 +18,10 @@
             <!-- ttm-stickable-header-w -->
             <div id="ttm-stickable-header-w" class="ttm-stickable-header-w clearfix">
                 <!-- ttm-topbar-wrapper -->
-                <?php require_once VIEW_COMMON."info_social_topbar.php"?>
+                <?php require_once VIEW_COMMON."pages/landing/toolbar/info_social_topbar.php"?>
                 <!-- ttm-topbar-wrapper end -->
 
-                <?php require_once VIEW_COMMON."main_menu.php"?>
+                <?php require_once VIEW_COMMON."pages/landing/menu/menu.php"?>
             </div><!-- ttm-stickable-header-w end-->
         </div><!--ttm-header-wrap end -->
 

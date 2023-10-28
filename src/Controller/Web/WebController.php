@@ -21,14 +21,15 @@ class WebController extends AbstractController
     /**
      * Load the view (checks for the file).
      */
-    public function view($view, $data = [], $arr = []): void
+    public function view($view, $data = [], $arr = []): bool
     {
         $viewPath = $view.'.php';
 
         if (file_exists($viewPath)) {
             require_once $viewPath;
+            return true;
         } else {
-            exit('View does not exists!');
+            return false;
         }
     }
 

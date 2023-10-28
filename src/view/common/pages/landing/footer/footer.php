@@ -1,5 +1,5 @@
 <!--footer start-->
-<?php require_once VIEW_COMMON."footer.php"?>
+<?php require_once VIEW_COMMON."pages/landing/footer/footer_widget.php"?>
 <!--footer end-->
 
 <!--back-to-top start-->
@@ -10,7 +10,7 @@
 
 </div><!-- page end -->
 
-<?php require_once VIEW_COMMON."footer_scripts.php"?>
+<?php require_once VIEW_COMMON."pages/landing/footer/footer_scripts.php"?>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>

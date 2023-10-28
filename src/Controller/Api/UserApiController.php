@@ -3,6 +3,7 @@
 namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\UserDataMapper;
 use Src\Model\DataSource\extends\UserDataSource;
@@ -206,6 +207,9 @@ class UserApiController extends ApiController
                 ]);
             }
 
+            /**
+             * Check Password Equality
+             */
             $hashValidator = new PasswordHashValidator($actualPasswordHash);
             $validPassword = $hashValidator->validate($items['password']);
             if(!$validPassword) {
@@ -213,9 +217,81 @@ class UserApiController extends ApiController
                     'error' => 'The provided password does not match the one saved for the requested user!'
                 ]);
             }
+
+            /**
+             * Select User ID for storing it into session
+             */
+            $userId = $this->dataMapper->selectUserIdByEmail($items['email']);
+            if($userId === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting user id!'
+                ]);
+            }
+
+            /**
+             * Store Users ID into session
+             */
+            SessionHelper::setUserSession($userId);
             $this->returnJson([
-                'success' => true
+                'success' => true,
+                'session' => $_SESSION['user_id']
             ]);
         }
     }
+
+    /**
+     * @return int|mixed|string
+     */
+    private function _getUserId() {
+        $userId = 0;
+        if(isset($_GET['user_id']) && $_GET['user_id'] !== '') {
+            $userId = htmlspecialchars(trim($_GET['user_id']));
+        } else {
+            if(isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id'];
+            }
+        }
+        return $userId;
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/getUserInfo
+     */
+    public function getUserInfo() {
+        $userId = $this->_getUserId();
+        $result = $this->dataMapper->selectUserInfoById($userId);
+        if($result) {
+            $this->returnJson([
+                'success' => true,
+                'user' => $result
+            ]);
+        } else {
+            $this->returnJson([
+                'error' => "The error occurred while getting user's info"
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/getUserSocialNetworks
+     */
+    public function getUserSocialNetworks() {
+        $userId = $this->_getUserId();
+        $result = $this->dataMapper->selectUserSocialById($userId);
+        if($result) {
+            $this->returnJson([
+                'success' => true,
+                'user' => $result
+            ]);
+        } else {
+            $this->returnJson([
+                'error' => "The error occurred while getting user's social info"
+            ]);
+        }
+    }
+
 }

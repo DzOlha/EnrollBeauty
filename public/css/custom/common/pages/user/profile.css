@@ -1,0 +1,124 @@
+
+.user-name-surname-wrapper {
+    color: white;
+    text-align: center;
+    font-family: "Nimbus Roman No9 L",sans-serif;
+    font-size: 20px;
+    padding: 3px;
+    margin-top: 5px;
+}
+
+.user-info-wrapper .dropify-wrapper.has-preview {
+    border-radius: 15px;
+}
+.row {
+    justify-content: center;
+}
+.profile-homepage-user-info {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid black;
+}
+.profile-homepage-user-info .user-name-surname-wrapper{
+    color: black;
+    font-size: 30px;
+}
+.profile-homepage-user-info .user-photo-input {
+    height: 150px;
+    width: auto;
+}
+.card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: var(--dark-color);
+    column-gap: 8px;
+}
+.card-header i {
+    font-size: 20px;
+}
+.card-header:first-child {
+    border-radius: 0;
+}
+.custom-card {
+    padding-right: 0;
+    padding-left: 0;
+    border: 1px solid var(--dark-color);
+}
+.custom-card:hover .card-header{
+    background-color: var(--dark-brown-color);
+}
+.custom-card:hover {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.cards-wrapper {
+    height: 150px;
+}
+.cards-wrapper div {
+    height: 100%;
+    padding-top: 10px;
+}
+.appointmets-wrapper {
+    justify-content: left;
+    padding-bottom: 25px;
+}
+
+#dataTableLoader {
+    display: none;
+}
+.arrow_column {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    color: white;
+}
+.arrow_column .sort_arrow {
+    width: 10px;
+    height: 10px;
+    /*font-weight: bold;*/
+    margin-left: 10px;
+}
+th, td {
+    border: 1px solid #dedede;
+    padding: 5px;
+
+}
+thead {
+    border-bottom: 1px solid #aeaeae;
+    border-top: 1px solid #aeaeae;
+    background-color: var(--light-brown-color);
+    color: white;
+}
+
+.btn-manage {
+    background-color: var(--dark-color);
+    color: white;
+}
+.btn-manage:hover {
+    background-color: var(--dark-brown-color);
+    color: white;
+}
+.user-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.user-img-wrapper {
+    width: 100%;
+    height: auto;
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 50%;
+    text-align: center;
+    overflow: hidden;
+}
+.user-img {
+    width: auto;
+    height: auto;
+    display: block;
+    margin: auto;
+}

@@ -43,7 +43,7 @@ CREATE TABLE users_setting (
 CREATE TABLE users_photo (
      id INT AUTO_INCREMENT PRIMARY KEY,
      user_id INT NOT NULL,
-     name VARCHAR(255),
+     filename VARCHAR(255),
      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -63,6 +63,7 @@ CREATE TABLE workers (
      name VARCHAR(50) NOT NULL,
      surname VARCHAR(50) NOT NULL,
      password VARCHAR(255) NOT NULL,
+     email VARCHAR(100) UNIQUE NOT NULL,
      gender ENUM('Male', 'Female', 'Other'),
      age INT NOT NULL,
      years_of_experience DECIMAL(2, 2) NOT NULL,
@@ -155,22 +156,42 @@ CREATE TABLE services (
       department_id INT NOT NULL,
       FOREIGN KEY (department_id) REFERENCES departments(id)
 );
+CREATE TABLE workers_service (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      worker_id INT NOT NULL,
+      service_id INT NOT NULL,
+      price DECIMAL(10, 2) NOT NULL,
+      currency VARCHAR(5) DEFAULT 'UAH',
+      FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
+      FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+);
 CREATE TABLE orders_service (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     email VARCHAR(100) NOT NULL,
-    phone_number VARCHAR(20) NOT NULL,
     service_id INT NOT NULL,
     worker_id INT NOT NULL,
     affiliate_id INT NOT NULL,
-    chosen_datetime DATETIME NOT NULL,
+    start_datetime DATETIME NOT NULL,
+    end_datetime DATETIME NOT NULL,
     completed_datetime DATETIME,
     canceled_datetime DATETIME,
-    price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
     FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
     FOREIGN KEY (affiliate_id) REFERENCES affiliates(id) ON DELETE CASCADE
+);
+CREATE TABLE workers_service_schedule (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      worker_id INT NOT NULL,
+      service_id INT NOT NULL,
+      day DATE NOT NULL,
+      start_datetime DATETIME NOT NULL,
+      end_datetime DATETIME NOT NULL,
+      order_id INT COMMENT 'If not null, the time window has been taken',
+      FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
+      FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
+      FOREIGN KEY (order_id) REFERENCES orders_service(id) ON DELETE CASCADE
 );
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -182,6 +203,7 @@ CREATE TABLE products (
       id INT AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
       price DECIMAL(10, 2) NOT NULL,
+      currency VARCHAR(5) DEFAULT 'UAH',
       category_id INT NOT NULL,
       available_count INT NOT NULL,
       FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE

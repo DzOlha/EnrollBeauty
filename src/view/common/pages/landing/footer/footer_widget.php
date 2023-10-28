@@ -99,7 +99,7 @@
             <div class="row copyright">
                 <div class="col-md-9">
                     <div class="ttm-textcolor-white">
-                        <span>Copyright &copy; 2023&nbsp;<a class="ttm-textcolor-skincolor" href="#">Sylin Theme</a> by <a href="https://themetechmount.com/" target="_blank">Themetechmount</a></span>
+                        <span>Copyright &copy; 2023&nbsp;<a class="ttm-textcolor-skincolor" href="#">Sylin Theme</a></span>
                     </div>
                 </div>
                 <div class="col-md-3">

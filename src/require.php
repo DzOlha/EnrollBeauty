@@ -1,9 +1,15 @@
 <?php
 namespace Src;
 
-//session_start(); //session_destroy will be in the logout UserController
+session_start(); //session_destroy will be in the logout UserController
 use Src\Router\extends\Router;
 use Src\Router\extends\Web\WebRouter;
+
+//Set the character encoding for HTML output
+header('Content-Type: text/html; charset=UTF-8');
+
+// Set the internal character encoding for multibyte string functions
+mb_internal_encoding('UTF-8');
 
 ini_set('max_execution_time', 100000);
 /**

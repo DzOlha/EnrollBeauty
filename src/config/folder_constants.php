@@ -2,6 +2,7 @@
 //str_replace('\\', '/', dirname(__FILE__, 3))
 define('ENROLL_BEAUTY_ROOT', dirname(__FILE__, 3));
 const SRC = ENROLL_BEAUTY_ROOT . '/src';
+const TEST = ENROLL_BEAUTY_ROOT . '/test';
 const PUBLIC_ = '../../public';
 
 const VIEW_FRONTEND = SRC . '/view/frontend/';
