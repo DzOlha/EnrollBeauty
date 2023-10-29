@@ -14,7 +14,7 @@ class LoginForm extends Form {
     }
     successCallbackSubmit(response) {
         window.location.href = this.accountUrl;
-        console.log(response);
+        //console.log(response);
     }
 
     errorCallbackSubmit(message) {

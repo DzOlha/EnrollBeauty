@@ -262,6 +262,7 @@ class UserApiController extends ApiController
     public function getUserInfo() {
         $userId = $this->_getUserId();
         $result = $this->dataMapper->selectUserInfoById($userId);
+
         if($result) {
             $this->returnJson([
                 'success' => true,
@@ -285,11 +286,26 @@ class UserApiController extends ApiController
         if($result) {
             $this->returnJson([
                 'success' => true,
-                'user' => $result
+                'data' => $result
             ]);
         } else {
             $this->returnJson([
                 'error' => "The error occurred while getting user's social info"
+            ]);
+        }
+    }
+
+    public function getUserComingAppointments() {
+        $userId = $this->_getUserId();
+        $result = $this->dataMapper->selectUserComingAppointments($userId);
+        if($result) {
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
+            $this->returnJson([
+                'error' => "The error occurred while getting user's coming appointments"
             ]);
         }
     }

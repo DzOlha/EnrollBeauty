@@ -116,11 +116,9 @@ class Form {
     getMessages(){}
 
     showErrorMessage(message) {
-        alertify.set('notifier', 'position', 'top-center');
-        alertify.error(message, 4);
+        Notifier.showErrorMessage(message);
     }
     showSuccessMessage(message) {
-        alertify.set('notifier', 'position', 'top-center');
-        alertify.success(message, 4);
+        Notifier.showSuccessMessage(message);
     }
 }

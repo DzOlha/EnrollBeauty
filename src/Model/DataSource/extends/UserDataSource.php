@@ -132,11 +132,11 @@ class UserDataSource extends DataSource
         $usersPhotoUserId = UsersPhoto::$user_id;
 
         $this->db->query("
-            SELECT $userId, $name, $surname, $email, $filename
+            SELECT $usersId, $name, $surname, $email, $filename
             FROM $users INNER JOIN $usersPhoto ON $usersId = $usersPhotoUserId
             WHERE $usersId = :id
         ");
-        $this->db->bind(':id', $usersId);
+        $this->db->bind(':id', $userId);
 
         $result = $this->db->singleRow();
         if ($result) {

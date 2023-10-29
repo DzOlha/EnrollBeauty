@@ -94,12 +94,16 @@
                 <div class="row row-sm">
                     <div class="col-sm-12 col-md-8 profile-homepage-user-info">
                         <div class="col-sm-12 col-md-12 user-info-wrapper">
-                            <input type="file" class="dropify upload-img" id="user-photo-input"
-                                   accept=".jpg"
-                                   name="user-photo" data-height="150"
-                                   data-default-file="/public/images/custom/system/nophoto.jpg"
-                                   disabled="disabled"
-                            />
+                            <div class="user-img-wrapper">
+                                <img id="user-img-large" class="user-img"
+                                     src="/public/images/custom/system/nophoto.jpg" alt="user-photo"/>
+                            </div>
+<!--                            <input type="file" class="dropify upload-img" id="user-photo-input"-->
+<!--                                   accept=".jpg"-->
+<!--                                   name="user-photo" data-height="150"-->
+<!--                                   data-default-file="/public/images/custom/system/nophoto.jpg"-->
+<!--                                   disabled="disabled"-->
+<!--                            />-->
                             <div class="user-name-surname-wrapper">
                                 <span id="name-large">Name</span>
                                 <span id="surname-large">Surname</span>
@@ -156,6 +160,18 @@
 
                 <div class="row row-sm appointmets-wrapper mt-40">
                     <h3 class="pl-20">Coming Appointments</h3>
+<!--                    <div class="row table-filter">-->
+<!--                        <div class="col-lg-2">-->
+<!--                            <div class="show-entries">-->
+<!--                                <select class="form-control select2 wd-50">-->
+<!--                                    <option>5</option>-->
+<!--                                    <option>10</option>-->
+<!--                                    <option>15</option>-->
+<!--                                    <option>20</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div class="table-responsive my-data-table">
                         <div class="col-lg-12 col-sm-12">
                             <div class="card custom-card" id="dataTableLoader">
@@ -362,6 +378,13 @@
 <script src="/public/assets/js/custom.js"></script>
 
 <?php require_once VIEW_COMMON."pages/landing/footer/footer_scripts.php"?>
+
+
+<script src="/public/js/custom/common/pages/Notifier.js"></script>
+<script src="/public/js/custom/common/pages/Requestor.js"></script>
+<script src="/public/js/custom/common/pages/user/profile/Account.js"></script>
+
+<script src="/public/js/custom/frontend/pages/user/profile/account.js"></script>
 
 </body>
 </html>
