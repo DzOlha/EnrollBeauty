@@ -15,4 +15,5 @@ class OrdersService
     public static string $end_datetime = 'orders_service.end_datetime';
     public static string $completed_datetime = 'orders_service.completed_datetime';
     public static string $canceled_datetime = 'orders_service.canceled_datetime';
+    public static string $created_datetime = 'orders_service.created_datetime';
 }

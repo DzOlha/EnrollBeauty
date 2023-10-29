@@ -13,7 +13,9 @@ use Src\Model\Table\UsersPhoto;
 use Src\Model\Table\UsersSetting;
 use Src\Model\Table\UsersSocial;
 use Src\Model\Table\Workers;
-use Src\Model\Table\WorkersService;
+use Src\Model\Table\WorkersAffiliate;
+use Src\Model\Table\WorkersServicePricing;
+use Src\Model\Table\WorkersServiceSchedule;
 
 class UserDataSource extends DataSource
 {
@@ -207,11 +209,11 @@ class UserDataSource extends DataSource
         $canceled = OrdersService::$canceled_datetime;
         $completed = OrdersService::$completed_datetime;
 
-        $workersService = WorkersService::$table;
-        $workersServiceWorkerId = WorkersService::$worker_id;
-        $workersServiceServiceId = WorkersService::$service_id;
-        $price = WorkersService::$price;
-        $currency = WorkersService::$currency;
+        $workersService = WorkersServicePricing::$table;
+        $workersServiceWorkerId = WorkersServicePricing::$worker_id;
+        $workersServiceServiceId = WorkersServicePricing::$service_id;
+        $price = WorkersServicePricing::$price;
+        $currency = WorkersServicePricing::$currency;
 
         $workers = Workers::$table;
         $workerId = Workers::$id;
