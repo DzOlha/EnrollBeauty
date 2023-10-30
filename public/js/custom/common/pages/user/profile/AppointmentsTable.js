@@ -1,9 +1,10 @@
+
 class AppointmentsTable extends Table {
     constructor() {
         super(
-            '/api/user/getUserComingAppointments'
+            '/api/user/getUserComingAppointments?'
         );
-        this.tableId = 'data-table';
+        this.tableId = 'table-body';
 
     }
 
@@ -28,6 +29,7 @@ class AppointmentsTable extends Table {
      *      'price':
      *      'currency':
      * }
+     * ....
      * @param response
      */
     populateTable(response) {
@@ -43,18 +45,30 @@ class AppointmentsTable extends Table {
                 return true;
             }
             // Create a table row for each of appointments
-            let row = $('<tr>');
+            let row = $(`<tr data-appointment-id = "${item.id}">`);
 
             row.append(`<td>${item.id}</td>`);
-            row.append(`<td>${item.service_name}</td>`);
-            row.append(`<td>${item.worker_name}</td>`);
-            row.append(`<td>${item.affiliate_city + ', ' + item.affiliate_address}</td>`);
-            row.append(`<td>${item.start_datetime}</td>`);
-            row.append(`<td>${item.end_datetime}</td>`);
+
+            row.append(`<td data-service-id = "${item.service_id}">
+                            ${item.service_name}
+                      </td>`);
+
+            row.append(`<td data-worker-id = "${item.worker_id}">
+                            ${item.worker_name + ' ' + item.worker_surname}
+                      </td>`);
+
+            row.append(`<td data-affiliate-id = "${item.affiliate_id}">
+                            ${item.affiliate_city + ', ' + item.affiliate_address}
+                      </td>`);
+
+            row.append(`<td>${DateRenderer.render(item.start_datetime)}</td>`);
+            row.append(`<td>${TimeRenderer.render(item.start_datetime)}</td>`);
+            row.append(`<td>${TimeRenderer.render(item.end_datetime)}</td>`);
             row.append(`<td>${item.price + ' ' + item.currency}</td>`);
 
             row.append(`<td>
                         <a class="btn ripple btn-manage"
+                           data-appointment-id = "${item.id}"
                            href="">
                             <i class="fe fe-eye me-2"></i>
                             Manage

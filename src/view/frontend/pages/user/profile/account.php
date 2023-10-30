@@ -16,6 +16,9 @@
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
 
+<!-- Select2 css -->
+<link href="/public/assets/plugins/select2/css/select2.min.css" rel="stylesheet">
+
 
 <body class="ltr main-body leftmenu">
 
@@ -111,8 +114,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row row-sm mt-10 gx-20 cards-wrapper">
-                    <div class="col-md-3">
+                <div class="row row-xs mt-10 gx-20 cards-wrapper">
+                    <div class="col-xs-4 col-md-3">
                         <a href="/web/user/profile/settings">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
@@ -127,7 +130,7 @@
                         </a>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-xs-4 col-md-3">
                         <a href="/web/user/profile/history">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
@@ -143,7 +146,7 @@
                         </a>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-xs-4 col-md-3">
                         <a href="/web/user/profile/statistics">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
@@ -172,149 +175,161 @@
 <!--                            </div>-->
 <!--                        </div>-->
 <!--                    </div>-->
-                    <div class="table-responsive my-data-table">
-                        <div class="col-lg-12 col-sm-12">
-                            <div class="card custom-card" id="dataTableLoader">
-                                <div class="card-body">
-                                    <div>
-                                        <h6 class="main-content-label mb-1">Please wait</h6>
-                                        <p class="text-muted card-sub-title">information is loading...</p>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="lds-facebook"><div></div><div></div><div></div></div>
-                                    </div>
+                    <div class="card-body">
+                        <div class="row table-filter">
+                            <div class="col-lg-1 d-lg-flex justify-content-start">
+                                <div class="show-entries">
+                                    <select class="form-control select2 wd-50">
+                                        <option>5</option>
+                                        <option>10</option>
+                                        <option>15</option>
+                                        <option>20</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
-                        <table id="data-table"
-                               class="table card-table table-striped table-vcenter text-nowrap mb-0">
-                            <thead>
-                            <tr>
-                                <th class="wd-lg-8p">
-                                    <span class="arrow_column active">
-                                        ID
-                                        <img src="/public/images/custom/system/icons/arrows_down.svg"
-                                             id="id_arrow"
-                                             class="sort_arrow"
-                                             data-column="id" data-order="asc">
-                                    </span>
-                                </th>
-                                <th class="wd-lg-8p">
-                                    <span class="arrow_column">
-                                        Service
-                                        <img src="" id="img_arrow" class="sort_arrow"
-                                             data-column="name" data-order="">
-                                    </span>
-                                </th>
-                                <th class="wd-lg-20p">
-                                    <span class="arrow_column">
-                                        Worker
-                                        <img src="" id="login_arrow" class="sort_arrow"
-                                             data-column="login" data-order="">
-                                    </span>
-                                </th>
-                                <th class="wd-lg-20p">
-                                    <span class="arrow_column">
-                                        Affiliate Address
-                                        <img src="" id="email_arrow" class="sort_arrow"
-                                             data-column="email" data-order="">
-                                    </span>
-                                </th>
-                                <th class="wd-lg-10p">
-                                    <span class="arrow_column">
-                                        Date
-                                        <img src="" id="email_arrow" class="sort_arrow"
-                                             data-column="email" data-order="">
-                                    </span>
-                                </th>
-                                <th class="wd-lg-2p">
-                                    <span class="arrow_column">
-                                        Start
-                                        <img src="" id="email_arrow" class="sort_arrow"
-                                             data-column="email" data-order="">
-                                    </span>
-                                </th>
-                                <th class="wd-lg-2p">
-                                    <span class="arrow_column">
-                                        End
-                                        <img src="" id="email_arrow" class="sort_arrow"
-                                             data-column="email" data-order="">
-                                    </span>
-                                </th>
-                                <th class="wd-lg-10p">
-                                    <span class="arrow_column">
-                                        Price
-                                        <img src="" id="created_arrow" class="sort_arrow"
-                                             data-column="time_reg" data-order="">
-                                    </span>
-                                </th>
+                        <div class="table-responsive my-data-table">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="card custom-card" id="dataTableLoader">
+                                    <div class="card-body">
+                                        <div>
+                                            <h6 class="main-content-label mb-1">Please wait</h6>
+                                            <p class="text-muted card-sub-title">information is loading...</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="lds-facebook"><div></div><div></div><div></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="data-table"
+                                   class="table card-table table-striped table-vcenter text-nowrap mb-0">
+                                <thead>
+                                <tr>
+                                    <th class="wd-lg-8p">
+                                        <span class="arrow_column active">
+                                            ID
+                                            <img src="/public/images/custom/system/icons/arrows_down.svg"
+                                                 id="id_arrow"
+                                                 class="sort_arrow"
+                                                 data-column="id" data-order="asc">
+                                        </span>
+                                    </th>
+                                    <th class="wd-lg-8p">
+                                        <span class="arrow_column">
+                                            Service
+                                            <img src="" id="img_arrow" class="sort_arrow"
+                                                 data-column="name" data-order="">
+                                        </span>
+                                    </th>
+                                    <th class="wd-lg-20p">
+                                        <span class="arrow_column">
+                                            Worker
+                                            <img src="" id="login_arrow" class="sort_arrow"
+                                                 data-column="login" data-order="">
+                                        </span>
+                                    </th>
+                                    <th class="wd-lg-20p">
+                                        <span class="arrow_column">
+                                            Affiliate Address
+                                            <img src="" id="email_arrow" class="sort_arrow"
+                                                 data-column="email" data-order="">
+                                        </span>
+                                    </th>
+                                    <th class="wd-lg-10p">
+                                        <span class="arrow_column">
+                                            Date
+                                            <img src="" id="email_arrow" class="sort_arrow"
+                                                 data-column="email" data-order="">
+                                        </span>
+                                    </th>
+                                    <th class="wd-lg-2p">
+                                        <span class="arrow_column">
+                                            Start
+                                            <img src="" id="email_arrow" class="sort_arrow"
+                                                 data-column="email" data-order="">
+                                        </span>
+                                    </th>
+                                    <th class="wd-lg-2p">
+                                        <span class="arrow_column">
+                                            End
+                                            <img src="" id="email_arrow" class="sort_arrow"
+                                                 data-column="email" data-order="">
+                                        </span>
+                                    </th>
+                                    <th class="wd-lg-10p">
+                                        <span class="arrow_column">
+                                            Price
+                                            <img src="" id="created_arrow" class="sort_arrow"
+                                                 data-column="time_reg" data-order="">
+                                        </span>
+                                    </th>
 
-                                <th class="wd-lg-5p">
-                                    <span class="arrow_column">
-                                        Action
-                                    </span>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody id="table-body">
-                            <tr>
-                                <td>1</td>
-                                <td>Brown Coloring</td>
-                                <td>Irena Karpa</td>
-                                <td>Kyiv, str. Independent 89</td>
-                                <td>2 November</td>
-                                <td>12:00</td>
-                                <td>13:30</td>
-                                <td>30 USD</td>
-                                <td>
-                                    <a class="btn ripple btn-manage"
-                                       href="">
-                                        <i class="fe fe-eye me-2"></i>
-                                        Manage
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Brown Coloring</td>
-                                <td>Irena Karpa</td>
-                                <td>Kyiv, str. Freedom 33</td>
-                                <td>7 November</td>
-                                <td>12:00</td>
-                                <td>13:30</td>
-                                <td>22 USD</td>
-                                <td>
-                                    <a class="btn ripple btn-manage"
-                                       href="">
-                                        <i class="fe fe-eye me-2"></i>
-                                        Manage
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Brown Coloring</td>
-                                <td>Irena Karpa</td>
-                                <td>Kyiv, str. Brave 13</td>
-                                <td>15 November</td>
-                                <td>12:00</td>
-                                <td>13:30</td>
-                                <td>29 USD</td>
-                                <td>
-                                    <a class="btn ripple btn-manage"
-                                       href="">
-                                        <i class="fe fe-eye me-2"></i>
-                                        Manage
-                                    </a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                    <th class="wd-lg-5p">
+                                        <span class="arrow_column">
+                                            Action
+                                        </span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                <tr>
+                                    <td>1</td>
+                                    <td>Brown Coloring</td>
+                                    <td>Irena Karpa</td>
+                                    <td>Kyiv, str. Independent 89</td>
+                                    <td>2 November</td>
+                                    <td>12:00</td>
+                                    <td>13:30</td>
+                                    <td>30 USD</td>
+                                    <td>
+                                        <a class="btn ripple btn-manage"
+                                           href="">
+                                            <i class="fe fe-eye me-2"></i>
+                                            Manage
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Brown Coloring</td>
+                                    <td>Irena Karpa</td>
+                                    <td>Kyiv, str. Freedom 33</td>
+                                    <td>7 November</td>
+                                    <td>12:00</td>
+                                    <td>13:30</td>
+                                    <td>22 USD</td>
+                                    <td>
+                                        <a class="btn ripple btn-manage"
+                                           href="">
+                                            <i class="fe fe-eye me-2"></i>
+                                            Manage
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Brown Coloring</td>
+                                    <td>Irena Karpa</td>
+                                    <td>Kyiv, str. Brave 13</td>
+                                    <td>15 November</td>
+                                    <td>12:00</td>
+                                    <td>13:30</td>
+                                    <td>29 USD</td>
+                                    <td>
+                                        <a class="btn ripple btn-manage"
+                                           href="">
+                                            <i class="fe fe-eye me-2"></i>
+                                            Manage
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="pagination mt-4 mb-0 float-end">
+                        </ul>
                     </div>
-                    <ul class="pagination mt-4 mb-0 float-end">
-                    </ul>
-
-
                 </div>
 
                 <!-- End Row -->
@@ -378,7 +393,18 @@
 <script src="/public/assets/js/custom.js"></script>
 
 <?php require_once VIEW_COMMON."pages/landing/footer/footer_scripts.php"?>
+<!-- Select2 js-->
+<script src="/public/assets/plugins/select2/js/select2.min.js"></script>
+<script src="/public/assets/js/select2.js"></script>
 
+<script src="/public/js/custom/common/pages/classes/renderer/Renderer.js"></script>
+<script src="/public/js/custom/common/pages/classes/renderer/extends/TimeRenderer.js"></script>
+<script src="/public/js/custom/common/pages/classes/renderer/extends/DateRenderer.js"></script>
+
+<script src="/public/js/custom/common/pages/Cookie.js"></script>
+
+<script src="/public/js/custom/common/pages/Table.js"></script>
+<script src="/public/js/custom/common/pages/user/profile/AppointmentsTable.js"></script>
 
 <script src="/public/js/custom/common/pages/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/Requestor.js"></script>

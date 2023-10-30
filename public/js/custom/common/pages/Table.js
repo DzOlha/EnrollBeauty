@@ -3,7 +3,7 @@ class Table {
     constructor(apiUrl, orderByField = null, orderDirection = null) {
         this.apiUrl = apiUrl; // Store the API URL
         this.totalRowsCount = 1;
-        this.itemsPerPage = 5;
+        this.itemsPerPage = 1;
         this.totalPages = Math.ceil(this.totalRowsCount / this.itemsPerPage);
 
         this.sortedBy = orderByField ?? 'id';
@@ -21,7 +21,7 @@ class Table {
         this.sendApiRequest(this.itemsPerPage, current, this.sortedBy, this.sortingOrder);
 
         this.observeNumberRowsOnThePage(this.itemsPerPage, current);
-        this.replaceUpDownArrows();
+        //this.replaceUpDownArrows();
 
         // Set a handler to reset the cookie on page unload
         window.addEventListener('beforeunload', () => {
@@ -46,8 +46,8 @@ class Table {
     }
 
     getItemsPerPage() {
-        //return Number(document.querySelector('span[title]').innerText);
-        return this.itemsPerPage;
+        return Number(document.querySelector('span[title]').innerText);
+        //return this.itemsPerPage;
     }
 
     observeNumberRowsOnThePage(itemsPerPage, currentPage) {

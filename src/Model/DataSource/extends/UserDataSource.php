@@ -4,6 +4,9 @@ namespace Src\Model\DataSource\extends;
 
 use Src\DB\IDatabase;
 use Src\Model\DataSource\DataSource;
+use Src\Model\DTO\Read\UserReadDto;
+use Src\Model\DTO\Read\UserSocialReadDto;
+use Src\Model\DTO\Write\UserWriteDto;
 use Src\Model\Table\Affiliates;
 use Src\Model\Table\OrdersService;
 use Src\Model\Table\Roles;
@@ -24,7 +27,7 @@ class UserDataSource extends DataSource
         parent::__construct($db);
     }
 
-    public function insertNewUser(string $name, string $surname, string $email, string $passwordHash)
+    public function insertNewUser(UserWriteDto $user)
     {
         $users = Users::$table;
         $_name = Users::$name;
@@ -45,10 +48,10 @@ class UserDataSource extends DataSource
                 VALUES (:name, :surname, :password, :email, NOW(), 
                         (SELECT $role_id FROM $roles WHERE $role_name = :user_role))"
         );
-        $this->db->bind(':name', $name);
-        $this->db->bind(':surname', $surname);
-        $this->db->bind(':password', $passwordHash);
-        $this->db->bind(':email', $email);
+        $this->db->bind(':name', $user->getName());
+        $this->db->bind(':surname', $user->getSurname());
+        $this->db->bind(':password', $user->getPasswordHash());
+        $this->db->bind(':email', $user->getEmail());
 
         $this->db->bind(':user_role', $userRole);
 
@@ -107,7 +110,7 @@ class UserDataSource extends DataSource
 
     /**
      * @param int $userId
-     * @return array|false
+     * @return UserReadDto|false
      *
      * return = [
      *      'id' =>
@@ -140,14 +143,14 @@ class UserDataSource extends DataSource
 
         $result = $this->db->singleRow();
         if ($result) {
-            return $result;
+            return new UserReadDto($result);
         }
         return false;
     }
 
     /**
      * @param int $userId
-     * @return array|false
+     * @return UserSocialReadDto|false
      *
      * return = [
      *      'id' =>
@@ -171,7 +174,7 @@ class UserDataSource extends DataSource
         $this->db->bind(':id', $userId);
         $result = $this->db->singleRow();
         if($result) {
-            return $result;
+            return new UserSocialReadDto($result);
         }
         return false;
     }
@@ -196,7 +199,9 @@ class UserDataSource extends DataSource
      *    'currency' =>
      * ]
      */
-    public function selectUserComingAppointments(int $userId)
+    public function selectUserComingAppointments(
+        int $userId, int $limit, int $offset,
+        string $orderByField = 'orders_service.id', string $orderDirection = 'asc')
     {
         $ordersService = OrdersService::$table;
         $order_id = OrdersService::$id;
@@ -242,13 +247,13 @@ class UserDataSource extends DataSource
             WHERE $user_id = :user_id
                 AND $canceled IS NULL
                 AND $completed IS NULL
+            
+            ORDER BY $orderByField $orderDirection
+            LIMIT $limit
+            OFFSET $offset
         ");
         $this->db->bind(':user_id', $userId);
 
-        $result = $this->db->manyRows();
-        if($result) {
-            return $result;
-        }
-        return false;
+        return $this->db->manyRows();
     }
 }

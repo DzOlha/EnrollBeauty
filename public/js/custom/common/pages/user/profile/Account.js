@@ -1,6 +1,7 @@
 class Account {
-    constructor(requestorObject) {
+    constructor(requestorObject, appointmentsTable) {
         this.requestor = requestorObject;
+        this.appointmentsTable = appointmentsTable;
         this.apiUserInfoUrl = '/api/user/getUserInfo';
 
         this.smallNameId = 'name-small';
@@ -24,11 +25,15 @@ class Account {
         )
     }
 
+    getComingAppointments() {
+        this.appointmentsTable.manageAll();
+    }
+
     /**
      * @param response
      *
      * response =
-     * 'user': {
+     * 'data': {
      *      'id':
      *      'name':
      *      'surname':

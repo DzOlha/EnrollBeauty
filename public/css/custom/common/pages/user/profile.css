@@ -126,3 +126,18 @@ thead {
     max-width: 160px;
     max-height: 160px;
 }
+
+.page-item.active .page-link {
+    background-color: var(--dark-color);
+    border-color: var(--dark-color);
+}
+.page-item a {
+    color: black;
+}
+.page-item a.disabled {
+    color: darkgrey;
+}
+
+.row.table-filter {
+    justify-content: space-between;
+}
