@@ -8,16 +8,19 @@
     }
 </style>
 <!-- InternalFileupload css-->
-<link href="/public/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>
+<!--<link href="/public/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>-->
 
 <!-- InternalFancy uploader css-->
-<link href="/public/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
+<!--<link href="/public/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />-->
 
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
 
 <!-- Select2 css -->
 <link href="/public/assets/plugins/select2/css/select2.min.css" rel="stylesheet">
+
+<!-- Internal Daterangepicker css-->
+<link href="/public/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
 
 <body class="ltr main-body leftmenu">
@@ -115,7 +118,7 @@
                     </div>
                 </div>
                 <div class="row row-xs mt-10 gx-20 cards-wrapper">
-                    <div class="col-xs-4 col-md-3">
+                    <div class="col-lg-3">
                         <a href="/web/user/profile/settings">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
@@ -130,7 +133,7 @@
                         </a>
                     </div>
 
-                    <div class="col-xs-4 col-md-3">
+                    <div class="col-lg-3">
                         <a href="/web/user/profile/history">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
@@ -146,7 +149,7 @@
                         </a>
                     </div>
 
-                    <div class="col-xs-4 col-md-3">
+                    <div class="col-lg-3">
                         <a href="/web/user/profile/statistics">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
@@ -161,20 +164,8 @@
                     </div>
                     </div>
 
-                <div class="row row-sm appointmets-wrapper mt-40">
-                    <h3 class="pl-20">Coming Appointments</h3>
-<!--                    <div class="row table-filter">-->
-<!--                        <div class="col-lg-2">-->
-<!--                            <div class="show-entries">-->
-<!--                                <select class="form-control select2 wd-50">-->
-<!--                                    <option>5</option>-->
-<!--                                    <option>10</option>-->
-<!--                                    <option>15</option>-->
-<!--                                    <option>20</option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                <div class="row row-sm appointments-wrapper mt-40">
+                    <h3 class="pl-30 title">Coming Appointments</h3>
                     <div class="card-body">
                         <div class="row table-filter">
                             <div class="col-lg-1 d-lg-flex justify-content-start">
@@ -332,6 +323,216 @@
                     </div>
                 </div>
 
+                <div class="row row-sm available-schedules mt-40 mb-40">
+                    <h3 class="pl-15">Available Schedule for Appointments</h3>
+                    <div class="card-body">
+
+                        <div class="row row-sm">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <p class="mg-b-0">Service Name</p>
+                                    <select class="form-control select2-with-search">
+                                        <option label="Choose one">
+                                        </option>
+                                        <option value="Firefox">
+                                            Firefox
+                                        </option>
+                                        <option value="Chrome">
+                                            Chrome
+                                        </option>
+                                        <option value="Safari">
+                                            Safari
+                                        </option>
+                                        <option value="Opera">
+                                            Opera
+                                        </option>
+                                        <option value="Internet Explorer">
+                                            Internet Explorer
+                                        </option>
+                                    </select>
+                                    </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <p class="mg-b-0">Worker Name</p>
+                                    <select class="form-control select2-with-search">
+                                        <option label="Choose one">
+                                        </option>
+                                        <option value="Firefox">
+                                            Firefox
+                                        </option>
+                                        <option value="Chrome">
+                                            Chrome
+                                        </option>
+                                        <option value="Safari">
+                                            Safari
+                                        </option>
+                                        <option value="Opera">
+                                            Opera
+                                        </option>
+                                        <option value="Internet Explorer">
+                                            Internet Explorer
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <p class="mg-b-0">Affiliate</p>
+                                    <select class="form-control select2-with-search">
+                                        <option label="Choose one">
+                                        </option>
+                                        <option value="Firefox">
+                                            Firefox
+                                        </option>
+                                        <option value="Chrome">
+                                            Chrome
+                                        </option>
+                                        <option value="Safari">
+                                            Safari
+                                        </option>
+                                        <option value="Opera">
+                                            Opera
+                                        </option>
+                                        <option value="Internet Explorer">
+                                            Internet Explorer
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <p class="mg-b-0">Dates</p>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fe fe-calendar"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text"
+                                           class="form-control pull-right"
+                                           id="reservation"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row row-sm time-range">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <p class="mg-b-0">Start time</p>
+                                            <select class="form-control select2">
+                                                <option label="Choose one">
+                                                </option>
+                                                <option value="9">
+                                                    09:00
+                                                </option>
+                                                <option value="10">
+                                                    10:00
+                                                </option>
+                                                <option value="11">
+                                                    11:00
+                                                </option>
+                                                <option value="12">
+                                                    12:00
+                                                </option>
+                                                <option value="13">
+                                                    13:00
+                                                </option>
+                                                <option value="14">
+                                                    14:00
+                                                </option>
+                                                <option value="15">
+                                                    15:00
+                                                </option>
+                                                <option value="16">
+                                                    16:00
+                                                </option>
+                                                <option value="17">
+                                                    17:00
+                                                </option>
+                                                <option value="18">
+                                                    18:00
+                                                </option>
+                                        </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <p class="mg-b-0">End time</p>
+                                            <select class="form-control select2 col-lg-2">
+                                                <option label="Choose one">
+                                                </option>
+                                                <option value="9">
+                                                    09:00
+                                                </option>
+                                                <option value="10">
+                                                    10:00
+                                                </option>
+                                                <option value="11">
+                                                    11:00
+                                                </option>
+                                                <option value="12">
+                                                    12:00
+                                                </option>
+                                                <option value="13">
+                                                    13:00
+                                                </option>
+                                                <option value="14">
+                                                    14:00
+                                                </option>
+                                                <option value="15">
+                                                    15:00
+                                                </option>
+                                                <option value="16">
+                                                    16:00
+                                                </option>
+                                                <option value="17">
+                                                    17:00
+                                                </option>
+                                                <option value="18">
+                                                    18:00
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <p class="mg-b-0">Price from</p>
+                                    <div class="input-group mb-3">
+                                        <input aria-label="Amount (to the nearest dollar)"
+                                               class="form-control" type="number">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bd-r">грн</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <p class="mg-b-0">Price to</p>
+                                    <div class="input-group mb-3">
+                                        <input aria-label="Amount (to the nearest dollar)"
+                                               class="form-control" type="number">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bd-r">грн</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <p class="mg-b-25"></p>
+                                <button class="btn btn-block"
+                                        id="submit-search-button">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- End Row -->
             </div>
             </div>
@@ -364,30 +565,17 @@
 <!-- Datepicker js-->
 <script src="/public/assets/plugins/jquery-ui/ui/widgets/datepicker.js"></script>
 
+<!-- Jquery-Ui js-->
+<script src="/public/assets/plugins/jquery-ui/ui/widgets/datepicker.js"></script>
+
 <!-- Perfect-scrollbar js -->
 <script src="/public/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 
 <!-- Sidemenu js -->
 <script src="/public/assets/plugins/sidemenu/sidemenu.js" id="leftmenu"></script>
 
-<!-- Select2 js-->
-<script src="/public/assets/plugins/select2/js/select2.min.js"></script>
-<script src="/public/assets/js/select2.js"></script>
-
 <!-- Color Theme js -->
 <script src="/public/assets/js/themeColors.js"></script>
-
-<!-- Sticky js -->
-<script src="/public/assets/js/sticky.js"></script>
-
-<!-- Full-calendar js-->
-<!--<script src='/public/assets/plugins/fullcalendar/fullcalendar.min.js'></script>-->
-<!--<script src="/public/assets/js/calendar-events.js"></script>-->
-<!--<script src="/public/assets/js/calendar.js"></script>-->
-
-<!-- Internal Fileuploads js-->
-<script src="/public/assets/plugins/fileuploads/js/fileupload.js"></script>
-<script src="/public/assets/plugins/fileuploads/js/file-upload.js"></script>
 
 <!-- Custom js -->
 <script src="/public/assets/js/custom.js"></script>
@@ -397,6 +585,22 @@
 <script src="/public/assets/plugins/select2/js/select2.min.js"></script>
 <script src="/public/assets/js/select2.js"></script>
 
+<!-- Internal Form-elements js-->
+<script src="/public/assets/js/advanced-form-elements.js"></script>
+
+<!-- Sticky js -->
+<script src="/public/assets/js/sticky.js"></script>
+
+<!-- Internal Fileuploads js-->
+<script src="/public/assets/plugins/fileuploads/js/fileupload.js"></script>
+<script src="/public/assets/plugins/fileuploads/js/file-upload.js"></script>
+
+<!-- Internal Daternagepicker js-->
+<script src="/public/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+<script src="/public/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+
+<!--Mine scripts-->
 <script src="/public/js/custom/common/pages/classes/renderer/Renderer.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/extends/TimeRenderer.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/extends/DateRenderer.js"></script>

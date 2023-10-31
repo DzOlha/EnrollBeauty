@@ -15,6 +15,9 @@
     <!-- bootstrap -->
     <link rel="stylesheet" type="text/css" href="/public/css/mockup/bootstrap.min.css"/>
 
+    <!-- Bootstrap css-->
+    <link  id="style" href="/public/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+
     <!-- animate -->
     <link rel="stylesheet" type="text/css" href="/public/css/mockup/animate.css"/>
 

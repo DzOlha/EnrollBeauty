@@ -51,14 +51,14 @@
 .custom-card:hover {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
-.cards-wrapper {
-    height: 150px;
-}
+/*.cards-wrapper {*/
+/*    height: 150px;*/
+/*}*/
 .cards-wrapper div {
     height: 100%;
     padding-top: 10px;
 }
-.appointmets-wrapper {
+.appointments-wrapper {
     justify-content: left;
     padding-bottom: 25px;
 }
@@ -86,7 +86,7 @@ th, td {
     padding: 5px;
 
 }
-thead {
+.appointments-wrapper thead {
     border-bottom: 1px solid #aeaeae;
     border-top: 1px solid #aeaeae;
     background-color: var(--light-brown-color);
@@ -140,4 +140,46 @@ thead {
 
 .row.table-filter {
     justify-content: space-between;
+}
+
+.available-schedules {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.available-schedules .card-body form{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.available-schedules .form-control {
+    padding: 5px;
+}
+#submit-search-button {
+    background-color: var(--dark-color);
+    color: white;
+}
+#submit-search-button:hover {
+    background-color: var(--dark-brown-color);
+}
+#reservation {
+    padding: 7px;
+}
+
+@media(max-width: 992px) {
+    .time-range {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        padding: 4px;
+    }
+    .main-content .second-footer {
+        padding-left: 0;
+    }
+    .page-header {
+        padding-top: 0 !important;
+    }
+}
+.title {
+    margin-bottom: 0;
 }
