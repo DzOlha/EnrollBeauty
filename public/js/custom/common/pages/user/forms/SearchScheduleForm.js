@@ -267,48 +267,36 @@ class SearchScheduleForm extends Form {
      * }
      */
     addListenerChangeServiceName() {
-        //let serviceNameSelect = document.getElementById(this.serviceNameSelectId);
-        const serviceNameWrapper = document.querySelector(
-            `.service-wrapper`
-        );
-        console.log(serviceNameWrapper);
-        serviceNameWrapper.addEventListener('click', () => {
+        let serviceNameSelect = $(`#${this.serviceNameSelectId}`);
 
-            let options =
-                Array.from(document.getElementsByClassName('select2-results__option'));
-            options.forEach((option) => {
-                option.addEventListener('click', () => {
-                    let serviceNameSelect = document.getElementById(this.serviceNameSelectId);
-                    console.log(serviceNameSelect.value);
-
-                    /**
-                     * If nothing is selected ot user reset the filter
-                     * we load all workers into appropriate select
-                     */
-                    if (!serviceNameSelect.value) {
-                        this.requestor.get(
-                            this.apiUrlGetWorkersAll,
-                            this.successCallbackGetWorkers.bind(this),
-                            this.errorCallbackSubmit.bind(this),
-                            this.errorCallbackSubmit.bind(this)
-                        )
-                    }
-                    /**
-                     * If user select some service name
-                     * we load into workers selector only workers
-                     * who can provide selected service
-                     */
-                    else {
-                        this.requestor.get(
-                            `${this.apiUrlGetWorkers}
-                        service_id=${serviceNameSelect.value}`,
-                            this.successCallbackGetWorkers.bind(this),
-                            this.errorCallbackSubmit.bind(this),
-                            this.errorCallbackSubmit.bind(this)
-                        )
-                    }
-                })
-            })
+        serviceNameSelect.on('select2:select', (e) => {
+            let value = e.params.data.id;
+            console.log(value);
+            /**
+             * If nothing is selected ot user reset the filter
+             * we load all workers into appropriate select
+             */
+            if (!value) {
+                this.requestor.get(
+                    this.apiUrlGetWorkersAll,
+                    this.successCallbackGetWorkers.bind(this),
+                    this.errorCallbackSubmit.bind(this),
+                    this.errorCallbackSubmit.bind(this)
+                )
+            }
+            /**
+             * If user select some service name
+             * we load into workers selector only workers
+             * who can provide selected service
+             */
+            else {
+                this.requestor.get(
+                    `${this.apiUrlGetWorkers}service_id=${value}`,
+                    this.successCallbackGetWorkers.bind(this),
+                    this.errorCallbackSubmit.bind(this),
+                    this.errorCallbackSubmit.bind(this)
+                )
+            }
         })
     }
 
@@ -343,47 +331,37 @@ class SearchScheduleForm extends Form {
      * }
      */
     addListenerChangeWorkerName() {
-        let workerNameWrapper = document.querySelector(
-            `.worker-wrapper`
-        );
+        let workerNameSelect = $(`#${this.workerNameSelectId}`);
 
-        workerNameWrapper.addEventListener('click', () => {
-            let options =
-                Array.from(document.getElementsByClassName('select2-results__option'));
-
-            options.forEach((option) => {
-                option.addEventListener('click', () => {
-                    let workerNameSelect = document.getElementById(this.workerNameSelectId);
-                    console.log(workerNameSelect.value);
-
-                    /**
-                     * If nothing is selected ot user reset the filter
-                     * we load all services into appropriate select
-                     */
-                    if (!workerNameSelect.value) {
-                        this.requestor.get(
-                            this.apiUrlGetServicesAll,
-                            this.successCallbackGetServices.bind(this),
-                            this.errorCallbackSubmit.bind(this),
-                            this.errorCallbackSubmit.bind(this)
-                        )
-                    }
-                    /**
-                     * If user select some worker name
-                     * we load into services selector only services
-                     * which the selected worker can provide
-                     */
-                    else {
-                        this.requestor.get(
-                            `${this.apiUrlGetServices}
-                                worker_id=${workerNameSelect.value.trim()}`,
-                            this.successCallbackGetServices.bind(this),
-                            this.errorCallbackSubmit.bind(this),
-                            this.errorCallbackSubmit.bind(this)
-                        )
-                    }
-                })
-            })
+        workerNameSelect.on('select2:select', (e) => {
+            let value = e.params.data.id;
+            console.log(value);
+            /**
+             * If nothing is selected ot user reset the filter
+             * we load all services into appropriate select
+             */
+            if (!value) {
+                this.requestor.get(
+                    this.apiUrlGetServicesAll,
+                    this.successCallbackGetServices.bind(this),
+                    this.errorCallbackSubmit.bind(this),
+                    this.errorCallbackSubmit.bind(this)
+                )
+            }
+            /**
+             * If user select some worker name
+             * we load into services selector only services
+             * which the selected worker can provide
+             */
+            else {
+                this.requestor.get(
+                    `${this.apiUrlGetServices}
+                        worker_id=${value.trim()}`,
+                    this.successCallbackGetServices.bind(this),
+                    this.errorCallbackSubmit.bind(this),
+                    this.errorCallbackSubmit.bind(this)
+                )
+            }
         })
     }
 
