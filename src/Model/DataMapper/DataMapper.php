@@ -28,11 +28,38 @@ abstract class DataMapper
         $this->dataSource->rollBackTransaction();
     }
 
-    public function selectUserPasswordByEmail(string $email) {
+    public function selectUserPasswordByEmail(string $email)
+    {
         return $this->dataSource->selectUserPasswordByEmail($email);
     }
 
-    public function selectUserIdByEmail(string $email) {
+    public function selectUserIdByEmail(string $email)
+    {
         return $this->dataSource->selectUserIdByEmail($email);
+    }
+
+    public function selectWorkersForService(int $serviceId)
+    {
+        return $this->dataSource->selectWorkersForService($serviceId);
+    }
+
+    public function selectServicesForWorker(int $workerId)
+    {
+        return $this->dataSource->selectServicesForWorker($workerId);
+    }
+
+    public function selectAllServices()
+    {
+        return $this->dataSource->selectAllServices();
+    }
+
+    public function selectAllWorkers()
+    {
+        return $this->dataSource->selectAllWorkers();
+    }
+
+    public function selectAllAffiliates()
+    {
+        return $this->dataSource->selectAllAffiliates();
     }
 }

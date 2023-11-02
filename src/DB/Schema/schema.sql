@@ -66,7 +66,7 @@ CREATE TABLE workers (
      email VARCHAR(100) UNIQUE NOT NULL,
      gender ENUM('Male', 'Female', 'Other'),
      age INT NOT NULL,
-     years_of_experience DECIMAL(2, 2) NOT NULL,
+     years_of_experience DECIMAL(10, 2) NOT NULL,
      position_id INT NOT NULL,
      salary DECIMAL(10, 2),
      role_id INT NOT NULL,

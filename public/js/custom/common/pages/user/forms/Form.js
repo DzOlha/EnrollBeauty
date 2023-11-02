@@ -24,22 +24,12 @@ class Form {
         const noErrorWithText = $("div.error").get().every(function(element) {
             return $(element).text().trim() === '';
         });
-        console.log(noErrorWithText);
+        //console.log(noErrorWithText);
 
         // Handle form submission if there are no errors
         if (noErrorWithText) {
             this.handleFormSubmission();
         }
-
-        // Display the errors (you can customize how you want to display them)
-        // if (Object.keys(validationErrors).length > 0) {
-        //     console.log('Validation errors:');
-        //     for (const field in validationErrors) {
-        //         console.log(`${field}: ${validationErrors[field]}`);
-        //     }
-        // } else {
-        //     this.handleFormSubmission();
-        // }
     }
     // Function to validate the form data
     validateFormData(formData, rules, messages) {
@@ -100,7 +90,7 @@ class Form {
     }
 
     handleFormSubmission = () => {
-        console.log('submission');
+        //console.log('submission');
         this.requestor.post(
             this.submitActionUrl,
             this.collectDataToSend(),

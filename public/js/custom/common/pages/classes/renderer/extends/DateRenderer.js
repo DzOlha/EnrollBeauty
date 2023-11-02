@@ -4,7 +4,7 @@ class DateRenderer extends Renderer {
         super();
     }
     static render(value) {
-        console.log(value)
+        // console.log(value)
         let sqlDateTime = new Date(value);
 
         let options = {

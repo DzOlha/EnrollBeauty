@@ -42,7 +42,8 @@ class UserApiController extends ApiController
      *       type    controller      method
      * url:  /api       /user        /register
      */
-    public function register() {
+    public function register()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
                 'name' => htmlspecialchars(trim($_POST['name'])),
@@ -59,7 +60,7 @@ class UserApiController extends ApiController
              * Name
              */
             $validName = $nameValidator->validate($items['name']);
-            if(!$validName) {
+            if (!$validName) {
                 $this->returnJson([
                     'error' => 'Name must be at least 3 characters long and contain only letters'
                 ]);
@@ -69,7 +70,7 @@ class UserApiController extends ApiController
              * Surname
              */
             $validSurname = $nameValidator->validate($items['surname']);
-            if(!$validSurname) {
+            if (!$validSurname) {
                 $this->returnJson([
                     'error' => 'Surname must be at least 3 characters long and contain only letters'
                 ]);
@@ -79,7 +80,7 @@ class UserApiController extends ApiController
              * Email
              */
             $validEmail = $emailValidator->validate($items['email']);
-            if(!$validEmail) {
+            if (!$validEmail) {
                 $this->returnJson([
                     'error' => 'Please enter an email address in the format myemail@mailservice.domain'
                 ]);
@@ -89,7 +90,7 @@ class UserApiController extends ApiController
              * Password
              */
             $validPass = $passwordValidator->validate($items['password']);
-            if(!$validPass) {
+            if (!$validPass) {
                 $this->returnJson([
                     'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
                                 one digit, one special character, and be between 8 to 30 characters long'
@@ -99,7 +100,7 @@ class UserApiController extends ApiController
             /**
              * Confirm Password
              */
-            if($items['password'] !== $items['confirm-password']) {
+            if ($items['password'] !== $items['confirm-password']) {
                 $this->returnJson([
                     'error' => 'Passwords do not match'
                 ]);
@@ -111,7 +112,7 @@ class UserApiController extends ApiController
              * Check if the user with such email is already registered
              */
             $registeredBefore = $this->dataMapper->selectUserIdByEmail($items['email']);
-            if($registeredBefore) {
+            if ($registeredBefore) {
                 $this->returnJson([
                     'error' => "The user with such email is already registered!"
                 ]);
@@ -126,7 +127,7 @@ class UserApiController extends ApiController
             );
 
             $userId = $this->dataMapper->insertNewUser($user);
-            if($userId === false) {
+            if ($userId === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => "The error occurred while creating a new user account!"
@@ -137,7 +138,7 @@ class UserApiController extends ApiController
              * Insert into 'user_setting'
              */
             $inserted = $this->dataMapper->insertNewUserSetting($userId);
-            if($inserted === false) {
+            if ($inserted === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => "The error occurred while inserting user setting!"
@@ -148,7 +149,7 @@ class UserApiController extends ApiController
              * Insert into 'user_photo'
              */
             $inserted = $this->dataMapper->insertNewUserPhoto($userId);
-            if($inserted === false) {
+            if ($inserted === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => "The error occurred while inserting user photo!"
@@ -159,7 +160,7 @@ class UserApiController extends ApiController
              * Insert into 'user_social'
              */
             $inserted = $this->dataMapper->insertNewUserSocial($userId);
-            if($inserted === false) {
+            if ($inserted === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => "The error occurred while inserting user social!"
@@ -172,7 +173,9 @@ class UserApiController extends ApiController
             ]);
         }
     }
-    public function login() {
+
+    public function login()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
                 'email' => htmlspecialchars(trim($_POST['email'])),
@@ -185,7 +188,7 @@ class UserApiController extends ApiController
              * Email
              */
             $validEmail = $emailValidator->validate($items['email']);
-            if(!$validEmail) {
+            if (!$validEmail) {
                 $this->returnJson([
                     'error' => 'Please enter an email address in the format myemail@mailservice.domain'
                 ]);
@@ -195,7 +198,7 @@ class UserApiController extends ApiController
              * Password
              */
             $validPass = $passwordValidator->validate($items['password']);
-            if(!$validPass) {
+            if (!$validPass) {
                 $this->returnJson([
                     'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
                                 one digit, one special character, and be between 8 to 30 characters long'
@@ -206,7 +209,7 @@ class UserApiController extends ApiController
              * Get actual password hash
              */
             $actualPasswordHash = $this->dataMapper->selectUserPasswordByEmail($items['email']);
-            if($actualPasswordHash === false) {
+            if ($actualPasswordHash === false) {
                 $this->returnJson([
                     'error' => 'There is no user with such email'
                 ]);
@@ -217,7 +220,7 @@ class UserApiController extends ApiController
              */
             $hashValidator = new PasswordHashValidator($actualPasswordHash);
             $validPassword = $hashValidator->validate($items['password']);
-            if(!$validPassword) {
+            if (!$validPassword) {
                 $this->returnJson([
                     'error' => 'The provided password does not match the one saved for the requested user!'
                 ]);
@@ -227,7 +230,7 @@ class UserApiController extends ApiController
              * Select User ID for storing it into session
              */
             $userId = $this->dataMapper->selectUserIdByEmail($items['email']);
-            if($userId === false) {
+            if ($userId === false) {
                 $this->returnJson([
                     'error' => 'The error occurred while getting user id!'
                 ]);
@@ -247,12 +250,13 @@ class UserApiController extends ApiController
     /**
      * @return int|mixed|string
      */
-    private function _getUserId() {
+    private function _getUserId()
+    {
         $userId = 0;
-        if(isset($_GET['user_id']) && $_GET['user_id'] !== '') {
+        if (isset($_GET['user_id']) && $_GET['user_id'] !== '') {
             $userId = htmlspecialchars(trim($_GET['user_id']));
         } else {
-            if(isset($_SESSION['user_id'])) {
+            if (isset($_SESSION['user_id'])) {
                 $userId = $_SESSION['user_id'];
             }
         }
@@ -264,14 +268,15 @@ class UserApiController extends ApiController
      *
      * url = /api/user/getUserInfo
      */
-    public function getUserInfo() {
+    public function getUserInfo()
+    {
         $userId = $this->_getUserId();
         /**
          * @var UserReadDto|false $result
          */
         $result = $this->dataMapper->selectUserInfoById($userId);
 
-        if($result) {
+        if ($result) {
             $this->returnJson([
                 'success' => true,
                 'data' => $result
@@ -288,13 +293,14 @@ class UserApiController extends ApiController
      *
      * url = /api/user/getUserSocialNetworks
      */
-    public function getUserSocialNetworks() {
+    public function getUserSocialNetworks()
+    {
         $userId = $this->_getUserId();
         /**
          * @var UserSocialReadDto|false $result
          */
         $result = $this->dataMapper->selectUserSocialById($userId);
-        if($result) {
+        if ($result) {
             $this->returnJson([
                 'success' => true,
                 'data' => $result
@@ -360,7 +366,9 @@ class UserApiController extends ApiController
             'offset' => $offset
         ];
     }
-    public function getUserComingAppointments() {
+
+    public function getUserComingAppointments()
+    {
         $userId = $this->_getUserId();
         $param = $this->_getLimitPageFieldOrderOffset();
         $result = $this->dataMapper->selectUserComingAppointments(
@@ -370,40 +378,40 @@ class UserApiController extends ApiController
             $param['order_field'],
             $param['order_direction']
         );
-        if($result !== false) {
+        if ($result !== false) {
             $resultArrayTest = [
-                    [
-                        'id' => 1,
-                        'service_id' => 101,
-                        'service_name' => 'Haircut',
-                        'worker_id' => 201,
-                        'worker_name' => 'John',
-                        'worker_surname' => 'Doe',
-                        'affiliate_id' => 301,
-                        'affiliate_city' => 'New York',
-                        'affiliate_address' => '123 Main St',
-                        'start_datetime' => '2023-11-03 13:00:00',
-                        'end_datetime' => '2023-11-03 14:00:00',
-                        'price' => 50,
-                        'currency' => 'USD',
-                    ],
-                    [
-                        'id' => 2,
-                        'service_id' => 102,
-                        'service_name' => 'Massage',
-                        'worker_id' => 202,
-                        'worker_name' => 'Sarah',
-                        'worker_surname' => 'Smith',
-                        'affiliate_id' => 302,
-                        'affiliate_city' => 'Los Angeles',
-                        'affiliate_address' => '456 Elm St',
-                        'start_datetime' => '2023-11-04 15:30:00',
-                        'end_datetime' => '2023-11-04 16:30:00',
-                        'price' => 80,
-                        'currency' => 'USD',
-                    ],
-                    'totalRowsCount' => 2
-                ];
+                [
+                    'id' => 1,
+                    'service_id' => 101,
+                    'service_name' => 'Haircut',
+                    'worker_id' => 201,
+                    'worker_name' => 'John',
+                    'worker_surname' => 'Doe',
+                    'affiliate_id' => 301,
+                    'affiliate_city' => 'New York',
+                    'affiliate_address' => '123 Main St',
+                    'start_datetime' => '2023-11-03 13:00:00',
+                    'end_datetime' => '2023-11-03 14:00:00',
+                    'price' => 50,
+                    'currency' => 'USD',
+                ],
+                [
+                    'id' => 2,
+                    'service_id' => 102,
+                    'service_name' => 'Massage',
+                    'worker_id' => 202,
+                    'worker_name' => 'Sarah',
+                    'worker_surname' => 'Smith',
+                    'affiliate_id' => 302,
+                    'affiliate_city' => 'Los Angeles',
+                    'affiliate_address' => '456 Elm St',
+                    'start_datetime' => '2023-11-04 15:30:00',
+                    'end_datetime' => '2023-11-04 16:30:00',
+                    'price' => 80,
+                    'currency' => 'USD',
+                ],
+                'totalRowsCount' => 2
+            ];
 
             $data = $result ? $result : $resultArrayTest;
             $this->returnJson([
@@ -417,4 +425,117 @@ class UserApiController extends ApiController
         }
     }
 
+    public function getWorkersForService()
+    {
+        $serviceId = 0;
+        if (isset($_GET['service_id']) && $_GET['service_id'] !== '') {
+            $serviceId = htmlspecialchars(trim($_GET['service_id']));
+        }
+        $result = $this->dataMapper->selectWorkersForService($serviceId);
+        if ($result === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting workers for the selected service'
+            ]);
+        }
+
+        foreach ($result as &$worker) {
+            $worker['name'] = $worker['name'] . " " . $worker['surname'];
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
+
+    public function getServicesForWorker()
+    {
+        $workerId = 0;
+        if (isset($_GET['worker_id']) && $_GET['worker_id'] !== '') {
+            $workerId = htmlspecialchars(trim($_GET['worker_id']));
+        }
+        $result = $this->dataMapper->selectServicesForWorker($workerId);
+        if ($result === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting services for the selected worker'
+            ]);
+        }
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
+
+    public function getServicesWorkersAffiliates()
+    {
+        $services = $this->dataMapper->selectAllServices();
+        if ($services === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all services'
+            ]);
+        }
+
+        $workers = $this->dataMapper->selectAllWorkers();
+        if ($workers === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all workers'
+            ]);
+        }
+        foreach ($workers as &$worker) {
+            $worker['name'] = $worker['name'] . " " . $worker['surname'];
+        }
+
+
+        $affiliates = $this->dataMapper->selectAllAffiliates();
+        if ($affiliates === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all affiliates'
+            ]);
+        }
+        foreach ($affiliates as &$affiliate) {
+            $affiliate['name'] =
+                "{$affiliate['city']}, {$affiliate['address']}";
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => [
+                'services' => $services,
+                'workers' => $workers,
+                'affiliates' => $affiliates
+            ]
+        ]);
+    }
+
+    public function getWorkersAll() {
+        $result = $this->dataMapper->selectAllWorkers();
+        if ($result === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all workers'
+            ]);
+        }
+
+        foreach ($result as &$worker) {
+            $worker['name'] = $worker['name'] . " " . $worker['surname'];
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
+
+    public function getServicesAll() {
+        $result = $this->dataMapper->selectAllServices();
+        if ($result === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all services'
+            ]);
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
 }

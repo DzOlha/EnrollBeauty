@@ -183,3 +183,7 @@ th, td {
 .title {
     margin-bottom: 0;
 }
+.border-error {
+    border: 1px solid #dc3545;
+    /*box-shadow: #fd6074 0px 2px 8px 0px;*/
+}

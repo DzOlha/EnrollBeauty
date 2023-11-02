@@ -1,7 +1,9 @@
 class Account {
-    constructor(requestorObject, appointmentsTable) {
+    constructor(requestorObject, appointmentsTable, searchForm) {
         this.requestor = requestorObject;
         this.appointmentsTable = appointmentsTable;
+        this.searchScheduleForm = searchForm;
+
         this.apiUserInfoUrl = '/api/user/getUserInfo';
 
         this.smallNameId = 'name-small';
@@ -27,6 +29,20 @@ class Account {
 
     getComingAppointments() {
         this.appointmentsTable.manageAll();
+    }
+
+    searchSchedule() {
+        this.searchScheduleForm.addListenerSubmitForm();
+    }
+
+    addListenerChangeServiceName() {
+        this.searchScheduleForm.addListenerChangeServiceName();
+    }
+    // addListenerChangeWorkerName() {
+    //     this.searchScheduleForm.addListenerChangeWorkerName();
+    // }
+    getAllSelectInfo() {
+        this.searchScheduleForm.getAllSelectInfo();
     }
 
     /**
