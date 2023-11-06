@@ -53,11 +53,38 @@ class UserDataMapper extends DataMapper
     }
 
     public function selectUserComingAppointments(
-        int $userId, int $limit, int $offset,
+        int    $userId, int $limit, int $offset,
         string $orderByField = 'orders_service.id', string $orderDirection = 'asc')
     {
         return $this->dataSource->selectUserComingAppointments(
             $userId, $limit, $offset, $orderByField, $orderDirection
         );
+    }
+
+    public function selectAllDepartments()
+    {
+        return $this->dataSource->selectAllDepartments();
+    }
+
+    public function selectSchedule(
+        $departmentId = null, $serviceId = null,
+        $workerId = null, $affiliateId = null,
+        $dateFrom = null, $dateTo = null,
+        $timeFrom = null, $timeTo = null,
+        $priceFrom = null, $priceTo = null
+    )
+    {
+        return $this->dataSource->selectSchedule(
+            $departmentId, $serviceId,
+            $workerId, $affiliateId,
+            $dateFrom, $dateTo,
+            $timeFrom, $timeTo,
+            $priceFrom, $priceTo,
+        );
+    }
+
+    public function selectDepartmentByServiceId(int $serviceId)
+    {
+        return $this->dataSource->selectDepartmentByServiceId($serviceId);
     }
 }

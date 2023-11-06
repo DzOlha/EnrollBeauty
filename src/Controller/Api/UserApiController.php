@@ -507,7 +507,8 @@ class UserApiController extends ApiController
         ]);
     }
 
-    public function getWorkersAll() {
+    public function getWorkersAll()
+    {
         $result = $this->dataMapper->selectAllWorkers();
         if ($result === false) {
             $this->returnJson([
@@ -525,7 +526,8 @@ class UserApiController extends ApiController
         ]);
     }
 
-    public function getServicesAll() {
+    public function getServicesAll()
+    {
         $result = $this->dataMapper->selectAllServices();
         if ($result === false) {
             $this->returnJson([
@@ -537,5 +539,122 @@ class UserApiController extends ApiController
             'success' => true,
             'data' => $result
         ]);
+    }
+
+    public function getInitialSchedule()
+    {
+        /**
+         * Select all departments for the tab menu
+         */
+        $departments = $this->dataMapper->selectAllDepartments();
+        if ($departments === false) {
+            $this->returnJson([
+                'error' => 'There is error occurred while getting all departments'
+            ]);
+        }
+
+        if (!$departments) {
+            $this->returnJson([
+                'error' => 'There is no any departments yet!'
+            ]);
+        }
+
+        $defaultDepartment = $departments[0];
+
+        $scheduleForDepartment = $this->dataMapper->selectSchedule(
+            $defaultDepartment['id']
+        );
+        if ($scheduleForDepartment === false) {
+            $this->returnJson([
+                'error' => "The error occurred while getting schedule
+                            for {$defaultDepartment['name']} department"
+
+            ]);
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => [
+                'schedule' => $scheduleForDepartment,
+                'departments' => $departments,
+                'active_department' => $defaultDepartment
+            ]
+        ]);
+    }
+
+    public function searchSchedule()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $items = [
+                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
+                'worker_id' => htmlspecialchars(trim($_POST['worker_id'])),
+                'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
+                'start_date' => htmlspecialchars(trim($_POST['start_date'])),
+                'end_date' => htmlspecialchars(trim($_POST['end_date'])),
+                'start_time' => htmlspecialchars(trim($_POST['start_time'])),
+                'end_time' => htmlspecialchars(trim($_POST['end_time'])),
+                'price_bottom' => htmlspecialchars(trim($_POST['price_bottom'])),
+                'price_top' => htmlspecialchars(trim($_POST['price_top']))
+            ];
+
+            $items['start_date'] = \DateTime::createFromFormat('d/m/y', $items['start_date']);
+            $items['end_date'] = \DateTime::createFromFormat('d/m/y', $items['end_date']);
+
+            $items['start_time'] = strtotime($items['start_time']);
+            $items['end_time'] = strtotime($items['end_time']);
+
+            var_dump($items);
+
+            /**
+             * Select all departments
+             */
+            $departments = $this->dataMapper->selectAllDepartments();
+            if ($departments === false) {
+                $this->returnJson([
+                    'error' => 'There is error occurred while getting all departments'
+                ]);
+            }
+
+            if (!$departments) {
+                $this->returnJson([
+                    'error' => 'There is no any departments yet!'
+                ]);
+            }
+
+            $activeDepartment = null;
+            if(!$items['service_id']) {
+                $activeDepartment = $departments[0];
+            } else {
+                $activeDepartment = $this->dataMapper->selectDepartmentByServiceId(
+                    $items['service_id']
+                );
+                if($activeDepartment === false) {
+                    $this->returnJson([
+                        'error' => 'The error occurred while getting the department for the service'
+                    ]);
+                }
+            }
+
+            $schedule = $this->dataMapper->selectSchedule(
+                $activeDepartment['id'], $items['service_id'], $items['worker_id'],
+                $items['affiliate_id'], $items['start_date'], $items['end_date'],
+                $items['start_time'], $items['end_time'],
+                $items['price_bottom'], $items['price_top']
+            );
+            if($schedule === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting schedule'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data' => [
+                    'schedule' => $schedule,
+                    'departments' => $departments,
+                    'active_department' => $activeDepartment
+                ]
+            ]);
+        }
     }
 }

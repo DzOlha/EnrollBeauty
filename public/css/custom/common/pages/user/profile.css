@@ -27,17 +27,17 @@
     height: 150px;
     width: auto;
 }
-.card-header {
+.cards-wrapper .card-header {
     display: flex;
     flex-direction: row;
     align-items: center;
     background-color: var(--dark-color);
     column-gap: 8px;
 }
-.card-header i {
+.cards-wrapper .card-header i {
     font-size: 20px;
 }
-.card-header:first-child {
+.cards-wrapper .card-header:first-child {
     border-radius: 0;
 }
 .custom-card {
@@ -186,4 +186,72 @@ th, td {
 .border-error {
     border: 1px solid #dc3545;
     /*box-shadow: #fd6074 0px 2px 8px 0px;*/
+}
+
+.tab-content .card-body {
+    padding-top: 5px;
+}
+#main-schedule-wrapper .tabs-style-3 {
+    border: none;
+    padding: 0;
+}
+#main-schedule-wrapper .tabs-style-3 .nav.panel-tabs li a.active {
+    background-color: var(--light-brown-color);
+}
+#main-schedule-wrapper .card-body {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.time-interval {
+    padding: 5px;
+}
+.time-interval:nth-child(odd) {
+    border-left: 2px dashed var(--primary-transparentcolor);
+}
+.time-interval:nth-child(even) {
+    border-left: 2px dashed var(--primary-transparentcolor);
+}
+.time-menu-body {
+    padding-top: 0 !important;
+}
+.time-separation-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}
+.time-interval-value {
+    border-left: 2px dashed var(--dark-color);
+    border-bottom: 2px solid var(--dark-color);
+    /*border-top: 2px solid var(--dark-color);*/
+    padding: 5px;
+    padding-top: 25px;
+    font-size: 18px;
+}
+.time-interval {
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+}
+.time-interval .card-body {
+    box-shadow: rgba(21, 21, 21, 0.2) 0px 5px 5px;
+    padding: 0px !important;
+    font-size: 16px;
+}
+.time-interval .card-header {
+    padding: 1rem 1.25rem;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: "Poppins", sans-serif !important;
+    background-color: #eaeaea;
+}
+.time-interval .card-options i {
+    padding-left: 5px;
+    color: black;
+}
+.card-schedule-content, .card-worker-wrapper {
+    padding: 10px;
+}
+.card-worker-wrapper {
+    padding-bottom: 0;
 }

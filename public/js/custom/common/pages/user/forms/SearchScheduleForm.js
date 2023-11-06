@@ -15,6 +15,9 @@ class SearchScheduleForm extends Form {
         this.affiliateSelectId = 'affiliate-name-address';
         this.affiliateSelectWrapper = `select2-${this.affiliateSelectId}-container`;
 
+        this.dateRangeId = 'date-range-input';
+        this._initializeDateRangePicker();
+
         this.datesInputClass = 'date-range';
         this.dateRangeErrorId = 'date-range-input-error';
 
@@ -37,6 +40,23 @@ class SearchScheduleForm extends Form {
 
         this.apiUrlGetWorkersAll = '/api/user/getWorkersAll';
         this.apiUrlGetServicesAll = '/api/user/getServicesAll';
+
+        this.submitActionUrl = '/api/user/searchSchedule';
+    }
+
+    _initializeDateRangePicker() {
+        const currentDate = new Date();
+
+        $(`#${this.dateRangeId}`).daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY', // Date format
+            },
+            opens: 'right',
+            showDropdowns: false,
+            startDate: currentDate,
+            endDate: currentDate,
+            minDate: currentDate,  // Minimum selectable date (current date)
+        });
     }
 
     listenerSubmitForm = () => {
@@ -161,20 +181,23 @@ class SearchScheduleForm extends Form {
     }
 
     validateDateRange() {
-        let dateRangeInput = $(`.${this.datesInputClass}`);
-        let dateRange = dateRangeInput.val()
-            .split('-')
-            .map(
-                (item) => (
-                    // convert into unix timestamp
-                    new Date(item.trim()).getTime() / 1000
-                )
-            );
+        let dateRangeInput = $(`.${this.datesInputClass}`).val();
+        let dateRange = dateRangeInput.split('-')
+            .map((item) => {
+                const trimmedDate = item.trim();
+                const parsedDate = moment(trimmedDate, 'DD/MM/YYYY');
+                if (parsedDate.isValid()) {
+                    return trimmedDate;
+                } else {
+                    console.log(`Invalid date: ${trimmedDate}`);
+                    return null; // Handle invalid dates as needed
+                }
+            });
 
         let validDateRange = true;
         let error = $(`#${this.dateRangeErrorId}`)
 
-        if (dateRange[0] > dateRange[1]) {
+        if (new Date(dateRange[0]) > new Date(dateRange[1])) {
             validDateRange = false;
             dateRangeInput.addClass('border-danger');
 

@@ -8,6 +8,7 @@ use Src\Model\DTO\Read\UserReadDto;
 use Src\Model\DTO\Read\UserSocialReadDto;
 use Src\Model\DTO\Write\UserWriteDto;
 use Src\Model\Table\Affiliates;
+use Src\Model\Table\Departments;
 use Src\Model\Table\OrdersService;
 use Src\Model\Table\Roles;
 use Src\Model\Table\Services;
@@ -173,7 +174,7 @@ class UserDataSource extends DataSource
         ");
         $this->db->bind(':id', $userId);
         $result = $this->db->singleRow();
-        if($result) {
+        if ($result) {
             return new UserSocialReadDto($result);
         }
         return false;
@@ -200,7 +201,7 @@ class UserDataSource extends DataSource
      * ]
      */
     public function selectUserComingAppointments(
-        int $userId, int $limit, int $offset,
+        int    $userId, int $limit, int $offset,
         string $orderByField = 'orders_service.id', string $orderDirection = 'asc')
     {
         $ordersService = OrdersService::$table;
@@ -255,5 +256,260 @@ class UserDataSource extends DataSource
         $this->db->bind(':user_id', $userId);
 
         return $this->db->manyRows();
+    }
+
+    /**
+     * @return array|false
+     *
+     * [
+     *      [
+     *          id
+     *          name
+     *      ]
+     *      ......
+     * ]
+     */
+    public function selectAllDepartments()
+    {
+        $departments = Departments::$table;
+
+        $this->db->query("
+            SELECT * FROM $departments
+        ");
+
+        return $this->db->manyRows();
+    }
+
+    private function _serviceFilter($serviceId, $columnToJoin)
+    {
+        $result = [
+            'join' => '',
+            'where' => ''
+        ];
+        $services = Services::$table;
+        $services_id = Services::$id;
+
+        if ($serviceId !== null && $serviceId !== '') {
+            $result['join'] = " INNER JOIN $services ON $columnToJoin = $services_id ";
+            $result['where'] = " AND $columnToJoin = $serviceId ";
+        }
+        return $result;
+    }
+
+    private function _workerFilter($workerId, $columnToJoin)
+    {
+        $result = [
+            'join' => '',
+            'where' => ''
+        ];
+        $workers = Workers::$table;
+        $workers_id = Workers::$id;
+
+        if ($workerId !== null && $workerId !== '') {
+            $result['join'] = " INNER JOIN $workers ON $columnToJoin = $workers_id ";
+            $result['where'] = " AND $columnToJoin = $workerId ";
+        }
+        return $result;
+    }
+
+    private function _affiliateFilter($affiliateId, $columnToJoin)
+    {
+        $result = [
+            'join' => '',
+            'where' => ''
+        ];
+        $affiliates = Affiliates::$table;
+        $affiliates_id = Affiliates::$id;
+
+        if ($affiliateId !== null && $affiliateId !== '') {
+            $result['join'] = " INNER JOIN $affiliates ON $columnToJoin = $affiliates_id ";
+            $result['where'] = " AND $columnToJoin = $affiliateId ";
+        }
+        return $result;
+    }
+
+    private function _dateFilter($dateFrom, $dateTo)
+    {
+        $result = [
+            'where' => ''
+        ];
+        $schedule_day = WorkersServiceSchedule::$day;
+
+        $setFrom = ($dateFrom !== null && $dateFrom !== '');
+        $setTo = ($dateTo !== null && $dateTo !== '');
+
+        if($setFrom) {
+            $result['where'] = " AND $schedule_day >= $dateFrom ";
+        }
+        if($setTo) {
+            $result['where'] .= " AND $schedule_day <= $dateTo ";
+        }
+        return $result;
+    }
+
+    private function _timeFilter($timeFrom, $timeTo)
+    {
+        $result = [
+            'where' => ''
+        ];
+        $schedule_start_time = WorkersServiceSchedule::$start_time;
+        $schedule_end_time = WorkersServiceSchedule::$end_time;
+
+        $setFrom = ($timeFrom !== null && $timeFrom !== '');
+        $setTo = ($timeTo !== null && $timeTo !== '');
+
+        if($setFrom) {
+            $result['where'] = " AND $schedule_start_time >= $timeFrom ";
+        }
+        if($setTo) {
+            $result['where'] .= " AND $schedule_end_time <= $timeTo ";
+        }
+        return $result;
+    }
+
+    private function _priceFilter(
+        $priceFrom, $priceTo, $columnToJoinWorker, $columnToJoinService
+    )
+    {
+        $result = [
+            'join' => '',
+            'where' => ''
+        ];
+        $workersServicePricing = WorkersServicePricing::$table;
+        $pricing_service_id = WorkersServicePricing::$service_id;
+        $pricing_worker_id = WorkersServicePricing::$worker_id;
+        $pricing_price = WorkersServicePricing::$price;
+
+        $setFrom = ($priceFrom !== null && $priceFrom !== '');
+        $setTo = ($priceTo !== null && $priceTo !== '');
+
+        if($setFrom || $setTo) {
+            $result['join'] = " INNER JOIN $workersServicePricing ON 
+                                    $columnToJoinWorker = $pricing_worker_id
+                                    AND $columnToJoinService = $pricing_service_id ";
+        }
+        if($setFrom) {
+            $result['where'] = " AND $pricing_price >= $priceFrom ";
+        }
+        if($setTo) {
+            $result['where'] .= " AND $pricing_price <= $priceTo ";
+        }
+        return $result;
+    }
+
+    private function _departmentFilter($departmentId, $columnToJoin) {
+        $result = [
+            'join' => '',
+            'where' => ''
+        ];
+        $services = Services::$table;
+        $services_id = Services::$id;
+        $services_depId = Services::$department_id;
+
+        $set = ($departmentId !== null && $departmentId !== '');
+        if($set) {
+            $result['join'] = " INNER JOIN $services ON $columnToJoin = $services_id ";
+            $result['where'] = " AND $services_depId = $departmentId ";
+        }
+        return $result;
+    }
+
+    public function selectSchedule(
+        $departmentId = null, $serviceId = null,
+        $workerId = null, $affiliateId = null,
+        $dateFrom = null, $dateTo = null,
+        $timeFrom = null, $timeTo = null,
+        $priceFrom = null, $priceTo = null
+    )
+    {
+        $workerServiceSchedule = WorkersServiceSchedule::$table;
+        $schedule_id = WorkersServiceSchedule::$id;
+        $schedule_service_id = WorkersServiceSchedule::$service_id;
+        $schedule_worker_id = WorkersServiceSchedule::$worker_id;
+        $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
+        $schedule_day = WorkersServiceSchedule::$day;
+        $schedule_start_time = WorkersServiceSchedule::$start_time;
+        $schedule_end_time = WorkersServiceSchedule::$end_time;
+        $schedule_order_id = WorkersServiceSchedule::$order_id;
+
+        $services = Services::$table;
+        $services_id = Services::$id;
+        $services_serviceName = Services::$name;
+        $services_departmentId = Services::$department_id;
+
+        $workers_id = Workers::$id;
+        $workers_name = Workers::$name;
+        $workers_surname = Workers::$surname;
+
+        $affiliates_id = Affiliates::$id;
+        $affiliates_city = Affiliates::$city;
+        $affiliates_address = Affiliates::$address;
+
+        $pricing_price = WorkersServicePricing::$price;
+        $pricing_currency = WorkersServicePricing::$currency;
+
+        $departmentFilter = $this->_departmentFilter($departmentId, $schedule_service_id);
+        $serviceFilter = $this->_serviceFilter($serviceId, $schedule_service_id);
+        $workerFilter = $this->_workerFilter($workerId, $schedule_worker_id);
+        $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
+        $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
+        $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
+        $priceFilter = $this->_priceFilter(
+            $priceFrom, $priceTo, $schedule_worker_id, $schedule_service_id
+        );
+
+        $this->db->query("
+            SELECT $schedule_id as schedule_id, $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $workers_id as worker_id, $workers_name as worker_name,
+                   $workers_surname as worker_surname,
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency
+            
+            FROM $workerServiceSchedule 
+                {$departmentFilter['join']}
+                    
+                {$workerFilter['join']}
+                {$affiliateFilter['join']}
+                {$priceFilter['join']}
+            
+            WHERE $schedule_order_id IS NULL 
+                {$departmentFilter['where']}
+                    
+                {$serviceFilter['where']}
+                {$workerFilter['where']}
+                {$affiliateFilter['where']}
+              
+                {$dateFilter['where']}
+              
+                {$timeFilter['where']}
+              
+                {$priceFilter['where']}
+        ");
+
+        return $this->db->manyRows();
+    }
+
+    public function selectDepartmentByServiceId(int $serviceId) {
+        $departments = Departments::$table;
+        $departments_id = Departments::$id;
+        $departments_name = Departments::$name;
+
+        $services = Services::$table;
+        $services_id = Services::$id;
+        $services_department_id = Services::$department_id;
+
+        $this->db->query("
+            SELECT $departments_id, $departments_name
+                FROM $departments 
+                INNER JOIN $services ON $services_department_id = $departments_id
+            WHERE $services_id = :service_id
+        ");
+
+        $this->db->bind(':service_id', $serviceId);
+
+        return $this->db->singleRow();
     }
 }
