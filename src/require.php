@@ -11,6 +11,9 @@ header('Content-Type: text/html; charset=UTF-8');
 // Set the internal character encoding for multibyte string functions
 mb_internal_encoding('UTF-8');
 
+//set defaul timezone
+date_default_timezone_set('Europe/Kiev');
+
 ini_set('max_execution_time', 100000);
 /**
  * set constants for paths to the root folder, main, view, public, css, js

@@ -262,9 +262,9 @@ class UserDataSource extends DataSource
      * @return array|false
      *
      * [
-     *      [
-     *          id
-     *          name
+     *      0 => [
+     *          'id' =>,
+     *          'name' =>,
      *      ]
      *      ......
      * ]
@@ -414,6 +414,40 @@ class UserDataSource extends DataSource
         return $result;
     }
 
+    /**
+     * @param $departmentId
+     * @param $serviceId
+     * @param $workerId
+     * @param $affiliateId
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $timeFrom
+     * @param $timeTo
+     * @param $priceFrom
+     * @param $priceTo
+     * @return array|false
+     *
+     * response example
+     * [
+     *      0 => [
+     *         'schedule_id' =>,
+     *         'service_id' =>,
+     *         'service_name' =>,
+     *         'worker_id' =>,
+     *         'worker_name' =>,
+     *         'worker_surname' =>,
+     *         'affiliate_id' =>,
+     *         'city' =>,
+     *         'address' =>,
+     *         'day' =>,
+     *         'start_time' =>,
+     *         'end_time' =>,
+     *         'price' =>,
+     *         'currency' =>
+     *      ]
+     * ...............................
+     * ]
+     */
     public function selectSchedule(
         $departmentId = null, $serviceId = null,
         $workerId = null, $affiliateId = null,
@@ -492,6 +526,16 @@ class UserDataSource extends DataSource
         return $this->db->manyRows();
     }
 
+    /**
+     * @param int $serviceId
+     * @return array|false
+     *
+     * response example
+     * [
+     *      'id' =>,
+     *      'nam'e' =>
+     * ]
+     */
     public function selectDepartmentByServiceId(int $serviceId) {
         $departments = Departments::$table;
         $departments_id = Departments::$id;

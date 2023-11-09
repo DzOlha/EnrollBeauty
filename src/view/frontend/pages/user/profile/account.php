@@ -636,7 +636,7 @@
                                                                          data-start-interval="9"
                                                                          data-end-interval="12"
                                                                     >
-                                                                        <div class="card-body">
+                                                                        <div class="card">
                                                                             <div class="card-header custom-card-header border-bottom-0 ">
                                                                                 <h5 class="main-content-label my-auto tx-medium mb-0">
                                                                                     Manicure
@@ -695,7 +695,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="card-body">
+                                                                        <div class="card">
                                                                             <div class="card-header custom-card-header border-bottom-0 ">
                                                                                 <h5 class="main-content-label my-auto tx-medium mb-0">
                                                                                     Manicure
@@ -754,7 +754,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="card-body">
+                                                                        <div class="card">
                                                                             <div class="card-header custom-card-header border-bottom-0 ">
                                                                                 <h5 class="main-content-label my-auto tx-medium mb-0">
                                                                                     Manicure
@@ -807,6 +807,7 @@
 <!--                                                                                         <span>Address: </span>-->
                                                                                          <span class="address">
                                                                                              c. Kyiv, str. Freedom, 79
+                                                                                             c. Kyiv, str. Freedom, 79 ahhajakj sjsjs
                                                                                          </span>
                                                                                     </div>
 

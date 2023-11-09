@@ -66,6 +66,40 @@ class UserDataMapper extends DataMapper
         return $this->dataSource->selectAllDepartments();
     }
 
+    /**
+     * @param $departmentId
+     * @param $serviceId
+     * @param $workerId
+     * @param $affiliateId
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $timeFrom
+     * @param $timeTo
+     * @param $priceFrom
+     * @param $priceTo
+     * @return mixed
+     *
+     *  * response example
+     * [
+     *      0 => [
+     *         'schedule_id' =>,
+     *         'service_id' =>,
+     *         'service_name' =>,
+     *         'worker_id' =>,
+     *         'worker_name' =>,
+     *         'worker_surname' =>,
+     *         'affiliate_id' =>,
+     *         'city' =>,
+     *         'address' =>,
+     *         'day' =>,
+     *         'start_time' =>,
+     *         'end_time' =>,
+     *         'price' =>,
+     *         'currency' =>
+     *      ]
+     * ..........................
+     * ]
+     */
     public function selectSchedule(
         $departmentId = null, $serviceId = null,
         $workerId = null, $affiliateId = null,

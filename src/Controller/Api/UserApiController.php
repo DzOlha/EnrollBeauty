@@ -597,11 +597,14 @@ class UserApiController extends ApiController
                 'price_top' => htmlspecialchars(trim($_POST['price_top']))
             ];
 
-            $items['start_date'] = \DateTime::createFromFormat('d/m/y', $items['start_date']);
-            $items['end_date'] = \DateTime::createFromFormat('d/m/y', $items['end_date']);
+            $items['start_date'] = date("Y-m-d", $items['start_date']);
+            $items['end_date'] = date("Y-m-d", $items['end_date']);
 
-            $items['start_time'] = strtotime($items['start_time']);
-            $items['end_time'] = strtotime($items['end_time']);
+            $startTime = \DateTime::createFromFormat('H:i', $items['start_time']);
+            $endTime = \DateTime::createFromFormat('H:i', $items['end_time']);
+
+            $items['start_time'] = $startTime ? $startTime->format('H:i:s') : '';
+            $items['end_time'] = $endTime ? $endTime->format('H:i:s') : '';
 
             var_dump($items);
 
@@ -652,7 +655,8 @@ class UserApiController extends ApiController
                 'data' => [
                     'schedule' => $schedule,
                     'departments' => $departments,
-                    'active_department' => $activeDepartment
+                    'active_department' => $activeDepartment,
+                    'active_day' => $items['start_date']
                 ]
             ]);
         }

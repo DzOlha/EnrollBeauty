@@ -151,8 +151,10 @@ class SearchScheduleForm extends Form {
         let selectStartWrapper = $(`#${this.selectStartTimeWrapper}`);
 
         let startTimeSelect = $(`#${this.startTimeSelectId}`);
+        let endTimeSelect = $(`#${this.endTimeSelectId}`);
+
         let startTime = parseInt(startTimeSelect.val());
-        let endTime = parseInt($(`#${this.endTimeSelectId}`).val());
+        let endTime = parseInt(endTimeSelect.val());
 
         let errorStart = $(`#${this.startTimeErrorId}`)
 
@@ -168,26 +170,28 @@ class SearchScheduleForm extends Form {
         }
 
         if (validTimeRange) {
-            selectStartWrapper.removeClass('border-error');
+            if(selectStartWrapper.hasClass('border-error'))
+                selectStartWrapper.removeClass('border-error');
+
             errorStart.html('');
             errorStart.removeClass('text-danger')
 
             return {
-                'startTime': startTime,
-                'endTime': endTime
+                'startTime': startTimeSelect.val(),
+                'endTime': endTimeSelect.val()
             }
         }
         return false;
     }
 
     validateDateRange() {
-        let dateRangeInput = $(`.${this.datesInputClass}`).val();
-        let dateRange = dateRangeInput.split('-')
+        let dateRangeInput = $(`.${this.datesInputClass}`);
+        let dateRange = dateRangeInput.val().split('-')
             .map((item) => {
                 const trimmedDate = item.trim();
                 const parsedDate = moment(trimmedDate, 'DD/MM/YYYY');
                 if (parsedDate.isValid()) {
-                    return trimmedDate;
+                    return parsedDate.unix();
                 } else {
                     console.log(`Invalid date: ${trimmedDate}`);
                     return null; // Handle invalid dates as needed
@@ -208,7 +212,9 @@ class SearchScheduleForm extends Form {
         }
 
         if (validDateRange) {
-            dateRangeInput.removeClass('border-danger');
+            if(dateRangeInput.hasClass('border-danger'))
+                dateRangeInput.removeClass('border-danger');
+
             error.html('');
             error.removeClass('text-danger');
 

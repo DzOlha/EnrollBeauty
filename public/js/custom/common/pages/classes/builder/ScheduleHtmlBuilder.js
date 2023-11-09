@@ -7,7 +7,7 @@ class ScheduleHtmlBuilder {
         worker, date, startTime, endTime, address
         )
     {
-        return `<div class="card-body">
+        return `<div class="card">
                     <div class="card-header custom-card-header border-bottom-0 ">
                         <h5 class="main-content-label my-auto tx-medium mb-0">
                             ${serviceName}
