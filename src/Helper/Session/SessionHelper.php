@@ -10,6 +10,13 @@ class SessionHelper
     public static function setUserSession(int $userId): void {
         $_SESSION['user_id'] = $userId;
     }
+    public static function getUserSession() {
+        if(isset($_SESSION['user_id'])) {
+            return $_SESSION['user_id'];
+        } else {
+            return false;
+        }
+    }
     public static function removeUserSession(): void {
         unset($_SESSION['user_id']);
     }

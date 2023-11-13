@@ -174,6 +174,11 @@ class UserApiController extends ApiController
         }
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/login
+     */
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -256,8 +261,9 @@ class UserApiController extends ApiController
         if (isset($_GET['user_id']) && $_GET['user_id'] !== '') {
             $userId = htmlspecialchars(trim($_GET['user_id']));
         } else {
-            if (isset($_SESSION['user_id'])) {
-                $userId = $_SESSION['user_id'];
+            $sessionUserId = SessionHelper::getUserSession();
+            if ($sessionUserId) {
+                $userId = $sessionUserId;
             }
         }
         return $userId;
@@ -367,6 +373,11 @@ class UserApiController extends ApiController
         ];
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/getUserComingAppointments
+     */
     public function getUserComingAppointments()
     {
         $userId = $this->_getUserId();
@@ -425,6 +436,11 @@ class UserApiController extends ApiController
         }
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/getWorkersForService
+     */
     public function getWorkersForService()
     {
         $serviceId = 0;
@@ -448,6 +464,11 @@ class UserApiController extends ApiController
         ]);
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/getServicesForWorker
+     */
     public function getServicesForWorker()
     {
         $workerId = 0;
@@ -466,6 +487,11 @@ class UserApiController extends ApiController
         ]);
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/getServicesWorkersAffiliates
+     */
     public function getServicesWorkersAffiliates()
     {
         $services = $this->dataMapper->selectAllServices();
@@ -507,6 +533,11 @@ class UserApiController extends ApiController
         ]);
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/getWorkersAll
+     */
     public function getWorkersAll()
     {
         $result = $this->dataMapper->selectAllWorkers();
@@ -526,6 +557,11 @@ class UserApiController extends ApiController
         ]);
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/getServicesAll
+     */
     public function getServicesAll()
     {
         $result = $this->dataMapper->selectAllServices();
@@ -541,6 +577,11 @@ class UserApiController extends ApiController
         ]);
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/getInitialSchedule
+     */
     public function getInitialSchedule()
     {
         /**
@@ -582,6 +623,11 @@ class UserApiController extends ApiController
         ]);
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/user/searchSchedule
+     */
     public function searchSchedule()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
