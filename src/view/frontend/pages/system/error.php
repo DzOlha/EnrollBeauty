@@ -27,14 +27,6 @@
 
 <?php require_once VIEW_COMMON."pages/landing/footer/footer_scripts.php"?>
 
-
-<script src="/public/js/custom/common/pages/Notifier.js"></script>
-<script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
-<script src="/public/js/custom/common/pages/user/forms/LoginForm.js"></script>
-<script src="/public/js/custom/common/pages/Requestor.js"></script>
-
-<script src="/public/js/custom/frontend/pages/user/forms/login.js"></script>
-
 </body>
 </html>
 
