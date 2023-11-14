@@ -1,5 +1,5 @@
 class SearchScheduleForm extends Form {
-    constructor() {
+    constructor(scheduleRenderer) {
         super(
             '',
             'submit-search-button',
@@ -42,6 +42,8 @@ class SearchScheduleForm extends Form {
         this.apiUrlGetServicesAll = '/api/user/getServicesAll';
 
         this.submitActionUrl = '/api/user/searchSchedule';
+
+        this.renderer = scheduleRenderer;
     }
 
     _initializeDateRangePicker() {
@@ -75,7 +77,7 @@ class SearchScheduleForm extends Form {
     }
 
     successCallbackSubmit(response) {
-
+        this.renderer.render(response);
     }
 
     errorCallbackSubmit(message) {
@@ -186,22 +188,16 @@ class SearchScheduleForm extends Form {
 
     validateDateRange() {
         let dateRangeInput = $(`.${this.datesInputClass}`);
-        let dateRange = dateRangeInput.val().split('-')
-            .map((item) => {
-                const trimmedDate = item.trim();
-                const parsedDate = moment(trimmedDate, 'DD/MM/YYYY');
-                if (parsedDate.isValid()) {
-                    return parsedDate.unix();
-                } else {
-                    console.log(`Invalid date: ${trimmedDate}`);
-                    return null; // Handle invalid dates as needed
-                }
-            });
+        let dateRange = dateRangeInput.val()
+                        .split('-')
+                            .map(
+                                (item) => DateRenderer.getUnixTimestamp(item)
+                            );
 
         let validDateRange = true;
-        let error = $(`#${this.dateRangeErrorId}`)
+        let error = $(`#${this.dateRangeErrorId}`);
 
-        if (new Date(dateRange[0]) > new Date(dateRange[1])) {
+        if (dateRange[0] > dateRange[1]) {
             validDateRange = false;
             dateRangeInput.addClass('border-danger');
 
@@ -439,4 +435,8 @@ class SearchScheduleForm extends Form {
         let affiliatesSelect = $(`#${this.affiliateSelectId}`);
         this._populateSelectOptions(affiliatesSelect, response.data.affiliates)
     }
+
+    /**
+     * --------------------------------------Schedule---------------------------------------
+     */
 }

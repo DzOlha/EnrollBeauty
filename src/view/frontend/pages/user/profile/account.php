@@ -946,6 +946,9 @@
 <script src="/public/js/custom/common/pages/classes/renderer/Renderer.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/extends/TimeRenderer.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/extends/DateRenderer.js"></script>
+<script src="/public/js/custom/common/pages/classes/renderer/extends/ScheduleRenderer.js"></script>
+
+<script src="/public/js/custom/common/pages/classes/builder/ScheduleHtmlBuilder.js"></script>
 
 <script src="/public/js/custom/common/pages/Cookie.js"></script>
 

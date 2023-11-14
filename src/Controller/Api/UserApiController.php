@@ -652,7 +652,7 @@ class UserApiController extends ApiController
             $items['start_time'] = $startTime ? $startTime->format('H:i:s') : '';
             $items['end_time'] = $endTime ? $endTime->format('H:i:s') : '';
 
-            var_dump($items);
+            //var_dump($items);
 
             /**
              * Select all departments
@@ -685,7 +685,7 @@ class UserApiController extends ApiController
             }
 
             $schedule = $this->dataMapper->selectSchedule(
-                $activeDepartment['id'], $items['service_id'], $items['worker_id'],
+                null, $items['service_id'], $items['worker_id'],
                 $items['affiliate_id'], $items['start_date'], $items['end_date'],
                 $items['start_time'], $items['end_time'],
                 $items['price_bottom'], $items['price_top']
@@ -702,7 +702,8 @@ class UserApiController extends ApiController
                     'schedule' => $schedule,
                     'departments' => $departments,
                     'active_department' => $activeDepartment,
-                    'active_day' => $items['start_date']
+                    'active_day' => $items['start_date'],
+                    'end_day' => $items['end_date'],
                 ]
             ]);
         }

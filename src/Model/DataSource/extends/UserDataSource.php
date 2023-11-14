@@ -283,14 +283,10 @@ class UserDataSource extends DataSource
     private function _serviceFilter($serviceId, $columnToJoin)
     {
         $result = [
-            'join' => '',
             'where' => ''
         ];
-        $services = Services::$table;
-        $services_id = Services::$id;
 
         if ($serviceId !== null && $serviceId !== '') {
-            $result['join'] = " INNER JOIN $services ON $columnToJoin = $services_id ";
             $result['where'] = " AND $columnToJoin = $serviceId ";
         }
         return $result;
@@ -299,14 +295,10 @@ class UserDataSource extends DataSource
     private function _workerFilter($workerId, $columnToJoin)
     {
         $result = [
-            'join' => '',
             'where' => ''
         ];
-        $workers = Workers::$table;
-        $workers_id = Workers::$id;
 
         if ($workerId !== null && $workerId !== '') {
-            $result['join'] = " INNER JOIN $workers ON $columnToJoin = $workers_id ";
             $result['where'] = " AND $columnToJoin = $workerId ";
         }
         return $result;
@@ -315,14 +307,10 @@ class UserDataSource extends DataSource
     private function _affiliateFilter($affiliateId, $columnToJoin)
     {
         $result = [
-            'join' => '',
             'where' => ''
         ];
-        $affiliates = Affiliates::$table;
-        $affiliates_id = Affiliates::$id;
 
         if ($affiliateId !== null && $affiliateId !== '') {
-            $result['join'] = " INNER JOIN $affiliates ON $columnToJoin = $affiliates_id ";
             $result['where'] = " AND $columnToJoin = $affiliateId ";
         }
         return $result;
@@ -339,10 +327,10 @@ class UserDataSource extends DataSource
         $setTo = ($dateTo !== null && $dateTo !== '');
 
         if($setFrom) {
-            $result['where'] = " AND $schedule_day >= $dateFrom ";
+            $result['where'] = " AND $schedule_day >= '$dateFrom' ";
         }
         if($setTo) {
-            $result['where'] .= " AND $schedule_day <= $dateTo ";
+            $result['where'] .= " AND $schedule_day <= '$dateTo' ";
         }
         return $result;
     }
@@ -359,56 +347,41 @@ class UserDataSource extends DataSource
         $setTo = ($timeTo !== null && $timeTo !== '');
 
         if($setFrom) {
-            $result['where'] = " AND $schedule_start_time >= $timeFrom ";
+            $result['where'] = " AND $schedule_start_time >= '$timeFrom' ";
         }
         if($setTo) {
-            $result['where'] .= " AND $schedule_end_time <= $timeTo ";
+            $result['where'] .= " AND $schedule_end_time <= '$timeTo' ";
         }
         return $result;
     }
 
-    private function _priceFilter(
-        $priceFrom, $priceTo, $columnToJoinWorker, $columnToJoinService
-    )
+    private function _priceFilter($priceFrom, $priceTo)
     {
         $result = [
-            'join' => '',
             'where' => ''
         ];
-        $workersServicePricing = WorkersServicePricing::$table;
-        $pricing_service_id = WorkersServicePricing::$service_id;
-        $pricing_worker_id = WorkersServicePricing::$worker_id;
         $pricing_price = WorkersServicePricing::$price;
 
         $setFrom = ($priceFrom !== null && $priceFrom !== '');
         $setTo = ($priceTo !== null && $priceTo !== '');
 
-        if($setFrom || $setTo) {
-            $result['join'] = " INNER JOIN $workersServicePricing ON 
-                                    $columnToJoinWorker = $pricing_worker_id
-                                    AND $columnToJoinService = $pricing_service_id ";
-        }
         if($setFrom) {
-            $result['where'] = " AND $pricing_price >= $priceFrom ";
+            $result['where'] = " AND $pricing_price >= '$priceFrom' ";
         }
         if($setTo) {
-            $result['where'] .= " AND $pricing_price <= $priceTo ";
+            $result['where'] .= " AND $pricing_price <= '$priceTo' ";
         }
         return $result;
     }
 
-    private function _departmentFilter($departmentId, $columnToJoin) {
+    private function _departmentFilter($departmentId) {
         $result = [
-            'join' => '',
             'where' => ''
         ];
-        $services = Services::$table;
-        $services_id = Services::$id;
         $services_depId = Services::$department_id;
 
         $set = ($departmentId !== null && $departmentId !== '');
         if($set) {
-            $result['join'] = " INNER JOIN $services ON $columnToJoin = $services_id ";
             $result['where'] = " AND $services_depId = $departmentId ";
         }
         return $result;
@@ -432,6 +405,7 @@ class UserDataSource extends DataSource
      *      0 => [
      *         'schedule_id' =>,
      *         'service_id' =>,
+     *         'department_id' =>,
      *         'service_name' =>,
      *         'worker_id' =>,
      *         'worker_name' =>,
@@ -471,18 +445,23 @@ class UserDataSource extends DataSource
         $services_serviceName = Services::$name;
         $services_departmentId = Services::$department_id;
 
+        $workers = Workers::$table;
         $workers_id = Workers::$id;
         $workers_name = Workers::$name;
         $workers_surname = Workers::$surname;
 
+        $affiliates = Affiliates::$table;
         $affiliates_id = Affiliates::$id;
         $affiliates_city = Affiliates::$city;
         $affiliates_address = Affiliates::$address;
 
+        $workersServicePricing = WorkersServicePricing::$table;
+        $pricing_service_id = WorkersServicePricing::$service_id;
+        $pricing_worker_id = WorkersServicePricing::$worker_id;
         $pricing_price = WorkersServicePricing::$price;
         $pricing_currency = WorkersServicePricing::$currency;
 
-        $departmentFilter = $this->_departmentFilter($departmentId, $schedule_service_id);
+        $departmentFilter = $this->_departmentFilter($departmentId);
         $serviceFilter = $this->_serviceFilter($serviceId, $schedule_service_id);
         $workerFilter = $this->_workerFilter($workerId, $schedule_worker_id);
         $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
@@ -492,9 +471,9 @@ class UserDataSource extends DataSource
             $priceFrom, $priceTo, $schedule_worker_id, $schedule_service_id
         );
 
-        $this->db->query("
-            SELECT $schedule_id as schedule_id, $services_id as service_id,
+        $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
                    $services_serviceName as service_name,
+                   $services_departmentId as department_id,
                    $workers_id as worker_id, $workers_name as worker_name,
                    $workers_surname as worker_surname,
                    $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
@@ -503,11 +482,45 @@ class UserDataSource extends DataSource
                    $pricing_price, $pricing_currency
             
             FROM $workerServiceSchedule 
-                {$departmentFilter['join']}
+                INNER JOIN $services ON $schedule_service_id = $services_id
+                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                INNER JOIN $workersServicePricing 
+                    ON $schedule_worker_id = $pricing_worker_id
+                    AND $schedule_service_id = $pricing_service_id
+            
+            WHERE $schedule_order_id IS NULL 
+                {$departmentFilter['where']}
                     
-                {$workerFilter['join']}
-                {$affiliateFilter['join']}
-                {$priceFilter['join']}
+                {$serviceFilter['where']}
+                {$workerFilter['where']}
+                {$affiliateFilter['where']}
+              
+                {$dateFilter['where']}
+              
+                {$timeFilter['where']}
+              
+                {$priceFilter['where']}
+        ";
+        //echo $q;
+        $this->db->query("
+            SELECT $schedule_id as schedule_id, $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $services_departmentId as department_id,
+                   $workers_id as worker_id, $workers_name as worker_name,
+                   $workers_surname as worker_surname,
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency
+            
+            FROM $workerServiceSchedule 
+                INNER JOIN $services ON $schedule_service_id = $services_id
+                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                INNER JOIN $workersServicePricing 
+                    ON $schedule_worker_id = $pricing_worker_id
+                    AND $schedule_service_id = $pricing_service_id
             
             WHERE $schedule_order_id IS NULL 
                 {$departmentFilter['where']}
@@ -523,7 +536,7 @@ class UserDataSource extends DataSource
                 {$priceFilter['where']}
         ");
 
-        return $this->db->manyRows();
+       return $this->db->manyRows();
     }
 
     /**

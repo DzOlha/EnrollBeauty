@@ -3,11 +3,14 @@ class ScheduleHtmlBuilder {
     constructor() {
     }
     static createScheduleCard(
+        scheduleId, workerId, serviceId, affiliateId,
         serviceName, price, currency,
         worker, date, startTime, endTime, address
         )
     {
-        return `<div class="card">
+        return `<div class="card" id="schedule-card-${scheduleId}" 
+                        data-worker-id="${workerId}" data-service-id="${serviceId}"
+                        data-affiliate-id="${affiliateId}">
                     <div class="card-header custom-card-header border-bottom-0 ">
                         <h5 class="main-content-label my-auto tx-medium mb-0">
                             ${serviceName}
@@ -62,7 +65,7 @@ class ScheduleHtmlBuilder {
         tabId, isActive = false
     ) {
         let active = isActive === true ? 'active' : '';
-        return ` <div class="tab-pane ${active}" id="${tabId}">
+        return ` <div class="tab-pane weekday-tab-pane ${active}" id="${tabId}">
                     <div class="row row-sm time-separation-wrapper">
                         <div class="row row-sm">
                             <div class="col-lg-3 time-interval-value"
@@ -91,7 +94,7 @@ class ScheduleHtmlBuilder {
                             </div>
                         </div>
                         <div class="row row-sm time-interval-wrapper">
-                            <div class="col-lg-3 time-interval 9-12"
+                            <div class="col-lg-3 time-interval _9_12"
                                  data-start-interval="9"
                                  data-end-interval="12"
                             >
@@ -99,14 +102,14 @@ class ScheduleHtmlBuilder {
 <!--                            Schedule Card-->
 <!--                            Schedule Card-->
                             </div>
-                            <div class="col-lg-3 time-interval 12-15"
+                            <div class="col-lg-3 time-interval _12_15"
                                  data-start-interval="12"
                                  data-end-interval="15"
                             >
 <!--                            Schedule Card-->
 <!--                            Schedule Card-->
                             </div>
-                            <div class="col-lg-3 time-interval 15-18"
+                            <div class="col-lg-3 time-interval _15_18"
                                  data-start-interval="15"
                                  data-end-interval="18"
                             >
@@ -115,7 +118,7 @@ class ScheduleHtmlBuilder {
 <!--                            Schedule Card-->
 <!--                            Schedule Card-->
                             </div>
-                            <div class="col-lg-3 time-interval 18-21"
+                            <div class="col-lg-3 time-interval _18_21"
                                  data-start-interval="18"
                                  data-end-interval="21"
                             >
@@ -127,31 +130,35 @@ class ScheduleHtmlBuilder {
     }
 
     static createTabWeekdayMenuLi(
-        weekday, tabId, date, isActive = false, disable = false
+        weekday, dayTabId, menuItemClass, menuItemId,
+        date, isActive = false, disable = false
     ) {
         let disabled = disable === true ? 'disabled' : '';
         let active = isActive === true ? 'active' : '';
         return `<li class="">
-                    <a href="#"
-                       class="${active} ${disabled}"
+                    <a href="#${dayTabId}"
+                       class="${menuItemClass} ${active} ${disabled}"
                        data-bs-toggle="tab"
                        data-date="${date}"
+                       id="${menuItemId}"
                        >
                         ${weekday}
                     </a>
                 </li>`
     }
     static createTabDepartmentContentPage(
-        tabPaneId,
+        tabPaneId, menuWrapperId, contentWrapperId, isActive = false
     ) {
-        return `<div class="tab-pane active" id="${tabPaneId}">
+        let active = isActive === true ? 'active' : '';
+        return `<div class="tab-pane department-tab-pane ${active}" id="${tabPaneId}">
                     <div class="card-body">
                         <div class="">
                             <div class="panel panel-primary tabs-style-3">
                                 <div class="tab-menu-heading weekday-menu-heading">
                                     <div class="tabs-menu">
                                         <!-- Tabs -->
-                                        <ul class="nav panel-tabs me-3">
+                                        <ul class="nav panel-tabs me-3" 
+                                            id="${menuWrapperId}">
 <!--                                           Weekday menu li-->
 <!--                                           Weekday menu li-->
 <!--                                           Weekday menu li-->
@@ -163,7 +170,7 @@ class ScheduleHtmlBuilder {
                             </div>
                         </div>
                         <div class="tabs-style-3">
-                            <div class="tab-content">
+                            <div class="tab-content" id="${contentWrapperId}">
 <!--                                Tab weekday content page-->
 <!--                                Tab weekday content page-->
 <!--                                Tab weekday content page-->
@@ -176,14 +183,14 @@ class ScheduleHtmlBuilder {
     }
 
     static createTabDepartmentMenuLi(
-        departmentName, departmentId, tabId, menuItemId,
+        departmentName, departmentId, tabId, menuItemId, menuItemClass,
         isActive = false, disable = false,
     ) {
         let active = isActive === true ? 'active' : '';
         let disabled = disable === true ? 'disabled' : '';
         return `<li>
                     <a href="#${tabId}"
-                       class="nav-link ${active} ${disabled} mt-1"
+                       class="${menuItemClass} nav-link ${active} ${disabled} mt-1"
                        data-bs-toggle="tab"
                        data-id="${departmentId}"
                        id="${menuItemId}"
@@ -206,7 +213,7 @@ class ScheduleHtmlBuilder {
                     </div>
                 </div>
                 <div class="panel-body tabs-menu-body main-content-body-right border">
-                    <div class="tab-content">
+                    <div class="tab-content" id="department-tab-content-wrapper">
 <!--                        Tab department content page-->
 <!--                        Tab department content page-->
 <!--                        Tab department content page-->
