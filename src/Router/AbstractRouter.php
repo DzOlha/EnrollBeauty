@@ -9,6 +9,7 @@ abstract class AbstractRouter
     protected string|AbstractController $defaultController = 'WebController';
     protected string $defaultType = 'Web';
     protected string $defaultMethod = 'index';
+    protected string $pageNotFoundMethod = 'error';
 
     protected string|AbstractController $currentController;
     protected string $type;
@@ -31,31 +32,46 @@ abstract class AbstractRouter
          */
         $url = $this->getUrl();
         //var_dump($url);
+        $isHomepage = $url[0] === '';
 
         /**
          * check the type of request [web, api]
          */
-        if(isset($url[0]) && ($url[0] === 'web' || $url[0] === 'api')) {
+        if (isset($url[0]) && ($url[0] === 'web' || $url[0] === 'api')) {
             $this->type = ucwords($url[0]);
+        } else {
+            $this->type = $this->defaultType;
         }
 
+        $setDefaultController = true;
         /**
          * check the specified Controller prefix
          */
         if (isset($url[1]) && $url[1] !== '') {
-            $filename = ucwords($url[1]).$this->type . 'Controller.php';
-            if (file_exists(SRC . "/Controller/". $this->type."/" . $filename)
+            $filename = ucwords($url[1]) . $this->type . 'Controller.php';
+            if (file_exists(SRC . "/Controller/" . $this->type . "/" . $filename)
             ) {
                 //make the first letter of the controller name in uppercase format
-                $this->currentController = ucwords($url[1]).$this->type. 'Controller';
+                $this->currentController = ucwords($url[1]) . $this->type . 'Controller';
                 unset($url[1]);
+                $setDefaultController = false;
             }
         }
 
         /**
          * Get object of the Controller class
          */
-        $controllerPath = sprintf('Src\Controller\\'.$this->type."\%s", $this->currentController);
+        $fileExists = file_exists(
+            SRC . "/Controller/" . $this->type . "/" . $this->currentController.".php"
+        );
+        if ($fileExists) {
+            $controllerPath = sprintf(
+                'Src\Controller\\' . $this->type . "\%s", $this->currentController
+            );
+            if ($setDefaultController && !$isHomepage) {
+                $this->currentMethod = $this->pageNotFoundMethod;
+            }
+        }
         $this->currentController = new $controllerPath();
 
         /**
@@ -66,12 +82,9 @@ abstract class AbstractRouter
                 $this->currentMethod = $url[2];
                 unset($url[2]);
             } else {
-                $controllerPath = sprintf("Src\\Controller\\".$this->defaultType."\\%s", $this->defaultController);
-                $this->currentController = new $controllerPath();
-                $this->currentMethod = $this->defaultMethod;
+                $this->currentMethod = $this->pageNotFoundMethod;
             }
         }
-
         $this->params = $url ? array_values($url) : [];
 
         call_user_func_array([$this->currentController, $this->currentMethod], $this->params);

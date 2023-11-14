@@ -82,4 +82,5 @@ class UserWebController extends WebController
         ];
         $this->view(VIEW_FRONTEND . 'index', $data);
     }
+
 }

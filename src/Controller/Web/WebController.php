@@ -39,4 +39,12 @@ class WebController extends AbstractController
         ];
         $this->view(VIEW_FRONTEND.'index', $data);
     }
+
+    public function error() {
+        $data = [
+            'title' => 'Page Not Found',
+            'message' => 'The requested page not found!'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/system/error', $data);
+    }
 }
