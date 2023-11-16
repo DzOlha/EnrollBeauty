@@ -6,6 +6,7 @@ class OrdersService
 {
     public static string $table = 'orders_service';
     public static string $id = "orders_service.id";
+    public static string $schedule_id = "orders_service.schedule_id";
     public static string $user_id = 'orders_service.user_id';
     public static string $email = 'orders_service.email';
     public static string $service_id = 'orders_service.service_id';

@@ -166,6 +166,7 @@ CREATE TABLE workers_service_pricing (
 CREATE TABLE orders_service (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
+    schedule_id INT,
     email VARCHAR(100) NOT NULL,
     service_id INT NOT NULL,
     worker_id INT NOT NULL,
@@ -176,6 +177,7 @@ CREATE TABLE orders_service (
     canceled_datetime DATETIME,
     created_datetime DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (schedule_id) REFERENCES workers_service_schedule(id) ON DELETE CASCADE,
     FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
     FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
     FOREIGN KEY (affiliate_id) REFERENCES affiliates(id) ON DELETE CASCADE
@@ -192,7 +194,7 @@ CREATE TABLE workers_service_schedule (
       FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
       FOREIGN KEY (affiliate_id) REFERENCES affiliates(id) ON DELETE CASCADE,
       FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
-      FOREIGN KEY (order_id) REFERENCES orders_service(id) ON DELETE CASCADE
+      FOREIGN KEY (order_id) REFERENCES orders_service(id) ON DELETE SET NULL
 );
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
