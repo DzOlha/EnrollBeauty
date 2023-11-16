@@ -235,9 +235,26 @@ class UserDataSource extends DataSource
         $serviceId = Services::$id;
         $service_name = Services::$name;
 
+        $queryFrom = "
+            $ordersService 
+                INNER JOIN $workers ON $worker_id = $workerId
+                INNER JOIN $affiliates ON $affiliate_id = $affiliateId
+                INNER JOIN $services ON $service_id = $serviceId
+                INNER JOIN $workersService ON $worker_id = $workersServiceWorkerId
+                                          AND $service_id = $workersServiceServiceId
+            WHERE $user_id = $userId
+                AND $canceled IS NULL
+                AND $completed IS NULL
+        ";
+
         $this->db->query("
-            SELECT $order_id, $service_id, $service_name, $worker_id, $worker_name, 
-                   $worker_surname, $affiliate_id, $affiliate_city, $affiliate_address, 
+            SELECT $order_id, $service_id as service_id, 
+                   $service_name as service_name, $worker_id as worker_id, 
+                   $worker_name as worker_name, 
+                   $worker_surname as worker_surname, 
+                   $affiliate_id as affiliate_id, 
+                   $affiliate_city as affiliate_city, 
+                   $affiliate_address as affiliate_address, 
                    $start_datetime, $end_datetime, $price, $currency
             FROM $ordersService 
                 INNER JOIN $workers ON $worker_id = $workerId
@@ -255,7 +272,9 @@ class UserDataSource extends DataSource
         ");
         $this->db->bind(':user_id', $userId);
 
-        return $this->db->manyRows();
+        $result = $this->db->manyRows();
+
+        return $this->_appendTotalRowsCount($queryFrom, $result);
     }
 
     /**
@@ -568,5 +587,117 @@ class UserDataSource extends DataSource
         $this->db->bind(':service_id', $serviceId);
 
         return $this->db->singleRow();
+    }
+
+    public function selectWorkerScheduleItemById(int $scheduleId) {
+        $workerServiceSchedule = WorkersServiceSchedule::$table;
+        $id = WorkersServiceSchedule::$id;
+
+        $this->db->query("
+            SELECT * FROM $workerServiceSchedule 
+            WHERE $id = :schedule_id
+        ");
+        $this->db->bind(':schedule_id', $scheduleId);
+
+        return $this->db->singleRow();
+    }
+
+    public function selectUserEmailById(int $userId) {
+        $users = Users::$table;
+        $id = Users::$id;
+        $email = Users::$email;
+
+        $this->db->query("
+            SELECT $email FROM $users
+            WHERE $id = :user_id
+        ");
+        $this->db->bind(':user_id', $userId);
+
+        $result = $this->db->singleRow();
+        if($result) {
+            /**
+             * users.email -> email
+             */
+            $emailColumn = explode('.', $email)[1];
+            return $result[$emailColumn];
+        }
+        return $result;
+    }
+
+    public function selectOrderServiceByScheduleId(int $scheduleId) {
+        $ordersService = OrdersService::$table;
+        $id = OrdersService::$id;
+        $schedule_id = OrdersService::$schedule_id;
+
+        $this->db->query("
+            SELECT $id FROM $ordersService
+            WHERE $schedule_id = :schedule_id
+        ");
+        $this->db->bind(':schedule_id', $scheduleId);
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return $result[explode('.', $id)[1]];
+        }
+        return $result;
+    }
+
+    public function insertOrderService(
+        ?int $scheduleId, ?int $userId, string $email, int $serviceId, int $workerId,
+        int $affiliateId, string $startDatetime, string $endDatetime
+    ) {
+        $ordersService = OrdersService::$table;
+        $user_id = OrdersService::$user_id;
+        $schedule_id = OrdersService::$schedule_id;
+        $email_column = OrdersService::$email;
+        $service_id = OrdersService::$service_id;
+        $worker_id = OrdersService::$worker_id;
+        $affiliate_id = OrdersService::$affiliate_id;
+        $start_datetime = OrdersService::$start_datetime;
+        $end_datetime = OrdersService::$end_datetime;
+        $created_datetime = OrdersService::$created_datetime;
+
+        $this->db->query("
+            INSERT INTO $ordersService 
+                ($user_id, $schedule_id, $email_column, $service_id, $worker_id, 
+                 $affiliate_id, $start_datetime, $end_datetime, $created_datetime)
+            VALUES (:user_id, :schedule_id, :email, :service_id, 
+                    :worker_id, :affiliate_id, :start, :end, NOW())
+        ");
+        $this->db->bind(':user_id', $userId);
+        $this->db->bind(':schedule_id', $scheduleId);
+        $this->db->bind(':email', $email);
+        $this->db->bind(':service_id', $serviceId);
+        $this->db->bind(':worker_id', $workerId);
+        $this->db->bind(':affiliate_id', $affiliateId);
+        $this->db->bind(':start', $startDatetime);
+        $this->db->bind(':end', $endDatetime);
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return $this->db->lastInsertedId();
+        }
+        return false;
+    }
+
+    public function updateOrderIdInWorkersServiceSchedule(
+        int $scheduleId, int $orderId
+    ) {
+        $workersServiceSchedule = WorkersServiceSchedule::$table;
+        $id = WorkersServiceSchedule::$id;
+        $order_id = WorkersServiceSchedule::$order_id;
+
+        $this->db->query("
+            UPDATE $workersServiceSchedule
+            SET $order_id = :order_id
+            WHERE $id = :schedule_id
+        ");
+
+        $this->db->bind(':order_id', $orderId);
+        $this->db->bind(':schedule_id', $scheduleId);
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
     }
 }

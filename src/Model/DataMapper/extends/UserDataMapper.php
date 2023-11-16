@@ -121,4 +121,38 @@ class UserDataMapper extends DataMapper
     {
         return $this->dataSource->selectDepartmentByServiceId($serviceId);
     }
+
+    public function selectWorkerScheduleItemById(int $scheduleId)
+    {
+        return $this->dataSource->selectWorkerScheduleItemById($scheduleId);
+    }
+
+    public function selectUserEmailById(int $userId)
+    {
+        return $this->dataSource->selectUserEmailById($userId);
+    }
+
+    public function selectOrderServiceByScheduleId(int $scheduleId)
+    {
+        return $this->dataSource->selectOrderServiceByScheduleId($scheduleId);
+    }
+
+    public function insertOrderService(
+        ?int $scheduleId, ?int $userId, string $email, int $serviceId, int $workerId,
+        int  $affiliateId, string $startDatetime, string $endDatetime
+    )
+    {
+        return $this->dataSource->insertOrderService(
+            $scheduleId, $userId, $email, $serviceId, $workerId,
+            $affiliateId, $startDatetime, $endDatetime
+        );
+    }
+
+    public function updateOrderIdInWorkersServiceSchedule(
+        int $scheduleId, int $orderId
+    ) {
+        return $this->dataSource->updateOrderIdInWorkersServiceSchedule(
+            $scheduleId, $orderId
+        );
+    }
 }

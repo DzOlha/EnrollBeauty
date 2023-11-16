@@ -238,16 +238,27 @@ th, td {
     padding: 0px !important;
     font-size: 16px;
 }
+.time-interval .card:hover {
+    box-shadow: rgba(21, 21, 21, 0.5) 0px 5px 5px;
+}
+
 .time-interval .card-header {
-    padding: 1rem 1.25rem;
+    /*padding: 1rem 1.25rem;*/
     font-size: 18px;
     font-weight: bold;
     font-family: "Poppins", sans-serif !important;
     background-color: #eaeaea;
 }
 .time-interval .card-options i {
-    padding-left: 5px;
+    margin-left: 5px;
+    padding: 8px;
     color: black;
+    border-radius: 5px;
+}
+.time-interval .card-options i:hover {
+    cursor: pointer;
+    background-color: black;
+    color: white;
 }
 .card-schedule-content, .card-worker-wrapper {
     padding: 10px;

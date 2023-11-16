@@ -3,7 +3,7 @@ class Table {
     constructor(apiUrl, orderByField = null, orderDirection = null) {
         this.apiUrl = apiUrl; // Store the API URL
         this.totalRowsCount = 1;
-        this.itemsPerPage = 1;
+        this.itemsPerPage = this.getItemsPerPage();
         this.totalPages = Math.ceil(this.totalRowsCount / this.itemsPerPage);
 
         this.sortedBy = orderByField ?? 'id';
@@ -92,7 +92,7 @@ class Table {
             // Hide the table and show the loader
             $("#data-table").hide();
             $("#dataTableLoader").show();
-        }, 500);
+        }, 800);
 
         if (!orderByField || !orderDirection) {
             //let object = this.getSortedByAndOrder();

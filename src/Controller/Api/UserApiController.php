@@ -10,6 +10,7 @@ use Src\Model\DataSource\extends\UserDataSource;
 use Src\Model\DTO\Read\UserReadDto;
 use Src\Model\DTO\Read\UserSocialReadDto;
 use Src\Model\DTO\Write\UserWriteDto;
+use Src\Model\Table\WorkersServiceSchedule;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\User\UserAuthService;
 use Src\Service\Hasher\impl\PasswordHasher;
@@ -424,10 +425,10 @@ class UserApiController extends ApiController
                 'totalRowsCount' => 2
             ];
 
-            $data = $result ? $result : $resultArrayTest;
+            //$data = $result ? $result : $resultArrayTest;
             $this->returnJson([
                 'success' => true,
-                'data' => $data
+                'data' => $result
             ]);
         } else {
             $this->returnJson([
@@ -705,6 +706,127 @@ class UserApiController extends ApiController
                     'active_day' => $items['start_date'],
                     'end_day' => $items['end_date'],
                 ]
+            ]);
+        }
+    }
+
+    public function orderServiceSchedule() {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            /**
+             * Get user id to work with
+             */
+            $userId = SessionHelper::getUserSession();
+            if(!$userId) {
+                if(!isset($_POST['email'])) {
+                    $this->returnJson([
+                        'error' => 'No user specified!'
+                    ]);
+                } else {
+                    $userId = null;
+                    $email = htmlspecialchars(trim($_POST['email']));
+                }
+            }
+
+            $scheduleId = htmlspecialchars(trim($_POST['schedule_id']));
+
+            /**
+             * Get schedule details
+             */
+            $scheduleDetails = $this->dataMapper->selectWorkerScheduleItemById($scheduleId);
+            if($scheduleDetails === false) {
+                $this->returnJson([
+                    'error' => 'There is error occurred while getting schedule details'
+                ]);
+            }
+            if($scheduleDetails === null) {
+                $this->returnJson([
+                    'error' => 'There is no schedule with such id'
+                ]);
+            }
+
+            /**
+             * Get user email
+             */
+            if($userId) {
+                $email = $this->dataMapper->selectUserEmailById($userId);
+                if($email === false) {
+                    $this->returnJson([
+                        'error' => 'The error occurred while getting user email'
+                    ]);
+                }
+                if($email === null) {
+                    $this->returnJson([
+                        'error' => 'There is no user email for the given id'
+                    ]);
+                }
+            }
+
+            /**
+             * Check if there is no orders with such schedule_id
+             */
+            $exists = $this->dataMapper->selectOrderServiceByScheduleId($scheduleId);
+            if($exists) {
+                $this->returnJson([
+                    'error' => 'The order for selected schedule item already exists'
+                ]);
+            }
+
+            /**
+             * Insert the new row into order_service
+             */
+            $service_id = explode('.', WorkersServiceSchedule::$service_id)[1];
+            $worker_id = explode('.', WorkersServiceSchedule::$worker_id)[1];
+            $affiliate_id = explode('.', WorkersServiceSchedule::$affiliate_id)[1];
+            $day = explode('.', WorkersServiceSchedule::$day)[1];
+            $start_time = explode('.', WorkersServiceSchedule::$start_time)[1];
+            $end_time = explode('.', WorkersServiceSchedule::$end_time)[1];
+
+            // Combine date and time strings
+            $start_datetime_str = $scheduleDetails[$day] . ' '
+                                . $scheduleDetails[$start_time];
+
+            $end_datetime_str = $scheduleDetails[$day] . ' '
+                                . $scheduleDetails[$end_time];
+
+            // Create DateTime objects
+            $_start_datetime = new \DateTime($start_datetime_str);
+            $_end_datetime = new \DateTime($end_datetime_str);
+
+            // Format the DateTime objects as needed
+            $start_datetime = $_start_datetime->format('Y-m-d H:i:s');
+            $end_datetime = $_end_datetime->format('Y-m-d H:i:s');
+
+            $this->dataMapper->beginTransaction();
+
+            $orderID = $this->dataMapper->insertOrderService(
+                $scheduleId, $userId, $email, $scheduleDetails[$service_id],
+                $scheduleDetails[$worker_id], $scheduleDetails[$affiliate_id],
+                $start_datetime, $end_datetime,
+            );
+            if($orderID === false) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'There is error occurred while inserting order into database'
+                ]);
+            }
+
+            /**
+             * Update order_id in 'workers_service_schedule' table to mark that the schedule
+             * is not available now
+             */
+            $updated = $this->dataMapper->updateOrderIdInWorkersServiceSchedule(
+                $scheduleId, $orderID
+            );
+            if(!$updated) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'The error occurred while updating schedule availability'
+                ]);
+            }
+
+            $this->dataMapper->commitTransaction();
+            $this->returnJson([
+                'success' => "You successfully created the order for the service",
             ]);
         }
     }

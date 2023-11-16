@@ -9,15 +9,17 @@ class ScheduleHtmlBuilder {
         )
     {
         return `<div class="card" id="schedule-card-${scheduleId}" 
-                        data-worker-id="${workerId}" data-service-id="${serviceId}"
+                        data-schedule-id="${scheduleId}"
+                        data-worker-id="${workerId}" 
+                        data-service-id="${serviceId}"
                         data-affiliate-id="${affiliateId}">
                     <div class="card-header custom-card-header border-bottom-0 ">
                         <h5 class="main-content-label my-auto tx-medium mb-0">
                             ${serviceName}
                         </h5>
                         <div class="card-options">
-                            <i class="far fa-heart me-1"></i>
-                            <i class="fe fe-shopping-cart"></i>
+                            <i class="far fa-heart me-1" data-schedule-id="${scheduleId}"></i>
+                            <i class="fe fe-shopping-cart" data-schedule-id="${scheduleId}"></i>
                         </div>
                     </div>
                     <div class="d-flex align-items-center pt-3 mt-auto

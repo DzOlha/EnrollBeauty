@@ -39,6 +39,33 @@ abstract class DataSource
         $this->db->rollBackTransaction();
     }
 
+    protected function _getTotalRowsCountQuery(string $queryFrom) {
+        $this->db->query(
+            "SELECT COUNT(*) as totalRowsCount FROM $queryFrom"
+        );
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return $result['totalRowsCount'];
+        } else {
+            return false;
+        }
+    }
+    protected function _appendTotalRowsCount(string $queryFrom, array $result) {
+        if($result) {
+            $totalRowsCount = $this->_getTotalRowsCountQuery($queryFrom);
+            if($totalRowsCount !== false) {
+                $result += [
+                    'totalRowsCount' => $totalRowsCount
+                ];
+                return $result;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
     public function selectUserPasswordByEmail(string $email)
     {
         $users = Users::$table;

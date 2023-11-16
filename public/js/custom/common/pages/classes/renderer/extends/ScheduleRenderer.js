@@ -2,6 +2,7 @@
 class ScheduleRenderer {
     constructor() {
         this.builder = new ScheduleHtmlBuilder();
+        this.requestor = new Requestor();
         this.scheduleWrapperId = 'main-schedule-wrapper';
 
         this.departmentsMenuId = 'departments-menu-wrapper';
@@ -30,6 +31,11 @@ class ScheduleRenderer {
 
         this.weekdayMenuItemBase = 'weekday-tab-menu-item';
         this.weekdayTabContentBase = 'weekday-tab-content';
+
+        /**
+         * API
+         */
+        this.apiOrderSchedule = '/api/user/orderServiceSchedule';
     }
 
     /**
@@ -479,20 +485,80 @@ class ScheduleRenderer {
             )
             //console.log(scheduleCard);
 
-            if(startTime >= 9 && endTime < 12) {
-                _9_12.insertAdjacentHTML('beforeend', scheduleCard);
+            if(startTime >= 9 && startTime <= 12) {
+                if (endTime <= 12) {
+                    _9_12.insertAdjacentHTML('beforeend', scheduleCard);
+                } else {
+                    _12_15.insertAdjacentHTML('beforeend', scheduleCard);
+                }
             }
-            if(startTime >= 12 && endTime < 15) {
-                _12_15.insertAdjacentHTML('beforeend', scheduleCard);
-                //console.log(_12_15);
+            if(startTime >= 12 && startTime <= 15) {
+                if(endTime <= 15) {
+                    _12_15.insertAdjacentHTML('beforeend', scheduleCard);
+                } else {
+                    _15_18.insertAdjacentHTML('beforeend', scheduleCard);
+                }
             }
-            if(startTime >= 15 && endTime < 18) {
-                _15_18.insertAdjacentHTML('beforeend', scheduleCard);
+            if(startTime >= 15 && startTime <= 18) {
+                if(endTime <= 18) {
+                    _15_18.insertAdjacentHTML('beforeend', scheduleCard);
+                } else {
+                    _18_21.insertAdjacentHTML('beforeend', scheduleCard);
+                }
             }
-            if(startTime >= 18 && endTime < 21) {
-                _18_21.insertAdjacentHTML('beforeend', scheduleCard);
+            if(startTime >= 18 && startTime <= 21) {
+                if(endTime <= 21) {
+                    _18_21.insertAdjacentHTML('beforeend', scheduleCard);
+                }
             }
+
+            /**
+             * Add listeners on shop/like icons
+             */
+            this.addListenerOnOrderSchedule(schedule.schedule_id);
+            this.addListenerOnLikeSchedule(schedule.schedule_id);
         })
         console.log('-------------------------------------------------------------------------------------------------------------------');
     }
+
+    addListenerOnOrderSchedule(scheduleId) {
+        let shopIcon = document.querySelector(
+            `#schedule-card-${scheduleId} .fe-shopping-cart`
+        );
+        if(shopIcon === null) return;
+        /**
+         * Create order for service
+         */
+        shopIcon.addEventListener('click', () => {
+            console.log('shop click');
+            let scheduleId = shopIcon.getAttribute('data-schedule-id');
+            let dataToSend = {
+                'schedule_id': scheduleId
+            }
+            this.requestor.post(
+                this.apiOrderSchedule,
+                dataToSend,
+                this._successOrderSchedule.bind(this),
+                this._errorOrderSchedule.bind(this)
+            )
+        })
+
+    }
+    _successOrderSchedule(response) {
+        Notifier.showSuccessMessage(response.success);
+    }
+    _errorOrderSchedule(response) {
+        Notifier.showErrorMessage(response.error);
+    }
+    addListenerOnLikeSchedule(scheduleId) {
+        let likeIcon = document.querySelector(
+            `#schedule-card-${scheduleId} .fa-heart`
+        );
+        if(likeIcon === null) return;
+        /**
+         * Add schedule to the liked/saved ones
+         */
+        likeIcon.addEventListener('click', () => {});
+    }
+
 }
