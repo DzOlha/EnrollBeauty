@@ -4,16 +4,16 @@ class Requestor {
         this.defaultErrorMessage = 'Error getting info! Please, try again later!';
     }
 
-    get(apiUrl, successCallback, errorCallback, errorMessageCallback) {
-        $.getJSON(apiUrl, (data) => {
-            if (data.error) {
-                errorCallback();
+    get(apiUrl, successCallback, errorCallback) {
+        $.getJSON(apiUrl, (response) => {
+            if (response.error) {
+                errorCallback(response);
                 return;
             }
-            successCallback(data);
+            successCallback(response);
         })
         .fail((jqXHR, textStatus, errorThrown) => {
-            errorMessageCallback(this.defaultErrorMessage);
+            errorCallback({'error': this.defaultErrorMessage});
         });
     }
 
@@ -26,13 +26,13 @@ class Requestor {
             dataType: 'json',
             success: (response) => {
                 if (response.error) {
-                    errorCallback(response.error);
+                    errorCallback(response);
                 } else {
                     successCallback(response);
                 }
             },
             error: (error) => {
-                errorCallback(`${this.defaultErrorMessage}`);
+                errorCallback({'error': `${this.defaultErrorMessage}`});
             }
         });
     }

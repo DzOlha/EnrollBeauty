@@ -100,7 +100,7 @@ class Form {
     }
 
     successCallbackSubmit(response) {}
-    errorCallbackSubmit(message) {}
+    errorCallbackSubmit(response) {}
     collectDataToSend(idAssoc = false) {}
     getRules(){}
     getMessages(){}

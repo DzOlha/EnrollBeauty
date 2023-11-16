@@ -17,8 +17,8 @@ class LoginForm extends Form {
         //console.log(response);
     }
 
-    errorCallbackSubmit(message) {
-        this.showErrorMessage(message);
+    errorCallbackSubmit(response) {
+        this.showErrorMessage(response.error);
     }
 
     collectDataToSend(idAssoc = false) {

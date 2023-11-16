@@ -22,7 +22,6 @@ class Account {
         this.requestor.get(
             this.apiUserInfoUrl,
             this.successCallbackUserInfo.bind(this),
-            this.errorCallbackUserInfo.bind(this),
             this.errorCallbackUserInfo.bind(this)
         )
     }
@@ -94,7 +93,7 @@ class Account {
         largeUserImg.setAttribute('src', this.imgPath + filename);
     }
 
-    errorCallbackUserInfo(message) {
-        Notifier.showErrorMessage(message);
+    errorCallbackUserInfo(response) {
+        Notifier.showErrorMessage(response.error);
     }
 }

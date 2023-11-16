@@ -80,8 +80,8 @@ class SearchScheduleForm extends Form {
         this.renderer.render(response);
     }
 
-    errorCallbackSubmit(message) {
-        Notifier.showErrorMessage(message);
+    errorCallbackSubmit(response) {
+        Notifier.showErrorMessage(response.error);
     }
 
     validatePriceRange() {

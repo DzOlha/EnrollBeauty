@@ -29,8 +29,8 @@ class RegistrationForm extends Form {
         }, 2000)
     }
 
-    errorCallbackSubmit(message) {
-        this.showErrorMessage(message);
+    errorCallbackSubmit(response) {
+        this.showErrorMessage(response.error);
     }
 
     collectDataToSend(idAssoc = false) {
