@@ -89,11 +89,10 @@
 
 <script nomodule src="/public/js/custom/common/libs/jquery.powertip.min.js"></script>
 
-<script src="/public/js/custom/common/pages/Notifier.js"></script>
+<script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/RegistrationForm.js"></script>
-<script src="/public/js/custom/common/pages/Requestor.js"></script>
-
+<script src="/public/js/custom/common/pages/classes/requestor/Requestor.js"></script>
 
 <script src="/public/js/custom/frontend/pages/user/forms/registration.js"></script>
 

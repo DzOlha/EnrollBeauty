@@ -21,7 +21,7 @@ class Table {
         this.sendApiRequest(this.itemsPerPage, current, this.sortedBy, this.sortingOrder);
 
         this.observeNumberRowsOnThePage(this.itemsPerPage, current);
-        //this.replaceUpDownArrows();
+        this.replaceUpDownArrows();
 
         // Set a handler to reset the cookie on page unload
         window.addEventListener('beforeunload', () => {
@@ -195,9 +195,10 @@ class Table {
         let arrowDown = this.arrowDown;
         let icons = {
             'initial': arrowDown,
-            arrowDown: arrowUp,
-            arrowUp: arrowDown
+            '/public/images/custom/system/icons/arrows_down.svg': arrowUp,
+            '/public/images/custom/system/icons/arrows_up.svg': arrowDown
         }
+        console.log(JSON.stringify(icons));
         let arrowColumns = Array.from(
             document.getElementsByClassName('arrow_column')
         );
@@ -239,6 +240,7 @@ class Table {
 
 
                     let currentSrc = sortArrows[i].getAttribute('src');
+
                     /**
                      * set the icon src (up or down)
                      */

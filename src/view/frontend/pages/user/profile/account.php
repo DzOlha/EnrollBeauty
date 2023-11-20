@@ -456,15 +456,15 @@
 
 <script src="/public/js/custom/common/pages/classes/builder/ScheduleHtmlBuilder.js"></script>
 
-<script src="/public/js/custom/common/pages/Cookie.js"></script>
+<script src="/public/js/custom/common/pages/classes/cookie/Cookie.js"></script>
 
-<script src="/public/js/custom/common/pages/Table.js"></script>
-<script src="/public/js/custom/common/pages/user/profile/AppointmentsTable.js"></script>
+<script src="/public/js/custom/common/pages/classes/table/Table.js"></script>
+<script src="/public/js/custom/common/pages/classes/table/extends/AppointmentsTable.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/SearchScheduleForm.js"></script>
 
-<script src="/public/js/custom/common/pages/Notifier.js"></script>
-<script src="/public/js/custom/common/pages/Requestor.js"></script>
+<script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
+<script src="/public/js/custom/common/pages/classes/requestor/Requestor.js"></script>
 <script src="/public/js/custom/common/pages/user/profile/Account.js"></script>
 
 <script src="/public/js/custom/frontend/pages/user/profile/account.js"></script>

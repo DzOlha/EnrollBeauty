@@ -235,6 +235,8 @@ class UserDataSource extends DataSource
         $serviceId = Services::$id;
         $service_name = Services::$name;
 
+        $now = date("Y-m-d H:i:s", time());
+
         $queryFrom = "
             $ordersService 
                 INNER JOIN $workers ON $worker_id = $workerId
@@ -245,6 +247,7 @@ class UserDataSource extends DataSource
             WHERE $user_id = $userId
                 AND $canceled IS NULL
                 AND $completed IS NULL
+                AND '$start_datetime' <= '$now'
         ";
 
         $this->db->query("
@@ -265,6 +268,7 @@ class UserDataSource extends DataSource
             WHERE $user_id = :user_id
                 AND $canceled IS NULL
                 AND $completed IS NULL
+                AND '$start_datetime' <= '$now'
             
             ORDER BY $orderByField $orderDirection
             LIMIT $limit
@@ -273,6 +277,9 @@ class UserDataSource extends DataSource
         $this->db->bind(':user_id', $userId);
 
         $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
 
         return $this->_appendTotalRowsCount($queryFrom, $result);
     }
