@@ -266,3 +266,33 @@ th, td {
 .card-worker-wrapper {
     padding-bottom: 0;
 }
+
+/**
+    Modal confirmation
+ */
+#modalAlertConfirmation {
+    background-color: rgb(0, 0, 0, 0.8);
+}
+#modalAlertConfirmation .close-modal {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    outline: none;
+}
+#modalAlertConfirmation .card {
+    color: black;
+    text-align: left;
+    font-weight: normal;
+    margin: 10px;
+}
+#modalAlertConfirmation-submit {
+    width: 100%;
+    background-color: var(--dark-color);
+    color: white;
+    font-weight: 500;
+}
+#modalAlertConfirmation-submit:hover {
+    background-color: var(--dark-brown-color);
+}

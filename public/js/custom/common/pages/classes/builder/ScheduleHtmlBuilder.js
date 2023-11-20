@@ -18,8 +18,13 @@ class ScheduleHtmlBuilder {
                             ${serviceName}
                         </h5>
                         <div class="card-options">
-                            <i class="far fa-heart me-1" data-schedule-id="${scheduleId}"></i>
-                            <i class="fe fe-shopping-cart" data-schedule-id="${scheduleId}"></i>
+                            <i class="far fa-heart me-1"
+                                data-schedule-id="${scheduleId}"
+                               
+                               
+                                ></i>
+                            <i class="fe fe-shopping-cart" 
+                                data-schedule-id="${scheduleId}"></i>
                         </div>
                     </div>
                     <div class="d-flex align-items-center pt-3 mt-auto

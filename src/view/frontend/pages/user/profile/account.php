@@ -393,6 +393,7 @@
     </div>
     <!-- End Main Content-->
 
+<?php require_once VIEW_COMMON."pages/user/profile/modals/modal_confirmation.php" ?>
 </div>
 <!-- End Page -->
 

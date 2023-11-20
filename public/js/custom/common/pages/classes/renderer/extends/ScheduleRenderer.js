@@ -33,6 +33,16 @@ class ScheduleRenderer {
         this.weekdayTabContentBase = 'weekday-tab-content';
 
         /**
+         * Modal
+         */
+        this.confirmationModalId = 'modalAlertConfirmation';
+        this.confirmationHeadlineId = 'modalAlertConfirmation-headline';
+        this.confirmationMessageId = 'modalAlertConfirmation-message';
+        this.confirmationSubmitId = 'modalAlertConfirmation-submit';
+        this.confirmationContentId = 'modalAlertConfirmation-content';
+        this.confirmationCloseId = 'modalAlertConfirmation-close';
+
+        /**
          * API
          */
         this.apiOrderSchedule = '/api/user/orderServiceSchedule';
@@ -525,26 +535,59 @@ class ScheduleRenderer {
         let shopIcon = document.querySelector(
             `#schedule-card-${scheduleId} .fe-shopping-cart`
         );
-        if(shopIcon === null) return;
+        if (shopIcon === null) return;
+
         /**
          * Create order for service
          */
-        shopIcon.addEventListener('click', () => {
-            console.log('shop click');
+        const handleShopIconClick = () => {
             let scheduleId = shopIcon.getAttribute('data-schedule-id');
+
+            let selectedCard = document.getElementById(`schedule-card-${scheduleId}`);
+            let card = selectedCard.cloneNode(true);
+
+            $(`#${this.confirmationHeadlineId}`).html('Confirmation!');
+            $(`#${this.confirmationContentId}`).html('');
+            $(`#${this.confirmationContentId}`).append(card);
+            $(`#${this.confirmationMessageId}`).html(
+                'Please confirm that you would like to order the selected item from available schedules.'
+            );
+            $(`#${this.confirmationModalId}`).show();
+
+            console.log('shop click');
+
             let dataToSend = {
                 'schedule_id': scheduleId
             }
+
+            let confirm = document.getElementById(this.confirmationSubmitId);
+            confirm.removeEventListener('click', handleConfirmClick); // Remove previous listener
+            confirm.addEventListener('click', handleConfirmClick);
+
+            let close = document.getElementById(this.confirmationCloseId);
+            close.removeEventListener('click', handleCloseClick); // Remove previous listener
+            close.addEventListener('click', handleCloseClick);
+        }
+
+        const handleConfirmClick = () => {
             this.requestor.post(
                 this.apiOrderSchedule,
-                dataToSend,
+                {'schedule_id': scheduleId},
                 this._successOrderSchedule.bind(this),
                 this._errorOrderSchedule.bind(this)
-            )
-        })
+            );
+        }
 
+        const handleCloseClick = () => {
+            $(`#${this.confirmationModalId}`).hide();
+        }
+
+        shopIcon.removeEventListener('click', handleShopIconClick); // Remove previous listener
+        shopIcon.addEventListener('click', handleShopIconClick);
     }
+
     _successOrderSchedule(response) {
+        $(`#${this.confirmationModalId}`).hide();
         Notifier.showSuccessMessage(response.success);
     }
     _errorOrderSchedule(response) {
