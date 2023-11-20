@@ -93,27 +93,33 @@ class AppointmentsTable extends Table {
             e.preventDefault();
 
             let id = e.currentTarget.getAttribute('data-appointment-id');
+            console.log(id);
+            console.log('click cancel');
 
-            console.log('shop click');
             this.confirmationModal.show(
                 'Confirmation!',
                 ``,
                 `Please confirm that you would like to cancel the appointment with id ${id}`
             )
 
-            let handleConfirmClick = () => {
-                this.requestor.post(
-                    this.apiCancelOrder,
-                    {'order_id': id},
-                    this._successCancelOrder.bind(this),
-                    this._errorCancelOrder.bind(this)
-                );
-            }
-
-            this.confirmationModal.submit(handleConfirmClick);
+            this.confirmationModal.submit(handleConfirmClick, id);
             this.confirmationModal.close();
         }
+        let handleConfirmClick = (id) => {
+            console.log('handleConfirmClick + ' + id);
+            this.requestor.post(
+                this.apiCancelOrder,
+                {'order_id': id},
+                this._successCancelOrder.bind(this),
+                this._errorCancelOrder.bind(this)
+            );
+        }
+
         cancelButtons.forEach((cancelButton) => {
+            //cancelButton.removeEventListener('click', handleCancelAppointment);
+            //let old = cancelButton.cloneNode(true);
+            //cancelButton.replaceWith(old);
+            console.log('forEach');
             cancelButton.addEventListener('click', handleCancelAppointment);
         })
     }

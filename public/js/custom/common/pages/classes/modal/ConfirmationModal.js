@@ -24,10 +24,21 @@ class ConfirmationModal {
         $(`#${this.confirmationModalId}`).hide();
     }
 
-    submit(callback) {
+    submit(callback, data) {
+        let f = () => {
+            callback(data);
+        }
         let confirm = document.getElementById(this.confirmationSubmitId);
-        confirm.removeEventListener('click', callback); // Remove previous listener
-        confirm.addEventListener('click', callback);
+
+        /**
+         * Replace the submit button with its copy to reset all event listeners
+         * @type {Node}
+         */
+        let copy = confirm.cloneNode(true);
+        confirm.replaceWith(copy);
+
+        copy.removeEventListener('click', f); // Remove previous listener
+        copy.addEventListener('click', f);
     }
 
     close() {

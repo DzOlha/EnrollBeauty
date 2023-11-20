@@ -150,7 +150,8 @@ class UserDataMapper extends DataMapper
 
     public function updateOrderIdInWorkersServiceSchedule(
         int $scheduleId, int $orderId
-    ) {
+    )
+    {
         return $this->dataSource->updateOrderIdInWorkersServiceSchedule(
             $scheduleId, $orderId
         );
@@ -159,5 +160,15 @@ class UserDataMapper extends DataMapper
     public function updateServiceOrderCanceledDatetimeById(int $orderId)
     {
         return $this->dataSource->updateServiceOrderCanceledDatetimeById($orderId);
+    }
+
+    public function selectScheduleIdByOrderId(int $orderId)
+    {
+        return $this->dataSource->selectScheduleIdByOrderId($orderId);
+    }
+
+    public function updateOrderIdByScheduleId(int $scheduleId)
+    {
+        return $this->dataSource->updateOrderIdByScheduleId($scheduleId);
     }
 }

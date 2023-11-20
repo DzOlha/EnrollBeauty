@@ -835,13 +835,58 @@ class UserApiController extends ApiController
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = htmlspecialchars(trim($_POST['order_id']));
 
+            $this->dataMapper->beginTransaction();
+
+            /**
+             * Changed the cancellation time of the service order
+             */
             $canceled = $this->dataMapper->updateServiceOrderCanceledDatetimeById($id);
             if($canceled === false) {
+                $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating cancellation datetime of the order!'
                 ]);
             }
 
+            /**
+             * Check if the canceled order has been created by choosing
+             * available schedule for specific service/worker
+             */
+            $scheduleId = $this->dataMapper->selectScheduleIdByOrderId($id);
+            if($scheduleId === false) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'The error occurred while getting schedule id'
+                ]);
+            }
+
+            if($scheduleId === null) {
+                /**
+                 * If not set -> return success message
+                 */
+                $this->dataMapper->commitTransaction();
+                $this->returnJson([
+                    'success' => 'You successfully canceled the appointment!'
+                ]);
+            }
+
+            /**
+             * Update the order_id in 'workers_service_schedule' table
+             * to mark the schedule as available for choosing
+             * (because previous person, who ordered it, canceled appointment)
+             */
+            $updatedOrderId = $this->dataMapper->updateOrderIdByScheduleId($scheduleId);
+            if($updatedOrderId === false) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'The error occurred while updating order id!'
+                ]);
+            }
+
+            /**
+             * Return success
+             */
+            $this->dataMapper->commitTransaction();
             $this->returnJson([
                 'success' => 'You successfully canceled the appointment!'
             ]);

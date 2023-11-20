@@ -529,6 +529,7 @@ class ScheduleRenderer {
         let shopIcon = document.querySelector(
             `#schedule-card-${scheduleId} .fe-shopping-cart`
         );
+
         if (shopIcon === null) return;
 
         /**
@@ -541,20 +542,21 @@ class ScheduleRenderer {
             let card = selectedCard.cloneNode(true);
 
             console.log('shop click');
+
             this.confirmationModal.show(
                 'Confirmation!',
                 card,
                 'Please confirm that you would like to order the selected item from available schedules.'
             )
 
-            this.confirmationModal.submit(handleConfirmClick);
+            this.confirmationModal.submit(handleConfirmClick, scheduleId);
             this.confirmationModal.close();
         }
 
-        const handleConfirmClick = () => {
+        const handleConfirmClick = (id) => {
             this.requestor.post(
                 this.apiOrderSchedule,
-                {'schedule_id': scheduleId},
+                {'schedule_id': id},
                 this._successOrderSchedule.bind(this),
                 this._errorOrderSchedule.bind(this)
             );

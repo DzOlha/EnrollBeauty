@@ -635,10 +635,14 @@ class UserDataSource extends DataSource
         $ordersService = OrdersService::$table;
         $id = OrdersService::$id;
         $schedule_id = OrdersService::$schedule_id;
+        $canceled_datetime = OrdersService::$canceled_datetime;
+        $completed_datetime = OrdersService::$completed_datetime;
 
         $this->db->query("
             SELECT $id FROM $ordersService
             WHERE $schedule_id = :schedule_id
+                  AND $canceled_datetime IS NULL
+                  AND $completed_datetime IS NULL
         ");
         $this->db->bind(':schedule_id', $scheduleId);
 
@@ -721,6 +725,39 @@ class UserDataSource extends DataSource
 
         $this->db->bind(':order_id', $orderId);
 
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+    public function selectScheduleIdByOrderId(int $orderId) {
+        $ordersService = OrdersService::$table;
+        $id = OrdersService::$id;
+        $schedule_id = OrdersService::$schedule_id;
+
+        $this->db->query("
+            SELECT $schedule_id FROM $ordersService
+            WHERE $id = :id
+        ");
+        $this->db->bind(':id', $orderId);
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return $result[explode('.', OrdersService::$schedule_id)[1]];
+        }
+        return $result;
+    }
+    public function updateOrderIdByScheduleId(int $scheduleId) {
+        $workersServiceSchedule = WorkersServiceSchedule::$table;
+        $order_id = WorkersServiceSchedule::$order_id;
+        $id = WorkersServiceSchedule::$id;
+
+        $this->db->query("
+            UPDATE $workersServiceSchedule
+            SET $order_id = NULL
+            WHERE $id = :id
+        ");
+        $this->db->bind(':id', $scheduleId);
         if ($this->db->affectedRowsCount() > 0) {
             return true;
         }
