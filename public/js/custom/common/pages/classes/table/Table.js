@@ -11,6 +11,8 @@ class Table {
 
         this.arrowDown = '/public/images/custom/system/icons/arrows_down.svg';
         this.arrowUp = '/public/images/custom/system/icons/arrows_up.svg';
+
+        this.requestor = new Requestor();
     }
 
     manageAll() {

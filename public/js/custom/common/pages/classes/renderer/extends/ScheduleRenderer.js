@@ -3,6 +3,8 @@ class ScheduleRenderer {
     constructor() {
         this.builder = new ScheduleHtmlBuilder();
         this.requestor = new Requestor();
+        this.ordersTable = new AppointmentsTable();
+
         this.scheduleWrapperId = 'main-schedule-wrapper';
 
         this.departmentsMenuId = 'departments-menu-wrapper';
@@ -35,12 +37,7 @@ class ScheduleRenderer {
         /**
          * Modal
          */
-        this.confirmationModalId = 'modalAlertConfirmation';
-        this.confirmationHeadlineId = 'modalAlertConfirmation-headline';
-        this.confirmationMessageId = 'modalAlertConfirmation-message';
-        this.confirmationSubmitId = 'modalAlertConfirmation-submit';
-        this.confirmationContentId = 'modalAlertConfirmation-content';
-        this.confirmationCloseId = 'modalAlertConfirmation-close';
+        this.confirmationModal = new ConfirmationModal();
 
         /**
          * API
@@ -546,27 +543,15 @@ class ScheduleRenderer {
             let selectedCard = document.getElementById(`schedule-card-${scheduleId}`);
             let card = selectedCard.cloneNode(true);
 
-            $(`#${this.confirmationHeadlineId}`).html('Confirmation!');
-            $(`#${this.confirmationContentId}`).html('');
-            $(`#${this.confirmationContentId}`).append(card);
-            $(`#${this.confirmationMessageId}`).html(
-                'Please confirm that you would like to order the selected item from available schedules.'
-            );
-            $(`#${this.confirmationModalId}`).show();
-
             console.log('shop click');
+            this.confirmationModal.show(
+                'Confirmation!',
+                card,
+                'Please confirm that you would like to order the selected item from available schedules.'
+            )
 
-            let dataToSend = {
-                'schedule_id': scheduleId
-            }
-
-            let confirm = document.getElementById(this.confirmationSubmitId);
-            confirm.removeEventListener('click', handleConfirmClick); // Remove previous listener
-            confirm.addEventListener('click', handleConfirmClick);
-
-            let close = document.getElementById(this.confirmationCloseId);
-            close.removeEventListener('click', handleCloseClick); // Remove previous listener
-            close.addEventListener('click', handleCloseClick);
+            this.confirmationModal.submit(handleConfirmClick);
+            this.confirmationModal.close();
         }
 
         const handleConfirmClick = () => {
@@ -578,16 +563,26 @@ class ScheduleRenderer {
             );
         }
 
-        const handleCloseClick = () => {
-            $(`#${this.confirmationModalId}`).hide();
-        }
-
         shopIcon.removeEventListener('click', handleShopIconClick); // Remove previous listener
         shopIcon.addEventListener('click', handleShopIconClick);
     }
 
     _successOrderSchedule(response) {
-        $(`#${this.confirmationModalId}`).hide();
+        /**
+         * Hide confirmation modal window
+         */
+        this.confirmationModal.hide();
+        /**
+         * Regenerate available schedules
+         */
+        $(`#submit-search-button`).click();
+        /**
+         * Regenerate orders table
+         */
+        this.ordersTable.sendApiRequest(this.ordersTable.itemsPerPage, Cookie.get('currentPage'));
+        /**
+         * Show success message
+         */
         Notifier.showSuccessMessage(response.success);
     }
     _errorOrderSchedule(response) {

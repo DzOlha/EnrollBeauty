@@ -247,7 +247,7 @@ class UserDataSource extends DataSource
             WHERE $user_id = $userId
                 AND $canceled IS NULL
                 AND $completed IS NULL
-                AND '$start_datetime' <= '$now'
+                AND $start_datetime >= '$now'
         ";
 
         $this->db->query("
@@ -268,7 +268,7 @@ class UserDataSource extends DataSource
             WHERE $user_id = :user_id
                 AND $canceled IS NULL
                 AND $completed IS NULL
-                AND '$start_datetime' <= '$now'
+                AND $start_datetime >= '$now'
             
             ORDER BY $orderByField $orderDirection
             LIMIT $limit
@@ -701,6 +701,25 @@ class UserDataSource extends DataSource
 
         $this->db->bind(':order_id', $orderId);
         $this->db->bind(':schedule_id', $scheduleId);
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateServiceOrderCanceledDatetimeById(int $orderId) {
+        $ordersService = OrdersService::$table;
+        $id = OrdersService::$id;
+        $canceledDatetime = OrdersService::$canceled_datetime;
+
+        $this->db->query("
+            UPDATE $ordersService
+            SET $canceledDatetime = NOW()
+            WHERE $id = :order_id
+        ");
+
+        $this->db->bind(':order_id', $orderId);
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;

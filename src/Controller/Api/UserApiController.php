@@ -830,4 +830,21 @@ class UserApiController extends ApiController
             ]);
         }
     }
+
+    public function cancelServiceOrder() {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = htmlspecialchars(trim($_POST['order_id']));
+
+            $canceled = $this->dataMapper->updateServiceOrderCanceledDatetimeById($id);
+            if($canceled === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while updating cancellation datetime of the order!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully canceled the appointment!'
+            ]);
+        }
+    }
 }

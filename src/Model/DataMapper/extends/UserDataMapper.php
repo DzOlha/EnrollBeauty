@@ -155,4 +155,9 @@ class UserDataMapper extends DataMapper
             $scheduleId, $orderId
         );
     }
+
+    public function updateServiceOrderCanceledDatetimeById(int $orderId)
+    {
+        return $this->dataSource->updateServiceOrderCanceledDatetimeById($orderId);
+    }
 }

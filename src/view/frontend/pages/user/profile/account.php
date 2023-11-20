@@ -168,7 +168,7 @@
                     <h3 class="pl-30 title">Coming Appointments</h3>
                     <div class="card-body">
                         <div class="row table-filter">
-                            <div class="col-lg-1 d-lg-flex justify-content-start">
+                            <div class="col-lg-1 mg-l-15 d-lg-flex justify-content-start">
                                 <div class="show-entries">
                                     <?php require_once VIEW_COMMON."pages/user/profile/blocks/select_pagination_count.php"?>
                                 </div>
@@ -454,6 +454,8 @@
 <script src="/public/js/custom/common/pages/classes/renderer/extends/TimeRenderer.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/extends/DateRenderer.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/extends/ScheduleRenderer.js"></script>
+
+<script src="/public/js/custom/common/pages/classes/modal/ConfirmationModal.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/builder/ScheduleHtmlBuilder.js"></script>
 

@@ -5,7 +5,8 @@ class AppointmentsTable extends Table {
             '/api/user/getUserComingAppointments?'
         );
         this.tableId = 'table-body';
-
+        this.confirmationModal = new ConfirmationModal();
+        this.apiCancelOrder = '/api/user/cancelServiceOrder';
     }
 
     manageAll() {
@@ -67,11 +68,12 @@ class AppointmentsTable extends Table {
             row.append(`<td>${item.price + ' ' + item.currency}</td>`);
 
             row.append(`<td>
-                        <a class="btn ripple btn-manage"
+                        <a class="btn ripple btn-manage cancel-button"
+                           id="cancel-${item.id}"
                            data-appointment-id = "${item.id}"
                            href="">
                             <i class="fe fe-eye me-2"></i>
-                            Manage
+                            Cancel
                         </a>
                     </td>`);
 
@@ -80,5 +82,48 @@ class AppointmentsTable extends Table {
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
         });
+        this.addListenerCancelAppointment();
+    }
+    addListenerCancelAppointment() {
+        let cancelButtons = Array.from(
+            document.getElementsByClassName('cancel-button')
+        );
+        // cancelButton.removeEventListener('click', handleShopIconClick); // Remove previous listener
+        const handleCancelAppointment = (e) => {
+            e.preventDefault();
+
+            let id = e.currentTarget.getAttribute('data-appointment-id');
+
+            console.log('shop click');
+            this.confirmationModal.show(
+                'Confirmation!',
+                ``,
+                `Please confirm that you would like to cancel the appointment with id ${id}`
+            )
+
+            let handleConfirmClick = () => {
+                this.requestor.post(
+                    this.apiCancelOrder,
+                    {'order_id': id},
+                    this._successCancelOrder.bind(this),
+                    this._errorCancelOrder.bind(this)
+                );
+            }
+
+            this.confirmationModal.submit(handleConfirmClick);
+            this.confirmationModal.close();
+        }
+        cancelButtons.forEach((cancelButton) => {
+            cancelButton.addEventListener('click', handleCancelAppointment);
+        })
+    }
+    _successCancelOrder(response) {
+        this.confirmationModal.hide();
+        Notifier.showSuccessMessage(response.success);
+        this.sendApiRequest(this.itemsPerPage, Cookie.get('currentPage'));
+    }
+    _errorCancelOrder(response) {
+        //this.confirmationModal.hide();
+        Notifier.showErrorMessage(response.error);
     }
 }

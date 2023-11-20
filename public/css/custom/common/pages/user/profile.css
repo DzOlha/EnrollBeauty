@@ -59,6 +59,8 @@
     padding-top: 10px;
 }
 .appointments-wrapper {
+    display: flex;
+    flex-direction: column;
     justify-content: left;
     padding-bottom: 25px;
 }
