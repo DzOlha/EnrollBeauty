@@ -1,4 +1,3 @@
-
 class Table {
     constructor(apiUrl, orderByField = null, orderDirection = null) {
         this.apiUrl = apiUrl; // Store the API URL
@@ -35,10 +34,12 @@ class Table {
         Cookie.remove('currentPage');
         Cookie.remove('totalRowsCount');
     }
+
     setInitialCookie() {
         Cookie.set('currentPage', 1);
         return 1;
     }
+
     setApiUrl(apiUrl) {
         this.apiUrl = apiUrl;
     }
@@ -88,8 +89,8 @@ class Table {
     getApiUrlFormat(itemsPerPage, currentPage, orderByField, orderDirection) {
         return `${this.apiUrl}limit=${itemsPerPage}&page=${currentPage}&order_field=${orderByField}&order_direction=${orderDirection}`;
     }
-    sendApiRequest(itemsPerPage, currentPage, orderByField = null, orderDirection = null)
-    {
+
+    sendApiRequest(itemsPerPage, currentPage, orderByField = null, orderDirection = null) {
         let requestTimeout = setTimeout(() => {
             // Hide the table and show the loader
             $("#data-table").hide();
@@ -107,7 +108,7 @@ class Table {
         //console.log('orderByField = ' + orderByField + "; orderDirection = " + orderDirection);
 
         $.getJSON(this.getApiUrlFormat(itemsPerPage, currentPage, orderByField, orderDirection),
-            (response)=> {
+            (response) => {
                 // Clear the timeout since the response is received
                 clearTimeout(requestTimeout);
 
@@ -126,7 +127,9 @@ class Table {
                 this.generatePaginationControls(currentPage);
             });
     }
-    populateTable(response) {}
+
+    populateTable(response) {
+    }
 
     generatePaginationControls(currentPage) {
         const paginationControls = $('.pagination');
@@ -211,8 +214,7 @@ class Table {
         //console.log(oldActiveArrowColumn.innerText);
         for (let i = 0; i < size; i++) {
             let order, icon;
-            arrowColumns[i].addEventListener('click', (e) =>
-            {
+            arrowColumns[i].addEventListener('click', (e) => {
                 let oldActiveArrowColumn = document.getElementsByClassName(
                     'arrow_column active'
                 )[0];
@@ -221,7 +223,7 @@ class Table {
                  * Check if the current active column was not clicked again to change sort order
                  * Click to change the field of sorting
                  */
-                if(oldActiveArrowColumn.innerText !== arrowColumns[i].innerText) {
+                if (oldActiveArrowColumn.innerText !== arrowColumns[i].innerText) {
                     /**
                      * Clear the previous sorted column arrow
                      */

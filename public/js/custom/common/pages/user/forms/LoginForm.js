@@ -1,4 +1,3 @@
-
 class LoginForm extends Form {
     constructor() {
         super(
@@ -12,6 +11,7 @@ class LoginForm extends Form {
 
         this.accountUrl = '/web/user/account'
     }
+
     successCallbackSubmit(response) {
         window.location.href = this.accountUrl;
         //console.log(response);
@@ -31,7 +31,7 @@ class LoginForm extends Form {
         password = password.value.trim();
 
 
-        if(idAssoc === true) {
+        if (idAssoc === true) {
             let result = {};
             result[this.emailInputId] = email;
             result[this.passwordInputId] = password;
@@ -43,6 +43,7 @@ class LoginForm extends Form {
             'password': password,
         };
     }
+
     getRules() {
         const formRules = {};
 
@@ -57,6 +58,7 @@ class LoginForm extends Form {
 
         return formRules;
     }
+
     getMessages() {
         const formMessages = {};
 
@@ -67,7 +69,7 @@ class LoginForm extends Form {
         formMessages[this.passwordInputId] = {
             required: 'Please enter your password',
             pattern: 'Password must contain at least one uppercase letter, one lowercase letter, one digit, ' +
-                     'one special character, and be between 8 to 30 characters long'
+                'one special character, and be between 8 to 30 characters long'
         };
 
         return formMessages;

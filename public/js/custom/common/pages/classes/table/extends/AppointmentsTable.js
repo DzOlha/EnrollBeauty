@@ -1,4 +1,3 @@
-
 class AppointmentsTable extends Table {
     constructor() {
         super(
@@ -84,6 +83,7 @@ class AppointmentsTable extends Table {
         });
         this.addListenerCancelAppointment();
     }
+
     addListenerCancelAppointment() {
         let cancelButtons = Array.from(
             document.getElementsByClassName('cancel-button')
@@ -117,11 +117,13 @@ class AppointmentsTable extends Table {
             cancelButton.addEventListener('click', handleCancelAppointment);
         })
     }
+
     _successCancelOrder(response) {
         this.confirmationModal.hide();
         Notifier.showSuccessMessage(response.success);
         this.sendApiRequest(this.itemsPerPage, Cookie.get('currentPage'));
     }
+
     _errorCancelOrder(response) {
         //this.confirmationModal.hide();
         Notifier.showErrorMessage(response.error);

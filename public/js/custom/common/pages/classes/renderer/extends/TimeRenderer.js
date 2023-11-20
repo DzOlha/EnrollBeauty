@@ -1,4 +1,3 @@
-
 class TimeRenderer extends Renderer {
     constructor() {
         super();
@@ -36,6 +35,7 @@ class TimeRenderer extends Renderer {
         // Format the time without the seconds
         return timeDate.toLocaleTimeString(locale, options);
     }
+
     static renderShortTime(timeString) {
         // Parse the input time string
         const parsedTime = new Date("1970-01-01T" + timeString + "Z");

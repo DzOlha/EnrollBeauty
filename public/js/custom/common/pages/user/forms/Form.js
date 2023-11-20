@@ -1,4 +1,3 @@
-
 class Form {
     constructor(formClass, submitButtonId, submitActionUrl, requestorObject) {
         this.formClass = formClass;
@@ -6,10 +5,12 @@ class Form {
         this.submitActionUrl = submitActionUrl;
         this.requestor = requestorObject;
     }
+
     addListenerSubmitForm() {
         let submit = document.getElementById(this.submitButtonId);
         submit.addEventListener('click', this.listenerSubmitForm);
     }
+
     listenerSubmitForm = () => {
         let formRules = this.getRules();
         let formMessages = this.getMessages();
@@ -21,7 +22,7 @@ class Form {
         this.displayErrors(validationErrors);
 
         // Check if there are no div.error elements with text content
-        const noErrorWithText = $("div.error").get().every(function(element) {
+        const noErrorWithText = $("div.error").get().every(function (element) {
             return $(element).text().trim() === '';
         });
         //console.log(noErrorWithText);
@@ -31,6 +32,7 @@ class Form {
             this.handleFormSubmission();
         }
     }
+
     // Function to validate the form data
     validateFormData(formData, rules, messages) {
         const errors = {};
@@ -56,7 +58,7 @@ class Form {
                             errors[key] = messages[key].equalTo;
                         }
                     }
-                    if(!errors[key]) {
+                    if (!errors[key]) {
                         errors[key] = '';
                     }
                 }
@@ -74,7 +76,7 @@ class Form {
             /**
              * Clear error highlighting and messages if there is no errors already
              */
-            if(validationErrors[field] === '') {
+            if (validationErrors[field] === '') {
                 input.removeClass('border-danger');
                 errorContainer.removeClass('text-danger');
                 errorContainer.text('');
@@ -99,15 +101,25 @@ class Form {
         )
     }
 
-    successCallbackSubmit(response) {}
-    errorCallbackSubmit(response) {}
-    collectDataToSend(idAssoc = false) {}
-    getRules(){}
-    getMessages(){}
+    successCallbackSubmit(response) {
+    }
+
+    errorCallbackSubmit(response) {
+    }
+
+    collectDataToSend(idAssoc = false) {
+    }
+
+    getRules() {
+    }
+
+    getMessages() {
+    }
 
     showErrorMessage(message) {
         Notifier.showErrorMessage(message);
     }
+
     showSuccessMessage(message) {
         Notifier.showSuccessMessage(message);
     }

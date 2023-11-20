@@ -38,7 +38,7 @@ class DateRenderer extends Renderer {
      * dateString = 'YYYY-MM-DD'
      */
     static getDayOfWeek(
-        dateString,  locale = 'en-US', timezone = 'Europe/Kiev'
+        dateString, locale = 'en-US', timezone = 'Europe/Kiev'
     ) {
         let date = new Date(dateString);
 

@@ -1,8 +1,8 @@
-
 class Cookie {
     static set(name, value) {
         document.cookie = `${name}=${value}`;
     }
+
     static get(name) {
         const _name = name + "=";
         const decodedCookie = decodeURIComponent(document.cookie);
@@ -18,6 +18,7 @@ class Cookie {
         }
         return "";
     }
+
     static remove(name) {
         document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     }

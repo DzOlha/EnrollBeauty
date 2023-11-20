@@ -1,4 +1,3 @@
-
 class ConfirmationModal {
     constructor() {
         this.confirmationModalId = 'modalAlertConfirmation';
@@ -8,6 +7,7 @@ class ConfirmationModal {
         this.confirmationContentId = 'modalAlertConfirmation-content';
         this.confirmationCloseId = 'modalAlertConfirmation-close';
     }
+
     show(headline, content, message) {
         $(`#${this.confirmationHeadlineId}`).html(headline);
 
@@ -29,6 +29,7 @@ class ConfirmationModal {
         confirm.removeEventListener('click', callback); // Remove previous listener
         confirm.addEventListener('click', callback);
     }
+
     close() {
         let callback = () => {
             this.hide();

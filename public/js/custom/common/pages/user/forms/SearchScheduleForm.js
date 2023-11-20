@@ -172,7 +172,7 @@ class SearchScheduleForm extends Form {
         }
 
         if (validTimeRange) {
-            if(selectStartWrapper.hasClass('border-error'))
+            if (selectStartWrapper.hasClass('border-error'))
                 selectStartWrapper.removeClass('border-error');
 
             errorStart.html('');
@@ -189,10 +189,10 @@ class SearchScheduleForm extends Form {
     validateDateRange() {
         let dateRangeInput = $(`.${this.datesInputClass}`);
         let dateRange = dateRangeInput.val()
-                        .split('-')
-                            .map(
-                                (item) => DateRenderer.getUnixTimestamp(item)
-                            );
+            .split('-')
+            .map(
+                (item) => DateRenderer.getUnixTimestamp(item)
+            );
 
         let validDateRange = true;
         let error = $(`#${this.dateRangeErrorId}`);
@@ -208,7 +208,7 @@ class SearchScheduleForm extends Form {
         }
 
         if (validDateRange) {
-            if(dateRangeInput.hasClass('border-danger'))
+            if (dateRangeInput.hasClass('border-danger'))
                 dateRangeInput.removeClass('border-danger');
 
             error.html('');

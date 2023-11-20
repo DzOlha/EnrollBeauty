@@ -1,4 +1,3 @@
-
 $(function () {
     let userInfo = new Account(
         new Requestor, new AppointmentsTable,

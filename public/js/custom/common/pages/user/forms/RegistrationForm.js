@@ -1,4 +1,3 @@
-
 class RegistrationForm extends Form {
     constructor() {
         super(
@@ -54,7 +53,7 @@ class RegistrationForm extends Form {
         if (confirmPassword === null) return;
         confirmPassword = confirmPassword.value.trim();
 
-        if(idAssoc === true) {
+        if (idAssoc === true) {
             let result = {};
             result[this.nameInputId] = name;
             result[this.surnameInputId] = surname;

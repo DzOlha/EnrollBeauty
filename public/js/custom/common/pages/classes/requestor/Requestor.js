@@ -1,4 +1,3 @@
-
 class Requestor {
     constructor() {
         this.defaultErrorMessage = 'Error getting info! Please, try again later!';
@@ -12,9 +11,9 @@ class Requestor {
             }
             successCallback(response);
         })
-        .fail((jqXHR, textStatus, errorThrown) => {
-            errorCallback({'error': this.defaultErrorMessage});
-        });
+            .fail((jqXHR, textStatus, errorThrown) => {
+                errorCallback({'error': this.defaultErrorMessage});
+            });
     }
 
     post(apiUrl, dataToSend, successCallback, errorCallback) {

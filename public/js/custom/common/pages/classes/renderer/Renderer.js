@@ -1,5 +1,7 @@
-
 class Renderer {
-    constructor() {}
-    static render(value){}
+    constructor() {
+    }
+
+    static render(value) {
+    }
 }

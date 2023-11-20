@@ -1,4 +1,3 @@
-
 class ScheduleRenderer {
     constructor() {
         this.builder = new ScheduleHtmlBuilder();
@@ -118,8 +117,7 @@ class ScheduleRenderer {
          * Insert the blueprint of the departments menu and schedule content
          * into the page structure
          */
-        response.data.departments.forEach((department) =>
-        {
+        response.data.departments.forEach((department) => {
             //console.log('response.data.departments.forEach((department)');
             /**
              * Set the tab id value which allows us to determine the identifier
@@ -173,8 +171,7 @@ class ScheduleRenderer {
              * @type {HTMLElement}
              */
             let a = document.getElementById(menuItemId);
-            a.addEventListener('click', () =>
-            {
+            a.addEventListener('click', () => {
                 console.log('department a.click');
                 /**
                  * #department-tab-content-{id} -> department-tab-content-{id}
@@ -393,7 +390,7 @@ class ScheduleRenderer {
          * @type {string}
          */
         let activeDayTabId = activeWeekdayTab.getAttribute('href')
-                                    .substring(1);
+            .substring(1);
 
         /**
          * Fill the time intervals with schedule cards
@@ -407,21 +404,21 @@ class ScheduleRenderer {
      * @param schedules
      * {
      *     0: {
-         *    schedule_id: ,
-         *    service_id: ,
-         *    department_id: ,
-         *    service_name: ,
-         *    worker_id: ,
-         *    worker_name: ,
-         *    worker_surname: ,
-         *    affiliate_id: ,
-         *    city: ,
-         *    address: ,
-         *    day: ,
-         *    start_time: ,
-         *    end_time: ,
-         *    price: ,
-         *    currency:
+     *    schedule_id: ,
+     *    service_id: ,
+     *    department_id: ,
+     *    service_name: ,
+     *    worker_id: ,
+     *    worker_name: ,
+     *    worker_surname: ,
+     *    affiliate_id: ,
+     *    city: ,
+     *    address: ,
+     *    day: ,
+     *    start_time: ,
+     *    end_time: ,
+     *    price: ,
+     *    currency:
      *    ........
      * },
      * }
@@ -492,29 +489,29 @@ class ScheduleRenderer {
             )
             //console.log(scheduleCard);
 
-            if(startTime >= 9 && startTime <= 12) {
+            if (startTime >= 9 && startTime <= 12) {
                 if (endTime <= 12) {
                     _9_12.insertAdjacentHTML('beforeend', scheduleCard);
                 } else {
                     _12_15.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
-            if(startTime >= 12 && startTime <= 15) {
-                if(endTime <= 15) {
+            if (startTime >= 12 && startTime <= 15) {
+                if (endTime <= 15) {
                     _12_15.insertAdjacentHTML('beforeend', scheduleCard);
                 } else {
                     _15_18.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
-            if(startTime >= 15 && startTime <= 18) {
-                if(endTime <= 18) {
+            if (startTime >= 15 && startTime <= 18) {
+                if (endTime <= 18) {
                     _15_18.insertAdjacentHTML('beforeend', scheduleCard);
                 } else {
                     _18_21.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
-            if(startTime >= 18 && startTime <= 21) {
-                if(endTime <= 21) {
+            if (startTime >= 18 && startTime <= 21) {
+                if (endTime <= 21) {
                     _18_21.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
@@ -585,18 +582,21 @@ class ScheduleRenderer {
          */
         Notifier.showSuccessMessage(response.success);
     }
+
     _errorOrderSchedule(response) {
         Notifier.showErrorMessage(response.error);
     }
+
     addListenerOnLikeSchedule(scheduleId) {
         let likeIcon = document.querySelector(
             `#schedule-card-${scheduleId} .fa-heart`
         );
-        if(likeIcon === null) return;
+        if (likeIcon === null) return;
         /**
          * Add schedule to the liked/saved ones
          */
-        likeIcon.addEventListener('click', () => {});
+        likeIcon.addEventListener('click', () => {
+        });
     }
 
 }
