@@ -89,8 +89,8 @@ class ScheduleRenderer {
      *  }
      */
     render(response) {
-        console.log(' render(response)');
-        console.log(JSON.stringify(response));
+        //console.log(' render(response)');
+        //console.log(JSON.stringify(response));
         let wrapper = document.getElementById(this.scheduleWrapperId);
         wrapper.innerHTML = '';
 
@@ -172,7 +172,7 @@ class ScheduleRenderer {
              */
             let a = document.getElementById(menuItemId);
             a.addEventListener('click', () => {
-                console.log('department a.click');
+                //console.log('department a.click');
                 /**
                  * #department-tab-content-{id} -> department-tab-content-{id}
                  * @type {string}
@@ -280,7 +280,7 @@ class ScheduleRenderer {
     populateActiveDepartmentScheduleTab(
         activeDepartmentTabId, departmentId, startDate, endDate, schedules
     ) {
-        console.log('populateActiveDepartmentScheduleTab');
+        //console.log('populateActiveDepartmentScheduleTab');
         //console.log('activeDepartmentTabId = ' + activeDepartmentTabId);
         let daysMenuWrapper = document.querySelector(
             `#${activeDepartmentTabId} .${this.daysMenuClass}`
@@ -363,7 +363,7 @@ class ScheduleRenderer {
              */
             let a = document.getElementById(menuItemId);
             a.addEventListener('click', () => {
-                console.log('weekday a.click');
+                //console.log('weekday a.click');
 
                 /**
                  * #_{id}_YYYY-MM-DD -> _id_YYYY-MM-DD
@@ -428,13 +428,13 @@ class ScheduleRenderer {
     populateActiveDayScheduleTab(
         activeDepartmentTabId, activeDayTabId, schedules
     ) {
-        console.log('populateActiveDayScheduleTab');
+        //console.log('populateActiveDayScheduleTab');
         let schedulesForActiveDay = schedules.filter(
             schedule => schedule.day === activeDayTabId.substring(3)
         );
 
         // console.log('activeDayTabId = ' + activeDayTabId);
-        console.log(`#${activeDepartmentTabId} #${activeDayTabId} .${this.timeIntervalClass}.${this.from12To15Class}`);
+        //console.log(`#${activeDepartmentTabId} #${activeDayTabId} .${this.timeIntervalClass}.${this.from12To15Class}`);
 
         /**
          * 9 - 12
@@ -472,7 +472,7 @@ class ScheduleRenderer {
             // console.log('schedulesForActiveDay.forEach((schedule)');
             // console.log('schedulesForDepartmentTab = ' + JSON.stringify(schedules));
             // console.log('scheduleForActiveDay = ' + JSON.stringify(schedulesForActiveDay));
-            console.log('scheduleItem = ' + JSON.stringify(schedule));
+            //console.log('scheduleItem = ' + JSON.stringify(schedule));
             let startTime = parseInt(schedule.start_time);
             let endTime = parseInt(schedule.end_time);
 
@@ -522,7 +522,7 @@ class ScheduleRenderer {
             this.addListenerOnOrderSchedule(schedule.schedule_id);
             this.addListenerOnLikeSchedule(schedule.schedule_id);
         })
-        console.log('-------------------------------------------------------------------------------------------------------------------');
+        //console.log('-------------------------------------------------------------------------------------------------------------------');
     }
 
     addListenerOnOrderSchedule(scheduleId) {
@@ -540,8 +540,6 @@ class ScheduleRenderer {
 
             let selectedCard = document.getElementById(`schedule-card-${scheduleId}`);
             let card = selectedCard.cloneNode(true);
-
-            console.log('shop click');
 
             this.confirmationModal.show(
                 'Confirmation!',

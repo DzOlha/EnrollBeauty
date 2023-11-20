@@ -93,8 +93,6 @@ class AppointmentsTable extends Table {
             e.preventDefault();
 
             let id = e.currentTarget.getAttribute('data-appointment-id');
-            console.log(id);
-            console.log('click cancel');
 
             this.confirmationModal.show(
                 'Confirmation!',
@@ -106,7 +104,6 @@ class AppointmentsTable extends Table {
             this.confirmationModal.close();
         }
         let handleConfirmClick = (id) => {
-            console.log('handleConfirmClick + ' + id);
             this.requestor.post(
                 this.apiCancelOrder,
                 {'order_id': id},
@@ -116,10 +113,6 @@ class AppointmentsTable extends Table {
         }
 
         cancelButtons.forEach((cancelButton) => {
-            //cancelButton.removeEventListener('click', handleCancelAppointment);
-            //let old = cancelButton.cloneNode(true);
-            //cancelButton.replaceWith(old);
-            console.log('forEach');
             cancelButton.addEventListener('click', handleCancelAppointment);
         })
     }
