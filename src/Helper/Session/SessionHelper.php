@@ -34,10 +34,17 @@ class SessionHelper
     /***
      * Admin
      */
-    public static function setAdminSession() {
-
+    public static function setAdminSession(int $adminId) {
+        $_SESSION['admin_id'] = $adminId;
+    }
+    public static function getAdminSession() {
+        if(isset($_SESSION['admin_id'])) {
+            return $_SESSION['admin_id'];
+        } else {
+            return false;
+        }
     }
     public static function removeAdminSession() {
-
+        unset($_SESSION['admin_id']);
     }
 }

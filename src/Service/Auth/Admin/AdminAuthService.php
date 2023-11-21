@@ -3,6 +3,7 @@
 namespace Src\Service\Auth\Admin;
 
 use Src\Helper\Data\AdminDefault;
+use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\AdminWriteDTO;
 use Src\Model\DTO\Write\UserWriteDto;
@@ -11,6 +12,7 @@ use Src\Service\Auth\AuthService;
 use Src\Service\Hasher\impl\PasswordHasher;
 use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
+use Src\Service\Validator\impl\PasswordHashValidator;
 use Src\Service\Validator\impl\PasswordValidator;
 
 class AdminAuthService extends AuthService
@@ -282,6 +284,79 @@ class AdminAuthService extends AuthService
             }
             return [
                 'success' => 'You successfully changed admin details!'
+            ];
+        }
+        return [];
+    }
+
+    public function login() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $items = [
+                'email' => htmlspecialchars(trim($_POST['email'])),
+                'password' => htmlspecialchars(trim($_POST['password'])),
+            ];
+            $emailValidator = new EmailValidator();
+            $passwordValidator = new PasswordValidator();
+
+            /**
+             * Email
+             */
+            $validEmail = $emailValidator->validate($items['email']);
+            if (!$validEmail) {
+                return [
+                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                ];
+            }
+
+            /**
+             * Password
+             */
+            $validPass = $passwordValidator->validate($items['password']);
+            if (!$validPass) {
+                return [
+                    'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
+                                one digit, one special character, and be between 8 to 30 characters long'
+                ];
+            }
+
+            /**
+             * Get actual password hash
+             */
+            $actualPasswordHash = $this->dataMapper->selectAdminPasswordByEmail($items['email']);
+            if ($actualPasswordHash === false) {
+                return [
+                    'error' => 'There is no admin with such email'
+                ];
+            }
+
+            /**
+             * Check Password Equality
+             */
+            $hashValidator = new PasswordHashValidator($actualPasswordHash);
+            $validPassword = $hashValidator->validate($items['password']);
+            if (!$validPassword) {
+                return [
+                    'error' => 'The provided password does not match the one saved for the requested admin!'
+                ];
+            }
+
+            /**
+             * Select User ID for storing it into session
+             */
+            $adminId = $this->dataMapper->selectAdminIdByEmail($items['email']);
+            if ($adminId === false) {
+                return [
+                    'error' => 'The error occurred while getting user id!'
+                ];
+            }
+
+            /**
+             * Store Users ID into session
+             */
+            SessionHelper::setAdminSession($adminId);
+            return [
+                'success' => true,
+                'session' => SessionHelper::getAdminSession()
             ];
         }
         return [];

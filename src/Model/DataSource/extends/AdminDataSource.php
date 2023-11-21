@@ -119,4 +119,24 @@ class AdminDataSource extends DataSource
         }
         return false;
     }
+    public function selectAdminPasswordByEmail(string $email)
+    {
+        $users = Admins::$table;
+        $_email = Admins::$email;
+        $_password = Admins::$password;
+
+        $this->db->query(
+            "SELECT $_password FROM $users WHERE $_email = :email"
+        );
+
+        $this->db->bind(':email', $email);
+
+        $result = $this->db->singleRow();
+        if ($result) {
+            // admins.password -> password
+            $key = explode('.', $_password)[1];
+            return $result[$key];
+        }
+        return false;
+    }
 }

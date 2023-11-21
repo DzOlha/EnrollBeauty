@@ -37,4 +37,9 @@ class AdminDataMapper extends DataMapper
     {
         return $this->dataSource->updateAdmin($admin);
     }
+
+    public function selectAdminPasswordByEmail(string $email)
+    {
+        return $this->dataSource->selectAdminPasswordByEmail($email);
+    }
 }

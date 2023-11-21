@@ -248,7 +248,7 @@ class UserApiController extends ApiController
             SessionHelper::setUserSession($userId);
             $this->returnJson([
                 'success' => true,
-                'session' => $_SESSION['user_id']
+                'session' => SessionHelper::getUserSession()
             ]);
         }
     }

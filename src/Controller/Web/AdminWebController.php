@@ -3,6 +3,7 @@
 namespace Src\Controller\Web;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\AdminDataMapper;
 use Src\Model\DataSource\extends\AdminDataSource;
@@ -52,6 +53,7 @@ class AdminWebController extends WebController
     }
 
     /**
+     * @return void
      *
      * url = /web/admin/login
      */
@@ -60,5 +62,28 @@ class AdminWebController extends WebController
             'title' => 'Login'
         ];
         $this->view(VIEW_FRONTEND . 'pages/admin/forms/login', $data);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/admin/account
+     */
+    public function account()
+    {
+        $session = SessionHelper::getAdminSession();
+        if (!$session) {
+            $data = [
+                'title' => 'Page Not Found',
+                'message' => 'The requested page not found! Please, log in to visit your account!'
+            ];
+            $this->view(VIEW_FRONTEND . 'pages/system/error', $data);
+        } else {
+            $data = [
+                'title' => 'Admin Account',
+                'page_name' => 'Homepage'
+            ];
+            $this->view(VIEW_FRONTEND . 'pages/admin/profile/account', $data);
+        }
     }
 }

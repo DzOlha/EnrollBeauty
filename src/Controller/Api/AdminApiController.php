@@ -37,4 +37,10 @@ class AdminApiController extends ApiController
             $this->authService->changeDefaultAdminData()
         );
     }
+
+    public function login() {
+        $this->returnJson(
+            $this->authService->login()
+        );
+    }
 }
