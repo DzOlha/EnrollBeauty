@@ -27,7 +27,14 @@ class AdminApiController extends ApiController
         return new AdminDataMapper(new AdminDataSource(MySql::getInstance()));
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/admin/changeDefault
+     */
     public function changeDefault() {
-
+        $this->returnJson(
+            $this->authService->changeDefaultAdminData()
+        );
     }
 }

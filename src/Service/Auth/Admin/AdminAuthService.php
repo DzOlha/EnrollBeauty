@@ -207,6 +207,16 @@ class AdminAuthService extends AuthService
             }
 
             /**
+             * Check if the admin with such email is already registered
+             */
+            $registeredBefore = $this->dataMapper->selectAdminIdByEmail($admin['email']);
+            if ($registeredBefore) {
+                return [
+                    'error' => "The admin with such email is already registered!",
+                ];
+            }
+
+            /**
              * Old Password -> format validation
              */
             $validPass = $passwordValidator->validate($admin['old-password']);
@@ -274,6 +284,6 @@ class AdminAuthService extends AuthService
                 'success' => 'You successfully changed admin details!'
             ];
         }
+        return [];
     }
-
 }

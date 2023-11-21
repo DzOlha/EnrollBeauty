@@ -25,9 +25,14 @@ class AdminWebController extends WebController
     {
         return new AdminDataMapper(new AdminDataSource(MySql::getInstance()));
     }
+
+    /**
+     * @return void
+     *
+     * url = /{the admin registration url is here}
+     */
     public function adminDefaultRegistration() {
         $result = $this->authService->defaultAdminRegister();
-
         /**
          * If registration of the default admin has been successfully done right now
          * OR
