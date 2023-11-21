@@ -18,7 +18,30 @@ CREATE TABLE users (
        referral_parent_id INT,
        last_login_date DATETIME,
        role_id INT NOT NULL,
-       FOREIGN KEY (role_id) REFERENCES roles(id)
+       FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+);
+
+CREATE TABLE admins (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       name VARCHAR(50) NOT NULL,
+       surname VARCHAR(50) NOT NULL,
+       password VARCHAR(255) NOT NULL,
+       email VARCHAR(100) UNIQUE NOT NULL,
+       created_date DATETIME NOT NULL,
+       referral_parent_id INT,
+       last_login_date DATETIME,
+       role_id INT NOT NULL,
+       status INT DEFAULT 0 COMMENT '0 - inactive, 1 - active, 2 - banned',
+       FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+       FOREIGN KEY (referral_parent_id) REFERENCES admins(id) ON DELETE SET NULL
+);
+CREATE TABLE admins_setting (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       admin_id INT NOT NULL,
+       recovery_code VARCHAR(100),
+       activation_code VARCHAR(100),
+       date_of_sending DATETIME,
+       FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
 );
 
 CREATE TABLE users_social (
@@ -36,6 +59,7 @@ CREATE TABLE users_setting (
        id INT AUTO_INCREMENT PRIMARY KEY,
        user_id INT NOT NULL,
        recovery_code VARCHAR(100),
+       activation_code VARCHAR(100),
        date_of_sending DATETIME,
        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -97,6 +121,7 @@ CREATE TABLE workers_setting (
    id INT AUTO_INCREMENT PRIMARY KEY,
    worker_id INT NOT NULL,
    recovery_code VARCHAR(100),
+   activation_code VARCHAR(100),
    date_of_sending DATETIME,
    FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE
 );
@@ -114,9 +139,9 @@ CREATE TABLE workers_document (
       issued_by VARCHAR(255) NOT NULL,
       issued_date DATE NOT NULL,
       created_date DATETIME NOT NULL,
-      document_id INT NOT NULL,
+      document_id INT,
       FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
-      FOREIGN KEY (document_id) REFERENCES documents(id)
+      FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE SET NULL
 );
 
 CREATE TABLE workers_rating (
@@ -135,9 +160,9 @@ CREATE TABLE affiliates (
     city VARCHAR(50) NOT NULL,
     country VARCHAR(50) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    worker_manager_id INT NOT NULL,
+    worker_manager_id INT,
     created_date DATETIME NOT NULL,
-    FOREIGN KEY (worker_manager_id) REFERENCES workers(id)
+    FOREIGN KEY (worker_manager_id) REFERENCES workers(id) ON DELETE SET NULL
 );
 CREATE TABLE services (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -224,7 +249,7 @@ CREATE TABLE orders_product (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
     FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
-    FOREIGN KEY (affiliate_id) REFERENCES affiliates(id)
+    FOREIGN KEY (affiliate_id) REFERENCES affiliates(id) ON DELETE SET NULL
 );
 
 CREATE TABLE comments (
