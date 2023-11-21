@@ -2,3 +2,4 @@
 /src/DB/Config/connection.php
 /src/logs
 /.idea
+/src/DB/Config/admin.php

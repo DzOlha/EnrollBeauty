@@ -3,6 +3,9 @@
 namespace Src\Router;
 
 use Src\Controller\AbstractController;
+use Src\Controller\Api\AdminApiController;
+use Src\Controller\Web\AdminWebController;
+use Src\Helper\Data\AdminDefault;
 
 abstract class AbstractRouter
 {
@@ -33,6 +36,17 @@ abstract class AbstractRouter
         $url = $this->getUrl();
         //var_dump($url);
         $isHomepage = $url[0] === '';
+
+        /**
+         * Check if the url is for initial registration of the default admin
+         */
+        $registerAdminUrl = AdminDefault::getRegistrationUrl();
+        if($registerAdminUrl && $url[0] === $registerAdminUrl) {
+            call_user_func_array(
+                [new AdminWebController(), 'adminDefaultRegistration'],
+                $this->params
+            );
+        }
 
         /**
          * check the type of request [web, api]

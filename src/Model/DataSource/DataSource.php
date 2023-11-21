@@ -101,7 +101,7 @@ abstract class DataSource
 
         $result = $this->db->singleRow();
         if ($result) {
-            // users.password -> password
+            // users.id -> id
             $key = explode('.', $_id)[1];
             return $result[$key];
         }

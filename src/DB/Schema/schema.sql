@@ -35,6 +35,7 @@ CREATE TABLE admins (
        FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
        FOREIGN KEY (referral_parent_id) REFERENCES admins(id) ON DELETE SET NULL
 );
+
 CREATE TABLE admins_setting (
        id INT AUTO_INCREMENT PRIMARY KEY,
        admin_id INT NOT NULL,

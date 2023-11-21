@@ -42,7 +42,7 @@ class UserDataSource extends DataSource
         $role_id = Roles::$id;
         $role_name = Roles::$name;
 
-        $userRole = 'User';
+        $userRole = \Src\Model\Entity\Roles::$USER;
 
         $this->db->query(
             "INSERT INTO $users ($_name, $_surname, $_password, $_email, $_created_date, $_role_id)
