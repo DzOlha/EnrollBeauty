@@ -47,7 +47,18 @@ class AdminWebController extends WebController
             ];
             $this->view(VIEW_FRONTEND . 'pages/admin/forms/change_default', $data);
         } else {
-            $this->error();
+            $this->error('Error', $result['error']);
         }
+    }
+
+    /**
+     *
+     * url = /web/admin/login
+     */
+    public function login() {
+        $data = [
+            'title' => 'Login'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/admin/forms/login', $data);
     }
 }

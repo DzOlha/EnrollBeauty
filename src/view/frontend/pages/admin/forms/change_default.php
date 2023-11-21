@@ -10,6 +10,9 @@
     body {
         background: #f4f4f2;
     }
+    .message-success {
+        font-size: 25px;
+    }
 </style>
 
 <form id="ttm-quote-form change-default-form"
@@ -17,7 +20,7 @@
       method="post"
       action="#"
 >
-    <h2 class="text-center">
+    <h2 class="text-center message-success">
         You successfully created a default admin account! Please change its info to yours!
     </h2>
     <div class="column">
@@ -47,7 +50,7 @@
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Old password must contain at least one uppercase letter, one lowercase letter,
                                one digit, one special character, and be between 8 to 30 characters long"
-                   required="required" class="form-control" id="password-input">
+                   required="required" class="form-control" id="old-password-input">
             <div class="error" id="old-password-input-error"></div>
         </div>
         <div class="form-group">
@@ -55,7 +58,7 @@
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="New password must contain at least one uppercase letter, one lowercase letter,
                                one digit, one special character, and be between 8 to 30 characters long"
-                   required="required" class="form-control" id="password-input">
+                   required="required" class="form-control" id="new-password-input">
             <div class="error" id="new-password-input-error"></div>
         </div>
         <div class="form-group">
@@ -100,7 +103,7 @@
 
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
-<script src="/public/js/custom/common/pages/user/forms/RegistrationForm.js"></script>
+<script src="/public/js/custom/common/pages/admin/forms/ChangeDefaultForm.js"></script>
 <script src="/public/js/custom/common/pages/classes/requestor/Requestor.js"></script>
 
 <script src="/public/js/custom/frontend/pages/admin/forms/change_default.js"></script>

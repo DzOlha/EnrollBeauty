@@ -20,10 +20,14 @@ class AdminDataSource extends DataSource
         $admins = Admins::$table;
 
         $this->db->query("
-            SELECT COUNT(*) FROM $admins
+            SELECT COUNT(*) AS number FROM $admins
         ");
 
-        return $this->db->singleRow();
+        $result = $this->db->singleRow();
+        if($result) {
+            return $result['number'];
+        }
+        return $result;
     }
 
     public function selectAdminIdByEmail(string $email) {
@@ -78,7 +82,7 @@ class AdminDataSource extends DataSource
     }
     public function insertAdminSetting(int $adminId) {
         $adminsSetting = AdminsSetting::$table;
-        $admin_id = AdminsSetting::$user_id;
+        $admin_id = AdminsSetting::$admin_id;
         $this->db->query(
             "INSERT INTO $adminsSetting ($admin_id) VALUES (:admin_id)"
         );

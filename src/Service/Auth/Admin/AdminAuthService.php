@@ -92,7 +92,7 @@ class AdminAuthService extends AuthService
         /**
          * Confirm Password
          */
-        if ($admin['confirm-password'] && $admin['password'] !== $admin['confirm-password']) {
+        if (isset($admin['confirm-password']) && $admin['password'] !== $admin['confirm-password']) {
             return [
                 'error' => 'Passwords do not match'
             ];

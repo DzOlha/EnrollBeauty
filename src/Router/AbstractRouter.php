@@ -34,7 +34,7 @@ abstract class AbstractRouter
          * [ 0               1                 2 ]
          */
         $url = $this->getUrl();
-        //var_dump($url);
+//        var_dump($url);
         $isHomepage = $url[0] === '';
 
         /**

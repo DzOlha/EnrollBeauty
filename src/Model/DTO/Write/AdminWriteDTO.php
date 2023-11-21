@@ -6,7 +6,7 @@ class AdminWriteDTO extends UserWriteDto
 {
 
     public string $role = 'Admin';
-    public int $status = 0;
+    public ?int $status = 0;
 
 
     /**

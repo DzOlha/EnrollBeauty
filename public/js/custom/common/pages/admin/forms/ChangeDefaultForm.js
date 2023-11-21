@@ -105,7 +105,7 @@ class ChangeDefaultForm extends Form {
         };
         formRules[this.confirmPasswordInputId] = {
             required: true,
-            equalTo: `${this.passwordInputId}`
+            equalTo: `${this.newPasswordInputId}`
         };
         return formRules;
     }
