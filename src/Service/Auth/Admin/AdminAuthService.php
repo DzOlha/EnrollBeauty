@@ -361,4 +361,8 @@ class AdminAuthService extends AuthService
         }
         return [];
     }
+
+    public function logout() {
+
+    }
 }

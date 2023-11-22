@@ -1,3 +1,5 @@
+<?php use Src\Helper\Session\SessionHelper; ?>
+
 <div id="site-header-menu" class="site-header-menu">
     <div class="site-header-menu-inner ttm-stickable-header">
         <div class="container">
@@ -61,27 +63,68 @@
                                 </li>
                                 <li><a href="contact-us.html">CONTACT US</a></li>
 
-                                <?php if(!isset($_SESSION['user_id'])) {?>
-                                <li class="register-button">
-                                    <a href="/web/user/registration">
-                                        Register
-                                    </a>
-                                </li>
-                                <li class="login-button">
-                                    <a href="/web/user/login">
+                                <?php if(!SessionHelper::getUserSession()
+                                        && !SessionHelper::getWorkerSession()
+                                        && !SessionHelper::getAdminSession()) {?>
+                                    <li class="register-button">
+                                        <a href="/web/user/registration">
+                                            Register
+                                        </a>
+                                    </li>
+                                    <li class="login-button">
+                                    <a href="#">
                                         Log In
                                     </a>
+                                    <ul>
+                                        <?php if(!SessionHelper::getUserSession()) {?>
+                                            <li><a href="/web/user/login">As a User</a></li>
+                                        <?php }?>
+
+                                        <?php if(!SessionHelper::getWorkerSession()) {?>
+                                            <li><a href="/web/worker/login">As a Worker</a></li>
+                                        <?php }?>
+
+                                        <?php if(!SessionHelper::getAdminSession()) {?>
+                                            <li><a href="/web/admin/login">As an Admin</a></li>
+                                        <?php }?>
+                                    </ul>
                                 </li>
-                                <?php } else {?>
-                                <li class="register-button">
-                                    <a href="/web/user/logout">
-                                        Log Out
-                                    </a>
-                                </li>
-                                <li class="login-button">
-                                    <a href="/web/user/account">
+                                <?php } else { ?>
+                                    <li class="register-button">
+                                        <a href="#">
+                                            Log Out
+                                        </a>
+                                        <ul>
+                                            <?php if(SessionHelper::getUserSession()) {?>
+                                                <li><a href="/web/user/logout">As a User</a></li>
+                                            <?php }?>
+
+                                            <?php if(SessionHelper::getWorkerSession()) {?>
+                                                <li><a href="/web/worker/logout">As a Worker</a></li>
+                                            <?php }?>
+
+                                            <?php if(SessionHelper::getAdminSession()) {?>
+                                                <li><a href="/web/admin/logout">As an Admin</a></li>
+                                            <?php }?>
+                                        </ul>
+                                    </li>
+                                    <li class="login-button">
+                                    <a href="#">
                                         Profile
                                     </a>
+                                    <ul>
+                                        <?php if(SessionHelper::getUserSession()) {?>
+                                            <li><a href="/web/user/account">Of the User</a></li>
+                                        <?php }?>
+
+                                        <?php if(SessionHelper::getWorkerSession()) {?>
+                                            <li><a href="/web/worker/account">Of the Worker</a></li>
+                                        <?php }?>
+
+                                        <?php if(SessionHelper::getAdminSession()) {?>
+                                            <li><a href="/web/admin/account">Of the Admin</a></li>
+                                        <?php }?>
+                                    </ul>
                                 </li>
                                 <?php } ?>
                             </ul>

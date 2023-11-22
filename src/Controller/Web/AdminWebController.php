@@ -86,4 +86,18 @@ class AdminWebController extends WebController
             $this->view(VIEW_FRONTEND . 'pages/admin/profile/account', $data);
         }
     }
+
+    /**
+     * @return void
+     *
+     * url = /web/user/logout
+     */
+    public function logout()
+    {
+        SessionHelper::removeAdminSession();
+        $data = [
+            'title' => 'Homepage'
+        ];
+        $this->view(VIEW_FRONTEND . 'index', $data);
+    }
 }

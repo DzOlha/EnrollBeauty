@@ -24,11 +24,18 @@ class SessionHelper
     /***
      * Worker
      */
-    public static function setWorkerSession() {
-
+    public static function setWorkerSession(int $workerId): void {
+        $_SESSION['worker_id'] = $workerId;
     }
-    public static function removeWorkerSession() {
-
+    public static function getWorkerSession() {
+        if(isset($_SESSION['worker_id'])) {
+            return $_SESSION['worker_id'];
+        } else {
+            return false;
+        }
+    }
+    public static function removeWorkerSession(): void {
+        unset($_SESSION['worker_id']);
     }
 
     /***

@@ -10,7 +10,7 @@
 </style>
 
 <form id="ttm-quote-form login-form" class="ttm-quote-form clearfix login-form" method="post" action="#">
-    <h2 class="text-center">Login</h2>
+    <h2 class="text-center">Login to Admin account</h2>
     <div class="column">
         <div class="form-group">
             <input name="email" type="email" placeholder="Email"
