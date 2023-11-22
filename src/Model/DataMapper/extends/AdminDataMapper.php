@@ -42,4 +42,9 @@ class AdminDataMapper extends DataMapper
     {
         return $this->dataSource->selectAdminPasswordByEmail($email);
     }
+
+    public function selectAdminInfoById(int $adminId)
+    {
+        return $this->dataSource->selectAdminInfoById($adminId);
+    }
 }

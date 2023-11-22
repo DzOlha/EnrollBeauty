@@ -139,4 +139,32 @@ class AdminDataSource extends DataSource
         }
         return false;
     }
+
+    /**
+     * @param int $adminId
+     * @return false|array|null
+     *
+     * [
+     *      'name' =>
+     *      'surname' =>
+     *      'email' =>
+     * ]
+     */
+    public function selectAdminInfoById(int $adminId) {
+        $admins = Admins::$table;
+        $name = Admins::$name;
+        $surname = Admins::$surname;
+        $email = Admins::$email;
+
+        $_admin_id = Admins::$id;
+
+        $this->db->query("
+            SELECT $_admin_id, $name, $surname, $email
+            FROM $admins
+            WHERE $_admin_id = :id
+        ");
+        $this->db->bind(':id', $adminId);
+
+        return $this->db->singleRow();
+    }
 }

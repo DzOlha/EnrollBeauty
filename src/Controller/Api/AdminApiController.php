@@ -3,6 +3,7 @@
 namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\AdminDataMapper;
 use Src\Model\DataSource\extends\AdminDataSource;
@@ -42,5 +43,46 @@ class AdminApiController extends ApiController
         $this->returnJson(
             $this->authService->login()
         );
+    }
+
+    private function _getAdminId()
+    {
+        $userId = 0;
+        if (isset($_GET['admin_id']) && $_GET['admin_id'] !== '') {
+            $userId = htmlspecialchars(trim($_GET['admin_id']));
+        } else {
+            $sessionUserId = SessionHelper::getAdminSession();
+            if ($sessionUserId) {
+                $userId = $sessionUserId;
+            }
+        }
+        return $userId;
+    }
+    public function getAdminInfo() {
+        if(!SessionHelper::getAdminSession()) {
+            $this->returnJson([
+                'error' => "Only admin have access to this information!"
+            ]);
+        }
+        $adminId = $this->_getAdminId();
+        /**
+         *  [
+         *      'name' =>
+         *      'surname' =>
+         *      'email' =>
+         * ]
+         */
+        $result = $this->dataMapper->selectAdminInfoById($adminId);
+
+        if ($result) {
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
+            $this->returnJson([
+                'error' => "The error occurred while getting admin's info"
+            ]);
+        }
     }
 }

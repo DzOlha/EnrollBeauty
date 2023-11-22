@@ -59,10 +59,10 @@ class Account {
      */
     successCallbackUserInfo(response) {
         this.populateSmallUserInfo(
-            response.data.name, response.data.surname, response.data.filename
+            response.data.name, response.data.surname, response.data?.filename
         );
         this.populateLargeUserInfo(
-            response.data.name, response.data.surname, response.data.filename
+            response.data.name, response.data.surname, response.data?.filename
         );
     }
 
