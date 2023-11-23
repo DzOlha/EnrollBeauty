@@ -1,9 +1,10 @@
 
 class WorkersTable extends Table {
-    constructor() {
+    constructor(requester) {
         super(
+            requester,
             '/api/admin/getWorkers?'
-        );
+        )
         this.tableId = 'table-body';
     }
     /**

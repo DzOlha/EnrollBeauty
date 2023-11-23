@@ -1,7 +1,9 @@
 
 $(function () {
-    let admin = new AdminAccount(
-        new Requestor, new WorkersTable(), null
-    );
+    let requester = new Requester();
+    let admin = new Admin(requester);
+    /**
+     * Fill the admin info
+     */
     admin.getUserInfo();
 });

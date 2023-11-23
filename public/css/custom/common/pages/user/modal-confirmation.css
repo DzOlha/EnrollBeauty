@@ -1,0 +1,34 @@
+
+/**
+    Modal confirmation
+ */
+#modalAlertConfirmation, .modal-confirmation {
+    background-color: rgb(0, 0, 0, 0.8);
+}
+.modal-confirmation .close-modal,
+#modalAlertConfirmation .close-modal {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    outline: none;
+}
+.modal-confirmation .card,
+#modalAlertConfirmation .card {
+    color: black;
+    text-align: left;
+    font-weight: normal;
+    margin: 10px;
+}
+.modal-confirmation button,
+#modalAlertConfirmation-submit {
+    width: 100%;
+    background-color: var(--dark-color);
+    color: white;
+    font-weight: 500;
+}
+.modal-confirmation button:hover,
+#modalAlertConfirmation-submit:hover {
+    background-color: var(--dark-brown-color);
+}

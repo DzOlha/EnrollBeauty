@@ -51,6 +51,7 @@ button[type="button"] {
 /* Change the background color of the Alertify popup */
 :root {
     --dark-color: #333;
+    --light-grey-color: #545b62;
     --light-brown-color: #bf9456;
     --dark-brown-color: #8f4e08;
     --success-color: rgba(91, 189, 114, .95);

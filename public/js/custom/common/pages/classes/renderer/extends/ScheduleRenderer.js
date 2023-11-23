@@ -1,8 +1,8 @@
 class ScheduleRenderer {
-    constructor() {
-        this.builder = new ScheduleHtmlBuilder();
-        this.requestor = new Requestor();
-        this.ordersTable = new AppointmentsTable();
+    constructor(requester, builder, appointmentsTable, confirmationModal) {
+        this.requester = requester;
+        this.builder = builder;
+        this.ordersTable = appointmentsTable;
 
         this.scheduleWrapperId = 'main-schedule-wrapper';
 
@@ -36,7 +36,7 @@ class ScheduleRenderer {
         /**
          * Modal
          */
-        this.confirmationModal = new ConfirmationModal();
+        this.confirmationModal = confirmationModal;
 
         /**
          * API
@@ -552,7 +552,7 @@ class ScheduleRenderer {
         }
 
         const handleConfirmClick = (id) => {
-            this.requestor.post(
+            this.requester.post(
                 this.apiOrderSchedule,
                 {'schedule_id': id},
                 this._successOrderSchedule.bind(this),

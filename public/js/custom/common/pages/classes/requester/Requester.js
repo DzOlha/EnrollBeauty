@@ -1,4 +1,4 @@
-class Requestor {
+class Requester {
     constructor() {
         this.defaultErrorMessage = 'Error getting info! Please, try again later!';
     }

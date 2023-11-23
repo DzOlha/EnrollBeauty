@@ -49,10 +49,28 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link with-sub" href="javascript:void(0)">
+        <a class="nav-link" href="/web/admin/profile/services">
+            <span class="shape1"></span>
+            <span class="shape2"></span>
+            <i class="ti-palette sidemenu-icon menu-icon"></i>
+            <span class="sidemenu-label">Services</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/web/admin/profile/products">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-shopping-cart-full sidemenu-icon menu-icon "></i>
+            <span class="sidemenu-label">Products</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link with-sub" href="javascript:void(0)">
+            <span class="shape1"></span>
+            <span class="shape2"></span>
+            <i class="ti-wallet sidemenu-icon menu-icon "></i>
             <span class="sidemenu-label">Orders</span>
             <i class="angle fe fe-chevron-right"></i>
         </a>

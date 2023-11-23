@@ -1,5 +1,5 @@
 class Table {
-    constructor(apiUrl, orderByField = null, orderDirection = null) {
+    constructor(requester, apiUrl, orderByField = null, orderDirection = null) {
         this.apiUrl = apiUrl; // Store the API URL
         this.totalRowsCount = 1;
         this.itemsPerPage = this.getItemsPerPage();
@@ -11,10 +11,10 @@ class Table {
         this.arrowDown = '/public/images/custom/system/icons/arrows_down.svg';
         this.arrowUp = '/public/images/custom/system/icons/arrows_up.svg';
 
-        this.requestor = new Requestor();
+        this.requester = requester;
     }
 
-    manageAll() {
+    POPULATE() {
         let current = Cookie.get('currentPage');
         if (!current || !Number.isInteger(current)) {
             current = this.setInitialCookie();

@@ -15,6 +15,7 @@
 
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
+<link href="/public/css/custom/common/pages/user/modal-confirmation.css" rel="stylesheet" />
 
 <!-- Select2 css -->
 <link href="/public/assets/plugins/select2/css/select2.min.css" rel="stylesheet">
@@ -165,7 +166,7 @@
                     </div>
 
                 <div class="row row-sm appointments-wrapper mt-40">
-                    <h3 class="pl-30 title">Coming Appointments</h3>
+                    <h3 class="pl-30 title">Upcoming Appointments</h3>
                     <div class="card-body">
                         <div class="row table-filter">
                             <div class="col-lg-1 mg-l-15 d-lg-flex justify-content-start">
@@ -186,7 +187,7 @@
                 </div>
 
                 <div class="row row-sm available-schedules mt-40 mb-40">
-                    <h3 class="pl-15">Available Schedule for Appointments</h3>
+                    <h3 class="pl-15">Search Available Schedules for Appointments</h3>
                     <div class="card-body">
 
                         <div class="row row-sm">
@@ -393,8 +394,8 @@
     </div>
     <!-- End Main Content-->
 
-<?php require_once VIEW_COMMON."pages/user/profile/modals/modal_confirmation.php" ?>
-</div>
+<?php require_once VIEW_COMMON."pages/user/profile/modals/modal-confirmation.php" ?>
+<!--</div>-->
 <!-- End Page -->
 
 <!-- Jquery js-->
@@ -467,8 +468,8 @@
 <script src="/public/js/custom/common/pages/user/forms/SearchScheduleForm.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
-<script src="/public/js/custom/common/pages/classes/requestor/Requestor.js"></script>
-<script src="/public/js/custom/common/pages/user/profile/Account.js"></script>
+<script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
+<script src="/public/js/custom/common/pages/user/profile/User.js"></script>
 
 <script src="/public/js/custom/frontend/pages/user/profile/account.js"></script>
 

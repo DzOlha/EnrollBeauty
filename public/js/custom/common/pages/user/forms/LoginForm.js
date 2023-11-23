@@ -4,7 +4,7 @@ class LoginForm extends Form {
             'login-form',
             'login-form-submit',
             '/api/user/login',
-            new Requestor()
+            new Requester()
         );
         this.emailInputId = 'email-input';
         this.passwordInputId = 'password-input';

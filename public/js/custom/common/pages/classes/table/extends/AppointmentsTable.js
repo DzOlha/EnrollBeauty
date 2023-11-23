@@ -1,15 +1,18 @@
 class AppointmentsTable extends Table {
-    constructor() {
+    constructor(requester, confirmationModal) {
         super(
+            requester,
             '/api/user/getUserComingAppointments?'
         );
         this.tableId = 'table-body';
-        this.confirmationModal = new ConfirmationModal();
+        this.confirmationModal = confirmationModal;
         this.apiCancelOrder = '/api/user/cancelServiceOrder';
+
+        this.searchScheduleButtonId = 'submit-search-button';
     }
 
-    manageAll() {
-        super.manageAll();
+    POPULATE() {
+        super.POPULATE();
     }
 
     /**
@@ -105,7 +108,7 @@ class AppointmentsTable extends Table {
             this.confirmationModal.close();
         }
         let handleConfirmClick = (id) => {
-            this.requestor.post(
+            this.requester.post(
                 this.apiCancelOrder,
                 {'order_id': id},
                 this._successCancelOrder.bind(this),
@@ -120,7 +123,19 @@ class AppointmentsTable extends Table {
 
     _successCancelOrder(response) {
         this.confirmationModal.hide();
+        /**
+         * Research available schedules
+         */
+        $(`#${this.searchScheduleButtonId}`).click();
+
+        /**
+         * Show success message
+         */
         Notifier.showSuccessMessage(response.success);
+
+        /**
+         * Update the table of upcoming appointments
+         */
         this.sendApiRequest(this.itemsPerPage, Cookie.get('currentPage'));
     }
 

@@ -1,4 +1,4 @@
-<div class="modal" id="modalAlertConfirmation">
+<div class="modal modal-confirmation" id="modalAlertConfirmation">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content tx-size-sm" style="z-index: 20">
             <div class="modal-body tx-center pd-y-20 pd-x-20">

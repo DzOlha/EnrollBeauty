@@ -5,7 +5,7 @@ class ChangeDefaultForm extends Form {
             'change-default-form',
             'change-default-form-submit',
             '/api/admin/changeDefault',
-            new Requestor()
+            new Requester()
         );
 
         this.nameInputId = 'name-input';

@@ -15,6 +15,7 @@
 
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
+<link href="/public/css/custom/common/pages/admin/workers.css" rel="stylesheet" />
 
 <!-- Select2 css -->
 <link href="/public/assets/plugins/select2/css/select2.min.css" rel="stylesheet">
@@ -97,14 +98,42 @@
                 <!-- End Page Header -->
 
                 <!-- Row -->
-                <div class="row row-sm appointments-wrapper mt-40">
-                    <h3 class="pl-30 title">Table</h3>
+                <div class="row row-sm table-wrapper">
+<!--                    <h3 class="pl-30 title">Table</h3>-->
                     <div class="card-body">
                         <div class="row table-filter">
-                            <div class="col-lg-1 mg-l-15 d-lg-flex justify-content-start">
+                            <div class="col-lg-3 d-lg-flex justify-content-start">
                                 <div class="show-entries">
                                     <?php require_once VIEW_COMMON."pages/user/profile/blocks/select_pagination_count.php"?>
                                 </div>
+                                <div class="button-wrapper mg-l-10">
+                                    <button aria-label="Add Worker"
+                                            class="btn ripple pd-x-25"
+                                            id="add-worker-trigger"
+                                            data-bs-dismiss="modal" type="button">
+                                        Add New Worker
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9 d-lg-flex justify-content-end">
+                                <div class="d-flex mt-4 mt-lg-0 filter-wrapper">
+                                    <div class="mass-action-wrapper">
+<!--                                        --><?php //require_once "tmp/admin/panel/common/html/type_filter.html";?>
+<!---->
+<!--                                        --><?php //require_once "tmp/admin/panel/common/html/dropdown_status_filter.html";?>
+<!---->
+<!--                                        --><?php //require_once "tmp/admin/panel/common/html/dropdown_select_mass_by.html";?>
+<!---->
+<!--                                        --><?php //require_once "tmp/admin/panel/common/html/dropdown_select_mass_action.html";?>
+<!---->
+<!--                                        --><?php //require_once "tmp/admin/panel/common/html/confirm_mass_action_button.html";?>
+                                    </div>
+
+                                    <?php require_once "src/view/common/pages/admin/profile/blocks/search_by.php";?>
+
+
+                                  </div>
                             </div>
                         </div>
                         <div class="table-responsive my-data-table">
@@ -141,8 +170,8 @@
 </div>
 <!-- End Main Content-->
 
-<?php //require_once VIEW_COMMON."pages/user/profile/modals/modal_confirmation.php" ?>
-</div>
+<?php //require_once VIEW_COMMON."pages/admin/profile/modals/modal-add-worker.php" ?>
+<!--</div>-->
 <!-- End Page -->
 
 <!-- Jquery js-->
@@ -203,19 +232,22 @@
 <script src="/public/js/custom/common/pages/classes/renderer/extends/DateRenderer.js"></script>
 <!--<script src="/public/js/custom/common/pages/classes/renderer/extends/ScheduleRenderer.js"></script>-->
 
-<!--<script src="/public/js/custom/common/pages/classes/modal/ConfirmationModal.js"></script>-->
+<script src="/public/js/custom/common/pages/classes/modal/FormModal.js"></script>
 
-<!--<script src="/public/js/custom/common/pages/classes/builder/ScheduleHtmlBuilder.js"></script>-->
+<script src="/public/js/custom/common/pages/classes/builder/FormBuilder.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/cookie/Cookie.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/table/Table.js"></script>
 <script src="/public/js/custom/common/pages/classes/table/extends/WorkersTable.js"></script>
 
+<script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
+<script src="/public/js/custom/common/pages/admin/forms/AddWorkerForm.js"></script>
+
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
-<script src="/public/js/custom/common/pages/classes/requestor/Requestor.js"></script>
-<script src="/public/js/custom/common/pages/user/profile/Account.js"></script>
-<script src="/public/js/custom/common/pages/admin/profile/AdminAccount.js"></script>
+<script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
+<script src="/public/js/custom/common/pages/user/profile/User.js"></script>
+<script src="/public/js/custom/common/pages/admin/profile/Admin.js"></script>
 
 <script src="/public/js/custom/frontend/pages/admin/profile/workers.js"></script>
 

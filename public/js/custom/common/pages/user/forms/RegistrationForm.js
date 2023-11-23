@@ -4,7 +4,7 @@ class RegistrationForm extends Form {
             'registration-form',
             'registration-form-submit',
             '/api/user/register',
-            new Requestor()
+            new Requester()
         );
         this.nameInputId = 'name-input';
         this.surnameInputId = 'surname-input';

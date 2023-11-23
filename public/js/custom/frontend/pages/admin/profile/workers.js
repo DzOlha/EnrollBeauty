@@ -1,8 +1,17 @@
 
 $(function () {
-    let admin = new AdminAccount(
-        new Requestor, new WorkersTable(), null
-    );
+    let requester = new Requester();
+    let admin = new Admin(requester);
+    let workersTable = new WorkersTable(requester);
+    let addNewWorkerForm = new AddWorkerForm();
+
+    /**
+     * Fill the admin info
+     */
     admin.getUserInfo();
-    admin.getWorkers();
+
+    /**
+     * Populate table of all workers
+     */
+    workersTable.POPULATE();
 });

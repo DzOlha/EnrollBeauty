@@ -282,9 +282,9 @@
 <!--<script src="/public/js/custom/common/pages/user/forms/SearchScheduleForm.js"></script>-->
 
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
-<script src="/public/js/custom/common/pages/classes/requestor/Requestor.js"></script>
-<script src="/public/js/custom/common/pages/user/profile/Account.js"></script>
-<script src="/public/js/custom/common/pages/admin/profile/AdminAccount.js"></script>
+<script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
+<script src="/public/js/custom/common/pages/user/profile/User.js"></script>
+<script src="/public/js/custom/common/pages/admin/profile/Admin.js"></script>
 
 <script src="/public/js/custom/frontend/pages/admin/profile/account.js"></script>
 

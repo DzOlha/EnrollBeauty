@@ -1,10 +1,10 @@
 class SearchScheduleForm extends Form {
-    constructor(scheduleRenderer) {
+    constructor(scheduleRenderer, requester) {
         super(
             '',
             'submit-search-button',
             '/api/user/searchSchedule',
-            new Requestor()
+            requester
         );
         this.serviceNameSelectId = 'service-name';
         this.serviceNameSelectWrapper = `select2-${this.serviceNameSelectId}-container`;
@@ -399,7 +399,7 @@ class SearchScheduleForm extends Form {
     /**
      * Populate service, workers, affiliates selectors
      */
-    getAllSelectInfo() {
+    getServicesWorkersAffiliates() {
         this.requestor.get(
             this.apiUrlGetAll,
             this.successCallbackGetAll.bind(this),
