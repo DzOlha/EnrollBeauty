@@ -47,4 +47,14 @@ class AdminDataMapper extends DataMapper
     {
         return $this->dataSource->selectAdminInfoById($adminId);
     }
+
+    public function selectAllWorkersForAdmin(
+        int    $limit, int $offset,
+        string $orderByField = 'workers.id', string $orderDirection = 'asc'
+    )
+    {
+        return $this->dataSource->selectAllWorkersForAdmin(
+            $limit, $offset, $orderByField, $orderDirection
+        );
+    }
 }

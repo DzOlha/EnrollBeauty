@@ -10,9 +10,9 @@ use Src\Model\DataSource\extends\MainDataSource;
 
 class WebController extends AbstractController
 {
-    public function __construct()
+    public function __construct(array $url)
     {
-        $this->dataMapper = $this->dataMapper();
+        parent::__construct($url);
     }
 
     public function getTypeDataMapper(): DataMapper {

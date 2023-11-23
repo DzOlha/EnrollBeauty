@@ -356,7 +356,9 @@ class AdminAuthService extends AuthService
             SessionHelper::setAdminSession($adminId);
             return [
                 'success' => true,
-                'session' => SessionHelper::getAdminSession()
+                'data' => [
+                    'session' => SessionHelper::getAdminSession()
+                ]
             ];
         }
         return [];

@@ -43,7 +43,7 @@ abstract class AbstractRouter
         $registerAdminUrl = AdminDefault::getRegistrationUrl();
         if($registerAdminUrl && $url[0] === $registerAdminUrl) {
             call_user_func_array(
-                [new AdminWebController(), 'adminDefaultRegistration'],
+                [new AdminWebController($url), 'adminDefaultRegistration'],
                 $this->params
             );
         }
@@ -86,7 +86,7 @@ abstract class AbstractRouter
                 $this->currentMethod = $this->pageNotFoundMethod;
             }
         }
-        $this->currentController = new $controllerPath();
+        $this->currentController = new $controllerPath($url);
 
         /**
          * Check the method within Controller

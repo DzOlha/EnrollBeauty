@@ -11,9 +11,9 @@ use Src\Model\DataSource\extends\MainDataSource;
 
 class ApiController extends AbstractController
 {
-    public function __construct()
+    public function __construct(array $url)
     {
-        $this->dataMapper = $this->dataMapper();
+        parent::__construct($url);
     }
 
     public function getTypeDataMapper(): DataMapper
@@ -25,5 +25,85 @@ class ApiController extends AbstractController
     {
         echo json_encode($array);
         exit();
+    }
+    protected function returnJsonError(string $message, int $code = null): void
+    {
+        if($code) {
+            $this->returnJson([
+                'error' => $message,
+                'error_code' => $code
+            ]);
+        } else {
+            $this->returnJson([
+                'error' => $message
+            ]);
+        }
+    }
+    protected function returnJsonSuccess(string|bool $message, array $data = []) {
+        $this->returnJson([
+            'success' => $message,
+            'data' => $data
+        ]);
+    }
+    protected function _accessDenied(
+        string $message = 'Access is denied to the requested resource!'
+    ) {
+        $this->returnJson([
+            'error' => $message
+        ]);
+    }
+    protected function _getLimitPageFieldOrderOffset(): array
+    {
+        /**
+         * get limits of displaying rows
+         */
+        $limit = 10;
+        if (isset($_GET['limit'])) {
+            $limit = (int)htmlspecialchars(trim($_GET['limit']));
+        }
+
+        /**
+         * get number of the pagination page that should be populated with the data
+         */
+        $page = 1;
+        if (isset($_GET['page'])) {
+            $page = (int)htmlspecialchars(trim($_GET['page']));
+        }
+
+        /**
+         * get the name of the column (field) the data should be sorted by
+         */
+        $orderByField = 'id';
+        if (isset($_GET['order_field'])) {
+            $orderByField = htmlspecialchars(trim($_GET['order_field']));
+        }
+
+        /**
+         * get the direction of the sorting process
+         *
+         * asc -> by increasing
+         *      OR
+         * desc -> by decreasing
+         */
+        $orderDirection = 'asc';
+        if (isset($_GET['order_direction'])) {
+            $orderDirection = htmlspecialchars(trim($_GET['order_direction']));
+        }
+
+        /**
+         * get the offset
+         *
+         * (number of rows we should skip before getting data,
+         * calculated based on the pagination page we are currently in
+         * and limit of rows we can show on the one page)
+         */
+        $offset = $limit * ($page - 1);
+
+        return [
+            'limit' => $limit,
+            'order_field' => $orderByField,
+            'order_direction' => $orderDirection,
+            'offset' => $offset
+        ];
     }
 }

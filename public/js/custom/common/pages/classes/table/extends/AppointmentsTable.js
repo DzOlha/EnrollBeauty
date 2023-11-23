@@ -30,6 +30,7 @@ class AppointmentsTable extends Table {
      *      'currency':
      * }
      * ....
+     * 'totalRowsCount':
      * @param response
      */
     populateTable(response) {

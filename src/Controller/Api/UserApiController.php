@@ -26,9 +26,9 @@ class UserApiController extends ApiController
     /**
      * @param ?AuthService $authService
      */
-    public function __construct(AuthService $authService = null)
+    public function __construct(array $url, AuthService $authService = null)
     {
-        parent::__construct();
+        parent::__construct($url);
         $this->authService = $authService ?? new UserAuthService($this->dataMapper);
     }
 
@@ -45,134 +45,9 @@ class UserApiController extends ApiController
      */
     public function register()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $items = [
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'surname' => htmlspecialchars(trim($_POST['surname'])),
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'password' => htmlspecialchars(trim($_POST['password'])),
-                'confirm-password' => htmlspecialchars(trim($_POST['confirm-password']))
-            ];
-            $nameValidator = new NameValidator();
-            $emailValidator = new EmailValidator();
-            $passwordValidator = new PasswordValidator();
-
-            /**
-             * Name
-             */
-            $validName = $nameValidator->validate($items['name']);
-            if (!$validName) {
-                $this->returnJson([
-                    'error' => 'Name must be at least 3 characters long and contain only letters'
-                ]);
-            }
-
-            /**
-             * Surname
-             */
-            $validSurname = $nameValidator->validate($items['surname']);
-            if (!$validSurname) {
-                $this->returnJson([
-                    'error' => 'Surname must be at least 3 characters long and contain only letters'
-                ]);
-            }
-
-            /**
-             * Email
-             */
-            $validEmail = $emailValidator->validate($items['email']);
-            if (!$validEmail) {
-                $this->returnJson([
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
-                ]);
-            }
-
-            /**
-             * Password
-             */
-            $validPass = $passwordValidator->validate($items['password']);
-            if (!$validPass) {
-                $this->returnJson([
-                    'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
-                ]);
-            }
-
-            /**
-             * Confirm Password
-             */
-            if ($items['password'] !== $items['confirm-password']) {
-                $this->returnJson([
-                    'error' => 'Passwords do not match'
-                ]);
-            }
-
-            $passwordHash = PasswordHasher::hash($items['password']);
-
-            /**
-             * Check if the user with such email is already registered
-             */
-            $registeredBefore = $this->dataMapper->selectUserIdByEmail($items['email']);
-            if ($registeredBefore) {
-                $this->returnJson([
-                    'error' => "The user with such email is already registered!"
-                ]);
-            }
-
-            $this->dataMapper->beginTransaction();
-            /**
-             * Insert into 'users' table
-             */
-            $user = new UserWriteDto(
-                $items['name'], $items['surname'], $items['email'], $passwordHash
-            );
-
-            $userId = $this->dataMapper->insertNewUser($user);
-            if ($userId === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => "The error occurred while creating a new user account!"
-                ]);
-            }
-
-            /**
-             * Insert into 'user_setting'
-             */
-            $inserted = $this->dataMapper->insertNewUserSetting($userId);
-            if ($inserted === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => "The error occurred while inserting user setting!"
-                ]);
-            }
-
-            /**
-             * Insert into 'user_photo'
-             */
-            $inserted = $this->dataMapper->insertNewUserPhoto($userId);
-            if ($inserted === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => "The error occurred while inserting user photo!"
-                ]);
-            }
-
-            /**
-             * Insert into 'user_social'
-             */
-            $inserted = $this->dataMapper->insertNewUserSocial($userId);
-            if ($inserted === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => "The error occurred while inserting user social!"
-                ]);
-            }
-
-            $this->dataMapper->commitTransaction();
-            $this->returnJson([
-                'success' => "You successfully created a new user account!"
-            ]);
-        }
+        $this->returnJson(
+            $this->authService->register()
+        );
     }
 
     /**
@@ -182,75 +57,9 @@ class UserApiController extends ApiController
      */
     public function login()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $items = [
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'password' => htmlspecialchars(trim($_POST['password'])),
-            ];
-            $emailValidator = new EmailValidator();
-            $passwordValidator = new PasswordValidator();
-
-            /**
-             * Email
-             */
-            $validEmail = $emailValidator->validate($items['email']);
-            if (!$validEmail) {
-                $this->returnJson([
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
-                ]);
-            }
-
-            /**
-             * Password
-             */
-            $validPass = $passwordValidator->validate($items['password']);
-            if (!$validPass) {
-                $this->returnJson([
-                    'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
-                ]);
-            }
-
-            /**
-             * Get actual password hash
-             */
-            $actualPasswordHash = $this->dataMapper->selectUserPasswordByEmail($items['email']);
-            if ($actualPasswordHash === false) {
-                $this->returnJson([
-                    'error' => 'There is no user with such email'
-                ]);
-            }
-
-            /**
-             * Check Password Equality
-             */
-            $hashValidator = new PasswordHashValidator($actualPasswordHash);
-            $validPassword = $hashValidator->validate($items['password']);
-            if (!$validPassword) {
-                $this->returnJson([
-                    'error' => 'The provided password does not match the one saved for the requested user!'
-                ]);
-            }
-
-            /**
-             * Select User ID for storing it into session
-             */
-            $userId = $this->dataMapper->selectUserIdByEmail($items['email']);
-            if ($userId === false) {
-                $this->returnJson([
-                    'error' => 'The error occurred while getting user id!'
-                ]);
-            }
-
-            /**
-             * Store Users ID into session
-             */
-            SessionHelper::setUserSession($userId);
-            $this->returnJson([
-                'success' => true,
-                'session' => SessionHelper::getUserSession()
-            ]);
-        }
+        $this->returnJson(
+            $this->authService->login()
+        );
     }
 
     /**
@@ -317,61 +126,6 @@ class UserApiController extends ApiController
                 'error' => "The error occurred while getting user's social info"
             ]);
         }
-    }
-
-    private function _getLimitPageFieldOrderOffset(): array
-    {
-        /**
-         * get limits of displaying rows
-         */
-        $limit = 10;
-        if (isset($_GET['limit'])) {
-            $limit = (int)htmlspecialchars(trim($_GET['limit']));
-        }
-
-        /**
-         * get number of the pagination page that should be populated with the data
-         */
-        $page = 1;
-        if (isset($_GET['page'])) {
-            $page = (int)htmlspecialchars(trim($_GET['page']));
-        }
-
-        /**
-         * get the name of the column (field) the data should be sorted by
-         */
-        $orderByField = 'id';
-        if (isset($_GET['order_field'])) {
-            $orderByField = htmlspecialchars(trim($_GET['order_field']));
-        }
-
-        /**
-         * get the direction of the sorting process
-         *
-         * asc -> by increasing
-         *      OR
-         * desc -> by decreasing
-         */
-        $orderDirection = 'asc';
-        if (isset($_GET['order_direction'])) {
-            $orderDirection = htmlspecialchars(trim($_GET['order_direction']));
-        }
-
-        /**
-         * get the offset
-         *
-         * (number of rows we should skip before getting data,
-         * calculated based on the pagination page we are currently in
-         * and limit of rows we can show on the one page)
-         */
-        $offset = $limit * ($page - 1);
-
-        return [
-            'limit' => $limit,
-            'order_field' => $orderByField,
-            'order_direction' => $orderDirection,
-            'offset' => $offset
-        ];
     }
 
     /**

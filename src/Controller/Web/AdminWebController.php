@@ -17,11 +17,12 @@ class AdminWebController extends WebController
     /**
      * @param ?AuthService $authService
      */
-    public function __construct(AuthService $authService = null)
+    public function __construct(array $url, AuthService $authService = null)
     {
-        parent::__construct();
+        parent::__construct($url);
         $this->authService = $authService ?? new AdminAuthService($this->dataMapper);
     }
+
     public function getTypeDataMapper(): DataMapper
     {
         return new AdminDataMapper(new AdminDataSource(MySql::getInstance()));
@@ -32,7 +33,8 @@ class AdminWebController extends WebController
      *
      * url = /{the admin registration url is here}
      */
-    public function adminDefaultRegistration() {
+    public function adminDefaultRegistration()
+    {
         $result = $this->authService->defaultAdminRegister();
         /**
          * If registration of the default admin has been successfully done right now
@@ -40,7 +42,7 @@ class AdminWebController extends WebController
          * we try to change admin default data and the account has been registered
          * before (we just close the change form then and not completed the process)
          */
-        if( isset($result['success']) ||
+        if (isset($result['success']) ||
             (isset($result['default_already_registered']) && $result['default_already_registered'])
         ) {
             $data = [
@@ -57,11 +59,19 @@ class AdminWebController extends WebController
      *
      * url = /web/admin/login
      */
-    public function login() {
+    public function login()
+    {
         $data = [
             'title' => 'Login'
         ];
         $this->view(VIEW_FRONTEND . 'pages/admin/forms/login', $data);
+    }
+
+    private function _accessDenied() {
+        $this->error(
+            'Access Denied!',
+            'The requested page not found! Please, log in as an Admin to visit your account!'
+        );
     }
 
     /**
@@ -73,11 +83,7 @@ class AdminWebController extends WebController
     {
         $session = SessionHelper::getAdminSession();
         if (!$session) {
-            $data = [
-                'title' => 'Page Not Found',
-                'message' => 'The requested page not found! Please, log in to visit your account!'
-            ];
-            $this->view(VIEW_FRONTEND . 'pages/system/error', $data);
+            $this->_accessDenied();
         } else {
             $data = [
                 'title' => 'Admin Account',
@@ -99,5 +105,40 @@ class AdminWebController extends WebController
             'title' => 'Homepage'
         ];
         $this->view(VIEW_FRONTEND . 'index', $data);
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /web/admin/profile/...
+     *         0    1       2
+     */
+    public function profile()
+    {
+        $session = SessionHelper::getAdminSession();
+        if (!$session) {
+            $this->_accessDenied();
+        } else {
+            if (isset($this->url[3])) {
+                $menuItemName = $this->url[3];
+                if ($menuItemName === 'settings') {
+
+                }
+                if ($menuItemName === 'users') {
+
+                }
+                if ($menuItemName === 'workers') {
+                    $data = [
+                        'title' => 'User Management',
+                        'page_name' => 'Workers'
+                    ];
+                    $this->view(VIEW_FRONTEND . 'pages/admin/profile/workers', $data);
+                }
+                if ($menuItemName === 'admins') {
+
+                }
+            }
+        }
     }
 }

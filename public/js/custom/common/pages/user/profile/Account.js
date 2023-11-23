@@ -1,7 +1,7 @@
 class Account {
-    constructor(requestorObject, appointmentsTable, searchForm) {
+    constructor(requestorObject, table, searchForm) {
         this.requestor = requestorObject;
-        this.appointmentsTable = appointmentsTable;
+        this.table = table;
         this.searchScheduleForm = searchForm;
 
         this.apiUserInfoUrl = '/api/user/getUserInfo';
@@ -27,7 +27,7 @@ class Account {
     }
 
     getComingAppointments() {
-        this.appointmentsTable.manageAll();
+        this.table.manageAll();
     }
 
     searchSchedule() {

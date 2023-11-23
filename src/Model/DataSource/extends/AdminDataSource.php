@@ -7,7 +7,9 @@ use Src\Model\DataSource\DataSource;
 use Src\Model\DTO\Write\AdminWriteDTO;
 use Src\Model\Table\Admins;
 use Src\Model\Table\AdminsSetting;
+use Src\Model\Table\Positions;
 use Src\Model\Table\Roles;
+use Src\Model\Table\Workers;
 
 class AdminDataSource extends DataSource
 {
@@ -166,5 +168,63 @@ class AdminDataSource extends DataSource
         $this->db->bind(':id', $adminId);
 
         return $this->db->singleRow();
+    }
+
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @param string $orderByField
+     * @param string $orderDirection
+     * @return array|false|null
+     *
+     * [
+     *      0 => [
+     *          id =>
+     *          name =>
+     *          surname =>
+     *          email =>
+     *          position =>
+     *          salary =>
+     *          experience =>
+     *      ]
+     *      ....................
+     * ]
+     */
+    public function selectAllWorkersForAdmin(
+        int $limit, int $offset,
+        string $orderByField = 'workers.id', string $orderDirection = 'asc'
+    ) {
+        $workers = Workers::$table;
+        $id = Workers::$id;
+        $name = Workers::$name;
+        $surname = Workers::$surname;
+        $email = Workers::$email;
+        $_position_id = Workers::$position_id;
+        $salary = Workers::$salary;
+        $experience = Workers::$years_of_experience;
+
+        $positions = Positions::$table;
+        $position_id = Positions::$id;
+        $position_name = Positions::$name;
+
+        $queryFrom = "
+            $workers INNER JOIN $positions ON $_position_id = $position_id
+        ";
+        $this->db->query("
+            SELECT $id, $name, $surname, $email, 
+                   $position_name as position, $salary, $experience as experience
+            FROM $workers INNER JOIN $positions ON $_position_id = $position_id
+            
+            ORDER BY $orderByField $orderDirection
+            LIMIT $limit
+            OFFSET $offset
+        ");
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
     }
 }

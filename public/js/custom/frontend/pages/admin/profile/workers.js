@@ -4,4 +4,5 @@ $(function () {
         new Requestor, new WorkersTable(), null
     );
     admin.getUserInfo();
+    admin.getWorkers();
 });

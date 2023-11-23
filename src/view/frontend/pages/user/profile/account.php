@@ -178,7 +178,7 @@
                             <div class="col-lg-12 col-sm-12">
                                 <?php require_once VIEW_COMMON."pages/user/profile/blocks/data_loader_gif.php"?>
                             </div>
-                            <?php require_once VIEW_COMMON."pages/user/profile/blocks/appointments_table.php"?>
+                            <?php require_once VIEW_COMMON."pages/user/profile/tables/appointments_table.php"?>
                         </div>
                         <ul class="pagination mt-4 mb-0 float-end">
                         </ul>

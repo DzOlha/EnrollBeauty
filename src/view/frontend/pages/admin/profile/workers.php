@@ -97,73 +97,6 @@
                 <!-- End Page Header -->
 
                 <!-- Row -->
-                <div class="row row-sm">
-                    <div class="col-sm-12 col-md-8 profile-homepage-user-info">
-                        <div class="col-sm-12 col-md-12 user-info-wrapper">
-                            <div class="user-img-wrapper">
-                                <img id="user-img-large" class="user-img"
-                                     src="/public/images/custom/system/nophoto.jpg" alt="user-photo"/>
-                            </div>
-                            <!--                            <input type="file" class="dropify upload-img" id="user-photo-input"-->
-                            <!--                                   accept=".jpg"-->
-                            <!--                                   name="user-photo" data-height="150"-->
-                            <!--                                   data-default-file="/public/images/custom/system/nophoto.jpg"-->
-                            <!--                                   disabled="disabled"-->
-                            <!--                            />-->
-                            <div class="user-name-surname-wrapper">
-                                <span id="name-large">Name</span>
-                                <span id="surname-large">Surname</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row row-xs mt-10 gx-20 cards-wrapper">
-                    <div class="col-lg-3">
-                        <a href="/web/admin/profile/settings">
-                            <div class="card custom-card">
-                                <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="si si-settings" data-bs-toggle="tooltip" title=""
-                                       data-bs-original-title="si-settings" aria-label="si-settings"></i>
-                                    Settings
-                                </div>
-                                <div class="card-body">
-                                    <p class="mg-b-0"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <a href="/web/admin/profile/orders">
-                            <div class="card custom-card">
-                                <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="fa fa-history" data-bs-toggle="tooltip" title=""
-                                       data-bs-original-title="fa fa-history"
-                                       aria-label="fa fa-history"></i>
-                                    Orders
-                                </div>
-                                <div class="card-body">
-                                    <p class="mg-b-0"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <a href="/web/admin/profile/statistics">
-                            <div class="card custom-card">
-                                <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="ti-bar-chart-alt sidemenu-icon menu-icon "></i>
-                                    Statistics
-                                </div>
-                                <div class="card-body">
-                                    <p class="mg-b-0"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
                 <div class="row row-sm appointments-wrapper mt-40">
                     <h3 class="pl-30 title">Table</h3>
                     <div class="card-body">
@@ -178,7 +111,7 @@
                             <div class="col-lg-12 col-sm-12">
                                 <?php require_once VIEW_COMMON."pages/user/profile/blocks/data_loader_gif.php"?>
                             </div>
-<!--                            --><?php //require_once VIEW_COMMON."pages/user/profile/blocks/appointments_table.php"?>
+                            <?php require_once VIEW_COMMON."pages/admin/profile/tables/workers_table.php"?>
                         </div>
                         <ul class="pagination mt-4 mb-0 float-end">
                         </ul>
@@ -277,16 +210,14 @@
 <script src="/public/js/custom/common/pages/classes/cookie/Cookie.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/table/Table.js"></script>
-<!--<script src="/public/js/custom/common/pages/classes/table/extends/AppointmentsTable.js"></script>-->
-<!--<script src="/public/js/custom/common/pages/user/forms/Form.js"></script>-->
-<!--<script src="/public/js/custom/common/pages/user/forms/SearchScheduleForm.js"></script>-->
+<script src="/public/js/custom/common/pages/classes/table/extends/WorkersTable.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/classes/requestor/Requestor.js"></script>
 <script src="/public/js/custom/common/pages/user/profile/Account.js"></script>
 <script src="/public/js/custom/common/pages/admin/profile/AdminAccount.js"></script>
 
-<script src="/public/js/custom/frontend/pages/admin/profile/account.js"></script>
+<script src="/public/js/custom/frontend/pages/admin/profile/workers.js"></script>
 
 </body>
 </html>

@@ -10,9 +10,9 @@ use Src\Model\DataSource\extends\MainDataSource;
 
 class UserWebController extends WebController
 {
-    public function __construct()
+    public function __construct(array $url)
     {
-        parent::__construct();
+        parent::__construct($url);
     }
 
     public function getTypeDataMapper(): DataMapper
@@ -82,5 +82,4 @@ class UserWebController extends WebController
         ];
         $this->view(VIEW_FRONTEND . 'index', $data);
     }
-
 }
