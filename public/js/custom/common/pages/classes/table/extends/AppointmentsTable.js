@@ -1,11 +1,16 @@
 class AppointmentsTable extends Table {
-    constructor(requester, confirmationModal) {
+    constructor(
+        requester, confirmationModal,
+        dateRenderer, timeRenderer
+    ) {
         super(
             requester,
             '/api/user/getUserComingAppointments?'
         );
         this.tableId = 'table-body';
         this.confirmationModal = confirmationModal;
+        this.dateRenderer = dateRenderer;
+        this.timeRenderer = timeRenderer;
         this.apiCancelOrder = '/api/user/cancelServiceOrder';
 
         this.searchScheduleButtonId = 'submit-search-button';
@@ -65,9 +70,9 @@ class AppointmentsTable extends Table {
                             ${item.affiliate_city + ', ' + item.affiliate_address}
                       </td>`);
 
-            row.append(`<td>${DateRenderer.render(item.start_datetime)}</td>`);
-            row.append(`<td>${TimeRenderer.render(item.start_datetime)}</td>`);
-            row.append(`<td>${TimeRenderer.render(item.end_datetime)}</td>`);
+            row.append(`<td>${this.dateRenderer.render(item.start_datetime)}</td>`);
+            row.append(`<td>${this.timeRenderer.render(item.start_datetime)}</td>`);
+            row.append(`<td>${this.timeRenderer.render(item.end_datetime)}</td>`);
             row.append(`<td>${item.price + ' ' + item.currency}</td>`);
 
             row.append(`<td>

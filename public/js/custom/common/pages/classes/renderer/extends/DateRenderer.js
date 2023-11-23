@@ -11,7 +11,7 @@ class DateRenderer extends Renderer {
      * @param timezone
      * @returns {string}
      */
-    static render(value, locale = 'en-US', timezone = 'Europe/Kiev') {
+    render(value, locale = 'en-US', timezone = 'Europe/Kiev') {
         // console.log(value)
         let sqlDateTime = new Date(value);
 
@@ -37,7 +37,7 @@ class DateRenderer extends Renderer {
      *
      * dateString = 'YYYY-MM-DD'
      */
-    static getDayOfWeek(
+    getDayOfWeek(
         dateString, locale = 'en-US', timezone = 'Europe/Kiev'
     ) {
         let date = new Date(dateString);
@@ -48,15 +48,15 @@ class DateRenderer extends Renderer {
             locale: locale
         };
 
-        return DateRenderer.capitalizeFirstLetter(
+        return this.capitalizeFirstLetter(
             new Intl.DateTimeFormat(locale, options).format(date)
         );
     }
-    static capitalizeFirstLetter(str) {
+    capitalizeFirstLetter(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    static getUnixTimestamp(dateString, dateFormat = 'DD/MM/YYYY') {
+    getUnixTimestamp(dateString, dateFormat = 'DD/MM/YYYY') {
         const trimmedDate = dateString.trim();
         const parsedDate = moment(trimmedDate, dateFormat);
         if (parsedDate.isValid()) {
@@ -73,7 +73,7 @@ class DateRenderer extends Renderer {
      * @param endDate YYYY-MM-DD
      * @returns {*[]}
      */
-    static getDatesBetween(startDate, endDate) {
+    getDatesBetween(startDate, endDate) {
         const dateArray = [];
         let currentDate = new Date(startDate);
         let _endDate = new Date(endDate);
@@ -91,9 +91,11 @@ class DateRenderer extends Renderer {
     /**
      * YYYY-MM-DD -> 2 Jun: Mn
      * @param dateString
+     * @param locale
+     * @param timezone
      * @returns {string}
      */
-    static shortRender(
+    shortRender(
         dateString, locale = 'en-US', timezone = 'Europe/Kiev'
     ) {
         const options = {

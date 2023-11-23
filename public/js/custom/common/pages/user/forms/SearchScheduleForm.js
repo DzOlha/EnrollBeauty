@@ -1,11 +1,17 @@
 class SearchScheduleForm extends Form {
-    constructor(scheduleRenderer, requester) {
+    constructor(
+        requester, scheduleRenderer,
+        optionBuilder, dateRenderer
+    ) {
         super(
             '',
             'submit-search-button',
             '/api/user/searchSchedule',
             requester
         );
+        this.renderer = scheduleRenderer;
+        this.optionBuilder = optionBuilder
+        this.dateRenderer = dateRenderer;
         this.serviceNameSelectId = 'service-name';
         this.serviceNameSelectWrapper = `select2-${this.serviceNameSelectId}-container`;
 
@@ -42,8 +48,6 @@ class SearchScheduleForm extends Form {
         this.apiUrlGetServicesAll = '/api/user/getServicesAll';
 
         this.submitActionUrl = '/api/user/searchSchedule';
-
-        this.renderer = scheduleRenderer;
     }
 
     _initializeDateRangePicker() {
@@ -191,7 +195,7 @@ class SearchScheduleForm extends Form {
         let dateRange = dateRangeInput.val()
             .split('-')
             .map(
-                (item) => DateRenderer.getUnixTimestamp(item)
+                (item) => this.dateRenderer.getUnixTimestamp(item)
             );
 
         let validDateRange = true;
@@ -327,10 +331,10 @@ class SearchScheduleForm extends Form {
 
     _populateSelectOptions(parent, data) {
         parent.html('');
-        parent.append(OptionBuilder.createOptionLabel());
+        parent.append(this.optionBuilder.createOptionLabel());
 
         data.forEach((item) => {
-            parent.append(OptionBuilder.createOption(
+            parent.append(this.optionBuilder.createOption(
                 item.id, item.name
             ));
         })

@@ -2,7 +2,7 @@
 class ScheduleHtmlBuilder {
     constructor() {
     }
-    static createScheduleCard(
+    createScheduleCard(
         scheduleId, workerId, serviceId, affiliateId,
         serviceName, price, currency,
         worker, date, startTime, endTime, address
@@ -68,7 +68,7 @@ class ScheduleHtmlBuilder {
                     </div>
                </div>`
     }
-    static createTabWeekdayContentPage(
+    createTabWeekdayContentPage(
         tabId, isActive = false
     ) {
         let active = isActive === true ? 'active' : '';
@@ -136,7 +136,7 @@ class ScheduleHtmlBuilder {
                 </div>`
     }
 
-    static createTabWeekdayMenuLi(
+    createTabWeekdayMenuLi(
         weekday, dayTabId, menuItemClass, menuItemId,
         date, isActive = false, disable = false
     ) {
@@ -153,7 +153,7 @@ class ScheduleHtmlBuilder {
                     </a>
                 </li>`
     }
-    static createTabDepartmentContentPage(
+    createTabDepartmentContentPage(
         tabPaneId, menuWrapperId, contentWrapperId, isActive = false
     ) {
         let active = isActive === true ? 'active' : '';
@@ -189,7 +189,7 @@ class ScheduleHtmlBuilder {
                 </div>`
     }
 
-    static createTabDepartmentMenuLi(
+    createTabDepartmentMenuLi(
         departmentName, departmentId, tabId, menuItemId, menuItemClass,
         isActive = false, disable = false,
     ) {
@@ -207,7 +207,7 @@ class ScheduleHtmlBuilder {
                  </li>`
     }
 
-    static createAvailableSchedulePage() {
+    createAvailableSchedulePage() {
         return `<div class="tab-menu-heading main-menu-heading">
                     <div class="tabs-menu1">
                         <!-- Tabs -->

@@ -17,11 +17,11 @@ class ConfirmationModal {
         $(`#${this.confirmationMessageId}`).html(
             message
         );
-        $(`#${this.confirmationModalId}`).show();
+        $(`#${this.confirmationModalId}`).fadeIn(400);
     }
 
-    hide() {
-        $(`#${this.confirmationModalId}`).hide();
+    hide(duration = 400) {
+        $(`#${this.confirmationModalId}`).fadeOut(duration);
     }
 
     submit(callback, data) {

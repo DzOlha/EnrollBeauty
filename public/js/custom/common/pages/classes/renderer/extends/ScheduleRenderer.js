@@ -1,8 +1,15 @@
 class ScheduleRenderer {
-    constructor(requester, builder, appointmentsTable, confirmationModal) {
+    constructor(
+        requester, appointmentsTable,
+        confirmationModal, htmlBuilder,
+        dateRenderer, timeRenderer
+    ) {
         this.requester = requester;
-        this.builder = builder;
         this.ordersTable = appointmentsTable;
+        this.confirmationModal = confirmationModal;
+        this.htmlBuilder = htmlBuilder;
+        this.dateRenderer = dateRenderer;
+        this.timeRenderer = timeRenderer;
 
         this.scheduleWrapperId = 'main-schedule-wrapper';
 
@@ -32,11 +39,6 @@ class ScheduleRenderer {
 
         this.weekdayMenuItemBase = 'weekday-tab-menu-item';
         this.weekdayTabContentBase = 'weekday-tab-content';
-
-        /**
-         * Modal
-         */
-        this.confirmationModal = confirmationModal;
 
         /**
          * API
@@ -98,7 +100,7 @@ class ScheduleRenderer {
          * Insert departments tabs menu and wrappers for tabs' content
          * @type {string}
          */
-        let departmentInnerTabs = ScheduleHtmlBuilder.createAvailableSchedulePage();
+        let departmentInnerTabs = this.htmlBuilder.createAvailableSchedulePage();
         wrapper.insertAdjacentHTML('beforeend', departmentInnerTabs);
 
         /**
@@ -144,7 +146,7 @@ class ScheduleRenderer {
              * Create the item of the menu for navigation between different departments
              * @type {string}
              */
-            let menuItem = ScheduleHtmlBuilder.createTabDepartmentMenuLi(
+            let menuItem = this.htmlBuilder.createTabDepartmentMenuLi(
                 department.name, department.id, tabId, menuItemId,
                 this.departmentMenuItemClass, active
             );
@@ -153,7 +155,7 @@ class ScheduleRenderer {
              * Create the page with schedule content for corresponding department tab from menu
              * @type {string}
              */
-            let contentPage = ScheduleHtmlBuilder.createTabDepartmentContentPage(
+            let contentPage = this.htmlBuilder.createTabDepartmentContentPage(
                 tabId, this.weekdaysMenuId, this.weekdaysContentId, active
             );
 
@@ -292,7 +294,7 @@ class ScheduleRenderer {
         );
         daysContentWrapper.innerHTML = '';
 
-        let days = DateRenderer.getDatesBetween(startDate, endDate);
+        let days = this.dateRenderer.getDatesBetween(startDate, endDate);
         days.forEach((day) => {
             //console.log('days.forEach((day)');
             /**
@@ -301,13 +303,13 @@ class ScheduleRenderer {
              * Get short weekday code like 'Mn' or 'Fr'
              * @type {string}
              */
-            let shortWeekDayCode = DateRenderer.getDayOfWeek(day);
+            let shortWeekDayCode = this.dateRenderer.getDayOfWeek(day);
 
             /**
              * Get '2 Month' format
              * @type {string}
              */
-            let date = DateRenderer.shortRender(day);
+            let date = this.dateRenderer.shortRender(day);
 
             /**
              * Concatenate value to get something like '2 November: Tu'
@@ -339,7 +341,7 @@ class ScheduleRenderer {
              * Create menu item to navigate for the specific day schedule tab
              * @type {string}
              */
-            let menuItem = ScheduleHtmlBuilder.createTabWeekdayMenuLi(
+            let menuItem = this.htmlBuilder.createTabWeekdayMenuLi(
                 weekday, dayTabId, this.weekdayMenuItemClass, menuItemId, day, active
             );
 
@@ -348,7 +350,7 @@ class ScheduleRenderer {
              * time separation by 9-12, 12-15, 15-18, 18-21 intervals
              * @type {string}
              */
-            let contentPage = ScheduleHtmlBuilder.createTabWeekdayContentPage(
+            let contentPage = this.htmlBuilder.createTabWeekdayContentPage(
                 dayTabId, active
             );
 
@@ -473,18 +475,18 @@ class ScheduleRenderer {
             // console.log('schedulesForDepartmentTab = ' + JSON.stringify(schedules));
             // console.log('scheduleForActiveDay = ' + JSON.stringify(schedulesForActiveDay));
             //console.log('scheduleItem = ' + JSON.stringify(schedule));
-            let startTime = parseInt(schedule.start_time);
-            let endTime = parseInt(schedule.end_time);
+            let startTime = this._timeToDecimal(schedule.start_time);
+            let endTime = this._timeToDecimal(schedule.end_time);
 
-            let date = DateRenderer.render(schedule.day);
-            let scheduleCard = ScheduleHtmlBuilder.createScheduleCard(
+            let date = this.dateRenderer.render(schedule.day);
+            let scheduleCard = this.htmlBuilder.createScheduleCard(
                 schedule.schedule_id, schedule.worker_id, schedule.service_id,
                 schedule.affiliate_id, schedule.service_name,
                 schedule.price, schedule.currency,
                 `${schedule.worker_name} ${schedule.worker_surname}`,
                 date,
-                TimeRenderer.renderShortTime(schedule.start_time),
-                TimeRenderer.renderShortTime(schedule.end_time),
+                this.timeRenderer.renderShortTime(schedule.start_time),
+                this.timeRenderer.renderShortTime(schedule.end_time),
                 `c. ${schedule.city}, ${schedule.address}`
             )
             //console.log(scheduleCard);
@@ -510,8 +512,11 @@ class ScheduleRenderer {
                     _18_21.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
+            console.log(startTime);
+            console.log(endTime);
             if (startTime >= 18 && startTime <= 21) {
                 if (endTime <= 21) {
+                    console.log(_18_21.insertAdjacentHTML);
                     _18_21.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
@@ -523,6 +528,16 @@ class ScheduleRenderer {
             this.addListenerOnLikeSchedule(schedule.schedule_id);
         })
         //console.log('-------------------------------------------------------------------------------------------------------------------');
+    }
+
+    _timeToDecimal(timeString) {
+        // Split the time string into hours, minutes, and seconds
+        const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+        // Calculate the decimal representation
+        const decimalTime = hours + minutes / 60 + seconds / 3600;
+
+        return decimalTime;
     }
 
     addListenerOnOrderSchedule(scheduleId) {

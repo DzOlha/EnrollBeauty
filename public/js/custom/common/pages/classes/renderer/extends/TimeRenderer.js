@@ -8,7 +8,7 @@ class TimeRenderer extends Renderer {
      * @param value
      * @returns {string}
      */
-    static render(value) {
+    render(value) {
         let sqlDateTime = new Date(value);
 
         let options = {
@@ -22,7 +22,7 @@ class TimeRenderer extends Renderer {
         return timeFormatter.format(sqlDateTime);
     }
 
-    static _renderShortTime(timeString, locale = 'uk-UA', timezone = 'Europe/Kiev') {
+    _renderShortTime(timeString, locale = 'uk-UA', timezone = 'Europe/Kiev') {
         // Convert the time string to a Date object
         let timeDate = new Date("1970-01-01T" + timeString + "Z");
 
@@ -36,7 +36,7 @@ class TimeRenderer extends Renderer {
         return timeDate.toLocaleTimeString(locale, options);
     }
 
-    static renderShortTime(timeString) {
+    renderShortTime(timeString) {
         // Parse the input time string
         const parsedTime = new Date("1970-01-01T" + timeString + "Z");
 

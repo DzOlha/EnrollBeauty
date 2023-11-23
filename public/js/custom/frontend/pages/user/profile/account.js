@@ -2,20 +2,22 @@ $(function () {
     let requester = new Requester();
     let user = new User(requester);
 
+    let dateRenderer = new DateRenderer();
+    let timeRenderer = new TimeRenderer();
+
     let confirmationModal = new ConfirmationModal();
     let appointmentsTable = new AppointmentsTable(
-        requester,
-        confirmationModal
+        requester, confirmationModal,
+        dateRenderer, timeRenderer
     );
 
+    let scheduleRenderer = new ScheduleRenderer(
+            requester, appointmentsTable, confirmationModal,
+            new ScheduleHtmlBuilder(), dateRenderer, timeRenderer
+    );
     let searchScheduleForm = new SearchScheduleForm(
-        new ScheduleRenderer(
-            requester,
-            new ScheduleHtmlBuilder(),
-            appointmentsTable,
-            confirmationModal
-        ),
-        requester
+        requester, scheduleRenderer,
+        new OptionBuilder(), dateRenderer
     );
 
     /**
