@@ -1,8 +1,13 @@
 
 class AddWorkerForm extends Form {
     constructor(requester, modalForm, optionBuilder) {
-        super();
-        this.requester = requester;
+        super(
+            '',
+            modalForm.modalSubmitId,
+            '/api/admin/addWorker',
+            requester
+        );
+        //this.requester = requester;
         this.modalForm = modalForm;
         this.optionBuilder = optionBuilder;
         this.addWorkerTriggerId = 'add-worker-trigger';
@@ -28,24 +33,40 @@ class AddWorkerForm extends Form {
         this.apiGetPositionsRoles = '/api/admin/getAllPositionsRoles';
     }
 
+    /**
+     * ---------------------------------Form initialization------------------------------
+     */
+
     _initSelect2() {
         let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
+        this._initGenderSelect2(modalBody);
+        this._initPositionSelect2(modalBody);
+        this._initRoleSelect2(modalBody);
+    }
+    _initGenderSelect2(modalBody) {
         $(`#${this.genderSelectId}`).select2({
-            dropdownParent: modalBody,
+            dropdownParent:  modalBody,
             placeholder: "Choose one",
             allowClear: true,
         });
+    }
+
+    _initPositionSelect2(modalBody) {
         $(`#${this.positionSelectId}`).select2({
             dropdownParent: modalBody,
             placeholder: "Choose one",
             allowClear: false,
         });
+    }
+
+    _initRoleSelect2(modalBody) {
         $(`#${this.roleSelectId}`).select2({
             dropdownParent: modalBody,
             placeholder: "Choose one",
             allowClear: false,
         });
     }
+
 
     /**
      * Add listener to the 'Add New Worker' button
@@ -66,8 +87,14 @@ class AddWorkerForm extends Form {
             this.modalForm.formBuilder.createAddWorkerForm(),
             'Create Worker'
         );
-        this.modalForm.close();
+        // Wait for the modal to fully show before initializing Select2
+        // this.modalForm.showCompleteCallback = () => {
+        //     this._initSelect2();
+        //     this.getPositionsAndRoles();
+        // };
+        this._initSelect2();
         this.getPositionsAndRoles();
+        this.modalForm.close();
     }
 
     _populateSelectOptions(parent, data) {
@@ -79,8 +106,7 @@ class AddWorkerForm extends Form {
                 item.id, item.name
             ));
         })
-
-        parent.select2();
+        parent.select2('destroy').select2();
     }
 
     getPositionsAndRoles() {
@@ -105,5 +131,12 @@ class AddWorkerForm extends Form {
         this._initSelect2();
     }
 
+
+    /**
+     * ----------------------------Form validation and submission----------------------------
+     */
+    validateInputs() {
+
+    }
 
 }

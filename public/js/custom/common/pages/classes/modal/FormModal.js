@@ -31,7 +31,12 @@ class FormModal {
         c.html('');
         c.append(content);
 
-        $(`#${this.modalId}`).fadeIn(400);
+        $(`#${this.modalId}`).fadeIn(400, () => {
+            // if (typeof this.showCompleteCallback === 'function') {
+            //     this.showCompleteCallback();
+            //     this.showCompleteCallback = null; // Reset the callback
+            // }
+        });
     }
 
     hide(duration = 400) {
@@ -56,6 +61,8 @@ class FormModal {
     close() {
         let callback = () => {
             this.hide();
+            let modal = document.getElementById(this.modalId);
+            modal.remove();
         }
         let close = document.getElementById(this.modalCloseId);
         close.removeEventListener('click', callback); // Remove previous listener

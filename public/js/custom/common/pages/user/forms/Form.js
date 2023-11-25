@@ -1,9 +1,9 @@
 class Form {
-    constructor(formClass, submitButtonId, submitActionUrl, requestorObject) {
+    constructor(formClass, submitButtonId, submitActionUrl, requesterObject) {
         this.formClass = formClass;
         this.submitButtonId = submitButtonId;
         this.submitActionUrl = submitActionUrl;
-        this.requestor = requestorObject;
+        this.requester = requesterObject;
     }
 
     addListenerSubmitForm() {
@@ -93,7 +93,7 @@ class Form {
 
     handleFormSubmission = () => {
         //console.log('submission');
-        this.requestor.post(
+        this.requester.post(
             this.submitActionUrl,
             this.collectDataToSend(),
             this.successCallbackSubmit.bind(this),
