@@ -104,7 +104,7 @@
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
 <script src="/public/js/custom/common/pages/admin/forms/ChangeDefaultForm.js"></script>
-<script src="/public/js/custom/common/pages/classes/requestor/Requestor.js"></script>
+<script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
 
 <script src="/public/js/custom/frontend/pages/admin/forms/change_default.js"></script>
 
