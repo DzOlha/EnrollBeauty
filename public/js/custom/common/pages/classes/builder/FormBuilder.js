@@ -3,7 +3,7 @@ class FormBuilder {
     constructor() {
     }
 
-    static createModalForm(modalId) {
+    createModalForm(modalId) {
         return `<div class="modal modal-form" id="${modalId}">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content tx-size-sm" style="z-index: 20">
@@ -31,32 +31,70 @@ class FormBuilder {
                 </div>
                 `
     }
-    static createAddWorkerForm() {
+    createAddWorkerForm() {
         return `<div class="form-group">
-                    <input name="name" type="text" placeholder="Name" autocomplete="off"
-                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                           data-title="Name must be at least 3 characters long and contain only letters"
-                           required="required" class="form-control" id="name-input">
-                    <div class="error" id="name-input-error"></div>
-                </div>
-                <div class="form-group">
-                    <input name="surname" type="text" placeholder="Surname" autocomplete="off"
-                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                           data-title="Surname must be at least 3 characters long and contain only letters"
-                           required="required" class="form-control" id="surname-input">
-                    <div class="error" id="surname-input-error"></div>
-                </div>
-                <div class="form-group">
-                    <input name="email" type="email" placeholder="Email" autocomplete="off"
-                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                           data-title="Email address must be in the format myemail@mailservice.domain"
-                           required="required" class="form-control" id="email-input">
-                    <div class="error" id="email-input-error"></div>
-                </div>
-                <div class="form-group">
-                    <p class="mg-b-0">Age</p>
+                    <p class="mg-b-0"><span>*</span>Name</p>
                     <div class="input-group mb-3">
-                        <input aria-label="Age"
+                        <input name="name" type="text" placeholder="Name" autocomplete="off"
+                               data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                               data-title="Name must be at least 3 characters long and contain only letters"
+                               required="required" class="form-control" id="name-input">
+                        <div class="error" id="name-input-error"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Surname</p>
+                    <div class="input-group mb-3">
+                        <input name="surname" type="text" placeholder="Surname" autocomplete="off"
+                               data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                               data-title="Surname must be at least 3 characters long and contain only letters"
+                               required="required" class="form-control" id="surname-input">
+                        <div class="error" id="surname-input-error"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Email</p>
+                    <div class="input-group mb-3">
+                        <input name="email" type="email" placeholder="Email" autocomplete="off"
+                               data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                               data-title="Email address must be in the format myemail@mailservice.domain"
+                               required="required" class="form-control" id="email-input">
+                        <div class="error" id="email-input-error"></div>
+                    </div>
+                </div>
+                 <div class="form-group position-selector-parent">
+                    <p class="mg-b-0"><span>*</span>Position</p>
+                    <select class="form-control select2-with-search"
+                            id="position-select">
+                        <option label="Choose one">
+                        </option>
+                    </select>
+                     <div class="error" id="position-select-error"></div>
+                </div>
+                 <div class="form-group role-selector-parent">
+                    <p class="mg-b-0"><span>*</span>Role</p>
+                    <select class="form-control select2-with-search"
+                            id="role-select">
+                        <option label="Choose one">
+                        </option>
+                    </select>
+                    <div class="error" id="role-select-error"></div>
+               </div>
+                 <div class="form-group gender-selector-parent">
+                    <p class="mg-b-0">Gender</p>
+                    <select class="form-control select2-with-search"
+                            id="gender-select">
+                        <option value="" disabled selected>Choose one</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="error" id="gender-select-error"></div>
+               </div>
+                <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Age</p>
+                    <div class="input-group mb-3">
+                        <input aria-label="Age" placeholder="Age"
                                class="form-control" type="number"
                                id="age-input"
                         >
@@ -64,9 +102,9 @@ class FormBuilder {
                     </div>
                </div>
                <div class="form-group">
-                    <p class="mg-b-0">Years of experience</p>
+                    <p class="mg-b-0"><span>*</span>Years of experience</p>
                     <div class="input-group mb-3">
-                        <input aria-label="Experience"
+                        <input aria-label="Experience" placeholder="Years of experience"
                                class="form-control" type="number"
                                id="experience-input"
                         >
@@ -74,17 +112,9 @@ class FormBuilder {
                     </div>
                </div>
                <div class="form-group">
-                    <p class="mg-b-0">Position</p>
-                    <select class="form-control select2-with-search"
-                            id="position-select">
-                        <option label="Choose one">
-                        </option>
-                    </select>
-               </div>
-               <div class="form-group">
                     <p class="mg-b-0">Salary</p>
                     <div class="input-group mb-3">
-                        <input aria-label="Salary Amount"
+                        <input aria-label="Salary Amount" placeholder="Salary"
                                class="form-control" type="number"
                                id="salary-input"
                         >
@@ -94,14 +124,6 @@ class FormBuilder {
                         <div class="error" id="salary-input-error"></div>
                     </div>
                </div>
-               <div class="form-group">
-                    <p class="mg-b-0">Role</p>
-                    <select class="form-control select2-with-search"
-                            id="position-select">
-                        <option label="Choose one">
-                        </option>
-                    </select>
-                </div>
             `
     }
 }

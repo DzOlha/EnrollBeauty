@@ -227,4 +227,28 @@ class AdminDataSource extends DataSource
         }
         return $this->_appendTotalRowsCount($queryFrom, $result);
     }
+
+    public function selectAllPositions() {
+        $positions = Positions::$table;
+        $id = Positions::$id;
+        $name = Positions::$name;
+
+        $this->db->query("
+            SELECT $id, $name FROM $positions
+        ");
+
+        return $this->db->manyRows();
+    }
+
+    public function selectAllRoles() {
+        $roles = Roles::$table;
+        $id = Roles::$id;
+        $name = Roles::$name;
+
+        $this->db->query("
+            SELECT $id, $name FROM $roles
+        ");
+
+        return $this->db->manyRows();
+    }
 }

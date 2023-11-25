@@ -5,7 +5,7 @@
         position: relative !important;
     }
     body {
-        background: #f4f4f2;
+        background: var(--grey-around-form);
     }
 </style>
 

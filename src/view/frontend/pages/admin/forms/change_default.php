@@ -8,7 +8,7 @@
         margin-bottom: 15px;
     }
     body {
-        background: #f4f4f2;
+        background: var(--grey-around-form);
     }
     .message-success {
         font-size: 25px;

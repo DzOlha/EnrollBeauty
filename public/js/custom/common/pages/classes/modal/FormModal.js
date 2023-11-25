@@ -1,7 +1,10 @@
 
 class FormModal {
-    constructor(modalId) {
-        this.parent = 'page';
+    constructor(formBuilder) {
+        this.parentClass = 'page';
+        this.formBuilder = formBuilder;
+    }
+    setSelectors(modalId) {
         this.modalId = `${modalId}`;
         this.modalHeadlineId = `${modalId}-headline`;
         this.modalContentId = `${modalId}-content`;
@@ -13,8 +16,9 @@ class FormModal {
          * Insert the outline of the modal in the page structure
          * @type {string}
          */
-        let modal = FormBuilder.createModalForm(this.modalId);
-        let page = document.getElementById(this.parent);
+        let modal = this.formBuilder.createModalForm(this.modalId);
+        let page = document.querySelector(`.${this.parentClass}`);
+
         if(!page) return;
         page.insertAdjacentHTML('afterend', modal);
 
@@ -27,11 +31,11 @@ class FormModal {
         c.html('');
         c.append(content);
 
-        $(`#${this.modalId}`).show();
+        $(`#${this.modalId}`).fadeIn(400);
     }
 
-    hide() {
-        $(`#${this.modalId}`).hide();
+    hide(duration = 400) {
+        $(`#${this.modalId}`).fadeOut(duration);
     }
     submit(callback, data) {
         let f = () => {

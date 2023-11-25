@@ -57,4 +57,14 @@ class AdminDataMapper extends DataMapper
             $limit, $offset, $orderByField, $orderDirection
         );
     }
+
+    public function selectAllPositions()
+    {
+        return $this->dataSource->selectAllPositions();
+    }
+
+    public function selectAllRoles()
+    {
+        return $this->dataSource->selectAllRoles();
+    }
 }

@@ -203,7 +203,7 @@ class Table {
             '/public/images/custom/system/icons/arrows_down.svg': arrowUp,
             '/public/images/custom/system/icons/arrows_up.svg': arrowDown
         }
-        console.log(JSON.stringify(icons));
+        //console.log(JSON.stringify(icons));
         let arrowColumns = Array.from(
             document.getElementsByClassName('arrow_column')
         );

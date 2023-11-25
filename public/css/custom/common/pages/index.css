@@ -57,6 +57,7 @@ button[type="button"] {
     --success-color: rgba(91, 189, 114, .95);
     --error-color: rgba(217,92,92,.95);
     --warning-color: rgba(252,248,215,.95);
+    --grey-around-form: #f4f4f2;
 }
 
 .alertify-notifier .ajs-message.ajs-success {

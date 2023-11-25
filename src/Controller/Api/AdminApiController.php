@@ -131,4 +131,42 @@ class AdminApiController extends ApiController
         }
         $this->returnJsonSuccess(true, $result);
     }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/getAllPositionsRoles
+     */
+    public function getAllPositionsRoles(): void
+    {
+        /**
+         * Get positions
+         */
+        $positions = $this->dataMapper->selectAllPositions();
+        if($positions === false) {
+            $this->returnJson(['error' => "An error occurred while getting all positions"]);
+        }
+        if($positions === null) {
+            $this->returnJson(['error' => "There are no positions found!"]);
+        }
+
+        /**
+         * Get roles
+         */
+        $roles = $this->dataMapper->selectAllRoles();
+        if($positions === false) {
+            $this->returnJson(['error' => "An error occurred while getting all roles"]);
+        }
+        if($positions === null) {
+            $this->returnJson(['error' => "There are no roles found!"]);
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => [
+                'positions' => $positions,
+                'roles' => $roles
+            ]
+        ]);
+    }
 }

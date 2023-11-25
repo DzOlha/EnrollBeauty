@@ -2,8 +2,10 @@
 /**
     Modal confirmation
  */
+
 .modal-form {
     background-color: rgb(0, 0, 0, 0.8);
+    overflow-y: scroll;
 }
 .modal-form .close-modal {
     width: 30px;
@@ -27,4 +29,52 @@
 }
 .modal-form button:hover {
     background-color: var(--dark-brown-color);
+}
+.modal-form .close-modal:hover {
+    background-color: white;
+    cursor: pointer;
+}
+.modal-form .btn {
+    height: 50px;
+    margin-top: 15px;
+}
+.modal-form .btn:hover {
+    color: white;
+}
+.modal-form .modal-body {
+    margin: 5% 10%;
+    padding: 25px;
+    background-color: white;
+    width: 80%;
+    height: 80%;
+}
+.modal-form .modal-dialog {
+    max-width: 60vw;
+}
+.modal-form .modal-content {
+    background-color: var(--grey-around-form);
+}
+
+.modal-form .form-group {
+    text-align: left;
+}
+.modal-form .form-group p {
+    padding-left: 3px;
+    padding-bottom: 3px;
+}
+.modal-form .form-group p span {
+    color: red;
+    padding-right: 2px;
+}
+.modal-form input {
+    height: 40px;
+    border-radius: 2px !important;
+}
+.modal-form .select2-container {
+    z-index: 1000;
+}
+.modal-form .select2-results {
+    overflow: scroll;
+    height: auto;
+    text-align: left;
 }
