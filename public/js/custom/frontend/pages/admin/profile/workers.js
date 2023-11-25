@@ -8,7 +8,7 @@ $(function () {
     let modalForm = new FormModal(formBuilder);
 
     let addNewWorkerForm = new AddWorkerForm(
-        requester, modalForm, new OptionBuilder()
+        requester, modalForm, new OptionBuilder(), workersTable
     );
 
     /**

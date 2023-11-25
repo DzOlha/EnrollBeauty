@@ -39,7 +39,7 @@ class FormBuilder {
                                data-toggle="tooltip" data-trigger="focus" data-placement="left"
                                data-title="Name must be at least 3 characters long and contain only letters"
                                required="required" class="form-control" id="name-input">
-                        <div class="error" id="name-input-error"></div>
+                        <div class="error text-danger" id="name-input-error"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -49,7 +49,7 @@ class FormBuilder {
                                data-toggle="tooltip" data-trigger="focus" data-placement="left"
                                data-title="Surname must be at least 3 characters long and contain only letters"
                                required="required" class="form-control" id="surname-input">
-                        <div class="error" id="surname-input-error"></div>
+                        <div class="error text-danger" id="surname-input-error"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -59,7 +59,7 @@ class FormBuilder {
                                data-toggle="tooltip" data-trigger="focus" data-placement="left"
                                data-title="Email address must be in the format myemail@mailservice.domain"
                                required="required" class="form-control" id="email-input">
-                        <div class="error" id="email-input-error"></div>
+                        <div class="error text-danger" id="email-input-error"></div>
                     </div>
                 </div>
                  <div class="form-group position-selector-parent">
@@ -69,7 +69,7 @@ class FormBuilder {
                         <option label="Choose one">
                         </option>
                     </select>
-                     <div class="error" id="position-select-error"></div>
+                     <div class="error text-danger" id="position-select-error"></div>
                 </div>
                  <div class="form-group role-selector-parent">
                     <p class="mg-b-0"><span>*</span>Role</p>
@@ -78,7 +78,7 @@ class FormBuilder {
                         <option label="Choose one">
                         </option>
                     </select>
-                    <div class="error" id="role-select-error"></div>
+                    <div class="error text-danger" id="role-select-error"></div>
                </div>
                  <div class="form-group gender-selector-parent">
                     <p class="mg-b-0">Gender</p>
@@ -89,7 +89,7 @@ class FormBuilder {
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
                     </select>
-                    <div class="error" id="gender-select-error"></div>
+                    <div class="error text-danger" id="gender-select-error"></div>
                </div>
                 <div class="form-group">
                     <p class="mg-b-0"><span>*</span>Age</p>
@@ -98,7 +98,7 @@ class FormBuilder {
                                class="form-control" type="number"
                                id="age-input"
                         >
-                        <div class="error" id="age-input-error"></div>
+                        <div class="error text-danger" id="age-input-error"></div>
                     </div>
                </div>
                <div class="form-group">
@@ -108,20 +108,22 @@ class FormBuilder {
                                class="form-control" type="number"
                                id="experience-input"
                         >
-                        <div class="error" id="experience-input-error"></div>
+                        <div class="error text-danger" id="experience-input-error"></div>
                     </div>
                </div>
                <div class="form-group">
                     <p class="mg-b-0">Salary</p>
                     <div class="input-group mb-3">
-                        <input aria-label="Salary Amount" placeholder="Salary"
-                               class="form-control" type="number"
-                               id="salary-input"
-                        >
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bd-r">грн</span>
+                        <div class="d-flex">
+                            <input aria-label="Salary Amount" placeholder="Salary"
+                                   class="form-control" type="number"
+                                   id="salary-input"
+                            >
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bd-r">UAH</span>
+                            </div>
                         </div>
-                        <div class="error" id="salary-input-error"></div>
+                        <div class="error text-danger" id="salary-input-error"></div>
                     </div>
                </div>
             `

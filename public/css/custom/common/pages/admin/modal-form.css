@@ -78,3 +78,10 @@
     height: auto;
     text-align: left;
 }
+.modal-form .input-group {
+    display: flex;
+    flex-direction: column;
+}
+.modal-form .input-group input {
+    width: 100%;
+}

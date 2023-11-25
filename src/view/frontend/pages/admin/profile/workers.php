@@ -225,7 +225,7 @@
 <!--Moment-->
 <script src="/public/assets/plugins/moment/moment.js"></script>
 
-
+<!--<script nomodule src="/public/js/custom/common/libs/jquery.powertip.min.js"></script>-->
 <!--Mine scripts-->
 <script src="/public/js/custom/common/pages/classes/builder/OptionBuilder.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/Renderer.js"></script>
