@@ -22,7 +22,7 @@ class UserAuthService extends AuthService
         parent::__construct($dataMapper);
     }
 
-    public function register()
+    public function registerUser()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
@@ -155,7 +155,7 @@ class UserAuthService extends AuthService
         return [];
     }
 
-    public function login() {
+    public function loginUser() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
                 'email' => htmlspecialchars(trim($_POST['email'])),

@@ -296,7 +296,7 @@ class AddWorkerForm extends Form {
 
         // Return data if there are no errors
         if (noErrorWithText) {
-            return nameSurnameEmail;
+            return this._collectNameSurnameEmail();
         } else {
             return false;
         }

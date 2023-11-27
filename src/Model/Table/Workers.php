@@ -15,6 +15,6 @@ class Workers
     public static string $years_of_experience = 'workers.years_of_experience';
     public static string $position_id = 'workers.position_id';
     public static string $salary = 'workers.salary';
-    public static string $hours_working = 'workers.hours_working';
     public static string $role_id = 'workers.role_id';
+    public static string $created_date = 'workers.created_date';
 }

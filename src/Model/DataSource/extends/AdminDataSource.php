@@ -11,7 +11,7 @@ use Src\Model\Table\Positions;
 use Src\Model\Table\Roles;
 use Src\Model\Table\Workers;
 
-class AdminDataSource extends DataSource
+class AdminDataSource extends WorkerDataSource
 {
     public function __construct(IDatabase $db)
     {

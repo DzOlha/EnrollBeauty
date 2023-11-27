@@ -7,11 +7,17 @@
         "monolog/monolog": "^3.3",
         "guzzlehttp/guzzle": "^7.5",
         "ext-pdo": "*",
-        "twbs/bootstrap": "5.3.2"
+        "twbs/bootstrap": "5.3.2",
+        "mailgun/mailgun-php": "^3.6"
     },
     "autoload": {
       "psr-4": {
         "Src\\": "src/"
       }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }

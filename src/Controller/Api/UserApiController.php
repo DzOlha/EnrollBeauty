@@ -46,7 +46,7 @@ class UserApiController extends ApiController
     public function register()
     {
         $this->returnJson(
-            $this->authService->register()
+            $this->authService->registerUser()
         );
     }
 
@@ -58,7 +58,7 @@ class UserApiController extends ApiController
     public function login()
     {
         $this->returnJson(
-            $this->authService->login()
+            $this->authService->loginUser()
         );
     }
 

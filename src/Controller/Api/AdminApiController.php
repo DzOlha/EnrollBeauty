@@ -43,7 +43,7 @@ class AdminApiController extends ApiController
     public function login()
     {
         $this->returnJson(
-            $this->authService->login()
+            $this->authService->loginAdmin()
         );
     }
 
@@ -168,5 +168,17 @@ class AdminApiController extends ApiController
                 'roles' => $roles
             ]
         ]);
+    }
+
+    /**
+     * @return void
+     *
+     *  * url = /api/admin/registerWorker
+     */
+    public function registerWorker(): void
+    {
+        $this->returnJson(
+            $this->authService->registerWorker()
+        );
     }
 }

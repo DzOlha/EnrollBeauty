@@ -6,7 +6,7 @@ use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataSource\extends\AdminDataSource;
 use Src\Model\DTO\Write\AdminWriteDTO;
 
-class AdminDataMapper extends DataMapper
+class AdminDataMapper extends WorkerDataMapper
 {
     public function __construct(AdminDataSource $ds)
     {

@@ -3,3 +3,4 @@
 /src/logs
 /.idea
 /src/DB/Config/admin.php
+/src/Helper/Mailgun/MailgunApiCredentials.php

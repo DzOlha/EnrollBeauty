@@ -9,13 +9,14 @@ use Src\Model\DTO\Write\AdminWriteDTO;
 use Src\Model\DTO\Write\UserWriteDto;
 use Src\Model\Entity\Roles;
 use Src\Service\Auth\AuthService;
+use Src\Service\Auth\Worker\WorkerAuthService;
 use Src\Service\Hasher\impl\PasswordHasher;
 use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
 use Src\Service\Validator\impl\PasswordHashValidator;
 use Src\Service\Validator\impl\PasswordValidator;
 
-class AdminAuthService extends AuthService
+class AdminAuthService extends WorkerAuthService
 {
     public function __construct(DataMapper $dataMapper)
     {
@@ -31,10 +32,10 @@ class AdminAuthService extends AuthService
                 'error' => 'The database already contains administrators! The default admin can be created only if there is no admin users in the database!'
             ];
         }
-        return $this->register($admin);
+        return $this->registerAdmin($admin);
     }
 
-    public function register($admin = null)
+    public function registerAdmin($admin = null)
     {
         if ($admin === null) {
             $admin = [
@@ -289,7 +290,7 @@ class AdminAuthService extends AuthService
         return [];
     }
 
-    public function login() {
+    public function loginAdmin() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
                 'email' => htmlspecialchars(trim($_POST['email'])),
@@ -364,7 +365,4 @@ class AdminAuthService extends AuthService
         return [];
     }
 
-    public function logout() {
-
-    }
 }
