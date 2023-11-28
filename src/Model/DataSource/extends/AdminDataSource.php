@@ -3,6 +3,7 @@
 namespace Src\Model\DataSource\extends;
 
 use Src\DB\IDatabase;
+use Src\Helper\Builder\impl\SqlBuilder;
 use Src\Model\DataSource\DataSource;
 use Src\Model\DTO\Write\AdminWriteDTO;
 use Src\Model\Table\Admins;
@@ -19,11 +20,10 @@ class AdminDataSource extends WorkerDataSource
     }
 
     public function selectAllAdminsRows() {
-        $admins = Admins::$table;
-
-        $this->db->query("
-            SELECT COUNT(*) AS number FROM $admins
-        ");
+        $builder = new SqlBuilder($this->db);
+        $builder->selectCount('*', 'number')
+                ->from(Admins::$table)
+            ->build();
 
         $result = $this->db->singleRow();
         if($result) {
@@ -33,49 +33,39 @@ class AdminDataSource extends WorkerDataSource
     }
 
     public function selectAdminIdByEmail(string $email) {
-        $admins = Admins::$table;
-        $_email = Admins::$email;
-        $_id = Admins::$id;
-
-        $this->db->query(
-            "SELECT $_id FROM $admins WHERE $_email = :email"
-        );
-
-        $this->db->bind(':email', $email);
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Admins::$id])
+                ->from(Admins::$table)
+                ->whereEqual(Admins::$email, ':email', $email)
+            ->build();
 
         $result = $this->db->singleRow();
         if ($result) {
             // admins.id -> id
-            $key = explode('.', $_id)[1];
+            $key = explode('.', Admins::$id)[1];
             return $result[$key];
         }
         return $result;
     }
 
     public function insertAdmin(AdminWriteDTO $admin) {
-        $admins = Admins::$table;
-        $_name = Admins::$name;
-        $_surname = Admins::$surname;
-        $_email = Admins::$email;
-        $_password = Admins::$password;
-        $_created_date = Admins::$created_date;
-        $_role_id = Admins::$role_id;
-
-        $roles = Roles::$table;
-        $role_id = Roles::$id;
-        $role_name = Roles::$name;
-
-        $this->db->query(
-            "INSERT INTO $admins ($_name, $_surname, $_password, $_email, $_created_date, $_role_id)
-                VALUES (:name, :surname, :password, :email, NOW(), 
-                        (SELECT $role_id FROM $roles WHERE $role_name = :admin_role))"
-        );
-        $this->db->bind(':name', $admin->getName());
-        $this->db->bind(':surname', $admin->getSurname());
-        $this->db->bind(':password', $admin->getPasswordHash());
-        $this->db->bind(':email', $admin->getEmail());
-
-        $this->db->bind(':admin_role', $admin->getRole());
+        $currentDatetime = date('Y-m-d H:i:s');
+        $builder = new SqlBuilder($this->db);
+        $builder->insertInto(Admins::$table,
+                    [Admins::$name, Admins::$surname, Admins::$password,
+                     Admins::$email, Admins::$created_date, Admins::$role_id])
+                ->values(
+                    [':name', ':surname', ':password', ':email', ':created_datetime'],
+                    [$admin->getName(), $admin->getSurname(), $admin->getPasswordHash(),
+                     $admin->getEmail(), $currentDatetime],
+                    true
+                )   ->subqueryBegin()
+                        ->select([Roles::$id])
+                        ->from(Roles::$table)
+                        ->whereEqual(Roles::$name, ':admin_role', $admin->getRole())
+                    ->subqueryEnd()
+                ->queryEnd()
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return $this->db->lastInsertedId();
@@ -83,12 +73,10 @@ class AdminDataSource extends WorkerDataSource
         return false;
     }
     public function insertAdminSetting(int $adminId) {
-        $adminsSetting = AdminsSetting::$table;
-        $admin_id = AdminsSetting::$admin_id;
-        $this->db->query(
-            "INSERT INTO $adminsSetting ($admin_id) VALUES (:admin_id)"
-        );
-        $this->db->bind(':admin_id', $adminId);
+        $builder = new SqlBuilder($this->db);
+        $builder->insertInto(AdminsSetting::$table, [AdminsSetting::$admin_id])
+                ->values([':admin_id'], [$adminId])
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return $this->db->lastInsertedId();
@@ -97,24 +85,14 @@ class AdminDataSource extends WorkerDataSource
     }
 
     public function updateAdmin(AdminWriteDTO $admin) {
-        $admins = Admins::$table;
-        $_name = Admins::$name;
-        $_surname = Admins::$surname;
-        $_email = Admins::$email;
-        $_password = Admins::$password;
-        $_status = Admins::$status;
-
-        $this->db->query("
-            UPDATE $admins
-            SET $_name = :name, $_surname = :surname, $_email = :email,
-                $_password = :password, $_status = :status
-        ");
-
-        $this->db->bind(':name', $admin->getName());
-        $this->db->bind(':surname', $admin->getSurname());
-        $this->db->bind(':email', $admin->getEmail());
-        $this->db->bind(':password', $admin->getPasswordHash());
-        $this->db->bind(':status', $admin->getStatus());
+        $builder = new SqlBuilder($this->db);
+        $builder->update(Admins::$table)
+                ->set(Admins::$name, ':name', $admin->getName())
+                ->andSet(Admins::$surname, ':surname', $admin->getSurname())
+                ->andSet(Admins::$email, ':email', $admin->getEmail())
+                ->andSet(Admins::$password, ':password', $admin->getPasswordHash())
+                ->andSet(Admins::$status, ':status', $admin->getStatus())
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;
@@ -123,20 +101,18 @@ class AdminDataSource extends WorkerDataSource
     }
     public function selectAdminPasswordByEmail(string $email)
     {
-        $users = Admins::$table;
-        $_email = Admins::$email;
-        $_password = Admins::$password;
-
-        $this->db->query(
-            "SELECT $_password FROM $users WHERE $_email = :email"
-        );
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Admins::$password])
+                ->from(Admins::$table)
+                ->whereEqual(Admins::$email, ':email', $email)
+            ->build();
 
         $this->db->bind(':email', $email);
 
         $result = $this->db->singleRow();
         if ($result) {
             // admins.password -> password
-            $key = explode('.', $_password)[1];
+            $key = explode('.', Admins::$password)[1];
             return $result[$key];
         }
         return false;
@@ -153,19 +129,11 @@ class AdminDataSource extends WorkerDataSource
      * ]
      */
     public function selectAdminInfoById(int $adminId) {
-        $admins = Admins::$table;
-        $name = Admins::$name;
-        $surname = Admins::$surname;
-        $email = Admins::$email;
-
-        $_admin_id = Admins::$id;
-
-        $this->db->query("
-            SELECT $_admin_id, $name, $surname, $email
-            FROM $admins
-            WHERE $_admin_id = :id
-        ");
-        $this->db->bind(':id', $adminId);
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Admins::$id, Admins::$name, Admins::$surname, Admins::$email])
+                ->from(Admins::$table)
+                ->whereEqual(Admins::$id, ':id', $adminId)
+            ->build();
 
         return $this->db->singleRow();
     }
@@ -196,12 +164,7 @@ class AdminDataSource extends WorkerDataSource
         string $orderByField = 'workers.id', string $orderDirection = 'asc'
     ) {
         $workers = Workers::$table;
-        $id = Workers::$id;
-        $name = Workers::$name;
-        $surname = Workers::$surname;
-        $email = Workers::$email;
         $_position_id = Workers::$position_id;
-        $salary = Workers::$salary;
         $experience = Workers::$years_of_experience;
 
         $positions = Positions::$table;
@@ -211,15 +174,18 @@ class AdminDataSource extends WorkerDataSource
         $queryFrom = "
             $workers INNER JOIN $positions ON $_position_id = $position_id
         ";
-        $this->db->query("
-            SELECT $id, $name, $surname, $email, 
-                   $position_name as position, $salary, $experience as experience
-            FROM $workers INNER JOIN $positions ON $_position_id = $position_id
-            
-            ORDER BY $orderByField $orderDirection
-            LIMIT $limit
-            OFFSET $offset
-        ");
+
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email,
+                         "$position_name as position", Workers::$salary, "$experience as experience"])
+                ->from(Workers::$table)
+                ->innerJoin(Positions::$table)
+                    ->on(Workers::$position_id, Positions::$id)
+                ->orderBy($orderByField, $orderDirection)
+                ->limit($limit)
+                ->offset($offset)
+            ->build();
+
 
         $result = $this->db->manyRows();
         if($result == null) {
@@ -229,25 +195,19 @@ class AdminDataSource extends WorkerDataSource
     }
 
     public function selectAllPositions() {
-        $positions = Positions::$table;
-        $id = Positions::$id;
-        $name = Positions::$name;
-
-        $this->db->query("
-            SELECT $id, $name FROM $positions
-        ");
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Positions::$id, Positions::$name])
+                ->from(Positions::$table)
+            ->build();
 
         return $this->db->manyRows();
     }
 
     public function selectAllRoles() {
-        $roles = Roles::$table;
-        $id = Roles::$id;
-        $name = Roles::$name;
-
-        $this->db->query("
-            SELECT $id, $name FROM $roles
-        ");
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Roles::$id, Roles::$name])
+                ->from(Roles::$table)
+            ->build();
 
         return $this->db->manyRows();
     }

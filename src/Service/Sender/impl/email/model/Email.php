@@ -69,15 +69,17 @@ class Email
 
     public function populateWorkerWelcomeLetter(
         string $urlOnButton,
-        string $headline = 'Beauty Salon',
+        string $name,
+        string $surname,
+        string $headline = 'Enroll Beauty',
         string $title = 'Access to the account!',
-        string $text = 'You have been registered as a Worker on the Beauty Salon Platform.To get access to your account, please click the link below!',
+        string $text = 'You have been registered as a Worker on the Enroll Beauty Platform. To get access to your account, please click the link below!',
         string $buttonText = 'Change password',
     )
     {
         $this->replaceArgumentWithValue('/%HEADLINE%/', $headline);
 
-        $this->replaceArgumentWithValue('/%TITLE%/', $title);
+        $this->replaceArgumentWithValue('/%TITLE%/', "Dear, $name $surname");
 
         $this->replaceArgumentWithValue('/%TEXT%/', $text);
 

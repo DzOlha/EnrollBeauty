@@ -3,6 +3,7 @@
 namespace Src\Model\DataSource\extends;
 
 use Src\DB\IDatabase;
+use Src\Helper\Builder\impl\SqlBuilder;
 use Src\Model\DataSource\DataSource;
 use Src\Model\DTO\Read\UserReadDto;
 use Src\Model\DTO\Read\UserSocialReadDto;
@@ -30,31 +31,27 @@ class UserDataSource extends DataSource
 
     public function insertNewUser(UserWriteDto $user)
     {
-        $users = Users::$table;
-        $_name = Users::$name;
-        $_surname = Users::$surname;
-        $_email = Users::$email;
-        $_password = Users::$password;
-        $_created_date = Users::$created_date;
-        $_role_id = Users::$role_id;
-
-        $roles = Roles::$table;
-        $role_id = Roles::$id;
-        $role_name = Roles::$name;
-
         $userRole = \Src\Model\Entity\Roles::$USER;
 
-        $this->db->query(
-            "INSERT INTO $users ($_name, $_surname, $_password, $_email, $_created_date, $_role_id)
-                VALUES (:name, :surname, :password, :email, NOW(), 
-                        (SELECT $role_id FROM $roles WHERE $role_name = :user_role))"
-        );
-        $this->db->bind(':name', $user->getName());
-        $this->db->bind(':surname', $user->getSurname());
-        $this->db->bind(':password', $user->getPasswordHash());
-        $this->db->bind(':email', $user->getEmail());
-
-        $this->db->bind(':user_role', $userRole);
+        $currentDatetime = date('Y-m-d H:i:s');
+        $builder = new SqlBuilder($this->db);
+        $builder->insertInto(Users::$table,
+                    [
+                        Users::$name, Users::$surname, Users::$password, Users::$email,
+                        Users::$created_date, Users::$role_id
+                    ]
+                )->values(
+                    [':name', ':surname', ':password', ':email', ':created_date'],
+                    [$user->getName(), $user->getSurname(), $user->getPasswordHash(),
+                     $user->getEmail(), $currentDatetime],
+                    true
+                )->subqueryBegin()
+                    ->select([Roles::$id])
+                    ->from(Roles::$table)
+                    ->whereEqual(Roles::$name, ':user_role', $userRole)
+                 ->subqueryEnd()
+                ->queryEnd()
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return $this->db->lastInsertedId();
@@ -64,12 +61,10 @@ class UserDataSource extends DataSource
 
     public function insertNewUserSetting(int $userId)
     {
-        $usersSetting = UsersSetting::$table;
-        $user_id = UsersSetting::$user_id;
-        $this->db->query(
-            "INSERT INTO $usersSetting ($user_id) VALUES (:user_id)"
-        );
-        $this->db->bind(':user_id', $userId);
+        $builder = new SqlBuilder($this->db);
+        $builder->insertInto(UsersSetting::$table, [UsersSetting::$user_id])
+                ->values([':user_id'], [$userId])
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return $this->db->lastInsertedId();
@@ -79,13 +74,10 @@ class UserDataSource extends DataSource
 
     public function insertNewUserSocial(int $userId)
     {
-        $usersSocial = UsersSocial::$table;
-        $user_id = UsersSocial::$user_id;
-
-        $this->db->query(
-            "INSERT INTO $usersSocial ($user_id) VALUES (:user_id)"
-        );
-        $this->db->bind(':user_id', $userId);
+        $builder = new SqlBuilder($this->db);
+        $builder->insertInto(UsersSocial::$table, [UsersSocial::$user_id])
+                ->values([':user_id'], [$userId])
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return $this->db->lastInsertedId();
@@ -95,13 +87,10 @@ class UserDataSource extends DataSource
 
     public function insertNewUserPhoto(int $userId)
     {
-        $usersSocial = UsersPhoto::$table;
-        $user_id = UsersPhoto::$user_id;
-
-        $this->db->query(
-            "INSERT INTO $usersSocial ($user_id) VALUES (:user_id)"
-        );
-        $this->db->bind(':user_id', $userId);
+        $builder = new SqlBuilder($this->db);
+        $builder->insertInto(UsersPhoto::$table, [UsersPhoto::$user_id])
+                ->values([':user_id'], [$userId])
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return $this->db->lastInsertedId();
@@ -124,23 +113,13 @@ class UserDataSource extends DataSource
      */
     public function selectUserInfoById(int $userId)
     {
-        $users = Users::$table;
-        $name = Users::$name;
-        $surname = Users::$surname;
-        $email = Users::$email;
-
-        $usersPhoto = UsersPhoto::$table;
-        $filename = UsersPhoto::$name;
-
-        $usersId = Users::$id;
-        $usersPhotoUserId = UsersPhoto::$user_id;
-
-        $this->db->query("
-            SELECT $usersId, $name, $surname, $email, $filename
-            FROM $users INNER JOIN $usersPhoto ON $usersId = $usersPhotoUserId
-            WHERE $usersId = :id
-        ");
-        $this->db->bind(':id', $userId);
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Users::$id, Users::$name, Users::$surname, Users::$email, UsersPhoto::$name])
+                ->from(Users::$table)
+                ->innerJoin(UsersPhoto::$table)
+                    ->on(Users::$id, UsersPhoto::$user_id)
+                ->whereEqual(Users::$id, ':id', $userId)
+            ->build();
 
         $result = $this->db->singleRow();
         if ($result) {
@@ -165,14 +144,12 @@ class UserDataSource extends DataSource
      */
     public function selectUserSocialById(int $userId)
     {
-        $usersSocial = UsersSocial::$table;
-        $usersSocialUserId = UsersSocial::$user_id;
+        $builder = new SqlBuilder($this->db);
+        $builder->select(['*'])
+                ->from(UsersSocial::$table)
+                ->whereEqual(UsersSocial::$user_id, ':id', $userId)
+            ->build();
 
-        $this->db->query("
-            SELECT * FROM $usersSocial 
-            WHERE $usersSocialUserId = :id
-        ");
-        $this->db->bind(':id', $userId);
         $result = $this->db->singleRow();
         if ($result) {
             return new UserSocialReadDto($result);
@@ -205,35 +182,26 @@ class UserDataSource extends DataSource
         string $orderByField = 'orders_service.id', string $orderDirection = 'asc')
     {
         $ordersService = OrdersService::$table;
-        $order_id = OrdersService::$id;
         $user_id = OrdersService::$user_id;
         $service_id = OrdersService::$service_id;
         $worker_id = OrdersService::$worker_id;
         $affiliate_id = OrdersService::$affiliate_id;
         $start_datetime = OrdersService::$start_datetime;
-        $end_datetime = OrdersService::$end_datetime;
         $canceled = OrdersService::$canceled_datetime;
         $completed = OrdersService::$completed_datetime;
 
         $workersService = WorkersServicePricing::$table;
         $workersServiceWorkerId = WorkersServicePricing::$worker_id;
         $workersServiceServiceId = WorkersServicePricing::$service_id;
-        $price = WorkersServicePricing::$price;
-        $currency = WorkersServicePricing::$currency;
 
         $workers = Workers::$table;
         $workerId = Workers::$id;
-        $worker_name = Workers::$name;
-        $worker_surname = Workers::$surname;
 
         $affiliates = Affiliates::$table;
         $affiliateId = Affiliates::$id;
-        $affiliate_city = Affiliates::$city;
-        $affiliate_address = Affiliates::$address;
 
         $services = Services::$table;
         $serviceId = Services::$id;
-        $service_name = Services::$name;
 
         $now = date("Y-m-d H:i:s", time());
 
@@ -250,31 +218,38 @@ class UserDataSource extends DataSource
                 AND $start_datetime >= '$now'
         ";
 
-        $this->db->query("
-            SELECT $order_id, $service_id as service_id, 
-                   $service_name as service_name, $worker_id as worker_id, 
-                   $worker_name as worker_name, 
-                   $worker_surname as worker_surname, 
-                   $affiliate_id as affiliate_id, 
-                   $affiliate_city as affiliate_city, 
-                   $affiliate_address as affiliate_address, 
-                   $start_datetime, $end_datetime, $price, $currency
-            FROM $ordersService 
-                INNER JOIN $workers ON $worker_id = $workerId
-                INNER JOIN $affiliates ON $affiliate_id = $affiliateId
-                INNER JOIN $services ON $service_id = $serviceId
-                INNER JOIN $workersService ON $worker_id = $workersServiceWorkerId
-                                          AND $service_id = $workersServiceServiceId
-            WHERE $user_id = :user_id
-                AND $canceled IS NULL
-                AND $completed IS NULL
-                AND $start_datetime >= '$now'
-            
-            ORDER BY $orderByField $orderDirection
-            LIMIT $limit
-            OFFSET $offset
-        ");
-        $this->db->bind(':user_id', $userId);
+        $currentDatetime = date('Y-m-d H:i:s');
+        $builder = new SqlBuilder($this->db);
+        $builder->select(
+                [OrdersService::$id, OrdersService::$service_id, Services::$name, OrdersService::$worker_id,
+                Workers::$name, Workers::$surname, OrdersService::$affiliate_id, Affiliates::$city,
+                Affiliates::$address, OrdersService::$start_datetime, OrdersService::$end_datetime,
+                WorkersServicePricing::$price, WorkersServicePricing::$currency],
+                [
+                    OrdersService::$service_id => 'service_id', Services::$name => 'service_name',
+                    OrdersService::$worker_id => 'worker_id', Workers::$name => 'worker_name',
+                    Workers::$surname => 'worker_surname', OrdersService::$affiliate_id => 'affiliate_id',
+                    Affiliates::$city => 'affiliate_city', Affiliates::$address => 'affiliate_address'
+                ]
+            )
+            ->from(OrdersService::$table)
+                ->innerJoin(Workers::$table)
+                    ->on(OrdersService::$worker_id, Workers::$id)
+                ->innerJoin(Affiliates::$table)
+                    ->on(OrdersService::$affiliate_id, Affiliates::$id)
+                ->innerJoin(Services::$table)
+                    ->on(OrdersService::$service_id, Services::$id)
+                ->innerJoin(WorkersServicePricing::$table)
+                    ->on(OrdersService::$worker_id, WorkersServicePricing::$worker_id)
+                    ->andOn(OrdersService::$service_id, WorkersServicePricing::$service_id)
+            ->whereEqual(OrdersService::$user_id, ':user_id', $userId)
+                ->andIsNull(OrdersService::$canceled_datetime)
+                ->andIsNull(OrdersService::$completed_datetime)
+                ->andGreaterEqual(OrdersService::$start_datetime, ':start_datetime', $currentDatetime)
+            ->orderBy($orderByField, $orderDirection)
+            ->limit($limit)
+            ->offset($offset)
+        ->build();
 
         $result = $this->db->manyRows();
         if($result == null) {
@@ -297,11 +272,10 @@ class UserDataSource extends DataSource
      */
     public function selectAllDepartments()
     {
-        $departments = Departments::$table;
-
-        $this->db->query("
-            SELECT * FROM $departments
-        ");
+        $builder = new SqlBuilder($this->db);
+        $builder->select(['*'])
+                ->from(Departments::$table)
+            ->build();
 
         return $this->db->manyRows();
     }
@@ -494,7 +468,7 @@ class UserDataSource extends DataSource
         $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
         $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
         $priceFilter = $this->_priceFilter(
-            $priceFrom, $priceTo, $schedule_worker_id, $schedule_service_id
+            $priceFrom, $priceTo
         );
 
         $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
@@ -576,49 +550,35 @@ class UserDataSource extends DataSource
      * ]
      */
     public function selectDepartmentByServiceId(int $serviceId) {
-        $departments = Departments::$table;
-        $departments_id = Departments::$id;
-        $departments_name = Departments::$name;
-
-        $services = Services::$table;
-        $services_id = Services::$id;
-        $services_department_id = Services::$department_id;
-
-        $this->db->query("
-            SELECT $departments_id, $departments_name
-                FROM $departments 
-                INNER JOIN $services ON $services_department_id = $departments_id
-            WHERE $services_id = :service_id
-        ");
-
-        $this->db->bind(':service_id', $serviceId);
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Departments::$id, Departments::$name])
+                ->from(Departments::$table)
+                ->innerJoin(Services::$table)
+                    ->on(Departments::$id, Services::$department_id)
+                ->whereEqual(Services::$id, ':service_id', $serviceId)
+            ->build();
 
         return $this->db->singleRow();
     }
 
     public function selectWorkerScheduleItemById(int $scheduleId) {
-        $workerServiceSchedule = WorkersServiceSchedule::$table;
-        $id = WorkersServiceSchedule::$id;
-
-        $this->db->query("
-            SELECT * FROM $workerServiceSchedule 
-            WHERE $id = :schedule_id
-        ");
-        $this->db->bind(':schedule_id', $scheduleId);
+        $builder = new SqlBuilder($this->db);
+        $builder->select(['*'])
+                ->from(WorkersServiceSchedule::$table)
+                ->whereEqual(WorkersServiceSchedule::$id, ':schedule_id', $scheduleId)
+            ->build();
 
         return $this->db->singleRow();
     }
 
     public function selectUserEmailById(int $userId) {
-        $users = Users::$table;
-        $id = Users::$id;
         $email = Users::$email;
 
-        $this->db->query("
-            SELECT $email FROM $users
-            WHERE $id = :user_id
-        ");
-        $this->db->bind(':user_id', $userId);
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Users::$email])
+                ->from(Users::$table)
+                ->whereEqual(Users::$id, ':user_id', $userId)
+            ->build();
 
         $result = $this->db->singleRow();
         if($result) {
@@ -632,19 +592,15 @@ class UserDataSource extends DataSource
     }
 
     public function selectOrderServiceByScheduleId(int $scheduleId) {
-        $ordersService = OrdersService::$table;
         $id = OrdersService::$id;
-        $schedule_id = OrdersService::$schedule_id;
-        $canceled_datetime = OrdersService::$canceled_datetime;
-        $completed_datetime = OrdersService::$completed_datetime;
 
-        $this->db->query("
-            SELECT $id FROM $ordersService
-            WHERE $schedule_id = :schedule_id
-                  AND $canceled_datetime IS NULL
-                  AND $completed_datetime IS NULL
-        ");
-        $this->db->bind(':schedule_id', $scheduleId);
+        $builder = new SqlBuilder($this->db);
+        $builder->select([OrdersService::$id])
+                ->from(OrdersService::$table)
+                ->whereEqual(OrdersService::$schedule_id, ':schedule_id', $scheduleId)
+                    ->andIsNull(OrdersService::$canceled_datetime)
+                    ->andIsNull(OrdersService::$completed_datetime)
+            ->build();
 
         $result = $this->db->singleRow();
         if($result) {
@@ -657,32 +613,24 @@ class UserDataSource extends DataSource
         ?int $scheduleId, ?int $userId, string $email, int $serviceId, int $workerId,
         int $affiliateId, string $startDatetime, string $endDatetime
     ) {
-        $ordersService = OrdersService::$table;
-        $user_id = OrdersService::$user_id;
-        $schedule_id = OrdersService::$schedule_id;
-        $email_column = OrdersService::$email;
-        $service_id = OrdersService::$service_id;
-        $worker_id = OrdersService::$worker_id;
-        $affiliate_id = OrdersService::$affiliate_id;
-        $start_datetime = OrdersService::$start_datetime;
-        $end_datetime = OrdersService::$end_datetime;
-        $created_datetime = OrdersService::$created_datetime;
-
-        $this->db->query("
-            INSERT INTO $ordersService 
-                ($user_id, $schedule_id, $email_column, $service_id, $worker_id, 
-                 $affiliate_id, $start_datetime, $end_datetime, $created_datetime)
-            VALUES (:user_id, :schedule_id, :email, :service_id, 
-                    :worker_id, :affiliate_id, :start, :end, NOW())
-        ");
-        $this->db->bind(':user_id', $userId);
-        $this->db->bind(':schedule_id', $scheduleId);
-        $this->db->bind(':email', $email);
-        $this->db->bind(':service_id', $serviceId);
-        $this->db->bind(':worker_id', $workerId);
-        $this->db->bind(':affiliate_id', $affiliateId);
-        $this->db->bind(':start', $startDatetime);
-        $this->db->bind(':end', $endDatetime);
+        $currentDatetime = date('Y-m-d H:i:s');
+        $builder = new SqlBuilder($this->db);
+        $builder->insertInto(OrdersService::$table,
+                    [
+                        OrdersService::$user_id, OrdersService::$schedule_id,
+                        OrdersService::$email, OrdersService::$service_id,
+                        OrdersService::$worker_id, OrdersService::$affiliate_id,
+                        OrdersService::$start_datetime, OrdersService::$end_datetime,
+                        OrdersService::$created_datetime
+                    ]
+                )
+                ->values(
+                    [':user_id', ':schedule_id', ':email', ':service_id', ':worker_id',
+                     ':affiliate_id', ':start', ':end', ':created_datetime'],
+                    [$userId, $scheduleId, $email, $serviceId, $workerId,
+                     $affiliateId, $startDatetime, $endDatetime, $currentDatetime]
+                )
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return $this->db->lastInsertedId();
@@ -693,18 +641,11 @@ class UserDataSource extends DataSource
     public function updateOrderIdInWorkersServiceSchedule(
         int $scheduleId, int $orderId
     ) {
-        $workersServiceSchedule = WorkersServiceSchedule::$table;
-        $id = WorkersServiceSchedule::$id;
-        $order_id = WorkersServiceSchedule::$order_id;
-
-        $this->db->query("
-            UPDATE $workersServiceSchedule
-            SET $order_id = :order_id
-            WHERE $id = :schedule_id
-        ");
-
-        $this->db->bind(':order_id', $orderId);
-        $this->db->bind(':schedule_id', $scheduleId);
+        $builder = new SqlBuilder($this->db);
+        $builder->update(WorkersServiceSchedule::$table)
+                ->set(WorkersServiceSchedule::$order_id, ':order_id', $orderId)
+                ->whereEqual(WorkersServiceSchedule::$id, ':schedule_id', $scheduleId)
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;
@@ -713,17 +654,12 @@ class UserDataSource extends DataSource
     }
 
     public function updateServiceOrderCanceledDatetimeById(int $orderId) {
-        $ordersService = OrdersService::$table;
-        $id = OrdersService::$id;
-        $canceledDatetime = OrdersService::$canceled_datetime;
-
-        $this->db->query("
-            UPDATE $ordersService
-            SET $canceledDatetime = NOW()
-            WHERE $id = :order_id
-        ");
-
-        $this->db->bind(':order_id', $orderId);
+        $currentDatetime = date('Y-m-d H:i:s');
+        $builder = new SqlBuilder($this->db);
+        $builder->update(OrdersService::$table)
+                ->set(OrdersService::$canceled_datetime, ':canceled_datetime', $currentDatetime)
+                ->whereEqual(OrdersService::$id, ':order_id', $orderId)
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;
@@ -731,15 +667,11 @@ class UserDataSource extends DataSource
         return false;
     }
     public function selectScheduleIdByOrderId(int $orderId) {
-        $ordersService = OrdersService::$table;
-        $id = OrdersService::$id;
-        $schedule_id = OrdersService::$schedule_id;
-
-        $this->db->query("
-            SELECT $schedule_id FROM $ordersService
-            WHERE $id = :id
-        ");
-        $this->db->bind(':id', $orderId);
+        $builder = new SqlBuilder($this->db);
+        $builder->select([OrdersService::$schedule_id])
+                ->from(OrdersService::$table)
+                ->whereEqual(OrdersService::$id, ':id', $orderId)
+            ->build();
 
         $result = $this->db->singleRow();
         if($result) {
@@ -748,16 +680,12 @@ class UserDataSource extends DataSource
         return $result;
     }
     public function updateOrderIdByScheduleId(int $scheduleId) {
-        $workersServiceSchedule = WorkersServiceSchedule::$table;
-        $order_id = WorkersServiceSchedule::$order_id;
-        $id = WorkersServiceSchedule::$id;
+        $builder = new SqlBuilder($this->db);
+        $builder->update(WorkersServiceSchedule::$table)
+                ->setNull(WorkersServiceSchedule::$order_id)
+                ->whereEqual(WorkersServiceSchedule::$id, ':id', $scheduleId)
+            ->build();
 
-        $this->db->query("
-            UPDATE $workersServiceSchedule
-            SET $order_id = NULL
-            WHERE $id = :id
-        ");
-        $this->db->bind(':id', $scheduleId);
         if ($this->db->affectedRowsCount() > 0) {
             return true;
         }

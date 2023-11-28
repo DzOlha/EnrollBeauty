@@ -2,6 +2,7 @@
 
 namespace Src\Service\Auth\Worker;
 
+use Src\Helper\Builder\impl\UrlBuilder;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\WorkerWriteDTO;
 use Src\Model\Entity\Gender;
@@ -245,15 +246,15 @@ class WorkerAuthService extends UserAuthService
              * Send email with url for changing password
              */
             $emailSent = $this->_sendLetterToWelcomeWorker(
-                $items['email'], $workerSettingId, $recoveryCode
+                $items['email'], $workerSettingId, $recoveryCode,
+                $items['name'], $items['surname']
             );
             if(isset($emailSent['error'])) {
                 return $emailSent;
             } else {
                 $this->dataMapper->commitTransaction();
                 return [
-                    'success' => "You successfully registered the worker '{$items['name']} {$items['surname']}'! 
-                                  The letter with the link to get access to the account has been sent to their email."
+                    'success' => "You successfully registered the worker '{$items['name']} {$items['surname']}'! The letter with the link to get access to the account has been sent to their email."
                 ];
             }
         }
@@ -261,25 +262,32 @@ class WorkerAuthService extends UserAuthService
     }
 
     protected function _createRecoveryLink(string $recoveryCode) {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT
-                .'web/worker/recoveryPassword?recovery_code='
-                .$recoveryCode;
+        $builder = new UrlBuilder();
+        $url = $builder->baseUrl(ENROLL_BEAUTY_URL_HTTP_ROOT)
+                    ->controllerType('web')
+                    ->controllerPrefix('worker')
+                    ->controllerMethod('recoveryPassword')
+                    ->get('recovery_code', $recoveryCode)
+                 ->build();
+        return $url;
     }
-    protected function _sendLetterToWelcomeWorker($email, $workerSettingId, $recoveryCode) {
+    protected function _sendLetterToWelcomeWorker(
+        $email, $workerSettingId, $recoveryCode, $name, $surname
+    ) {
         $email = new Email(
-            'sylin@beauty.com',
-            'Sylin',
+            'enroll@beauty.com',
+            'Enroll Beauty',
             [$email],
             'welcome',
             SRC.'/Service/Sender/impl/email/templates/email_with_link.html',
         );
 
         $recoveryUrl = $this->_createRecoveryLink($recoveryCode);
-        $email->populateWorkerWelcomeLetter($recoveryUrl);
+        $email->populateWorkerWelcomeLetter($recoveryUrl, $name, $surname);
 
         $sender = new EmailSender($email, new MailgunService());
         $emailSent = $sender->send();
-        var_dump($emailSent);
+        //var_dump($emailSent);
         if ($emailSent === true) {
             $success = $this->dataMapper->updateWorkerSettingDateOfSendingRecoveryCode(
                 $workerSettingId, $recoveryCode

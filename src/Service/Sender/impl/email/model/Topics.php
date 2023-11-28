@@ -6,7 +6,7 @@ class Topics
 {
     private static array $topics = [
         'register' => 'Confirmation of registration',
-        'welcome' => 'Welcome to the Sylin!',
+        'welcome' => 'Welcome to the Enroll Beauty!',
         'referral_reg' => 'NEW_REG',
         'mail_auth' => 'Mail Authentication Connection',
         'g2fa' => 'Connecting Google Authenticator',
