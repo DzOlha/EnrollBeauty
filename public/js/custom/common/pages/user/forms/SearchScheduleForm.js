@@ -306,7 +306,7 @@ class SearchScheduleForm extends Form {
              * we load all workers into appropriate select
              */
             if (!value) {
-                this.requestor.get(
+                this.requester.get(
                     this.apiUrlGetWorkersAll,
                     this.successCallbackGetWorkers.bind(this),
                     this.errorCallbackSubmit.bind(this),
@@ -319,7 +319,7 @@ class SearchScheduleForm extends Form {
              * who can provide selected service
              */
             else {
-                this.requestor.get(
+                this.requester.get(
                     `${this.apiUrlGetWorkers}service_id=${value}`,
                     this.successCallbackGetWorkers.bind(this),
                     this.errorCallbackSubmit.bind(this),
@@ -370,7 +370,7 @@ class SearchScheduleForm extends Form {
              * we load all services into appropriate select
              */
             if (!value) {
-                this.requestor.get(
+                this.requester.get(
                     this.apiUrlGetServicesAll,
                     this.successCallbackGetServices.bind(this),
                     this.errorCallbackSubmit.bind(this),
@@ -383,7 +383,7 @@ class SearchScheduleForm extends Form {
              * which the selected worker can provide
              */
             else {
-                this.requestor.get(
+                this.requester.get(
                     `${this.apiUrlGetServices}
                         worker_id=${value.trim()}`,
                     this.successCallbackGetServices.bind(this),
@@ -404,7 +404,7 @@ class SearchScheduleForm extends Form {
      * Populate service, workers, affiliates selectors
      */
     getServicesWorkersAffiliates() {
-        this.requestor.get(
+        this.requester.get(
             this.apiUrlGetAll,
             this.successCallbackGetAll.bind(this),
             this.errorCallbackSubmit.bind(this),

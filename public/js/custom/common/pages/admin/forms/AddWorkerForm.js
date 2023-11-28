@@ -7,7 +7,7 @@ class AddWorkerForm extends Form {
             '/api/admin/registerWorker',
             requester
         );
-        console.log(modalForm.modalSubmitId);
+        //console.log(modalForm.modalSubmitId);
         //this.requester = requester;
         this.modalForm = modalForm;
         this.optionBuilder = optionBuilder;
@@ -197,6 +197,10 @@ class AddWorkerForm extends Form {
         let positionRoleGender = this.validatePositionRoleGender();
         let ageExperienceSalary = this.validateAgeExperienceSalary();
 
+        console.log('nameSurnameEmail = ' + nameSurnameEmail);
+        console.log('positionRoleGender = ' + positionRoleGender);
+        console.log('ageExperienceSalary = ' + ageExperienceSalary);
+
         if(nameSurnameEmail && positionRoleGender && ageExperienceSalary) {
             return {
                 ...nameSurnameEmail, ...positionRoleGender, ...ageExperienceSalary
@@ -296,6 +300,7 @@ class AddWorkerForm extends Form {
 
         // Return data if there are no errors
         if (noErrorWithText) {
+            console.log('noErrorWithText');
             return this._collectNameSurnameEmail();
         } else {
             return false;
