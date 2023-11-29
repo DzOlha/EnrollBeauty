@@ -217,7 +217,7 @@ class UserAuthService extends AuthService
             }
 
             /**
-             * Store Users ID into session
+             * Store User's ID into session
              */
             SessionHelper::setUserSession($userId);
             return [

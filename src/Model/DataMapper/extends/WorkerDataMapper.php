@@ -35,9 +35,41 @@ class WorkerDataMapper extends DataMapper
 
     public function updateWorkerSettingDateOfSendingRecoveryCode(
         int $id, string $recoveryCode
-    ) {
+    )
+    {
         return $this->dataSource->updateWorkerSettingDateOfSendingRecoveryCode(
             $id, $recoveryCode
         );
+    }
+
+    public function selectWorkerDateSendingByRecoveryCode(
+        string $recoveryCode
+    )
+    {
+        return $this->dataSource->selectWorkerDateSendingByRecoveryCode($recoveryCode);
+    }
+
+    public function updateWorkerPasswordByRecoveryCode(
+        string $recoveryCode, string $passwordHash
+    )
+    {
+        return $this->dataSource->updateWorkerPasswordByRecoveryCode(
+            $recoveryCode, $passwordHash
+        );
+    }
+
+    public function selectWorkerPasswordByEmail(string $email)
+    {
+        return $this->dataSource->selectWorkerPasswordByEmail($email);
+    }
+
+    public function selectWorkerIdByEmail(string $email)
+    {
+        return $this->dataSource->selectWorkerIdByEmail($email);
+    }
+
+    public function updateRecoveryCodeByRecoveryCode(string $recoveryCode)
+    {
+        return $this->dataSource->updateRecoveryCodeByRecoveryCode($recoveryCode);
     }
 }

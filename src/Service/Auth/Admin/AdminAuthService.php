@@ -352,7 +352,7 @@ class AdminAuthService extends WorkerAuthService
             }
 
             /**
-             * Store Users ID into session
+             * Store Admin's ID into session
              */
             SessionHelper::setAdminSession($adminId);
             return [

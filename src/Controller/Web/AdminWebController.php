@@ -62,7 +62,7 @@ class AdminWebController extends WebController
     public function login()
     {
         $data = [
-            'title' => 'Login'
+            'title' => 'Login | Admin'
         ];
         $this->view(VIEW_FRONTEND . 'pages/admin/forms/login', $data);
     }
@@ -96,7 +96,7 @@ class AdminWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/user/logout
+     * url = /web/admin/logout
      */
     public function logout()
     {

@@ -3,6 +3,8 @@
 namespace Src\Service\Sender\impl\email\services\impl;
 
 use Mailgun\Mailgun;
+use Src\Helper\Logger\ILogger;
+use Src\Helper\Logger\impl\MyLogger;
 use Src\Helper\Mailgun\MailgunApiCredentials;
 use Src\Service\Sender\impl\email\model\Email;
 use Src\Service\Sender\impl\email\services\MailingService;
@@ -12,15 +14,17 @@ class MailgunService implements MailingService
     private string $apiKey;
     private string $domain;
     private Mailgun $mailgun;
+    private ILogger $logger;
 
     /**
      * @param string $api_key
      * @param string $domain
      */
-    public function __construct($apiKey = null, $domain = null)
+    public function __construct($apiKey = null, $domain = null, ILogger $logger = null)
     {
         $this->apiKey = $apiKey ?? MailgunApiCredentials::$apiKey;
         $this->domain = $domain ?? MailgunApiCredentials::$domain;
+        $this->logger = $logger ?? MyLogger::getInstance();
 
         // Initialize the Mailgun client
         $this->mailgun = Mailgun::create($this->apiKey);
@@ -66,6 +70,7 @@ class MailgunService implements MailingService
             return "Email sending failed. Response content: " . $response->getMessage();
         }
     }
+
     public function sendEmail(Email $email, bool $debug = false)
     {
         try {
@@ -74,20 +79,24 @@ class MailgunService implements MailingService
             // Send the email using the Mailgun client
             $response = $this->mailgun->messages()->send($this->domain, $message);
 
-            $messageId = $response->getId();
-
-            // Check if the response contains an ID to determine success
-            if ($messageId) {
+            /**
+             * Email has been successfully delivered
+             */
+            if (str_contains($response->getMessage(), 'Queued')) {
                 return true;
             } else {
-                return "Email sending failed. Response content: " . $response->getMessage();
+                $errorMessage = "Email sending failed. Response content: " . $response->getMessage();
+                $this->logger->error($errorMessage);
+                return 'Email sending failed';
             }
         } catch (\Mailgun\Exception\HttpClientException $e) {
-            // Handle Mailgun HTTP client exceptions
-            return "Mailgun HTTP client exception: " . $e->getMessage();
+            $errorMessage = "Mailgun HTTP client exception: " . $e->getMessage();
+            $this->logger->error($errorMessage);
+            return 'Email sending failed';
         } catch (\Exception $e) {
-            // Handle other exceptions
-            return "An unexpected error occurred: " . $e->getMessage();
+            $errorMessage = "An unexpected error occurred: " . $e->getMessage();
+            $this->logger->error($errorMessage);
+            return 'Email sending failed';
         }
     }
 

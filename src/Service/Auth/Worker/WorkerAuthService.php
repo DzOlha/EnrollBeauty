@@ -3,6 +3,7 @@
 namespace Src\Service\Auth\Worker;
 
 use Src\Helper\Builder\impl\UrlBuilder;
+use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\WorkerWriteDTO;
 use Src\Model\Entity\Gender;
@@ -16,6 +17,9 @@ use Src\Service\Sender\impl\email\model\Email;
 use Src\Service\Sender\impl\email\services\impl\MailgunService;
 use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
+use Src\Service\Validator\impl\PasswordHashValidator;
+use Src\Service\Validator\impl\PasswordValidator;
+use Src\Service\Validator\impl\RecoveryCodeValidator;
 
 class WorkerAuthService extends UserAuthService
 {
@@ -271,6 +275,7 @@ class WorkerAuthService extends UserAuthService
                  ->build();
         return $url;
     }
+
     protected function _sendLetterToWelcomeWorker(
         $email, $workerSettingId, $recoveryCode, $name, $surname
     ) {
@@ -306,5 +311,202 @@ class WorkerAuthService extends UserAuthService
                 'error' => $emailSent
             ];
         }
+    }
+
+
+    /**
+     * @return array
+     *
+     * used by Web controller, so return 'title' too
+     */
+    public function recoveryWorkerPassword() {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if (isset($_GET['recovery_code'])) {
+                $code = htmlspecialchars(trim($_GET['recovery_code']));
+
+                $validator = new RecoveryCodeValidator();
+                $isValidCode = $validator->validate($code);
+                if (!$isValidCode) {
+                    return [
+                        'error' => [
+                            'title' => 'Invalid Recovery Code',
+                            'message' =>"The provided recovery code is invalid by its characters!"
+                        ]
+                    ];
+                }
+
+                $dateOfSending = $this->dataMapper->selectWorkerDateSendingByRecoveryCode($code);
+                if (!$dateOfSending) {
+                    return [
+                        'error' => [
+                            'title' => 'Wrong Recovery Code',
+                            'message' => "There is no worker record with such recovery code!"
+                        ]
+                    ];
+                }
+
+                $dateTimestamp = (new \DateTime($dateOfSending))->getTimestamp();
+                if (time() > $dateTimestamp + VALID_TIME_RECOVERY_CODE) {
+                    return [
+                        'error' => [
+                            'title' => 'Expired Recovery Code',
+                            'message' => "The recovery code is already expired!"
+                        ]
+                    ];
+                }
+               return [
+                   'success' => true,
+                   'recovery_code' => $code
+               ];
+            }
+            return [
+                'error' => [
+                    'title' => 'No Recovery Code',
+                    'message' => "No recovery code has been provided!"
+                ]
+            ];
+        }
+        return [
+            'error' => [
+                'title' => 'Invalid request type',
+                'message' => "The request to recover password should be of GET type!"
+            ]
+        ];
+    }
+
+    /**
+     * @return string[]|void
+     */
+    public function changeWorkerPassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $items = [
+                // $_SESSION['recovery_code'] has been set in the recoveryPassword()
+                'recovery-code' => SessionHelper::getRecoveryCodeSession(),
+                'password' => htmlspecialchars(trim($_POST['password'] ?? '')),
+                'confirm-password' => htmlspecialchars(trim($_POST['confirm-password'] ?? ''))
+            ];
+            $passValidator = new PasswordValidator();
+            $pass1 = $passValidator->validate($items['password']);
+
+            if (!$pass1) {
+                return [
+                    'error' => "Password must contain at least one uppercase letter, one lowercase letter,
+                               one digit, one special character, and be between 8 and 30 characters long!"
+                ];
+            }
+
+            if ($items['password'] !== $items['confirm-password']) {
+                return [
+                    'error' => "Password and its confirmation one are not equal!"
+                ];
+            }
+            $validator = new RecoveryCodeValidator();
+            $isValidCode = $validator->validate($items['recovery-code']);
+            if (!$isValidCode) {
+                return [
+                    'error' => "The provided recovery code is invalid by its characters!"
+                ];
+            }
+            $passwordHash = PasswordHasher::hash($items['password']);
+
+            $changed = $this->dataMapper->updateWorkerPasswordByRecoveryCode(
+                $items['recovery-code'], $passwordHash
+            );
+            if (!$changed) {
+                return [
+                    'error' => "An error occurred while changing the password!"
+                ];
+            }
+
+            $recoveryNullified = $this->dataMapper->updateRecoveryCodeByRecoveryCode(
+                $items['recovery-code']
+            );
+            if(!$recoveryNullified) {
+                return [
+                    'error' => "An error occurred while updating the recovery code!"
+                ];
+            }
+            return [
+                'success' => 'You successfully changed your password'
+            ];
+        }
+    }
+
+    public function loginWorker() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $items = [
+                'email' => htmlspecialchars(trim($_POST['email'])),
+                'password' => htmlspecialchars(trim($_POST['password'])),
+            ];
+            $emailValidator = new EmailValidator();
+            $passwordValidator = new PasswordValidator();
+
+            /**
+             * Email
+             */
+            $validEmail = $emailValidator->validate($items['email']);
+            if (!$validEmail) {
+                return [
+                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                ];
+            }
+
+            /**
+             * Password
+             */
+            $validPass = $passwordValidator->validate($items['password']);
+            if (!$validPass) {
+                return [
+                    'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
+                                one digit, one special character, and be between 8 to 30 characters long'
+                ];
+            }
+
+            /**
+             * Get actual password hash
+             */
+            $actualPasswordHash = $this->dataMapper->selectWorkerPasswordByEmail(
+                $items['email']
+            );
+            if ($actualPasswordHash === false) {
+                return [
+                    'error' => 'There is no worker with such email'
+                ];
+            }
+
+            /**
+             * Check Password Equality
+             */
+            $hashValidator = new PasswordHashValidator($actualPasswordHash);
+            $validPassword = $hashValidator->validate($items['password']);
+            if (!$validPassword) {
+                return [
+                    'error' => 'The provided password does not match the one saved for the requested worker!'
+                ];
+            }
+
+            /**
+             * Select User ID for storing it into session
+             */
+            $workerId = $this->dataMapper->selectWorkerIdByEmail($items['email']);
+            if ($workerId === false) {
+                return [
+                    'error' => 'The error occurred while getting worker id!'
+                ];
+            }
+
+            /**
+             * Store Worker's ID into session
+             */
+            SessionHelper::setWorkerSession($workerId);
+            return [
+                'success' => true,
+                'data' => [
+                    'session' => SessionHelper::getWorkerSession()
+                ]
+            ];
+        }
+        return [];
     }
 }

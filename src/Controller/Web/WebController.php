@@ -46,5 +46,6 @@ class WebController extends AbstractController
             'message' => $message ?? 'The requested page not found!'
         ];
         $this->view(VIEW_FRONTEND . 'pages/system/error', $data);
+        exit();
     }
 }

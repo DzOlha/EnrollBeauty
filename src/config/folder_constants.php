@@ -22,7 +22,7 @@ const PHOTO_ADMIN = PUBLIC_ . '/photo/adminhtml/';
 const PHOTO_COMMON = PUBLIC_ . '/photo/common/';
 const PUBLIC_PHOTO_COMMON_DB_BOOKS_FOLDER = PHOTO_COMMON.'db/books/';
 
-
+const VALID_TIME_RECOVERY_CODE = 3600*30; //in seconds
 
 
 

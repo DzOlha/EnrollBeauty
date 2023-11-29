@@ -9,6 +9,7 @@ use Src\Model\DTO\Write\WorkerWriteDTO;
 use Src\Model\Table\Workers;
 use Src\Model\Table\WorkersSetting;
 use Src\Model\Table\WorkersSocial;
+use function Symfony\Component\String\b;
 
 
 class WorkerDataSource extends DataSource
@@ -24,8 +25,8 @@ class WorkerDataSource extends DataSource
 
         $builder = new SqlBuilder($this->db);
         $builder->select([Workers::$id])
-                ->from(Workers::$table)
-                ->whereEqual(Workers::$email, ':email', $email)
+            ->from(Workers::$table)
+            ->whereEqual(Workers::$email, ':email', $email)
             ->build();
 
         $result = $this->db->singleRow();
@@ -52,8 +53,8 @@ class WorkerDataSource extends DataSource
             ]
         )->values(
             [':name', ':surname', ':password', ':email',
-             ':gender', ':age', ':experience', ':position_id',
-             ':salary', ':role_id', ':created_date'],
+                ':gender', ':age', ':experience', ':position_id',
+                ':salary', ':role_id', ':created_date'],
             [
                 $worker->getName(), $worker->getSurname(), $worker->getPassword(),
                 $worker->getEmail(), $worker->getGender(), $worker->getAge(),
@@ -68,14 +69,15 @@ class WorkerDataSource extends DataSource
         return false;
     }
 
-    public function insertWorkerSettings(int $workerId, string $recoveryCode) {
+    public function insertWorkerSettings(int $workerId, string $recoveryCode)
+    {
         $builder = new SqlBuilder($this->db);
         $builder->insertInto(WorkersSetting::$table,
-                    [
-                        WorkersSetting::$worker_id,
-                        WorkersSetting::$recovery_code
-                    ]
-                )->values([':worker_id', ':recovery_code'], [$workerId, $recoveryCode])
+            [
+                WorkersSetting::$worker_id,
+                WorkersSetting::$recovery_code
+            ]
+        )->values([':worker_id', ':recovery_code'], [$workerId, $recoveryCode])
             ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
@@ -84,10 +86,11 @@ class WorkerDataSource extends DataSource
         return false;
     }
 
-    public function insertWorkerSocial(int $workerId) {
+    public function insertWorkerSocial(int $workerId)
+    {
         $builder = new SqlBuilder($this->db);
         $builder->insertInto(WorkersSocial::$table, [WorkersSocial::$worker_id])
-                ->values([':worker_id'], [$workerId])
+            ->values([':worker_id'], [$workerId])
             ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
@@ -95,18 +98,107 @@ class WorkerDataSource extends DataSource
         }
         return false;
     }
+
     public function updateWorkerSettingDateOfSendingRecoveryCode(
         int $id, string $recoveryCode
-    ) {
+    )
+    {
         $currentDateTime = date("Y-m-d H:i:s");
 
         $builder = new SqlBuilder($this->db);
         $builder->update(WorkersSetting::$table)
-                ->set(WorkersSetting::$recovery_code, ':recovery_code', $recoveryCode)
-                ->andSet(WorkersSetting::$date_of_sending, ':date_of_sending', $currentDateTime)
-                ->whereEqual(WorkersSetting::$id, ':id', $id)
+            ->set(WorkersSetting::$recovery_code, ':recovery_code', $recoveryCode)
+            ->andSet(WorkersSetting::$date_of_sending, ':date_of_sending', $currentDateTime)
+            ->whereEqual(WorkersSetting::$id, ':id', $id)
             ->build();
 
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectWorkerDateSendingByRecoveryCode(
+        string $recoveryCode
+    )
+    {
+        $builder = new SqlBuilder($this->db);
+        $builder->select([WorkersSetting::$date_of_sending])
+            ->from(WorkersSetting::$table)
+            ->whereEqual(WorkersSetting::$recovery_code, ':recovery_code', $recoveryCode)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if ($result) {
+            return $result[explode('.', WorkersSetting::$date_of_sending)[1]];
+        } else {
+            return false;
+        }
+    }
+
+    public function updateWorkerPasswordByRecoveryCode(
+        string $recoveryCode, string $passwordHash
+    )
+    {
+        $builder = new SqlBuilder($this->db);
+        $builder->update(Workers::$table)
+            ->innerJoin(WorkersSetting::$table)
+            ->on(Workers::$id, WorkersSetting::$worker_id)
+            ->set(Workers::$password, ':password', $passwordHash)
+            ->whereEqual(WorkersSetting::$recovery_code, ':recovery_code', $recoveryCode)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectWorkerPasswordByEmail(string $email)
+    {
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Workers::$password])
+            ->from(Workers::$table)
+            ->whereEqual(Workers::$email, ':email', $email)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if ($result) {
+            // workers.password -> password
+            return $result[explode('.', Workers::$password)[1]];
+        } else {
+            return false;
+        }
+    }
+
+    public function selectWorkerIdByEmail(string $email)
+    {
+        $builder = new SqlBuilder($this->db);
+        $builder->select([Workers::$id])
+            ->from(Workers::$table)
+            ->whereEqual(Workers::$email, ':email', $email)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if ($result) {
+            // workers.id -> id
+            return $result[explode('.', Workers::$id)[1]];
+        } else {
+            return false;
+        }
+    }
+
+    public function updateRecoveryCodeByRecoveryCode(string $recoveryCode)
+    {
+        $builder = new SqlBuilder($this->db);
+        $builder->update(WorkersSetting::$table)
+                ->setNull(WorkersSetting::$recovery_code)
+                ->whereEqual(
+                    WorkersSetting::$recovery_code,
+                    ':recovery_code',
+                    $recoveryCode
+                )
+            ->build();
         if ($this->db->affectedRowsCount() > 0) {
             return true;
         }
