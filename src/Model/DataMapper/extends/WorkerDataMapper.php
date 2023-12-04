@@ -72,4 +72,104 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->updateRecoveryCodeByRecoveryCode($recoveryCode);
     }
+
+    public function selectWorkerInfoById(int $workerId)
+    {
+        return $this->dataSource->selectWorkerInfoById($workerId);
+    }
+
+    /**
+     * @param $departmentId
+     * @param $serviceId
+     * @param $workerId
+     * @param $affiliateId
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $timeFrom
+     * @param $timeTo
+     * @param $priceFrom
+     * @param $priceTo
+     * @return mixed
+     *
+     *  * response example
+     * [
+     *      0 => [
+     *         'schedule_id' =>,
+     *         'order_id' =>,
+     *         'service_id' =>,
+     *         'service_name' =>,
+     *         'user_id' =>,
+     *         'user_email' =>,
+     *         'affiliate_id' =>,
+     *         'city' =>,
+     *         'address' =>,
+     *         'day' =>,
+     *         'start_time' =>,
+     *         'end_time' =>,
+     *         'price' =>,
+     *         'currency' =>
+     *      ]
+     * ..........................
+     * ]
+     */
+    public function selectWorkerSchedule(
+        $departmentId = null, $serviceId = null,
+        $workerId = null, $affiliateId = null,
+        $dateFrom = null, $dateTo = null,
+        $timeFrom = null, $timeTo = null,
+        $priceFrom = null, $priceTo = null
+    )
+    {
+        return $this->dataSource->selectWorkerSchedule(
+            $departmentId, $serviceId,
+            $workerId, $affiliateId,
+            $dateFrom, $dateTo,
+            $timeFrom, $timeTo,
+            $priceFrom, $priceTo,
+        );
+    }
+
+    /**
+     * @return array|false
+     *
+     * [
+     *      0 => [
+     *          'id' =>,
+     *          'name' =>,
+     *      ]
+     *      ......
+     * ]
+     */
+    public function selectDepartmentsForWorker(int $workerId)
+    {
+        return $this->dataSource->selectDepartmentsForWorker($workerId);
+    }
+
+    /**
+     * @param int $orderId
+     * @return array|false
+     *
+     * [
+     *  'user_id' =>
+     *  'email' =>
+     * ]
+     */
+    public function selectUserByOrderId(int $orderId)
+    {
+        return $this->dataSource->selectUserByOrderId($orderId);
+    }
+
+    /**
+     * @param int $orderId
+     * @return array|false
+     *
+     * [
+     *      'name' =>
+     *      'start_datetime' =>
+     * ]
+     */
+    public function selectOrderDetails(int $orderId)
+    {
+        return $this->dataSource->selectOrderDetails($orderId);
+    }
 }

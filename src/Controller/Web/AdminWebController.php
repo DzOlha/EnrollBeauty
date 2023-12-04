@@ -6,9 +6,12 @@ use Src\DB\Database\MySql;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\AdminDataMapper;
+use Src\Model\DataMapper\extends\UserDataMapper;
 use Src\Model\DataSource\extends\AdminDataSource;
+use Src\Model\DataSource\extends\UserDataSource;
 use Src\Service\Auth\Admin\AdminAuthService;
 use Src\Service\Auth\AuthService;
+use Src\Service\Auth\User\UserAuthService;
 
 class AdminWebController extends WebController
 {
@@ -20,7 +23,11 @@ class AdminWebController extends WebController
     public function __construct(array $url, AuthService $authService = null)
     {
         parent::__construct($url);
-        $this->authService = $authService ?? new AdminAuthService($this->dataMapper);
+        $this->authService = $authService ?? new AdminAuthService(
+            $this->dataMapper, new UserAuthService(
+                new UserDataMapper(new UserDataSource(MySql::getInstance()))
+            )
+        );
     }
 
     public function getTypeDataMapper(): DataMapper

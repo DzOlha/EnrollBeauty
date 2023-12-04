@@ -8,6 +8,7 @@ class ScheduleHtmlBuilder {
         worker, date, startTime, endTime, address
         )
     {
+        //console.log('createScheduleCard');
         return `<div class="card" id="schedule-card-${scheduleId}" 
                         data-schedule-id="${scheduleId}"
                         data-worker-id="${workerId}" 
@@ -38,7 +39,8 @@ class ScheduleHtmlBuilder {
                             <div>
                                 <span>Master: </span>
                                 <span>
-                                    <a href="" class="worker text-default">${worker}</a>
+                                    <a href="/web/worker/profile?worker_id=${workerId}" 
+                                    class="worker text-default" target="_blank">${worker}</a>
                                 </span>
                             </div>
                         </div>

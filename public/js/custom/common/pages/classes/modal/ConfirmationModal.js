@@ -24,7 +24,17 @@ class ConfirmationModal {
         $(`#${this.confirmationModalId}`).fadeOut(duration);
     }
 
+    showLoader() {
+        let confirm = document.getElementById(this.confirmationSubmitId);
+        confirm.insertAdjacentHTML(
+            'beforebegin', OptionBuilder.createGifLoader()
+        );
+    }
+    hideLoader() {
+        $('#gif-loader').remove();
+    }
     submit(callback, data) {
+
         let f = () => {
             callback(data);
         }

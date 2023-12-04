@@ -82,4 +82,55 @@ class UserWebController extends WebController
         ];
         $this->view(VIEW_FRONTEND . 'index', $data);
     }
+
+    private function _accessDenied() {
+        $this->error(
+            'Access Denied!',
+            'The requested page not found! Please, log in as an User to visit your account!'
+        );
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/user/profile/...
+     *         0    1       2
+     */
+    public function profile()
+    {
+        if(!isset($this->url[3]) && isset($_GET['user_id']) && $_GET['user_id'] !== '') {
+            if(SessionHelper::getAdminSession() || SessionHelper::getWorkerSession()) {
+                $data = [
+                    'title' => 'User Profile',
+                    'page_name' => 'User Profile'
+                ];
+                $this->view(VIEW_FRONTEND . 'pages/user/profile/profile', $data);
+            }
+        }
+
+        $session = SessionHelper::getUserSession();
+        if (!$session) {
+            $this->_accessDenied();
+        } else {
+            if (isset($this->url[3])) {
+                $menuItemName = $this->url[3];
+                if ($menuItemName === 'settings') {
+
+                }
+                if ($menuItemName === 'users') {
+
+                }
+                if ($menuItemName === 'workers') {
+                    $data = [
+                        'title' => 'User Management',
+                        'page_name' => 'Workers'
+                    ];
+                    $this->view(VIEW_FRONTEND . 'pages/admin/profile/workers', $data);
+                }
+                if ($menuItemName === 'admins') {
+
+                }
+            }
+        }
+    }
 }

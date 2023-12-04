@@ -21,7 +21,7 @@ use Src\Service\Validator\impl\PasswordHashValidator;
 use Src\Service\Validator\impl\PasswordValidator;
 use Src\Service\Validator\impl\RecoveryCodeValidator;
 
-class WorkerAuthService extends UserAuthService
+class WorkerAuthService extends AuthService
 {
     public function __construct(DataMapper $dataMapper)
     {

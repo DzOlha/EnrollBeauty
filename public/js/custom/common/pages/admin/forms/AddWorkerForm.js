@@ -143,7 +143,7 @@ class AddWorkerForm extends Form {
     /**
      * ----------------------------Form validation and submission----------------------------
      */
-    listenerSubmitForm = () => {
+    listenerSubmitForm = (e) => {
         /**
          * @type {{[p: string]: *}|boolean}
          *
@@ -163,17 +163,22 @@ class AddWorkerForm extends Form {
         console.log(data);
 
         if(data) {
+            e.currentTarget.insertAdjacentHTML(
+                'beforebegin', OptionBuilder.createGifLoader()
+            );
             this.requester.post(
                 this.submitActionUrl,
                 data,
                 this.successCallbackSubmit.bind(this),
                 (response) => {
+                    $(`#gif-loader`).remove();
                     Notifier.showErrorMessage(response.error);
                 }
             )
         }
     }
     successCallbackSubmit(response) {
+        $(`#gif-loader`).remove();
         /**
          * Show success message
          */

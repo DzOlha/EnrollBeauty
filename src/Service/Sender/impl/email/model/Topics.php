@@ -6,6 +6,7 @@ class Topics
 {
     private static array $topics = [
         'register' => 'Confirmation of registration',
+        'order_canceled' => 'Order Cancellation!',
         'welcome' => 'Welcome to the Enroll Beauty!',
         'referral_reg' => 'NEW_REG',
         'mail_auth' => 'Mail Authentication Connection',

@@ -100,4 +100,33 @@ class WorkerWebController extends WebController
         ];
         $this->view(VIEW_FRONTEND . 'index', $data);
     }
+
+    /**
+     * @return void
+     *
+     * url = /web/worker/profile/...
+     *         0    1       2
+     */
+    public function profile()
+    {
+        $session = SessionHelper::getWorkerSession();
+        if (!$session) {
+            $this->_accessDenied();
+        } else {
+            if (isset($this->url[3])) {
+                $menuItemName = $this->url[3];
+                if ($menuItemName === 'settings') {
+
+                }
+                if ($menuItemName === 'schedule') {
+                    $data = [
+                        'title' => 'Schedule Management',
+                        'page_name' => 'Schedule'
+                    ];
+                    $this->view(VIEW_FRONTEND . 'pages/worker/profile/schedule', $data);
+                }
+               
+            }
+        }
+    }
 }

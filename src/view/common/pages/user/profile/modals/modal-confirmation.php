@@ -1,3 +1,4 @@
+<link href="/public/css/custom/common/pages/user/modal-confirmation.css" rel="stylesheet" />
 <div class="modal modal-confirmation" id="modalAlertConfirmation">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content tx-size-sm" style="z-index: 20">

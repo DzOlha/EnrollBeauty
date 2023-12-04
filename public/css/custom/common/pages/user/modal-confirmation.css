@@ -29,6 +29,7 @@
     background-color: var(--dark-color);
     color: white;
     font-weight: 500;
+    margin-top: 10px;
 }
 .modal-confirmation button:hover,
 #modalAlertConfirmation-submit:hover {

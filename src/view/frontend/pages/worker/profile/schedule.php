@@ -1,3 +1,4 @@
+
 <?php require_once VIEW_COMMON."pages/user/profile/header/head.php"?>
 <style>
     .ttm-stickable-header-w {
@@ -15,7 +16,6 @@
 
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
-<!--<link href="/public/css/custom/common/pages/user/modal-confirmation.css" rel="stylesheet" />-->
 
 <!-- Select2 css -->
 <link href="/public/assets/plugins/select2/css/select2.min.css" rel="stylesheet">
@@ -52,7 +52,7 @@
             <div class="main-sidebar-header main-container-1 active">
                 <div class="main-sidebar-body main-body-1">
                     <div class="slide-left disabled" id="slide-left"><i class="fe fe-chevron-left"></i></div>
-                    <?php require_once VIEW_COMMON."pages/user/profile/menu/menu.php"?>
+                    <?php require_once VIEW_COMMON."pages/worker/profile/menu/menu.php"?>
                     <div class="slide-right" id="slide-right"><i class="fe fe-chevron-right"></i></div>
                 </div>
             </div>
@@ -105,12 +105,12 @@
                                 <img id="user-img-large" class="user-img"
                                      src="/public/images/custom/system/nophoto.jpg" alt="user-photo"/>
                             </div>
-<!--                            <input type="file" class="dropify upload-img" id="user-photo-input"-->
-<!--                                   accept=".jpg"-->
-<!--                                   name="user-photo" data-height="150"-->
-<!--                                   data-default-file="/public/images/custom/system/nophoto.jpg"-->
-<!--                                   disabled="disabled"-->
-<!--                            />-->
+                            <!--                            <input type="file" class="dropify upload-img" id="user-photo-input"-->
+                            <!--                                   accept=".jpg"-->
+                            <!--                                   name="user-photo" data-height="150"-->
+                            <!--                                   data-default-file="/public/images/custom/system/nophoto.jpg"-->
+                            <!--                                   disabled="disabled"-->
+                            <!--                            />-->
                             <div class="user-name-surname-wrapper">
                                 <span id="name-large">Name</span>
                                 <span id="surname-large">Surname</span>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="row row-xs mt-10 gx-20 cards-wrapper">
                     <div class="col-lg-3">
-                        <a href="/web/user/profile/settings">
+                        <a href="/web/worker/profile/settings">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
                                     <i class="si si-settings" data-bs-toggle="tooltip" title=""
@@ -135,13 +135,13 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <a href="/web/user/profile/history">
+                        <a href="/web/worker/profile/orders">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
                                     <i class="fa fa-history" data-bs-toggle="tooltip" title=""
                                        data-bs-original-title="fa fa-history"
                                        aria-label="fa fa-history"></i>
-                                    History
+                                    Orders
                                 </div>
                                 <div class="card-body">
                                     <p class="mg-b-0"></p>
@@ -151,7 +151,7 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <a href="/web/user/profile/statistics">
+                        <a href="/web/worker/profile/statistics">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
                                     <i class="ti-bar-chart-alt sidemenu-icon menu-icon "></i>
@@ -163,35 +163,34 @@
                             </div>
                         </a>
                     </div>
-                    </div>
-
-                <div class="row row-sm appointments-wrapper mt-40">
-                    <h3 class="pl-30 title">Upcoming Appointments</h3>
-                    <div class="card-body">
-                        <div class="row table-filter">
-                            <div class="col-lg-1 mg-l-15 d-lg-flex justify-content-start">
-                                <div class="show-entries">
-                                    <?php require_once VIEW_COMMON."pages/user/profile/blocks/select_pagination_count.php"?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-responsive my-data-table">
-                            <div class="col-lg-12 col-sm-12">
-                                <?php require_once VIEW_COMMON."pages/user/profile/blocks/data_loader_gif.php"?>
-                            </div>
-                            <?php require_once VIEW_COMMON."pages/user/profile/tables/appointments_table.php"?>
-                        </div>
-                        <ul class="pagination mt-4 mb-0 float-end">
-                        </ul>
-                    </div>
                 </div>
+<!---->
+<!--                <div class="row row-sm appointments-wrapper mt-40">-->
+<!--                    <h3 class="pl-30 title"></h3>-->
+<!--                    <div class="card-body">-->
+<!--                        <div class="row table-filter">-->
+<!--                            <div class="col-lg-1 mg-l-15 d-lg-flex justify-content-start">-->
+<!--                                <div class="show-entries">-->
+<!--                                                                        --><?php //require_once VIEW_COMMON."pages/user/profile/blocks/select_pagination_count.php"?>
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="table-responsive my-data-table">-->
+<!--                            <div class="col-lg-12 col-sm-12">-->
+<!--                                --><?php //require_once VIEW_COMMON."pages/user/profile/blocks/data_loader_gif.php"?>
+<!--                            </div>-->
+<!--                                                        --><?php //require_once VIEW_COMMON."pages/user/profile/blocks/appointments_table.php"?>
+<!--                        </div>-->
+<!--                        <ul class="pagination mt-4 mb-0 float-end">-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="row row-sm available-schedules mt-40 mb-40">
-                    <h3 class="pl-15">Search Available Schedules for Appointments</h3>
+                    <h3 class="pl-15">My Schedules</h3>
                     <div class="card-body">
-
                         <div class="row row-sm">
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="form-group service-wrapper">
                                     <p class="mg-b-0">Service Name</p>
                                     <select class="form-control select2-with-search"
@@ -200,20 +199,9 @@
                                         <option label="Choose one">
                                         </option>
                                     </select>
-                                    </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group worker-wrapper">
-                                    <p class="mg-b-0">Worker Name</p>
-                                    <select class="form-control select2-with-search"
-                                            id="worker-name"
-                                    >
-                                        <option label="Choose one">
-                                        </option>
-                                    </select>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <p class="mg-b-0">Affiliate</p>
                                     <select class="form-control select2-with-search"
@@ -224,7 +212,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <p class="mg-b-0">Dates</p>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -359,6 +347,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-2">
                                 <p class="mg-b-25"></p>
                                 <button class="btn btn-block"
@@ -371,31 +360,37 @@
 
                         <div class="row row-sm">
                             <div class="col-lg-12 panel panel-primary tabs-style-2 mg-t-50"
-                                  id="main-schedule-wrapper">
-<!--                                JS generate schedule-->
+                                 id="main-schedule-wrapper">
+                                <!--                                JS generate schedule-->
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="row row-sm available-schedules mt-40 mb-40">
+                    <h3 class="pl-15"></h3>
+                    <div class="card-body">
+
+                    </div>
+                </div>
+
                 <!-- End Row -->
             </div>
-            </div>
-                <!--footer start-->
-                <?php require_once VIEW_COMMON."pages/landing/footer/footer_widget.php"?>
-                <!--footer end-->
+        </div>
+        <!--footer start-->
+        <?php require_once VIEW_COMMON."pages/landing/footer/footer_widget.php"?>
+        <!--footer end-->
 
-                <!--back-to-top start-->
-                <a id="totop" href="#top">
-                    <i class="fa fa-angle-up"></i>
-                </a>
-                <!--back-to-top end-->
-            </div><!-- page end -->
-    </div>
-    <!-- End Main Content-->
+        <!--back-to-top start-->
+        <a id="totop" href="#top">
+            <i class="fa fa-angle-up"></i>
+        </a>
+        <!--back-to-top end-->
+    </div><!-- page end -->
+</div>
+<!-- End Main Content-->
 
 <?php require_once VIEW_COMMON."pages/user/profile/modals/modal-confirmation.php" ?>
-<!--</div>-->
 <!-- End Page -->
 
 <!-- Jquery js-->
@@ -455,23 +450,27 @@
 <script src="/public/js/custom/common/pages/classes/renderer/extends/TimeRenderer.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/extends/DateRenderer.js"></script>
 <script src="/public/js/custom/common/pages/classes/renderer/extends/ScheduleRenderer.js"></script>
+<script src="/public/js/custom/common/pages/classes/renderer/extends/WorkerScheduleRenderer.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/modal/ConfirmationModal.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/builder/ScheduleHtmlBuilder.js"></script>
+<script src="/public/js/custom/common/pages/classes/builder/WorkerScheduleHtmlBuilder.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/cookie/Cookie.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/table/Table.js"></script>
-<script src="/public/js/custom/common/pages/classes/table/extends/AppointmentsTable.js"></script>
+<!--<script src="/public/js/custom/common/pages/classes/table/extends/AppointmentsTable.js"></script>-->
 <script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/SearchScheduleForm.js"></script>
+<script src="/public/js/custom/common/pages/worker/forms/WorkerSearchScheduleForm.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
 <script src="/public/js/custom/common/pages/user/profile/User.js"></script>
+<script src="/public/js/custom/common/pages/worker/profile/Worker.js"></script>
 
-<script src="/public/js/custom/frontend/pages/user/profile/account.js"></script>
+<script src="/public/js/custom/frontend/pages/worker/profile/schedule.js"></script>
 
 </body>
 </html>

@@ -17,7 +17,8 @@ $(function () {
     );
     let searchScheduleForm = new SearchScheduleForm(
         requester, scheduleRenderer,
-        new OptionBuilder(), dateRenderer
+        new OptionBuilder(), dateRenderer,
+        '/api/user/searchSchedule'
     );
 
     /**

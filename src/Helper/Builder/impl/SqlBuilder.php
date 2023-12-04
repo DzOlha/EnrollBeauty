@@ -18,6 +18,11 @@ class SqlBuilder implements IBuilder
         $this->placeholders = [];
     }
 
+    public function clearQuery() {
+        $this->query = '';
+        $this->placeholders = [];
+    }
+
 
     public function select(array $columns, array $as = []) {
         $this->query .= "SELECT ";
@@ -266,5 +271,6 @@ class SqlBuilder implements IBuilder
         foreach ($this->placeholders as $placeholder => $value) {
             $this->database->bind($placeholder, $value);
         }
+        $this->clearQuery();
     }
 }

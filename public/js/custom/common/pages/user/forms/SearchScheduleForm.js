@@ -1,12 +1,12 @@
 class SearchScheduleForm extends Form {
     constructor(
         requester, scheduleRenderer,
-        optionBuilder, dateRenderer
+        optionBuilder, dateRenderer, apiUrl
     ) {
         super(
             '',
             'submit-search-button',
-            '/api/user/searchSchedule',
+            apiUrl,
             requester
         );
         this.renderer = scheduleRenderer;
@@ -47,11 +47,14 @@ class SearchScheduleForm extends Form {
         this.apiUrlGetWorkersAll = '/api/user/getWorkersAll';
         this.apiUrlGetServicesAll = '/api/user/getServicesAll';
 
-        this.submitActionUrl = '/api/user/searchSchedule';
+        this.submitActionUrl = apiUrl;
     }
 
     _initializeDateRangePicker() {
         const currentDate = new Date();
+
+        const tomorrow = new Date();
+        tomorrow.setDate(currentDate.getDate()+1);
 
         $(`#${this.dateRangeId}`).daterangepicker({
             locale: {
@@ -60,7 +63,7 @@ class SearchScheduleForm extends Form {
             opens: 'right',
             showDropdowns: false,
             startDate: currentDate,
-            endDate: currentDate,
+            endDate: tomorrow,
             minDate: currentDate,  // Minimum selectable date (current date)
         });
     }
@@ -68,7 +71,7 @@ class SearchScheduleForm extends Form {
     listenerSubmitForm = () => {
         let dataToSend = this.collectDataToSend();
 
-        console.log(JSON.stringify(dataToSend));
+        //console.log(JSON.stringify(dataToSend));
         // Check if there are no div.error elements with text content
         const noErrorWithText = $("div.error").get().every(function (element) {
             return $(element).text().trim() === '';

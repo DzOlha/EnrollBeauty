@@ -3,26 +3,30 @@
 namespace Src\Model\DataSource;
 
 use Src\DB\IDatabase;
+use Src\Helper\Builder\IBuilder;
 use Src\Helper\Builder\impl\SqlBuilder;
+use Src\Model\DTO\Read\UserReadDto;
 use Src\Model\Table\Affiliates;
-use Src\Model\Table\Roles;
+use Src\Model\Table\Departments;
+use Src\Model\Table\OrdersService;
 use Src\Model\Table\Services;
 use Src\Model\Table\Users;
 use Src\Model\Table\UsersPhoto;
-use Src\Model\Table\UsersSetting;
-use Src\Model\Table\UsersSocial;
 use Src\Model\Table\Workers;
 use Src\Model\Table\WorkersServicePricing;
+use Src\Model\Table\WorkersServiceSchedule;
 
 abstract class DataSource
 {
     protected ?IDatabase $db = null;
+    protected IBuilder $builder;
 
-    public function __construct(IDatabase $db)
+    public function __construct(IDatabase $db, IBuilder $builder = null)
     {
         if (!$this->db) {
             $this->db = $db;
         }
+        $this->builder = $builder ?? new SqlBuilder($this->db);
     }
 
     public function beginTransaction(): void
@@ -69,21 +73,11 @@ abstract class DataSource
     }
     public function selectUserPasswordByEmail(string $email)
     {
-//        $users = Users::$table;
-//        $_email = Users::$email;
-//        $_password = Users::$password;
-
-        $builder = new SqlBuilder($this->db);
-        $builder->select([Users::$password])
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->select([Users::$password])
                 ->from(Users::$table)
                 ->whereEqual(Users::$email, ':email', $email)
             ->build();
-
-//        $this->db->query(
-//            "SELECT $_password FROM $users WHERE $_email = :email"
-//        );
-//
-//        $this->db->bind(':email', $email);
 
         $result = $this->db->singleRow();
         if ($result) {
@@ -96,27 +90,50 @@ abstract class DataSource
 
     public function selectUserIdByEmail(string $email)
     {
-//        $users = Users::$table;
-//        $_email = Users::$email;
-//        $_id = Users::$id;
-
-        $builder = new SqlBuilder($this->db);
-        $builder->select([Users::$id])
+//        $builder = new SqlBuilder($this->db);
+        $this->builder->select([Users::$id])
                 ->from(Users::$table)
                 ->whereEqual(Users::$email, ':email', $email)
             ->build();
-
-//        $this->db->query(
-//            "SELECT $_id FROM $users WHERE $_email = :email"
-//        );
-//
-//        $this->db->bind(':email', $email);
 
         $result = $this->db->singleRow();
         if ($result) {
             // users.id -> id
             $key = explode('.', Users::$id)[1];
             return $result[$key];
+        }
+        return false;
+    }
+
+    /**
+     * @param int $userId
+     * @return UserReadDto|false
+     *
+     * return = [
+     *      'id' =>
+     *      'name' =>
+     *      'surname' =>
+     *      'email' =>
+     *      'filename' =>
+     * ]
+     *
+     */
+    public function selectUserInfoById(int $userId)
+    {
+//        $builder = new SqlBuilder($this->db);
+        $this->builder->select(
+            [Users::$id, Users::$name, Users::$surname,
+            Users::$email, UsersPhoto::$name]
+        )
+            ->from(Users::$table)
+            ->innerJoin(UsersPhoto::$table)
+            ->on(Users::$id, UsersPhoto::$user_id)
+            ->whereEqual(Users::$id, ':id', $userId)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if ($result) {
+            return new UserReadDto($result);
         }
         return false;
     }
@@ -136,30 +153,13 @@ abstract class DataSource
      */
     public function selectWorkersForService(int $serviceId)
     {
-//        $workersServicePricing = WorkersServicePricing::$table;
-//        $service_id = WorkersServicePricing::$service_id;
-//        $worker_id = WorkersServicePricing::$worker_id;
-//
-//        $workers = Workers::$table;
-//        $workerId = Workers::$id;
-//        $workerName = Workers::$name;
-//        $workerSurname = Workers::$surname;
-
-        $builder = new SqlBuilder($this->db);
-        $builder->select([Workers::$id, Workers::$name, Workers::$surname])
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname])
                 ->from(WorkersServicePricing::$table)
                 ->innerJoin(Workers::$table)
                     ->on(WorkersServicePricing::$worker_id, Workers::$id)
                 ->whereEqual(WorkersServicePricing::$service_id, ":id", $serviceId)
             ->build();
-
-//        $this->db->query("
-//            SELECT $workerId, $workerName, $workerSurname
-//            FROM $workersServicePricing
-//                INNER JOIN $workers ON $worker_id = $workerId
-//            WHERE $service_id = :id
-//        ");
-//        $this->db->bind(':id', $serviceId);
 
         return $this->db->manyRows();
     }
@@ -178,29 +178,13 @@ abstract class DataSource
      */
     public function selectServicesForWorker(int $workerId)
     {
-//        $workersServicePricing = WorkersServicePricing::$table;
-//        $service_id = WorkersServicePricing::$service_id;
-//        $worker_id = WorkersServicePricing::$worker_id;
-//
-//        $services = Services::$table;
-//        $serviceId = Services::$id;
-//        $serviceName = Services::$name;
-
-        $builder = new SqlBuilder($this->db);
-        $builder->select([Services::$id, Services::$name])
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->select([Services::$id, Services::$name])
                 ->from(WorkersServicePricing::$table)
                 ->innerJoin(Services::$table)
                     ->on(WorkersServicePricing::$service_id, Services::$id)
                 ->whereEqual(WorkersServicePricing::$worker_id, ":id", $workerId)
             ->build();
-
-//        $this->db->query("
-//            SELECT $serviceId, $serviceName
-//            FROM $workersServicePricing
-//                INNER JOIN $services ON $service_id = $serviceId
-//            WHERE $worker_id = :id
-//        ");
-//        $this->db->bind(':id', $workerId);
 
         return $this->db->manyRows();
     }
@@ -217,18 +201,11 @@ abstract class DataSource
      * ]
      */
     public function selectAllServices() {
-//        $services = Services::$table;
-//        $service_id = Services::$id;
-//        $service_name = Services::$name;
-
-        $builder = new SqlBuilder($this->db);
-        $builder->select([Services::$id, Services::$name])
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->select([Services::$id, Services::$name])
                 ->from(Services::$table)
             ->build();
 
-//        $this->db->query("
-//            SELECT $service_id, $service_name FROM $services
-//        ");
         return $this->db->manyRows();
     }
 
@@ -245,20 +222,11 @@ abstract class DataSource
      * ]
      */
     public function selectAllWorkers() {
-//        $workers = Workers::$table;
-//        $worker_id = Workers::$id;
-//        $worker_name = Workers::$name;
-//        $worker_surname = Workers::$surname;
-
-        $builder = new SqlBuilder($this->db);
-        $builder->select([Workers::$id, Workers::$name, Workers::$surname])
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname])
                 ->from(Workers::$table)
             ->build();
 
-//        $this->db->query("
-//            SELECT $worker_id, $worker_name, $worker_surname
-//            FROM $workers
-//        ");
         return $this->db->manyRows();
     }
 
@@ -276,22 +244,355 @@ abstract class DataSource
      * ]
      */
     public function selectAllAffiliates() {
-//        $affiliates = Affiliates::$table;
-//        $affiliate_id = Affiliates::$id;
-//        $affiliate_name = Affiliates::$name;
-//        $affiliate_city = Affiliates::$city;
-//        $affiliate_address = Affiliates::$address;
-
-        $builder = New SqlBuilder($this->db);
-        $builder->select([Affiliates::$id, Affiliates::$name,
+     //$builder = New SqlBuilder($this->db);
+        $this->builder->select([Affiliates::$id, Affiliates::$name,
                          Affiliates::$city, Affiliates::$address])
                 ->from(Affiliates::$table)
             ->build();
 
-//        $this->db->query("
-//            SELECT $affiliate_id, $affiliate_name, $affiliate_city, $affiliate_address
-//            FROM $affiliates
-//        ");
         return $this->db->manyRows();
     }
+
+    /**
+     * @return array|false
+     *
+     * [
+     *      0 => [
+     *          'id' =>,
+     *          'name' =>,
+     *      ]
+     *      ......
+     * ]
+     */
+    public function selectAllDepartments()
+    {
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->select(['*'])
+            ->from(Departments::$table)
+            ->build();
+
+        return $this->db->manyRows();
+    }
+
+    protected function _serviceFilter($serviceId, $columnToJoin)
+    {
+        $result = [
+            'where' => ''
+        ];
+
+        if ($serviceId !== null && $serviceId !== '') {
+            $result['where'] = " AND $columnToJoin = $serviceId ";
+        }
+        return $result;
+    }
+
+    protected function _workerFilter($workerId, $columnToJoin)
+    {
+        $result = [
+            'where' => ''
+        ];
+
+        if ($workerId !== null && $workerId !== '') {
+            $result['where'] = " AND $columnToJoin = $workerId ";
+        }
+        return $result;
+    }
+
+    protected function _affiliateFilter($affiliateId, $columnToJoin)
+    {
+        $result = [
+            'where' => ''
+        ];
+
+        if ($affiliateId !== null && $affiliateId !== '') {
+            $result['where'] = " AND $columnToJoin = $affiliateId ";
+        }
+        return $result;
+    }
+
+    protected function _dateFilter($dateFrom, $dateTo)
+    {
+        $result = [
+            'where' => ''
+        ];
+        $schedule_day = WorkersServiceSchedule::$day;
+
+        $setFrom = ($dateFrom !== null && $dateFrom !== '');
+        $setTo = ($dateTo !== null && $dateTo !== '');
+
+        if($setFrom) {
+            $result['where'] = " AND $schedule_day >= '$dateFrom' ";
+        }
+        if($setTo) {
+            $result['where'] .= " AND $schedule_day <= '$dateTo' ";
+        }
+        return $result;
+    }
+
+    protected function _timeFilter($timeFrom, $timeTo)
+    {
+        $result = [
+            'where' => ''
+        ];
+        $schedule_start_time = WorkersServiceSchedule::$start_time;
+        $schedule_end_time = WorkersServiceSchedule::$end_time;
+
+        $setFrom = ($timeFrom !== null && $timeFrom !== '');
+        $setTo = ($timeTo !== null && $timeTo !== '');
+
+        if($setFrom) {
+            $result['where'] = " AND $schedule_start_time >= '$timeFrom' ";
+        }
+        if($setTo) {
+            $result['where'] .= " AND $schedule_end_time <= '$timeTo' ";
+        }
+        return $result;
+    }
+
+    protected function _priceFilter($priceFrom, $priceTo)
+    {
+        $result = [
+            'where' => ''
+        ];
+        $pricing_price = WorkersServicePricing::$price;
+
+        $setFrom = ($priceFrom !== null && $priceFrom !== '');
+        $setTo = ($priceTo !== null && $priceTo !== '');
+
+        if($setFrom) {
+            $result['where'] = " AND $pricing_price >= '$priceFrom' ";
+        }
+        if($setTo) {
+            $result['where'] .= " AND $pricing_price <= '$priceTo' ";
+        }
+        return $result;
+    }
+
+    protected function _departmentFilter($departmentId) {
+        $result = [
+            'where' => ''
+        ];
+        $services_depId = Services::$department_id;
+
+        $set = ($departmentId !== null && $departmentId !== '');
+        if($set) {
+            $result['where'] = " AND $services_depId = $departmentId ";
+        }
+        return $result;
+    }
+
+    /**
+     * @param $departmentId
+     * @param $serviceId
+     * @param $workerId
+     * @param $affiliateId
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $timeFrom
+     * @param $timeTo
+     * @param $priceFrom
+     * @param $priceTo
+     * @return array|false
+     *
+     * response example
+     * [
+     *      0 => [
+     *         'schedule_id' =>,
+     *         'service_id' =>,
+     *         'department_id' =>,
+     *         'service_name' =>,
+     *         'worker_id' =>,
+     *         'worker_name' =>,
+     *         'worker_surname' =>,
+     *         'affiliate_id' =>,
+     *         'city' =>,
+     *         'address' =>,
+     *         'day' =>,
+     *         'start_time' =>,
+     *         'end_time' =>,
+     *         'price' =>,
+     *         'currency' =>
+     *      ]
+     * ...............................
+     * ]
+     */
+    public function selectSchedule(
+        $departmentId = null, $serviceId = null,
+        $workerId = null, $affiliateId = null,
+        $dateFrom = null, $dateTo = null,
+        $timeFrom = null, $timeTo = null,
+        $priceFrom = null, $priceTo = null
+    )
+    {
+        $workerServiceSchedule = WorkersServiceSchedule::$table;
+        $schedule_id = WorkersServiceSchedule::$id;
+        $schedule_service_id = WorkersServiceSchedule::$service_id;
+        $schedule_worker_id = WorkersServiceSchedule::$worker_id;
+        $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
+        $schedule_day = WorkersServiceSchedule::$day;
+        $schedule_start_time = WorkersServiceSchedule::$start_time;
+        $schedule_end_time = WorkersServiceSchedule::$end_time;
+        $schedule_order_id = WorkersServiceSchedule::$order_id;
+
+        $services = Services::$table;
+        $services_id = Services::$id;
+        $services_serviceName = Services::$name;
+        $services_departmentId = Services::$department_id;
+
+        $workers = Workers::$table;
+        $workers_id = Workers::$id;
+        $workers_name = Workers::$name;
+        $workers_surname = Workers::$surname;
+
+        $affiliates = Affiliates::$table;
+        $affiliates_id = Affiliates::$id;
+        $affiliates_city = Affiliates::$city;
+        $affiliates_address = Affiliates::$address;
+
+        $workersServicePricing = WorkersServicePricing::$table;
+        $pricing_service_id = WorkersServicePricing::$service_id;
+        $pricing_worker_id = WorkersServicePricing::$worker_id;
+        $pricing_price = WorkersServicePricing::$price;
+        $pricing_currency = WorkersServicePricing::$currency;
+
+        $departmentFilter = $this->_departmentFilter($departmentId);
+        $serviceFilter = $this->_serviceFilter($serviceId, $schedule_service_id);
+        $workerFilter = $this->_workerFilter($workerId, $schedule_worker_id);
+        $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
+        $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
+        $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
+        $priceFilter = $this->_priceFilter(
+            $priceFrom, $priceTo
+        );
+
+        $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $services_departmentId as department_id,
+                   $workers_id as worker_id, $workers_name as worker_name,
+                   $workers_surname as worker_surname,
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency
+            
+            FROM $workerServiceSchedule 
+                INNER JOIN $services ON $schedule_service_id = $services_id
+                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                INNER JOIN $workersServicePricing 
+                    ON $schedule_worker_id = $pricing_worker_id
+                    AND $schedule_service_id = $pricing_service_id
+            
+            WHERE $schedule_order_id IS NULL 
+                {$departmentFilter['where']}
+                    
+                {$serviceFilter['where']}
+                {$workerFilter['where']}
+                {$affiliateFilter['where']}
+              
+                {$dateFilter['where']}
+              
+                {$timeFilter['where']}
+              
+                {$priceFilter['where']}
+        ";
+        //echo $q;
+        $this->db->query("
+            SELECT $schedule_id as schedule_id, $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $services_departmentId as department_id,
+                   $workers_id as worker_id, $workers_name as worker_name,
+                   $workers_surname as worker_surname,
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency
+            
+            FROM $workerServiceSchedule 
+                INNER JOIN $services ON $schedule_service_id = $services_id
+                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                INNER JOIN $workersServicePricing 
+                    ON $schedule_worker_id = $pricing_worker_id
+                    AND $schedule_service_id = $pricing_service_id
+            
+            WHERE $schedule_order_id IS NULL 
+                {$departmentFilter['where']}
+                    
+                {$serviceFilter['where']}
+                {$workerFilter['where']}
+                {$affiliateFilter['where']}
+              
+                {$dateFilter['where']}
+              
+                {$timeFilter['where']}
+              
+                {$priceFilter['where']}
+        ");
+
+        return $this->db->manyRows();
+    }
+
+    /**
+     * @param int $serviceId
+     * @return array|false
+     *
+     * response example
+     * [
+     *      'id' =>,
+     *      'nam'e' =>
+     * ]
+     */
+    public function selectDepartmentByServiceId(int $serviceId) {
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->select([Departments::$id, Departments::$name])
+            ->from(Departments::$table)
+            ->innerJoin(Services::$table)
+            ->on(Departments::$id, Services::$department_id)
+            ->whereEqual(Services::$id, ':service_id', $serviceId)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function updateServiceOrderCanceledDatetimeById(int $orderId) {
+        $currentDatetime = date('Y-m-d H:i:s');
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->update(OrdersService::$table)
+            ->set(OrdersService::$canceled_datetime, ':canceled_datetime', $currentDatetime)
+            ->whereEqual(OrdersService::$id, ':order_id', $orderId)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateOrderIdByScheduleId(int $scheduleId) {
+        //$builder = new SqlBuilder($this->db);
+        $this->builder->update(WorkersServiceSchedule::$table)
+            ->setNull(WorkersServiceSchedule::$order_id)
+            ->whereEqual(WorkersServiceSchedule::$id, ':id', $scheduleId)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateCompletedDatetimeByOrderId(int $orderId) {
+        $now = date('Y-m-d H:i:s');
+        $this->builder->update(OrdersService::$table)
+                    ->set(OrdersService::$completed_datetime, ':completed', $now)
+                    ->whereEqual(OrdersService::$id, ':id', $orderId)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
 }

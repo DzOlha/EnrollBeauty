@@ -18,9 +18,12 @@ use Src\Service\Validator\impl\PasswordValidator;
 
 class AdminAuthService extends WorkerAuthService
 {
-    public function __construct(DataMapper $dataMapper)
-    {
+    public AuthService $authUser;
+    public function __construct(
+        DataMapper $dataMapper, AuthService $authUser
+    ){
         parent::__construct($dataMapper);
+        $this->authUser = $authUser;
     }
 
     public function defaultAdminRegister(): array

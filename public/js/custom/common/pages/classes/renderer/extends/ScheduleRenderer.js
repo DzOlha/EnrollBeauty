@@ -365,7 +365,7 @@ class ScheduleRenderer {
              */
             let a = document.getElementById(menuItemId);
             a.addEventListener('click', () => {
-                //console.log('weekday a.click');
+               //console.log('weekday a.click');
 
                 /**
                  * #_{id}_YYYY-MM-DD -> _id_YYYY-MM-DD
@@ -430,7 +430,7 @@ class ScheduleRenderer {
     populateActiveDayScheduleTab(
         activeDepartmentTabId, activeDayTabId, schedules
     ) {
-        //console.log('populateActiveDayScheduleTab');
+        //console.log('populateActiveDayScheduleTab parent');
         let schedulesForActiveDay = schedules.filter(
             schedule => schedule.day === activeDayTabId.substring(3)
         );
@@ -491,30 +491,30 @@ class ScheduleRenderer {
             )
             //console.log(scheduleCard);
 
-            if (startTime >= 9 && startTime <= 12) {
+            if (startTime >= 9 && startTime < 12) {
                 if (endTime <= 12) {
                     _9_12.insertAdjacentHTML('beforeend', scheduleCard);
                 } else {
                     _12_15.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
-            if (startTime >= 12 && startTime <= 15) {
+            if (startTime >= 12 && startTime < 15) {
                 if (endTime <= 15) {
                     _12_15.insertAdjacentHTML('beforeend', scheduleCard);
                 } else {
                     _15_18.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
-            if (startTime >= 15 && startTime <= 18) {
+            if (startTime >= 15 && startTime < 18) {
                 if (endTime <= 18) {
                     _15_18.insertAdjacentHTML('beforeend', scheduleCard);
                 } else {
                     _18_21.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }
-            console.log(startTime);
-            console.log(endTime);
-            if (startTime >= 18 && startTime <= 21) {
+            // console.log(startTime);
+            // console.log(endTime);
+            if (startTime >= 18 && startTime < 21) {
                 if (endTime <= 21) {
                     console.log(_18_21.insertAdjacentHTML);
                     _18_21.insertAdjacentHTML('beforeend', scheduleCard);
@@ -559,7 +559,7 @@ class ScheduleRenderer {
             this.confirmationModal.show(
                 'Confirmation!',
                 card,
-                'Please confirm that you would like to order the selected item from available schedules.'
+                'Please confirm that you would like to <b>order</b> the selected item from available schedules.'
             )
 
             this.confirmationModal.submit(handleConfirmClick, scheduleId);

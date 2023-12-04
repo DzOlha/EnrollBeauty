@@ -16,6 +16,9 @@ class User {
         this.imgPath = '/public/images/custom/pages/user/';
     }
 
+    setApiUserInfoUrl(userId) {
+        this.apiUserInfoUrl = `/api/user/getUserInfo?user_id=${userId}`;
+    }
     getUserInfo() {
         this.requestor.get(
             this.apiUserInfoUrl,

@@ -36,15 +36,6 @@ class UserDataMapper extends DataMapper
 
     /**
      * @param int $userId
-     * @return UserReadDto|false
-     */
-    public function selectUserInfoById(int $userId)
-    {
-        return $this->dataSource->selectUserInfoById($userId);
-    }
-
-    /**
-     * @param int $userId
      * @return
      */
     public function selectUserSocialById(int $userId)
@@ -59,67 +50,6 @@ class UserDataMapper extends DataMapper
         return $this->dataSource->selectUserComingAppointments(
             $userId, $limit, $offset, $orderByField, $orderDirection
         );
-    }
-
-    public function selectAllDepartments()
-    {
-        return $this->dataSource->selectAllDepartments();
-    }
-
-    /**
-     * @param $departmentId
-     * @param $serviceId
-     * @param $workerId
-     * @param $affiliateId
-     * @param $dateFrom
-     * @param $dateTo
-     * @param $timeFrom
-     * @param $timeTo
-     * @param $priceFrom
-     * @param $priceTo
-     * @return mixed
-     *
-     *  * response example
-     * [
-     *      0 => [
-     *         'schedule_id' =>,
-     *         'service_id' =>,
-     *         'service_name' =>,
-     *         'worker_id' =>,
-     *         'worker_name' =>,
-     *         'worker_surname' =>,
-     *         'affiliate_id' =>,
-     *         'city' =>,
-     *         'address' =>,
-     *         'day' =>,
-     *         'start_time' =>,
-     *         'end_time' =>,
-     *         'price' =>,
-     *         'currency' =>
-     *      ]
-     * ..........................
-     * ]
-     */
-    public function selectSchedule(
-        $departmentId = null, $serviceId = null,
-        $workerId = null, $affiliateId = null,
-        $dateFrom = null, $dateTo = null,
-        $timeFrom = null, $timeTo = null,
-        $priceFrom = null, $priceTo = null
-    )
-    {
-        return $this->dataSource->selectSchedule(
-            $departmentId, $serviceId,
-            $workerId, $affiliateId,
-            $dateFrom, $dateTo,
-            $timeFrom, $timeTo,
-            $priceFrom, $priceTo,
-        );
-    }
-
-    public function selectDepartmentByServiceId(int $serviceId)
-    {
-        return $this->dataSource->selectDepartmentByServiceId($serviceId);
     }
 
     public function selectWorkerScheduleItemById(int $scheduleId)
@@ -157,18 +87,8 @@ class UserDataMapper extends DataMapper
         );
     }
 
-    public function updateServiceOrderCanceledDatetimeById(int $orderId)
-    {
-        return $this->dataSource->updateServiceOrderCanceledDatetimeById($orderId);
-    }
-
     public function selectScheduleIdByOrderId(int $orderId)
     {
         return $this->dataSource->selectScheduleIdByOrderId($orderId);
-    }
-
-    public function updateOrderIdByScheduleId(int $scheduleId)
-    {
-        return $this->dataSource->updateOrderIdByScheduleId($scheduleId);
     }
 }
