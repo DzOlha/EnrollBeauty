@@ -1,12 +1,5 @@
 <?php require_once VIEW_COMMON."pages/user/profile/header/head.php"?>
-<style>
-    .ttm-stickable-header-w {
-        position: relative !important;
-        top: 0;
-        z-index: 2000;
-        padding-left: 10px;
-    }
-</style>
+<link href="/public/css/custom/common/pages/page-profile.css" rel="stylesheet"/>
 <!-- InternalFileupload css-->
 <!--<link href="/public/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>-->
 
@@ -23,14 +16,7 @@
 <!-- Internal Daterangepicker css-->
 <link href="/public/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
-
 <body class="ltr main-body leftmenu">
-
-<!-- Loader -->
-<div id="global-loader">
-    <img src="/public/assets/img/loader.svg" class="loader-img" alt="Loader">
-</div>
-<!-- End Loader -->
 
 <!-- Page -->
 <div class="page">

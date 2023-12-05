@@ -1,0 +1,13 @@
+
+.ttm-stickable-header-w {
+    position: relative !important;
+}
+.ttm-quote-form .form-group {
+    margin-bottom: 15px;
+}
+body {
+    background: var(--grey-around-form);
+}
+.message-success {
+    font-size: 25px;
+}

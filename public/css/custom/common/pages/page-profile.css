@@ -1,0 +1,7 @@
+
+.ttm-stickable-header-w {
+    position: relative !important;
+    top: 0;
+    z-index: 2000;
+    padding-left: 10px;
+}

@@ -1,13 +1,6 @@
 
 <?php require_once VIEW_COMMON."pages/landing/header/header.php"?>
-<style>
-    .ttm-stickable-header-w {
-        position: relative !important;
-    }
-    body {
-        background: var(--grey-around-form);
-    }
-</style>
+<link href="/public/css/custom/common/pages/page-form.css" rel="stylesheet"/>
 
 <form id="ttm-quote-form login-form" class="ttm-quote-form clearfix login-form" method="post" action="#">
     <h2 class="text-center">Login to Admin account</h2>

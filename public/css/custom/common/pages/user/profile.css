@@ -268,4 +268,7 @@ th, td {
 .card-worker-wrapper {
     padding-bottom: 0;
 }
+.ttm-btn-bgcolor-skincolor {
+    background-color: var(--light-brown-color) !important;
+}
 

@@ -1,16 +1,6 @@
 
 <?php require_once VIEW_COMMON."pages/landing/header/header.php"?>
-<style>
-    .ttm-stickable-header-w {
-        position: relative !important;
-    }
-    .ttm-quote-form .form-group {
-        margin-bottom: 15px;
-    }
-    body {
-        background: var(--grey-around-form);
-    }
-</style>
+<link href="/public/css/custom/common/pages/page-form.css" rel="stylesheet"/>
 
 <form id="ttm-quote-form registration-form"
       class="ttm-quote-form clearfix registration-form"
