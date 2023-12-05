@@ -119,13 +119,13 @@ class AddScheduleForm extends Form {
     _initServiceSelect2(modalBody) {
         $(`#${this.serviceSelectId}`).select2({
             dropdownParent:  modalBody,
-            placeholder: "Choose one",
+            placeholder: "Choose one service",
         });
     }
     _initAffiliateSelect2(modalBody) {
         $(`#${this.affiliateSelectId}`).select2({
             dropdownParent:  modalBody,
-            placeholder: "Choose one",
+            placeholder: "Choose one affiliate",
         });
     }
     _initTimeSelect2(modalBody) {

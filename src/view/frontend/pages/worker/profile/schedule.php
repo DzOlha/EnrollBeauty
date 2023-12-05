@@ -1,12 +1,6 @@
 
 <?php require_once VIEW_COMMON."pages/user/profile/header/head.php"?>
 <link href="/public/css/custom/common/pages/page-profile.css" rel="stylesheet"/>
-<!-- InternalFileupload css-->
-<!--<link href="/public/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>-->
-
-<!-- InternalFancy uploader css-->
-<!--<link href="/public/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />-->
-
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
 <link href="/public/css/custom/common/pages/admin/table-button-search.css" rel="stylesheet" />
@@ -19,10 +13,6 @@
 
 <!-- Internal Daterangepicker css-->
 <link href="/public/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-
-<!--Timepicker-->
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.14.1/jquery.timepicker.min.css">-->
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.css">-->
 
 <!--Bootstrap-datepicker css-->
 <!--<link rel="stylesheet" href="/public/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.css">-->
@@ -101,93 +91,6 @@
                 <!-- End Page Header -->
 
                 <!-- Row -->
-                <div class="row row-sm">
-                    <div class="col-sm-12 col-md-8 profile-homepage-user-info">
-                        <div class="col-sm-12 col-md-12 user-info-wrapper">
-                            <div class="user-img-wrapper">
-                                <img id="user-img-large" class="user-img"
-                                     src="/public/images/custom/system/nophoto.jpg" alt="user-photo"/>
-                            </div>
-                            <!--                            <input type="file" class="dropify upload-img" id="user-photo-input"-->
-                            <!--                                   accept=".jpg"-->
-                            <!--                                   name="user-photo" data-height="150"-->
-                            <!--                                   data-default-file="/public/images/custom/system/nophoto.jpg"-->
-                            <!--                                   disabled="disabled"-->
-                            <!--                            />-->
-                            <div class="user-name-surname-wrapper">
-                                <span id="name-large">Name</span>
-                                <span id="surname-large">Surname</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row row-xs mt-10 gx-20 cards-wrapper">
-                    <div class="col-lg-3">
-                        <a href="/web/worker/profile/settings">
-                            <div class="card custom-card">
-                                <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="si si-settings" data-bs-toggle="tooltip" title=""
-                                       data-bs-original-title="si-settings" aria-label="si-settings"></i>
-                                    Settings
-                                </div>
-                                <div class="card-body">
-                                    <p class="mg-b-0"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <a href="/web/worker/profile/orders">
-                            <div class="card custom-card">
-                                <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="fa fa-history" data-bs-toggle="tooltip" title=""
-                                       data-bs-original-title="fa fa-history"
-                                       aria-label="fa fa-history"></i>
-                                    Orders
-                                </div>
-                                <div class="card-body">
-                                    <p class="mg-b-0"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <a href="/web/worker/profile/statistics">
-                            <div class="card custom-card">
-                                <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="ti-bar-chart-alt sidemenu-icon menu-icon "></i>
-                                    Statistics
-                                </div>
-                                <div class="card-body">
-                                    <p class="mg-b-0"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-<!---->
-<!--                <div class="row row-sm appointments-wrapper mt-40">-->
-<!--                    <h3 class="pl-30 title"></h3>-->
-<!--                    <div class="card-body">-->
-<!--                        <div class="row table-filter">-->
-<!--                            <div class="col-lg-1 mg-l-15 d-lg-flex justify-content-start">-->
-<!--                                <div class="show-entries">-->
-<!--                                                                        --><?php //require_once VIEW_COMMON."pages/user/profile/blocks/select_pagination_count.php"?>
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="table-responsive my-data-table">-->
-<!--                            <div class="col-lg-12 col-sm-12">-->
-<!--                                --><?php //require_once VIEW_COMMON."pages/user/profile/blocks/data_loader_gif.php"?>
-<!--                            </div>-->
-<!--                                                        --><?php //require_once VIEW_COMMON."pages/user/profile/blocks/appointments_table.php"?>
-<!--                        </div>-->
-<!--                        <ul class="pagination mt-4 mb-0 float-end">-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                </div>-->
 
                 <div class="row row-sm available-schedules mt-40 mb-40">
                     <h3 class="">My Schedules</h3>
@@ -437,10 +340,6 @@
 <!-- Sticky js -->
 <script src="/public/assets/js/sticky.js"></script>
 
-<!-- Internal Fileuploads js-->
-<!--<script src="/public/assets/plugins/fileuploads/js/fileupload.js"></script>-->
-<!--<script src="/public/assets/plugins/fileuploads/js/file-upload.js"></script>-->
-
 <!-- Internal Daternagepicker js-->
 <script src="/public/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
 <script src="/public/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
@@ -489,7 +388,6 @@
 <script src="/public/js/custom/common/pages/classes/cookie/Cookie.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/table/Table.js"></script>
-<!--<script src="/public/js/custom/common/pages/classes/table/extends/AppointmentsTable.js"></script>-->
 <script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/SearchScheduleForm.js"></script>
 <script src="/public/js/custom/common/pages/worker/forms/WorkerSearchScheduleForm.js"></script>
