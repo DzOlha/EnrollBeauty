@@ -10,4 +10,5 @@ class WorkersServicePricing
     public static string $worker_id = 'workers_service_pricing.worker_id';
     public static string $price = 'workers_service_pricing.price';
     public static string $currency = 'workers_service_pricing.currency';
+    public static string $updated_datetime = 'workers_service_pricing.updated_datetime';
 }

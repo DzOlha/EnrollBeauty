@@ -433,4 +433,93 @@ class WorkerDataSource extends DataSource
 
         return $this->db->singleRow();
     }
+
+    public function selectWorkerServicePricingByIds(int $workerId, $serviceId) {
+        $this->builder->select([WorkersServicePricing::$id])
+            ->from(WorkersServicePricing::$table)
+            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
+            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+        ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            // workers_service_pricing.id -> id
+            return $result[explode('.', WorkersServicePricing::$id)[1]];
+        }
+        return false;
+    }
+
+    public function insertWorkerServicePricing(
+        int $workerId, int $serviceId, $price
+    ) {
+        $this->builder->insertInto(WorkersServicePricing::$table, [
+                WorkersServicePricing::$worker_id, WorkersServicePricing::$service_id,
+                WorkersServicePricing::$price
+            ])
+            ->values([':worker_id', ':service_id', ':price'],
+                    [$workerId, $serviceId, $price])
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param int $workerId
+     * @param int $limit
+     * @param int $offset
+     * @param string $orderByField
+     * @param string $orderDirection
+     * @return array|false
+     *
+     * [
+     * 0 => [
+     *      'id' =>
+     *      'name' => service name
+     *      'price' =>
+     *      'currency' =>
+     *      'updated_datetime' =>
+     *  ]
+     * ......
+     *  'totalRowsCount':
+     * ]
+     */
+    public function selectAllWorkersServicePricing(
+        int $workerId, int $limit, int $offset,
+        string $orderByField = 'workers_service_pricing.id', string $orderDirection = 'asc'
+    ) {
+        $pricingTable = WorkersServicePricing::$table;
+        $servicesTable = Services::$table;
+
+        $worker_id = WorkersServicePricing::$worker_id;
+
+        $service_id = Services::$id;
+        $pricing_service_id = WorkersServicePricing::$service_id;
+
+        $queryFrom = "
+            $pricingTable INNER JOIN $servicesTable ON $pricing_service_id = $service_id
+            WHERE $worker_id = $workerId
+        ";
+
+        $this->builder->select([
+                WorkersServicePricing::$id, Services::$name, WorkersServicePricing::$price,
+                WorkersServicePricing::$currency, WorkersServicePricing::$updated_datetime
+            ])
+            ->from(WorkersServicePricing::$table)
+            ->innerJoin(Services::$table)
+                ->on(WorkersServicePricing::$service_id, Services::$id)
+            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
+            ->orderBy($orderByField, $orderDirection)
+            ->limit($limit)
+            ->offset($offset)
+        ->build();
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
 }

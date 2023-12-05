@@ -62,9 +62,13 @@ class WorkerApiController extends ApiController
         if (isset($_GET['worker_id']) && $_GET['worker_id'] !== '') {
             $workerId = htmlspecialchars(trim($_GET['worker_id']));
         } else {
-            $sessionWorkerId = SessionHelper::getWorkerSession();
-            if ($sessionWorkerId) {
-                $workerId = $sessionWorkerId;
+            if(isset($_POST['worker_id']) && $_POST['worker_id'] !== '') {
+                $workerId = htmlspecialchars(trim($_POST['worker_id']));
+            } else {
+                $sessionWorkerId = SessionHelper::getWorkerSession();
+                if ($sessionWorkerId) {
+                    $workerId = $sessionWorkerId;
+                }
             }
         }
         return $workerId;
@@ -173,8 +177,11 @@ class WorkerApiController extends ApiController
             }
 
             if (!$departments) {
+//                $this->returnJson([
+//                    'error' => 'There is no any departments yet for the current worker!'
+//                ]);
                 $this->returnJson([
-                    'error' => 'There is no any departments yet for the current worker!'
+                    'success' => true
                 ]);
             }
 
@@ -397,5 +404,141 @@ class WorkerApiController extends ApiController
                 'success' => 'You successfully marked the appointment as completed!'
             ]);
         }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/getServicesAll
+     */
+    public function getServicesAll()
+    {
+        $result = $this->dataMapper->selectAllServices();
+        if ($result === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all services'
+            ]);
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/addServicePricing
+     */
+    public function addServicePricing() {
+        if(!SessionHelper::getWorkerSession()) {
+            $this->_accessDenied();
+        }
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $items = [
+                'worker_id' => $this->_getWorkerId(),
+                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
+                'price' => htmlspecialchars(trim($_POST['price']))
+            ];
+            /**
+             * Validate Price
+             */
+            if(!$items['price']) {
+                $this->returnJson([
+                    'error' => 'Price is the required field!'
+                ]);
+            }
+            if($items['price'] < 0){
+                $this->returnJson([
+                    'error' => 'Price can not be negative number!'
+                ]);
+            }
+            if(!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
+                $this->returnJson([
+                    'error' => 'Invalid price number was provided!'
+                ]);
+            }
+
+            /**
+             * Check if the price already exists for the current worker_id, service_id
+             */
+            $pricingId = $this->dataMapper->selectWorkerServicePricingByIds(
+                $items['worker_id'], $items['service_id']
+            );
+            if($pricingId) {
+                $this->returnJson([
+                    'error' => 'The pricing for the selected service has already been added before!'
+                ]);
+            }
+
+            /**
+             * Insert new pricing into db
+             */
+            $inserted = $this->dataMapper->insertWorkerServicePricing(
+                $items['worker_id'], $items['service_id'], $items['price']
+            );
+            if($inserted === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while inserting new pricing into database!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully added one more pricing!'
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/getServicePricing
+     */
+    public function getServicePricing() {
+        if (!SessionHelper::getWorkerSession()) {
+            $this->_accessDenied();
+        }
+        $param = $this->_getLimitPageFieldOrderOffset();
+        /**
+         *  * [
+         *      0 => [
+         *          id =>
+         *          name =>
+         *          surname =>
+         *          email =>
+         *          position =>
+         *          salary =>
+         *          experience =>
+         *      ]
+         *      ....................
+         * ]
+         */
+        $result = $this->dataMapper->selectAllWorkersServicePricing(
+            $this->_getWorkerId(),
+            $param['limit'],
+            $param['offset'],
+            $param['order_field'],
+            $param['order_direction']
+        );
+        if($result === false) {
+            $this->returnJsonError(
+                "The error occurred while getting data about pricing!"
+            );
+        }
+
+        foreach ($result as $key => &$value) {
+            if($key === 'totalRowsCount') continue;
+            $datetime = new \DateTime($value['updated_datetime']);
+            /**
+             * Format the updated datetime as November 24, 15:00
+             */
+            $value['updated_datetime'] = $datetime->format('F j, H:i');
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
     }
 }

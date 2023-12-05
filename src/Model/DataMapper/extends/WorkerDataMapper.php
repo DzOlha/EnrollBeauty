@@ -172,4 +172,46 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->selectOrderDetails($orderId);
     }
+
+    public function selectWorkerServicePricingByIds(int $workerId, $serviceId)
+    {
+        return $this->dataSource->selectWorkerServicePricingByIds($workerId, $serviceId);
+    }
+
+    public function insertWorkerServicePricing(
+        int $workerId, int $serviceId, $price
+    )
+    {
+        return $this->dataSource->insertWorkerServicePricing($workerId, $serviceId, $price);
+    }
+
+    /**
+     * @param int $workerId
+     * @param int $limit
+     * @param int $offset
+     * @param string $orderByField
+     * @param string $orderDirection
+     * @return mixed
+     * [
+     *  0 => [
+     *       'id' =>
+     *       'name' => service name
+     *       'price' =>
+     *       'currency' =>
+     *       'updated_datetime' =>
+     *   ]
+     * ......
+     * 'totalRowsCount':
+     *  ]
+     * /
+     */
+    public function selectAllWorkersServicePricing(
+        int    $workerId, int $limit, int $offset,
+        string $orderByField = 'workers_service_pricing.id', string $orderDirection = 'asc'
+    )
+    {
+        return $this->dataSource->selectAllWorkersServicePricing(
+            $workerId, $limit, $offset, $orderByField, $orderDirection
+        );
+    }
 }

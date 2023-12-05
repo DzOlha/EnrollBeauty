@@ -128,4 +128,32 @@ class FormBuilder {
                </div>
             `
     }
+
+    createAddPricingForm() {
+        return `<div class="form-group service-selector-parent">
+                    <p class="mg-b-0"><span>*</span>Service</p>
+                    <select class="form-control select2-with-search"
+                            id="service-select">
+                        <option label="Choose one">
+                        </option>
+                    </select>
+                    <div class="error text-danger" id="service-select-error"></div>
+               </div>
+               <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Price</p>
+                    <div class="input-group mb-3">
+                        <div class="d-flex">
+                            <input aria-label="Price Amount" placeholder="Price"
+                                   class="form-control" type="number"
+                                   id="price-input"
+                            >
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bd-r">UAH</span>
+                            </div>
+                        </div>
+                        <div class="error text-danger" id="price-input-error"></div>
+                    </div>
+               </div>
+            `
+    }
 }

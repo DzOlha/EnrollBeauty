@@ -119,14 +119,42 @@ class WorkerWebController extends WebController
 
                 }
                 if ($menuItemName === 'schedule') {
-                    $data = [
-                        'title' => 'Schedule Management',
-                        'page_name' => 'Schedule'
-                    ];
-                    $this->view(VIEW_FRONTEND . 'pages/worker/profile/schedule', $data);
+                    $this->_schedule();
+                }
+
+                if($menuItemName === 'pricing') {
+                    $this->_pricing();
                 }
                
             }
         }
     }
+
+    /**
+     * @return void
+     *
+     * url = /web/worker/profile/schedule
+     */
+    private function _schedule() {
+        $data = [
+            'title' => 'Schedule Management',
+            'page_name' => 'Schedule'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/worker/profile/schedule', $data);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/worker/profile/pricing
+     */
+    private function _pricing() {
+        $data = [
+            'title' => 'Service Pricing',
+            'page_name' => 'Price-list'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/worker/profile/pricing', $data);
+    }
+
+
 }
