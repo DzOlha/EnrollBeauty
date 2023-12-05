@@ -10,7 +10,7 @@
     <link rel="icon" href="/public/assets/img/brand/favicon.ico" type="image/x-icon"/>
 
     <!-- Title -->
-    <title>Sylin</title>
+    <title><?=$data['title']?></title>
 
     <!-- Bootstrap css-->
 <!--    <link  id="style" href="/public/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>-->
@@ -74,3 +74,4 @@
     <!--    CUSTOM CSS-->
     <link rel="stylesheet" type="text/css" href="/public/css/custom/common/pages/index.css"/>
 </head>
+<div id="global-loader"></div>

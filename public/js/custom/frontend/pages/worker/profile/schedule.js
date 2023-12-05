@@ -11,6 +11,7 @@ $(function () {
     let timeRenderer = new TimeRenderer();
 
     let confirmationModal = new ConfirmationModal();
+
     // let appointmentsTable = new AppointmentsTable(
     //     requester, confirmationModal,
     //     dateRenderer, timeRenderer
@@ -24,6 +25,13 @@ $(function () {
         requester, scheduleRenderer,
         new OptionBuilder(), dateRenderer,
         '/api/worker/searchSchedule'
+    );
+
+    let formBuilder = new FormBuilder();
+    let modalForm = new FormModal(formBuilder);
+
+    let addNewScheduleForm = new AddScheduleForm(
+        requester, modalForm, new OptionBuilder(), searchScheduleForm
     );
 
     /**
@@ -43,4 +51,9 @@ $(function () {
      */
     searchScheduleForm.handleFormSubmission();
 
+    /**
+     * Listen click on 'Add Schedule Item' button
+     * to show the form in modal window
+     */
+    addNewScheduleForm.addListenerShowAddScheduleForm();
 });

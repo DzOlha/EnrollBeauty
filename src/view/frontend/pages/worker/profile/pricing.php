@@ -8,7 +8,7 @@
 
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
-<link href="/public/css/custom/common/pages/admin/workers.css" rel="stylesheet" />
+<link href="/public/css/custom/common/pages/admin/table-button-search.css" rel="stylesheet" />
 <link href="/public/css/custom/common/pages/admin/modal-form.css" rel="stylesheet" />
 
 <!-- Select2 css -->
@@ -200,10 +200,6 @@
 
 <!-- Sticky js -->
 <script src="/public/assets/js/sticky.js"></script>
-
-<!-- Internal Fileuploads js-->
-<script src="/public/assets/plugins/fileuploads/js/fileupload.js"></script>
-<script src="/public/assets/plugins/fileuploads/js/file-upload.js"></script>
 
 <!-- Internal Daternagepicker js-->
 <script src="/public/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>

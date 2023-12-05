@@ -9,6 +9,10 @@
 
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
+<link href="/public/css/custom/common/pages/admin/table-button-search.css" rel="stylesheet" />
+<link href="/public/css/custom/common/pages/admin/modal-form.css" rel="stylesheet" />
+<!--<link href="/public/css/custom/common/pages/worker/timepicker.css" rel="stylesheet" />-->
+<link href="/public/css/custom/common/pages/worker/schedule.css" rel="stylesheet" />
 
 <!-- Select2 css -->
 <link href="/public/assets/plugins/select2/css/select2.min.css" rel="stylesheet">
@@ -16,6 +20,18 @@
 <!-- Internal Daterangepicker css-->
 <link href="/public/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
+<!--Timepicker-->
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.14.1/jquery.timepicker.min.css">-->
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.css">-->
+
+<!--Bootstrap-datepicker css-->
+<!--<link rel="stylesheet" href="/public/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.css">-->
+
+<!--Range timepicker-->
+<!--<link rel="stylesheet" href="/public/assets/plugins/range-picker-scale/jquery.timescale.css">-->
+
+<!--Datepicker plugin-->
+<link rel="stylesheet" href="/public/assets/plugins/date-month-year-picker/css/date-picker.css">
 
 <body class="ltr main-body leftmenu">
 
@@ -174,7 +190,7 @@
 <!--                </div>-->
 
                 <div class="row row-sm available-schedules mt-40 mb-40">
-                    <h3 class="pl-15">My Schedules</h3>
+                    <h3 class="">My Schedules</h3>
                     <div class="card-body">
                         <div class="row row-sm">
                             <div class="col-lg-4">
@@ -344,6 +360,14 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="button-wrapper light mg-t-35">
+                            <button aria-label="Add Worker"
+                                    class="btn ripple pd-x-25"
+                                    id="add-schedule-trigger"
+                                    data-bs-dismiss="modal" type="button">
+                                Add Schedule Item
+                            </button>
+                        </div>
 
                         <div class="row row-sm">
                             <div class="col-lg-12 panel panel-primary tabs-style-2 mg-t-50"
@@ -390,11 +414,8 @@
 <!-- Moment js-->
 <script src="/public/assets/plugins/moment/min/moment.min.js"></script>
 
-<!-- Datepicker js-->
-<script src="/public/assets/plugins/jquery-ui/ui/widgets/datepicker.js"></script>
-
 <!-- Jquery-Ui js-->
-<script src="/public/assets/plugins/jquery-ui/ui/widgets/datepicker.js"></script>
+<!--<script src="/public/assets/plugins/jquery-ui/ui/widgets/datepicker.js"></script>-->
 
 <!-- Perfect-scrollbar js -->
 <script src="/public/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
@@ -413,22 +434,43 @@
 <script src="/public/assets/plugins/select2/js/select2.min.js"></script>
 <script src="/public/assets/js/select2.js"></script>
 
-<!-- Internal Form-elements js-->
-<script src="/public/assets/js/advanced-form-elements.js"></script>
-
 <!-- Sticky js -->
 <script src="/public/assets/js/sticky.js"></script>
 
 <!-- Internal Fileuploads js-->
-<script src="/public/assets/plugins/fileuploads/js/fileupload.js"></script>
-<script src="/public/assets/plugins/fileuploads/js/file-upload.js"></script>
+<!--<script src="/public/assets/plugins/fileuploads/js/fileupload.js"></script>-->
+<!--<script src="/public/assets/plugins/fileuploads/js/file-upload.js"></script>-->
 
 <!-- Internal Daternagepicker js-->
 <script src="/public/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
 <script src="/public/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 
+<!--Bootstrap-datepicker js-->
+<!--<script src="/public/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>-->
+
 <!--Moment-->
 <script src="/public/assets/plugins/moment/moment.js"></script>
+
+<!--Timepicker-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.14.1/jquery.timepicker.min.js"></script>-->
+
+<!-- Internal Form-elements js-->
+<script src="/public/assets/js/advanced-form-elements.js"></script>
+
+<!--Range timepicker-->
+<!--<script src="/public/assets/plugins/range-picker-scale/jquery.timescale.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js" integrity="sha512-FwNWaxyfy2XlEINoSnZh1JQ5TRRtGow0D6XcmAWmYCRgvqOUTnzCxPc9uF35u5ZEpirk1uhlPVA19tflhvnW1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+<!--<script src="/public/assets/plugins/easy-time-picker-bootstrap/src/timepicker-bs4.js"></script>-->
+
+
+<!--Bootstrap timepicker-->
+<!--<script src="/public/assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>-->
+
+
+<!--Datepicker plugin-->
+<script src="/public/assets/plugins/date-month-year-picker/js/date-picker.js"></script>
+
+
 
 
 <!--Mine scripts-->
@@ -456,6 +498,11 @@
 <script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
 <script src="/public/js/custom/common/pages/user/profile/User.js"></script>
 <script src="/public/js/custom/common/pages/worker/profile/Worker.js"></script>
+
+<!--Modal Add Schedule-->
+<script src="/public/js/custom/common/pages/classes/modal/FormModal.js"></script>
+<script src="/public/js/custom/common/pages/classes/builder/FormBuilder.js"></script>
+<script src="/public/js/custom/common/pages/worker/forms/AddScheduleForm.js"></script>
 
 <script src="/public/js/custom/frontend/pages/worker/profile/schedule.js"></script>
 

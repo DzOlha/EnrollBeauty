@@ -156,4 +156,165 @@ class FormBuilder {
                </div>
             `
     }
+
+    createAddScheduleForm() {
+        return `<div class="form-group service-selector-parent">
+                    <p class="mg-b-0"><span>*</span>Service</p>
+                    <select class="form-control select2-with-search"
+                            id="service-select">
+                        <option label="Choose one">
+                        </option>
+                    </select>
+                    <div class="error text-danger" id="service-select-error"></div>
+               </div>
+                <div class="form-group affiliate-selector-parent">
+                    <p class="mg-b-0"><span>*</span>Affiliate</p>
+                    <select class="form-control select2-with-search"
+                            id="affiliate-select">
+                        <option label="Choose one">
+                        </option>
+                    </select>
+                    <div class="error text-danger" id="affiliate-select-error"></div>
+               </div>
+               <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Day</p>
+                        <input class="form-control" 
+                            placeholder="DD/MM/YYYY" 
+                            id="day-input"
+                            type="date">
+                    <div class="error text-danger" id="day-input-error"></div>
+               </div>
+               <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Start Time</p>
+                    <div class="hour-minute-wrapper">
+                        <select class="form-control select2 col-lg-1"
+                                id="start-time-hour"
+                        >
+                            <option label="Choose one">
+                            </option>
+                            <option value="09">
+                                09
+                            </option>
+                            <option value="10">
+                                10
+                            </option>
+                            <option value="11">
+                                11
+                            </option>
+                            <option value="12">
+                                12
+                            </option>
+                            <option value="13">
+                                13
+                            </option>
+                            <option value="14">
+                                14
+                            </option>
+                            <option value="15">
+                                15
+                            </option>
+                            <option value="16">
+                                16
+                            </option>
+                            <option value="17">
+                                17
+                            </option>
+                            <option value="18">
+                                18
+                            </option>
+                        </select>
+                        <span class="mg-10">:</span>
+                        <select class="form-control select2 col-lg-1"
+                            id="start-time-minute"
+                    >
+                        <option label="Choose one">
+                        </option>
+                        <option value="00">
+                            00
+                        </option>
+                        <option value="15">
+                            15
+                        </option>
+                        <option value="30">
+                            30
+                        </option>
+                        <option value="45">
+                            45
+                        </option>
+                    </select>
+                    </div>
+<!--                        <input class="form-control" -->
+<!--                            placeholder="Start time" -->
+<!--                            id="start-time-input"-->
+<!--                            type="text">-->
+<!--                            <div id="start-time-input"></div>-->
+                    <div class="error text-danger" id="start-time-input-error"></div>
+               </div>
+               <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>End Time</p>
+                    <div class="hour-minute-wrapper">
+                        <select class="form-control select2 col-lg-1"
+                            id="end-time-hour"
+                    >
+                        <option label="Choose one">
+                        </option>
+                        <option value="09">
+                            09
+                        </option>
+                        <option value="10">
+                            10
+                        </option>
+                        <option value="11">
+                            11
+                        </option>
+                        <option value="12">
+                            12
+                        </option>
+                        <option value="13">
+                            13
+                        </option>
+                        <option value="14">
+                            14
+                        </option>
+                        <option value="15">
+                            15
+                        </option>
+                        <option value="16">
+                            16
+                        </option>
+                        <option value="17">
+                            17
+                        </option>
+                        <option value="18">
+                            18
+                        </option>
+                    </select>
+                        <span class="mg-10">:</span>
+                        <select class="form-control select2 col-lg-1"
+                            id="end-time-minute"
+                    >
+                        <option label="Choose one">
+                        </option>
+                        <option value="00">
+                            00
+                        </option>
+                        <option value="15">
+                            15
+                        </option>
+                        <option value="30">
+                            30
+                        </option>
+                        <option value="45">
+                            45
+                        </option>
+                    </select>
+                    </div>
+<!--                        <input class="form-control" -->
+<!--                            placeholder="End time" -->
+<!--                            id="end-time-input"-->
+<!--                            type="text">-->
+<!--                             <div id="end-time-input"></div>-->
+                    <div class="error text-danger" id="end-time-input-error"></div>
+               </div>`
+    }
 }

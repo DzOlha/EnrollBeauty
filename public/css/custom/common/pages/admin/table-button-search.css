@@ -22,6 +22,7 @@
 .button-wrapper button:hover {
     color: white !important;
     background-color: var(--light-grey-color) !important;
+    transition: background-color 0.3s ease;
 }
 .search-by-wrapper {
     display: flex;
@@ -37,3 +38,14 @@
 #search-by-submit:hover {
     background-color: var(--light-grey-color) !important;
 }
+
+/**
+Light
+ */
+.button-wrapper.light button {
+    background-color: var(--light-brown-color) !important;
+}
+.button-wrapper.light button:hover {
+    background-color: var(--dark-brown-color) !important;
+}
+

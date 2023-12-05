@@ -22,7 +22,7 @@ $(function () {
     pricingTable.POPULATE();
 
     /**
-     * Listen click on 'Add New Worker' button
+     * Listen click on 'Add Pricing Item' button
      * to show the form in modal window
      */
     addNewPricingForm.addListenerShowAddPricingForm();

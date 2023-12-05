@@ -121,8 +121,8 @@ class AddWorkerForm extends Form {
         this.requester.get(
             this.apiGetPositionsRoles,
             this.successCallbackGetPositionsAndRoles.bind(this),
-            (message) => {
-                Notifier.showErrorMessage(message);
+            (response) => {
+                Notifier.showErrorMessage(response.error);
             }
         )
     }

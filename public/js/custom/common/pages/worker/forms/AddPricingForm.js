@@ -83,8 +83,8 @@ class AddPricingForm extends Form {
         this.requester.get(
             this.apiGetServices,
             this.successCallbackGetServices.bind(this),
-            (message) => {
-                Notifier.showErrorMessage(message);
+            (response) => {
+                Notifier.showErrorMessage(response.error);
             }
         )
     }

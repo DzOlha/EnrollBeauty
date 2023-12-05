@@ -70,7 +70,6 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
         this.requester.get(
             this.apiUrlGetAll,
             this.successCallbackGetAll.bind(this),
-            this.errorCallbackSubmit.bind(this),
             this.errorCallbackSubmit.bind(this)
         )
     }

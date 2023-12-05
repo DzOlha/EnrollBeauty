@@ -1,0 +1,23 @@
+
+.timepicker-popover .fa-chevron-down,
+.timepicker-popover .fa-chevron-up {
+    color: var(--dark-color);
+}
+
+.timepicker-popover table {
+    border-collapse: collapse;
+}
+
+.timepicker-popover table,
+.timepicker-popover th,
+.timepicker-popover td {
+    border: none;
+}
+
+.timepicker-popover .btn-primary {
+    background-color: var(--light-brown-color) !important;
+    border: none;
+}
+.timepicker-popover .close {
+    outline: none;
+}
