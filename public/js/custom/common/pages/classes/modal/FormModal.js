@@ -40,7 +40,10 @@ class FormModal {
     }
 
     hide(duration = 400) {
-        $(`#${this.modalId}`).fadeOut(duration);
+        $(`#${this.modalId}`).fadeOut(duration, () => {
+            let modal = document.getElementById(this.modalId);
+            modal.remove();
+        });
     }
     submit(callback, data) {
         let f = () => {
@@ -61,8 +64,8 @@ class FormModal {
     close() {
         let callback = () => {
             this.hide();
-            let modal = document.getElementById(this.modalId);
-            modal.remove();
+            // let modal = document.getElementById(this.modalId);
+            // modal.remove();
         }
         let close = document.getElementById(this.modalCloseId);
         close.removeEventListener('click', callback); // Remove previous listener
