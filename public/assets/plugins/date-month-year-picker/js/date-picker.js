@@ -560,6 +560,8 @@
       if (show) {
         generatePicker(_this, _this.dateContainer, date, showtype);
       }
+      // Trigger a custom change event
+      this.element.trigger('pDatePickerChange', [this.getSelectedDate()]);
     },
     getSelectedDate: function () {
       return new Date(

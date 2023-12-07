@@ -9,6 +9,17 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
         userEmail, date, startTime, endTime, address, orderId
     )
     {
+        let userLabel = userId !== null ? 'User: '
+            : '<span class="text-success">Available for order!</span>';
+
+        let userLink = userId !== null ? `<span>
+                                                    <a href="/web/user/profile?user_id=${userId}" 
+                                                         class="worker text-default" target="_blank">
+                                                        ${userEmail}
+                                                    </a>
+                                                  </span>`
+            : '';
+
         return `<div class="card" id="schedule-card-${scheduleId}" 
                         data-schedule-id="${scheduleId}"
                         data-user-id="${userId}" 
@@ -38,11 +49,8 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
                                 <span class="currency">${currency}</span>
                             </span>
                             <div>
-                                <span>User: </span>
-                                <span>
-                                    <a href="/web/user/profile?user_id=${userId}" 
-                                    class="worker text-default" target="_blank">${userEmail}</a>
-                                </span>
+                                <span>${userLabel} </span>
+                                ${userLink}
                             </div>
                         </div>
                     </div>

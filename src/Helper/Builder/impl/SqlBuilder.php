@@ -158,6 +158,54 @@ class SqlBuilder implements IBuilder
         return $this;
     }
 
+    public function or() {
+        $this->query .= "OR ";
+        return $this;
+    }
+    public function and() {
+        $this->query .= "AND ";
+        return $this;
+    }
+
+    public function lessEqual(string $column, string $placeholder, string $value) {
+        $this->placeholders += [
+            $placeholder => $value
+        ];
+        $this->query .= "$column <= $placeholder ";
+        return $this;
+    }
+    public function less(string $column, string $placeholder, string $value) {
+        $this->placeholders += [
+            $placeholder => $value
+        ];
+        $this->query .= "$column < $placeholder ";
+        return $this;
+    }
+
+    public function equal(string $column, string $placeholder, string $value) {
+        $this->placeholders += [
+            $placeholder => $value
+        ];
+        $this->query .= "$column = $placeholder ";
+        return $this;
+    }
+
+    public function greater(string $column, string $placeholder, string $value) {
+        $this->placeholders += [
+            $placeholder => $value
+        ];
+        $this->query .= "$column > $placeholder ";
+        return $this;
+    }
+
+    public function greaterEqual(string $column, string $placeholder, string $value) {
+        $this->placeholders += [
+            $placeholder => $value
+        ];
+        $this->query .= "$column >= $placeholder ";
+        return $this;
+    }
+
     public function insertInto(
         string $table, array $columns
     ) {

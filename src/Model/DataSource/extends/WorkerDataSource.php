@@ -228,12 +228,12 @@ class WorkerDataSource extends DataSource
      * [
      *      0 => [
      *         'schedule_id' =>,
-     *         'order_id' =>,
+     *                  'order_id' =>,
      *         'service_id' =>,
      *         'department_id' =>,
      *         'service_name' =>,
-     *         'user_id' =>,
-     *         'user_email' =>,
+     *                  'user_id' =>,
+     *                  'user_email' =>,
      *         'affiliate_id' =>,
      *         'city' =>,
      *         'address' =>,
@@ -246,14 +246,13 @@ class WorkerDataSource extends DataSource
      * ...............................
      * ]
      */
-    public function selectWorkerSchedule(
+    public function selectWorkerOrderedSchedule(
         $departmentId = null, $serviceId = null,
         $workerId = null, $affiliateId = null,
         $dateFrom = null, $dateTo = null,
         $timeFrom = null, $timeTo = null,
-        $priceFrom = null, $priceTo = null
-    )
-    {
+        $priceFrom = null, $priceTo = null,
+    ){
         $workerServiceSchedule = WorkersServiceSchedule::$table;
         $schedule_id = WorkersServiceSchedule::$id;
         $schedule_service_id = WorkersServiceSchedule::$service_id;
@@ -301,9 +300,8 @@ class WorkerDataSource extends DataSource
 
         $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
                    $services_serviceName as service_name,
-                   $ordersOrderId as order_id,
-                   $services_departmentId as department_id,
-                   $ordersUserId as user_id, $ordersUserEmail as user_email,
+                   $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
+                   $services_departmentId as department_id, 
                    $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
                    $schedule_day, 
                    $schedule_start_time, $schedule_end_time,
@@ -318,8 +316,7 @@ class WorkerDataSource extends DataSource
                     ON $schedule_worker_id = $pricing_worker_id
                     AND $schedule_service_id = $pricing_service_id
             
-            WHERE $schedule_order_id IS NOT NULL 
-                AND $completedTime IS NULL
+            WHERE $schedule_order_id IS NOT NULL AND $completedTime IS NULL
                 {$departmentFilter['where']}
                     
                 {$serviceFilter['where']}
@@ -336,9 +333,8 @@ class WorkerDataSource extends DataSource
         $this->db->query("
             SELECT $schedule_id as schedule_id, $services_id as service_id,
                    $services_serviceName as service_name,
-                   $ordersOrderId as order_id,
+                   $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
                    $services_departmentId as department_id,
-                   $ordersUserId as user_id, $ordersUserEmail as user_email,
                    $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
                    $schedule_day, 
                    $schedule_start_time, $schedule_end_time,
@@ -353,8 +349,7 @@ class WorkerDataSource extends DataSource
                     ON $schedule_worker_id = $pricing_worker_id
                     AND $schedule_service_id = $pricing_service_id
             
-            WHERE $schedule_order_id IS NOT NULL 
-                AND $completedTime IS NULL
+            WHERE $schedule_order_id IS NOT NULL AND $completedTime IS NULL
                 {$departmentFilter['where']}
                     
                 {$serviceFilter['where']}
@@ -371,6 +366,116 @@ class WorkerDataSource extends DataSource
         return $this->db->manyRows();
     }
 
+
+    public function selectWorkerFreeSchedule(
+        $departmentId = null, $serviceId = null,
+        $workerId = null, $affiliateId = null,
+        $dateFrom = null, $dateTo = null,
+        $timeFrom = null, $timeTo = null,
+        $priceFrom = null, $priceTo = null,
+    ){
+        $workerServiceSchedule = WorkersServiceSchedule::$table;
+        $schedule_id = WorkersServiceSchedule::$id;
+        $schedule_service_id = WorkersServiceSchedule::$service_id;
+        $schedule_worker_id = WorkersServiceSchedule::$worker_id;
+        $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
+        $schedule_day = WorkersServiceSchedule::$day;
+        $schedule_start_time = WorkersServiceSchedule::$start_time;
+        $schedule_end_time = WorkersServiceSchedule::$end_time;
+        $schedule_order_id = WorkersServiceSchedule::$order_id;
+
+        $services = Services::$table;
+        $services_id = Services::$id;
+        $services_serviceName = Services::$name;
+        $services_departmentId = Services::$department_id;
+
+        $workers = Workers::$table;
+        $workers_id = Workers::$id;
+
+        $affiliates = Affiliates::$table;
+        $affiliates_id = Affiliates::$id;
+        $affiliates_city = Affiliates::$city;
+        $affiliates_address = Affiliates::$address;
+
+        $workersServicePricing = WorkersServicePricing::$table;
+        $pricing_service_id = WorkersServicePricing::$service_id;
+        $pricing_worker_id = WorkersServicePricing::$worker_id;
+        $pricing_price = WorkersServicePricing::$price;
+        $pricing_currency = WorkersServicePricing::$currency;
+
+        $departmentFilter = $this->_departmentFilter($departmentId);
+        $serviceFilter = $this->_serviceFilter($serviceId, $schedule_service_id);
+        $workerFilter = $this->_workerFilter($workerId, $schedule_worker_id);
+        $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
+        $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
+        $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
+        $priceFilter = $this->_priceFilter(
+            $priceFrom, $priceTo
+        );
+
+        $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $services_departmentId as department_id, 
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency
+            
+            FROM $workerServiceSchedule 
+                INNER JOIN $services ON $schedule_service_id = $services_id
+                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                INNER JOIN $workersServicePricing 
+                    ON $schedule_worker_id = $pricing_worker_id
+                    AND $schedule_service_id = $pricing_service_id
+            
+            WHERE $schedule_order_id IS NULL
+                {$departmentFilter['where']}
+                    
+                {$serviceFilter['where']}
+                {$workerFilter['where']}
+                {$affiliateFilter['where']}
+              
+                {$dateFilter['where']}
+              
+                {$timeFilter['where']}
+              
+                {$priceFilter['where']}
+        ";
+        //echo $q;
+        $this->db->query("
+            SELECT $schedule_id as schedule_id, $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $services_departmentId as department_id,
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency
+            
+            FROM $workerServiceSchedule 
+                INNER JOIN $services ON $schedule_service_id = $services_id
+                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                INNER JOIN $workersServicePricing 
+                    ON $schedule_worker_id = $pricing_worker_id
+                    AND $schedule_service_id = $pricing_service_id
+            
+            WHERE $schedule_order_id IS NULL
+                {$departmentFilter['where']}
+                    
+                {$serviceFilter['where']}
+                {$workerFilter['where']}
+                {$affiliateFilter['where']}
+              
+                {$dateFilter['where']}
+              
+                {$timeFilter['where']}
+              
+                {$priceFilter['where']}
+        ");
+
+        return $this->db->manyRows();
+    }
 
     /**
      * @return array|false
@@ -521,5 +626,104 @@ class WorkerDataSource extends DataSource
             return $result;
         }
         return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
+
+    /**
+     * @param int $workerId
+     * @param string $day
+     * @return array|false
+     *
+     *  [
+     *       0 => [
+     *           'start_time' =>
+     *           'end_time' =>
+     *       ]
+     *   ........................
+     *  ]
+     */
+    public function selectFilledTimeIntervalsByWorkerIdAndDay(
+        int $workerId, string $day
+    ) {
+        $this->builder->select([WorkersServiceSchedule::$start_time,
+                                WorkersServiceSchedule::$end_time])
+                    ->from(WorkersServiceSchedule::$table)
+                    ->whereEqual(WorkersServiceSchedule::$worker_id, ':worker_id', $workerId)
+                    ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
+            ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function selectScheduleForWorkerByDayAndTime(
+        int $workerId, string $day, string $startTime, string $endTime
+    ) {
+        $schedule = WorkersServiceSchedule::$table;
+        $start_time = WorkersServiceSchedule::$start_time;
+        $end_time = WorkersServiceSchedule::$end_time;
+        $day_column = WorkersServiceSchedule::$day;
+        $worker_id = WorkersServiceSchedule::$worker_id;
+        $id = WorkersServiceSchedule::$id;
+
+        $q = "
+            SELECT $id FROM $schedule
+            WHERE $worker_id = :worker_id
+            AND $day_column = :day
+            AND (
+                 ($start_time <= :start_time AND $start_time < :end_time 
+                    AND $end_time > :start_time AND $end_time >= :end_time)
+                
+                OR ($start_time <= :start_time AND $start_time < :end_time 
+                    AND $end_time > :start_time AND $end_time <= :end_time)
+                
+                OR ($start_time >= :start_time AND  $start_time < :end_time
+                    AND $end_time > :start_time AND $end_time >= :end_time)
+            )
+        ";
+        //echo $q;
+
+        $this->db->query("
+            SELECT $id FROM $schedule
+            WHERE $worker_id = :worker_id
+            AND $day_column = :day
+            AND (
+                 ($start_time <= :start_time AND $start_time < :end_time 
+                    AND $end_time > :start_time AND $end_time >= :end_time)
+                
+                OR ($start_time <= :start_time AND $start_time < :end_time 
+                    AND $end_time > :start_time AND $end_time <= :end_time)
+                
+                OR ($start_time >= :start_time AND  $start_time < :end_time
+                    AND $end_time > :start_time AND $end_time >= :end_time)
+            )
+        ");
+        $this->db->bind(':worker_id', $workerId);
+        $this->db->bind(':day', $day);
+        $this->db->bind(':start_time', $startTime);
+        $this->db->bind(':end_time', $endTime);
+
+        return $this->db->manyRows();
+    }
+
+    public function insertWorkerServiceSchedule(
+        int $workerId, int $serviceId, int $affiliateId,
+        string $day, string $startTime, string $endTime
+    ) {
+        $this->builder->insertInto(WorkersServiceSchedule::$table,
+                    [
+                        WorkersServiceSchedule::$worker_id, WorkersServiceSchedule::$service_id,
+                        WorkersServiceSchedule::$affiliate_id, WorkersServiceSchedule::$day,
+                        WorkersServiceSchedule::$start_time, WorkersServiceSchedule::$end_time
+                    ])
+                    ->values(
+                        [':worker_id', ':service_id', ':affiliate_id',
+                         ':day', ':start_time', ':end_time'],
+                        [$workerId, $serviceId, $affiliateId, $day, $startTime, $endTime]
+                    )
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
     }
 }

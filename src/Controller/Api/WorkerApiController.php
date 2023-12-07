@@ -152,8 +152,13 @@ class WorkerApiController extends ApiController
                 'start_time' => htmlspecialchars(trim($_POST['start_time'])),
                 'end_time' => htmlspecialchars(trim($_POST['end_time'])),
                 'price_bottom' => htmlspecialchars(trim($_POST['price_bottom'])),
-                'price_top' => htmlspecialchars(trim($_POST['price_top']))
+                'price_top' => htmlspecialchars(trim($_POST['price_top'])),
+                'only_ordered' => htmlspecialchars(trim($_POST['only_ordered'])),
+                'only_free' => htmlspecialchars(trim($_POST['only_free']))
             ];
+
+            $items['only_ordered'] = !($items['only_ordered'] === 'false');
+            $items['only_free'] = !($items['only_free'] === 'false');
 
             $items['start_date'] = date("Y-m-d", $items['start_date']);
             $items['end_date'] = date("Y-m-d", $items['end_date']);
@@ -199,18 +204,38 @@ class WorkerApiController extends ApiController
                 }
             }
 
-            $schedule = $this->dataMapper->selectWorkerSchedule(
-                null, $items['service_id'], $items['worker_id'],
-                $items['affiliate_id'], $items['start_date'], $items['end_date'],
-                $items['start_time'], $items['end_time'],
-                $items['price_bottom'], $items['price_top']
-            );
-            if($schedule === false) {
-                $this->returnJson([
-                    'error' => 'The error occurred while getting schedule'
-                ]);
+            $scheduleOrdered = [];
+            if($items['only_ordered']) {
+                $scheduleOrdered = $this->dataMapper->selectWorkerOrderedSchedule(
+                    null, $items['service_id'], $items['worker_id'],
+                    $items['affiliate_id'], $items['start_date'], $items['end_date'],
+                    $items['start_time'], $items['end_time'],
+                    $items['price_bottom'], $items['price_top']
+                );
+                if($scheduleOrdered === false) {
+                    $this->returnJson([
+                        'error' => 'An error occurred while getting ordered schedules!'
+                    ]);
+                }
+            }
+            $scheduleFree = [];
+            if($items['only_free']) {
+                $scheduleFree = $this->dataMapper->selectWorkerFreeSchedule(
+                    null, $items['service_id'], $items['worker_id'],
+                    $items['affiliate_id'], $items['start_date'], $items['end_date'],
+                    $items['start_time'], $items['end_time'],
+                    $items['price_bottom'], $items['price_top']
+                );
+                if($scheduleFree === false) {
+                    $this->returnJson([
+                        'error' => 'An error occurred while getting free schedules!'
+                    ]);
+                }
             }
 
+            $schedule = array_merge($scheduleOrdered, $scheduleFree);
+
+            //var_dump($schedule);
             $this->returnJson([
                 'success' => true,
                 'data' => [
@@ -545,6 +570,43 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
+     * Get time intervals for the selected day for the current user
+     * to know when there are free time spots for placing new schedule item
+     */
+    public function getFilledTimeIntervals() {
+        $day = null;
+        if(isset($_GET['day']) && $_GET['day'] !== '') {
+            $day = htmlspecialchars(trim($_GET['day']));
+        }
+
+        $workerId = $this->_getWorkerId();
+
+        /**
+         * [
+         *      0 => [
+         *          'start_time' =>
+         *          'end_time' =>
+         *      ]
+         *  ........................
+         * ]
+         */
+        $filledIntervals = $this->dataMapper->selectFilledTimeIntervalsByWorkerIdAndDay(
+            $workerId, $day
+        );
+        if($filledIntervals === false) {
+            $this->returnJson([
+                'error' => 'An error occurred while getting filled time intervals for the selected day!'
+            ]);
+        }
+        $this->returnJson([
+            'success' => true,
+            'data' => $filledIntervals
+        ]);
+    }
+
+    /**
+     * @return void
+     *
      * url = /api/worker/addSchedule
      *
      * POST = [
@@ -561,6 +623,7 @@ class WorkerApiController extends ApiController
         }
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
+                'worker_id' => $this->_getWorkerId(),
                 'service_id' => htmlspecialchars(trim($_POST['service_id'])),
                 'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
                 'day' => htmlspecialchars(trim($_POST['day'])),
@@ -568,7 +631,49 @@ class WorkerApiController extends ApiController
                 'end_time' => htmlspecialchars(trim($_POST['end_time']))
             ];
 
+            /**
+             * Validate start and end time
+             */
+            $startTime = \DateTime::createFromFormat('H:i:s', $items['start_time']);
+            $endTime = \DateTime::createFromFormat('H:i:s', $items['end_time']);
+            if($startTime >= $endTime) {
+                $this->returnJson([
+                    'error' => 'Start time should be less than end time!'
+                ]);
+            }
 
+            /**
+             * Check if there is some schedules for the current worker
+             * withing provided time interval and at the selected day
+             */
+            $scheduleExists = $this->dataMapper->selectScheduleForWorkerByDayAndTime(
+                $items['worker_id'], $items['day'], $items['start_time'], $items['end_time']
+            );
+            if($scheduleExists) {
+                $this->returnJson([
+                    'error' => 'There is an overlapping with another of your schedule items! Please, review your schedule for the selected day to choose available time intervals!'
+                ]);
+            }
+
+            /**
+             * Insert new schedule
+             */
+            $inserted = $this->dataMapper->insertWorkerServiceSchedule(
+                $items['worker_id'], $items['service_id'], $items['affiliate_id'],
+                $items['day'], $items['start_time'], $items['end_time']
+            );
+            if($inserted === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while inserting new schedule item!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => 'You successfully added new schedule item!',
+                'data' => [
+                    'service_id' => $items['service_id'],
+                    'day' => $items['day']
+                ]
+            ]);
         }
     }
 }

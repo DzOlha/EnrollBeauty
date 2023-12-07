@@ -93,9 +93,9 @@
                 <!-- Row -->
 
                 <div class="row row-sm available-schedules mb-40">
-                    <h3 class="">My Schedules</h3>
+                    <h3 class="">My Ordered Schedule</h3>
                     <div class="card-body">
-                        <div class="row row-sm">
+                        <div class="row row-sm justify-content-start">
                             <div class="col-lg-4">
                                 <div class="form-group service-wrapper">
                                     <p class="mg-b-0">Service Name</p>
@@ -133,7 +133,7 @@
                                 </div>
                                 <div class="error" id="date-range-input-error"></div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <div class="row row-sm time-range">
                                     <div class="col-lg-6">
                                         <div class="form-group">
@@ -220,6 +220,36 @@
                                             <div class="error" id="end-time-select-error"></div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 d-flex">
+                                <div class="form-group">
+                                    <label class="pd-t-30 custom-control custom-checkbox custom-control-md">
+                                        <input type="checkbox"
+                                               class="custom-control-input"
+                                               name="make-lang-active"
+                                               value=""
+                                               checked
+                                               id="only-ordered-checkbox">
+                                        <span class="custom-control-label custom-control-label-md  tx-16">
+                                                 Show ordered schedules
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 d-flex">
+                                <div class="form-group">
+                                    <label class="pd-t-30 custom-control custom-checkbox custom-control-md">
+                                        <input type="checkbox"
+                                               class="custom-control-input"
+                                               name="make-lang-active"
+                                               value=""
+                                               id="only-free-checkbox">
+                                        <span class="custom-control-label custom-control-label-md  tx-16">
+                                                Show free schedules
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
 

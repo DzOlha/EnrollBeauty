@@ -6,3 +6,7 @@
     width: 50%;
     padding-left: 0;
 }
+.custom-control-input:checked~.custom-control-label::before {
+    background-color: var(--dark-color) !important;
+    outline: none;
+}

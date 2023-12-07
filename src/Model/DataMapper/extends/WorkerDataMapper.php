@@ -112,7 +112,7 @@ class WorkerDataMapper extends DataMapper
      * ..........................
      * ]
      */
-    public function selectWorkerSchedule(
+    public function selectWorkerOrderedSchedule(
         $departmentId = null, $serviceId = null,
         $workerId = null, $affiliateId = null,
         $dateFrom = null, $dateTo = null,
@@ -120,15 +120,61 @@ class WorkerDataMapper extends DataMapper
         $priceFrom = null, $priceTo = null
     )
     {
-        return $this->dataSource->selectWorkerSchedule(
+        return $this->dataSource->selectWorkerOrderedSchedule(
             $departmentId, $serviceId,
             $workerId, $affiliateId,
             $dateFrom, $dateTo,
             $timeFrom, $timeTo,
-            $priceFrom, $priceTo,
+            $priceFrom, $priceTo
         );
     }
 
+
+    /**
+     * @param $departmentId
+     * @param $serviceId
+     * @param $workerId
+     * @param $affiliateId
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $timeFrom
+     * @param $timeTo
+     * @param $priceFrom
+     * @param $priceTo
+     * @return mixed  * response example
+     *  [
+     *       0 => [
+     *          'schedule_id' =>,
+     *          'service_id' =>,
+     *          'service_name' =>,
+     *          'affiliate_id' =>,
+     *          'city' =>,
+     *          'address' =>,
+     *          'day' =>,
+     *          'start_time' =>,
+     *          'end_time' =>,
+     *          'price' =>,
+     *          'currency' =>
+     *       ]
+     *  ..........................
+     *  ]
+     */
+    public function selectWorkerFreeSchedule(
+        $departmentId = null, $serviceId = null,
+        $workerId = null, $affiliateId = null,
+        $dateFrom = null, $dateTo = null,
+        $timeFrom = null, $timeTo = null,
+        $priceFrom = null, $priceTo = null
+    )
+    {
+        return $this->dataSource->selectWorkerFreeSchedule(
+            $departmentId, $serviceId,
+            $workerId, $affiliateId,
+            $dateFrom, $dateTo,
+            $timeFrom, $timeTo,
+            $priceFrom, $priceTo
+        );
+    }
     /**
      * @return array|false
      *
@@ -212,6 +258,42 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->selectAllWorkersServicePricing(
             $workerId, $limit, $offset, $orderByField, $orderDirection
+        );
+    }
+
+    /**
+     * @param int $workerId
+     * @param string $day
+     * @return array|false
+     *
+     *  [
+     *       0 => [
+     *           'start_time' =>
+     *           'end_time' =>
+     *       ]
+     *   ........................
+     *  ]
+     */
+    public function selectFilledTimeIntervalsByWorkerIdAndDay(
+        int $workerId, string $day
+    ) {
+        return $this->dataSource->selectFilledTimeIntervalsByWorkerIdAndDay($workerId, $day);
+    }
+
+    public function selectScheduleForWorkerByDayAndTime(
+        int $workerId, string $day, string $startTime, string $endTime
+    ) {
+        return $this->dataSource->selectScheduleForWorkerByDayAndTime(
+            $workerId, $day, $startTime, $endTime
+        );
+    }
+
+    public function insertWorkerServiceSchedule(
+        int $workerId, int $serviceId, int $affiliateId,
+        string $day, string $startTime, string $endTime
+    ) {
+        return $this->dataSource->insertWorkerServiceSchedule(
+            $workerId, $serviceId, $affiliateId, $day, $startTime, $endTime
         );
     }
 }

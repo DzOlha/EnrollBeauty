@@ -223,6 +223,12 @@ class FormBuilder {
                             <option value="18">
                                 18
                             </option>
+                             <option value="19">
+                                19
+                            </option>
+                             <option value="20">
+                                20
+                            </option>
                         </select>
                         <span class="mg-10">:</span>
                         <select class="form-control select2 col-lg-1"
@@ -284,6 +290,15 @@ class FormBuilder {
                         </option>
                         <option value="18">
                             18
+                        </option>
+                        <option value="19">
+                            19
+                        </option>
+                         <option value="20">
+                            20
+                        </option>
+                         <option value="21">
+                            21
                         </option>
                     </select>
                         <span class="mg-10">:</span>

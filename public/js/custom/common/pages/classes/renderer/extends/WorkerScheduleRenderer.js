@@ -40,9 +40,46 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
     ) {
         // console.log(JSON.stringify(schedules));
         // console.log('populateActiveDayScheduleTab children');
+        /**
+         * Filter schedules to leave only ones that are for the day, which tab is active now
+         */
         let schedulesForActiveDay = schedules.filter(
             schedule => schedule.day === activeDayTabId.substring(3)
         );
+
+        /**
+         * Sorting schedules by start_time and end_time
+         * */
+        schedulesForActiveDay.sort((a, b) => {
+            // Compare start_time
+            let firstStart = this._timeToDecimal(a.start_time);
+            let firstEnd = this._timeToDecimal(a.end_time);
+
+            let secondStart = this._timeToDecimal(b.start_time);
+            let secondEnd = this._timeToDecimal(b.end_time);
+
+            let comparisonStart = 0;
+            if(firstStart > secondStart) {
+                comparisonStart = 1;
+            } else {
+                comparisonStart = -1;
+            }
+
+            console.log(a);
+            console.log(b);
+            // If start_time is the same, compare end_time
+            if (comparisonStart === 0) {
+                let comparisonEnd = 0;
+                if(firstEnd > secondEnd) {
+                    comparisonEnd = 1;
+                } else {
+                    comparisonEnd = -1;
+                }
+                return comparisonEnd
+            }
+
+            return comparisonStart;
+        });
 
         // console.log('activeDayTabId = ' + activeDayTabId);
         //console.log(`#${activeDepartmentTabId} #${activeDayTabId} .${this.timeIntervalClass}.${this.from12To15Class}`);
@@ -89,16 +126,22 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
             let endTime = this._timeToDecimal(schedule.end_time);
 
             let date = this.dateRenderer.render(schedule.day);
+
+            let userId = schedule.hasOwnProperty('user_id') ? schedule.user_id : null;
+            let userEmail = schedule.hasOwnProperty('user_email') ? schedule.user_email : null;
+            let orderId = schedule.hasOwnProperty('order_id') ? schedule.order_id : null;
+
+            console.log(schedule.hasOwnProperty('user_id'));
             let scheduleCard = this.htmlBuilder.createScheduleCard(
-                schedule.schedule_id, schedule.user_id, schedule.service_id,
+                schedule.schedule_id, userId, schedule.service_id,
                 schedule.affiliate_id, schedule.service_name,
                 schedule.price, schedule.currency,
-                `${schedule.user_email}`,
+                userEmail,
                 date,
                 this.timeRenderer.renderShortTime(schedule.start_time),
                 this.timeRenderer.renderShortTime(schedule.end_time),
                 `c. ${schedule.city}, ${schedule.address}`,
-                schedule.order_id
+                orderId
             )
             //console.log(scheduleCard);
 
@@ -134,8 +177,12 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
             /**
              * Add listeners on shop/like icons
              */
-            this.addListenerOnCancelAppointment(schedule.schedule_id);
-            this.addListenerOnCompleteAppoitment(schedule.schedule_id);
+            if(schedule.hasOwnProperty('order_id')) {
+                this.addListenerOnCancelAppointment(schedule.schedule_id);
+                this.addListenerOnCompleteAppoitment(schedule.schedule_id);
+            } else {
+
+            }
         })
         //console.log('-------------------------------------------------------------------------------------------------------------------');
     }
