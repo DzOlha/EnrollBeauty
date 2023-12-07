@@ -351,7 +351,7 @@ class AddScheduleForm extends Form {
         let day = new Date(value);
 
         if (day < currentDate) {
-            result.error = "The day can not be from the past!";
+            result.error = "The day can not be in the past!";
             datepickerInput.classList.add('border-danger');
             return result;
         }

@@ -569,7 +569,15 @@
       );
     },
     show: function () {
+      const _this = this;
       this.baseContainer.addClass("show");
+
+      // Bind the click event to hide the picker when clicking outside the picker
+      $(document).on("click.pDatePicker", function (evt) {
+        if (!$.contains(_this.wrapper[0], evt.target)) {
+          _this.hide();
+        }
+      });
       //   this.element
       //     .css({
       //       display: "",
