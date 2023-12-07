@@ -541,4 +541,34 @@ class WorkerApiController extends ApiController
             'data' => $result
         ]);
     }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/addSchedule
+     *
+     * POST = [
+     *      'service_id' =>
+     *      'affiliate_id' =>
+     *      'day' => yyyy-mm-dd
+     *      'start_time' => hh:ii:ss
+     *      'end_time' => hh:ii:ss
+     * ]
+     */
+    public function addSchedule() {
+        if (!SessionHelper::getWorkerSession()) {
+            $this->_accessDenied();
+        }
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $items = [
+                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
+                'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
+                'day' => htmlspecialchars(trim($_POST['day'])),
+                'start_time' => htmlspecialchars(trim($_POST['start_time'])),
+                'end_time' => htmlspecialchars(trim($_POST['end_time']))
+            ];
+
+
+        }
+    }
 }

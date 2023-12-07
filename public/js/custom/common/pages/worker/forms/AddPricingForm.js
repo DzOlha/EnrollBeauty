@@ -32,8 +32,7 @@ class AddPricingForm extends Form {
     _initServiceSelect2(modalBody) {
         $(`#${this.serviceSelectId}`).select2({
             dropdownParent:  modalBody,
-            placeholder: "Choose one",
-            allowClear: true,
+            placeholder: "Choose one"
         });
     }
     _checkSelectAndSetErrorBorder(value, wrapperClass, errorId, errorMessage) {

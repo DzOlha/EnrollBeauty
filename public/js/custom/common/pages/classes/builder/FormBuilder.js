@@ -184,9 +184,10 @@ class FormBuilder {
                             type="date">
                     <div class="error text-danger" id="day-input-error"></div>
                </div>
-               <div class="form-group">
+               <div class="form-group start-time-selector-parent">
                     <p class="mg-b-0"><span>*</span>Start Time</p>
-                    <div class="hour-minute-wrapper">
+                    <div class="error text-danger" id="start-time-hour-input-error"></div>
+                    <div class="hour-minute-wrapper" id="start-time-input">
                         <select class="form-control select2 col-lg-1"
                                 id="start-time-hour"
                         >
@@ -243,16 +244,12 @@ class FormBuilder {
                         </option>
                     </select>
                     </div>
-<!--                        <input class="form-control" -->
-<!--                            placeholder="Start time" -->
-<!--                            id="start-time-input"-->
-<!--                            type="text">-->
-<!--                            <div id="start-time-input"></div>-->
-                    <div class="error text-danger" id="start-time-input-error"></div>
+                    <div class="error text-danger" id="start-time-minute-input-error"></div>
                </div>
-               <div class="form-group">
+               <div class="form-group end-time-selector-parent">
                     <p class="mg-b-0"><span>*</span>End Time</p>
-                    <div class="hour-minute-wrapper">
+                    <div class="error text-danger" id="end-time-hour-input-error"></div>
+                    <div class="hour-minute-wrapper" id="end-time-input">
                         <select class="form-control select2 col-lg-1"
                             id="end-time-hour"
                     >
@@ -309,12 +306,7 @@ class FormBuilder {
                         </option>
                     </select>
                     </div>
-<!--                        <input class="form-control" -->
-<!--                            placeholder="End time" -->
-<!--                            id="end-time-input"-->
-<!--                            type="text">-->
-<!--                             <div id="end-time-input"></div>-->
-                    <div class="error text-danger" id="end-time-input-error"></div>
+                    <div class="error text-danger" id="end-time-minute-input-error"></div>
                </div>`
     }
 }

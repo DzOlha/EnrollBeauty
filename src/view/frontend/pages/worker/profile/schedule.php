@@ -92,7 +92,7 @@
 
                 <!-- Row -->
 
-                <div class="row row-sm available-schedules mt-40 mb-40">
+                <div class="row row-sm available-schedules mb-40">
                     <h3 class="">My Schedules</h3>
                     <div class="card-body">
                         <div class="row row-sm">

@@ -74,4 +74,4 @@
     <!--    CUSTOM CSS-->
     <link rel="stylesheet" type="text/css" href="/public/css/custom/common/pages/index.css"/>
 </head>
-<div id="global-loader"></div>
+<!--<div id="global-loader"></div>-->
