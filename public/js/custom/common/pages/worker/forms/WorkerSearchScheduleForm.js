@@ -13,6 +13,20 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
         this.onlyOrderedCheckboxId = 'only-ordered-checkbox';
         this.onlyFreeCheckboxId = 'only-free-checkbox';
     }
+    _initializeDateRangePicker() {
+        const currentDate = new Date();
+
+        $(`#${this.dateRangeId}`).daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY', // Date format
+            },
+            opens: 'right',
+            showDropdowns: false,
+            startDate: currentDate,
+            endDate: currentDate,
+            minDate: currentDate,  // Minimum selectable date (current date)
+        });
+    }
     collectDataToSend(idAssoc = false) {
         let dataToSend = {
             'service_id': '',

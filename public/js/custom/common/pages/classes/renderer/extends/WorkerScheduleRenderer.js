@@ -49,6 +49,7 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
 
         /**
          * Sorting schedules by start_time and end_time
+         * to show by ascending order
          * */
         schedulesForActiveDay.sort((a, b) => {
             // Compare start_time

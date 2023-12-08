@@ -435,6 +435,41 @@ class ScheduleRenderer {
             schedule => schedule.day === activeDayTabId.substring(3)
         );
 
+        /**
+         * Sorting schedules by start_time and end_time
+         * to show by ascending order
+         * */
+        schedulesForActiveDay.sort((a, b) => {
+            // Compare start_time
+            let firstStart = this._timeToDecimal(a.start_time);
+            let firstEnd = this._timeToDecimal(a.end_time);
+
+            let secondStart = this._timeToDecimal(b.start_time);
+            let secondEnd = this._timeToDecimal(b.end_time);
+
+            let comparisonStart = 0;
+            if(firstStart > secondStart) {
+                comparisonStart = 1;
+            } else {
+                comparisonStart = -1;
+            }
+
+            console.log(a);
+            console.log(b);
+            // If start_time is the same, compare end_time
+            if (comparisonStart === 0) {
+                let comparisonEnd = 0;
+                if(firstEnd > secondEnd) {
+                    comparisonEnd = 1;
+                } else {
+                    comparisonEnd = -1;
+                }
+                return comparisonEnd
+            }
+
+            return comparisonStart;
+        });
+
         // console.log('activeDayTabId = ' + activeDayTabId);
         //console.log(`#${activeDepartmentTabId} #${activeDayTabId} .${this.timeIntervalClass}.${this.from12To15Class}`);
 

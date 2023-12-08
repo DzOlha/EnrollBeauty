@@ -29,6 +29,8 @@ class AddScheduleForm extends Form {
         this.endTimeHourId = 'end-time-hour';
         this.endTimeMinuteId = 'end-time-minute';
 
+        this.disabledEndHours = {};
+        this.disabledStartHours = {};
 
         this.select2ContainerClass = 'select2-container';
 
@@ -39,6 +41,7 @@ class AddScheduleForm extends Form {
 
         this.apiGetServicesAffiliates = '/api/worker/getServicesAffiliates?';
         this.apiGetFilledTimeIntervals = '/api/worker/getFilledTimeIntervals?';
+
     }
 
     _initDatepicker() {
@@ -200,6 +203,17 @@ class AddScheduleForm extends Form {
         this._initSelect2();
     }
 
+    addListenerChangeDay() {
+        let _this = this;
+        // Assuming `dayInputId` is the ID of the input associated with the date picker
+        $(`#${this.dayInputId}`).on('pDatePickerChange', function () {
+            // Use $(this).val() to get the value of the date picker input
+            _this._resetSelect2();
+            _this.getFilledTimeIntervals($(this).val());
+            // console.log('I changed');
+        });
+    }
+
     getFilledTimeIntervals(day) {
         this.requester.get(
             `${this.apiGetFilledTimeIntervals}day=${day}`,
@@ -209,210 +223,283 @@ class AddScheduleForm extends Form {
             }
         )
     }
-    addListenerChangeDay() {
-        let _this = this;
-        // Assuming `dayInputId` is the ID of the input associated with the date picker
-        $(`#${this.dayInputId}`).on('pDatePickerChange', function () {
-            // Use $(this).val() to get the value of the date picker input
-            // _this.getFilledTimeIntervals($(this).val());
-            // console.log('I changed');
-        });
+
+    _enableAllOptions(selectId) {
+        console.log('_enableAllOptions - ' + selectId);
+        $(`#${selectId} option`).prop('disabled', false);
+        //$(`#${selectId}`).trigger('change');
     }
-    // Function to disable conflicting options based on the busy time interval
-    _disableConflictingOptions = (busyTimeIntervals) => {
-        let _this = this;
-        console.log('_disableConflictingOptions');
-        // Loop through each busy time interval and disable conflicting options
+    _disableHours(selectHourId, startHour, startMinute, endHour, endMinute) {
+        console.log('_disableHours ' + selectHourId);
+
+        $(`#${selectHourId} option`).each(function() {
+
+            let currentHour = $(this).val();
+            /**
+             * Disable hours current option if the condition is met
+             *
+             * New schedule item can not start or end withing hours of another schedule item
+             */
+            if(currentHour === endHour && endMinute === '45'
+                || currentHour === startHour && startMinute === '00'
+                || currentHour > startHour && currentHour < endHour)
+            {
+                $(this).prop('disabled', true);
+            }
+        })
+        //$(`#${selectHourId}`).trigger('change');
+    }
+    _disableMinutes(busyTimeIntervals, clickedHour, minuteSelectId, hourSelectType) {
+        console.log('_disableMinutes ' + minuteSelectId);
+
+        /**
+         * Reset value of minute if we change hour
+         */
+        $(`#${minuteSelectId}`).val('');
+
         for (const key in busyTimeIntervals) {
             let interval = busyTimeIntervals[key];
-            console.log(interval);
+            //console.log(interval);
             const start = interval.start_time.split(':');
             const end = interval.end_time.split(':');
 
-            const startHour = start[0];
-            const startMinute = start[1];
+            let startHour = start[0], endHour = end[0],
+                startMinute = start[1], endMinute = end[1];
 
-            const endHour = end[0];
-            const endMinute = end[1];
-
-            /**
-             * For start hour disable only minutes that is greater than busy
-             * minutes in or intervals
-             * Example: start_time = 14:30:00
-             *          end_time = 17:45:00
-             *
-             * current 14, we disabled minutes: 30, 45
-             * @type {*|jQuery}
-             */
-            let currentStartHourValue = $(`#${this.startTimeHourId}`).val();
-            if (currentStartHourValue === startHour) {
-                $(`#${this.startTimeMinuteId} option`).each(function () {
-                    let val = $(this).val();
-                    if (val >= startMinute) {
+            if(clickedHour === startHour) {
+                $(`#${minuteSelectId} option`).each(function() {
+                    /**
+                     * New schedule item can not start withing the time period of another schedule item
+                     */
+                    if($(this).val() >= startMinute) {
+                        $(this).prop('disabled', true);
+                    }
+                })
+            } else {
+                if(clickedHour === endHour) {
+                    $(`#${minuteSelectId} option`).each(function() {
                         /**
-                         * if start_time = 14:00:00
-                         * but end_time = 14:30:00
-                         *
-                         * disable only 00, 15, 30 (without 45, because we work within one hour)
+                         * New schedule item can start at the time the other schedule item ends
                          */
-                        if(endHour === startHour) {
-                            if(val <= endMinute) {
+                        if(hourSelectType === 'start') {
+                            if($(this).val() < endMinute) {
                                 $(this).prop('disabled', true);
                             }
                         } else {
-                            $(this).prop('disabled', true);
-                        }
-                    }
-                });
-            }
-
-            /**
-             * Example: start_time = 14:30:00
-             *          end_time = 17:45:00
-             *
-             * current 17, we disable minutes: 00, 15, 30, 45
-             */
-            if (currentStartHourValue === endHour) {
-                $(`#${this.startTimeMinuteId} option`).each(function () {
-                    let val = $(this).val();
-                    if (val <= endMinute) {
-                        /**
-                         * if start_time = 17:15:00
-                         *    end_time = 17:45:00
-                         *
-                         * we disable only: 15, 30, 45 (without 00, because we work within one hour)
-                         */
-                        if(endHour === startHour) {
-                            if(val >= startMinute) {
+                            /**
+                             * New schedule item can not end at the same time with another schedule items
+                             */
+                            if($(this).val() <= endMinute) {
                                 $(this).prop('disabled', true);
                             }
-                        } else {
-                            $(this).prop('disabled', true);
                         }
-                    }
-                });
+                    })
+                }
             }
-
-            /**
-             * Example start_time: 14:30:00
-             *         end_time: 17:45:00
-             *
-             * current is between (14, 17), so it is:  15, 16.
-             * we disable all minute to not allow the worker to choose
-             * such interval at all (because it is busy already)
-             */
-            if (currentStartHourValue > startHour && currentStartHourValue < endHour) {
-                $(`#${this.startTimeMinuteId} option`).each(function () {
-                    $(this).prop('disabled', true);
-                });
-            }
-
-
-            /**
-             * Example start_time: 14:30:00
-             *         end_time: 17:45:00
-             *
-             * current is between (14, 17), so it is:  15, 16.
-             * we disable all minute to not allow the worker to choose
-             * such interval at all (because it is busy already)
-             */
-            let currentEndHourValue = $(`#${this.endTimeHourId}`).val();
-            if (currentEndHourValue < endHour && currentEndHourValue > startHour) {
-                $(`#${this.endTimeMinuteId} option`).each(function () {
-                    $(this).prop('disabled', true);
-                });
-            }
-
-            /**
-             * Example: start_time = 14:30:00
-             *          end_time = 17:45:00
-             *
-             * current 17, we disable minutes: 00, 15, 30, 45
-             */
-            if (currentEndHourValue === endHour) {
-                $(`#${this.endTimeMinuteId} option`).each(function () {
-                    let val = $(this).val();
-                    if (val <= endMinute) {
-                        /**
-                         * if start_time = 17:15:00
-                         *    end_time = 17:45:00
-                         *
-                         * we disable only: 15, 30, 45 (without 00, because we work within one hour)
-                         */
-                        if(endHour === startHour) {
-                            if(val >= startMinute) {
-                                $(this).prop('disabled', true);
-                            }
-                        } else {
-                            $(this).prop('disabled', true);
-                        }
-                    }
-                });
-            }
-
-            /**
-             * For start hour disable only minutes that is greater than busy
-             * minutes in or intervals
-             * Example: start_time = 14:30:00
-             *          end_time = 17:45:00
-             *
-             * current 14, we disabled minutes: 30, 45
-             */
-            if (currentEndHourValue === startHour) {
-                $(`#${this.endTimeMinuteId} option`).each(function () {
-                    let val = $(this).val();
-                    if (val >= startMinute) {
-                        /**
-                         * if start_time = 14:00:00
-                         * but end_time = 14:30:00
-                         *
-                         * disable only 00, 15, 30 (without 45, because we work within one hour)
-                         */
-                        if(endHour === startHour) {
-                            if(val <= endMinute) {
-                                $(this).prop('disabled', true);
-                            }
-                        } else {
-                            $(this).prop('disabled', true);
-                        }
-                    }
-                });
-            }
-            // Inside each if condition, add the following line to trigger the 'change' event
-            $(`#${_this.startTimeMinuteId}`).trigger('change');
-            $(`#${_this.endTimeMinuteId}`).trigger('change');
         }
+        //$(`#${minuteSelectId}`).trigger('change');
+    }
+    _initialHourDisabling = (busyTimeIntervals) => {
+        console.log('_initialHourDisabling');
+        /**
+         * Reset all disabled options
+         */
+        this._enableAllOptions(this.startTimeHourId);
+        this._enableAllOptions(this.endTimeHourId);
 
-        //$('.select2').trigger('change');
+        // Loop through each busy time interval and disable conflicting options
+        for (const key in busyTimeIntervals) {
+            let interval = busyTimeIntervals[key];
+            //console.log(interval);
+            /**
+             * @type {string[]}
+             * Example:
+             * 14:30:00 -> [14, 30, 00]
+             */
+            const start = interval.start_time.split(':');
+            /**
+             * @type {string[]}
+             * Example:
+             * 17:45:00 -> [17, 45, 00]
+             */
+            const end = interval.end_time.split(':');
+
+            this._disableHours(this.startTimeHourId, start[0], start[1], end[0], end[1]);
+            this._disableHours(this.endTimeHourId, start[0], start[1], end[0], end[1]);
+        }
     }
 
-    successCallbackGetFilledTimeIntervals(response) {
-        // Initialize disabled options on page load
-        //this._disableConflictingOptions(response.data);
+    _disableEndHours(busyTimeIntervals, startHourSelected, endHourSelectId) {
+        console.log('disableEndHours ' + startHourSelected);
 
+        this._enabledOptionFromList(this.disabledEndHours, endHourSelectId);
+        console.log(this.disabledEndHours);
+        let _this = this;
+
+        for (const key in busyTimeIntervals) {
+            let interval = busyTimeIntervals[key];
+            //console.log(interval);
+            const start = interval.start_time.split(':');
+            const end = interval.end_time.split(':');
+
+            let startHour = start[0], endHour = end[0];
+
+            /**
+             * Example: start_time: 14:30:00,
+             *          end_time: 17:45:00
+             * If we select start hour as 14:15, so
+             * we should disable the opportunity to select end time >= 17:45
+             */
+            if(startHourSelected <= startHour) {
+                /**
+                 * Reset value of end hour if we change start hour
+                 */
+                $(`#${endHourSelectId}`).val('');
+
+                $(`#${endHourSelectId} option`).each(function(index) {
+                    console.log(index);
+                    let value = $(this).val();
+                    if(value >= endHour) {
+                        $(this).prop('disabled', true);
+                        _this.disabledEndHours[index] = value;
+                    }
+                })
+            }
+            // else if(startHourSelected >= endHour) {
+            //     $(`#${endHourSelectId} option`).each(function() {
+            //         if($(this).val() <= endHour) {
+            //             $(this).prop('disabled', true);
+            //         }
+            //     })
+            // }
+        }
+    }
+
+    _enabledOptionFromList(list, selectId) {
+        $(`${selectId} option`).each(function(index) {
+            if(typeof list.index !== 'undefined') {
+                $(this).prop('disabled', false);
+            }
+        })
+        list = {};
+    }
+
+    _disableStartHours(busyTimeIntervals, endHourSelected, startHourSelectId) {
+        console.log('disableStartHours ' + endHourSelected);
+
+        this._enabledOptionFromList(this.disabledStartHours, startHourSelectId);
+        console.log(this.disabledStartHours);
+
+        let _this = this;
+
+        for (const key in busyTimeIntervals) {
+            let interval = busyTimeIntervals[key];
+            //console.log(interval);
+            const start = interval.start_time.split(':');
+            const end = interval.end_time.split(':');
+
+            let startHour = start[0], endHour = end[0];
+
+            /**
+             * Example: start_time: 14:30:00,
+             *          end_time: 17:45:00
+             * If we select end hour as 18:00, so
+             * we should disable the opportunity to select start time <= 14:30
+             */
+            if(endHourSelected <= startHour) {
+                /**
+                 * Reset value of start hour if we change end hour
+                 */
+                $(`#${startHourSelectId}`).val('');
+                $(`#${startHourSelectId} option`).each(function(index) {
+                    let value = $(this).val();
+                    if(value <= startHour) {
+                        $(this).prop('disabled', true);
+                        _this.disabledStartHours[index] = value;
+                    }
+                })
+            }
+            // else if(endHourSelected >= endHour) {
+            //     $(`#${startHourSelectId} option`).each(function() {
+            //         if($(this).val() >= endHour) {
+            //             $(this).prop('disabled', true);
+            //         }
+            //     })
+            // }
+        }
+    }
+
+    _resetSelect2() {
+        $(`#${this.startTimeHourId}`).val('').trigger('change');
+        $(`#${this.startTimeMinuteId}`).val('').trigger('change');
+        $(`#${this.endTimeHourId}`).val('').trigger('change');
+        $(`#${this.endTimeMinuteId}`).val('').trigger('change');
+    }
+
+    successCallbackGetFilledTimeIntervals(response)
+    {
+        console.log('successCallbackGetFilledTimeIntervals');
+        if(response.data.length === 0) {
+            /**
+             * Reset all disabled options
+             */
+            console.log('All time slots are free!');
+            this._enableAllOptions(this.startTimeHourId);
+            this._enableAllOptions(this.startTimeMinuteId);
+            this._enableAllOptions(this.endTimeHourId);
+            this._enableAllOptions(this.endTimeMinuteId);
+        } else {
+            this._initialHourDisabling(response.data);
+        }
+        let _this = this;
+
+        let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
         // Attach change event listeners to start and end time Select2 elements
-        $(`#${this.startTimeHourId}`)
-            .on('change', () => {
-                $(`#${this.startTimeMinuteId} option`).each(function() {
-                    $(this).prop('disabled', false);
-                    console.log($(this));
-                });
-                $(`#${this.startTimeMinuteId}`).val('');
-                $(`#${this.startTimeMinuteId}`).trigger('change');
-
-                console.log('on change start');
-                this._disableConflictingOptions(response.data);
+        $(`#${this.startTimeHourId}`).select2({
+            dropdownParent: modalBody,
+            placeholder: "Hours",
+        })
+            .on('select2:select', function() {
+                //_this._disableEndHours(response.data, $(this).val(), _this.endTimeHourId);
+                /**
+                 * Reset all disabled options
+                 */
+                _this._enableAllOptions(_this.startTimeMinuteId);
+                _this._disableMinutes(
+                    response.data, $(this).val(), _this.startTimeMinuteId, 'start'
+                );
+                $(`#${_this.startTimeMinuteId}`).select2({
+                    dropdownParent: modalBody,
+                    placeholder: "Minutes",
+                })
+                // $(`#${_this.endTimeHourId}`).select2({
+                //     dropdownParent: modalBody,
+                //     placeholder: "Hours",
+                // })
+                //$('select').select2();
             });
 
-        $(`#${this.endTimeHourId}`)
-            .on('change', () => {
-                $(`#${this.endTimeMinuteId} option`).each(function() {
-                    $(this).prop('disabled', false);
-                });
-                $(`#${this.endTimeMinuteId}`).val('');
-                $(`#${this.endTimeMinuteId}`).trigger('change');
-                console.log('on change end');
-                this._disableConflictingOptions(response.data);
+        $(`#${this.endTimeHourId}`).select2({
+            dropdownParent: modalBody,
+            placeholder: "Hours",
+        })
+            .on('select2:select', function()  {
+                //_this._disableStartHours(response.data, $(this).val(), _this.startTimeHourId);
+                /**
+                 * Reset all disabled options
+                 */
+                _this._enableAllOptions(_this.endTimeMinuteId);
+                _this._disableMinutes(
+                    response.data, $(this).val(), _this.endTimeMinuteId, 'end'
+                );
+                $(`#${_this.endTimeMinuteId}`).select2({
+                    dropdownParent: modalBody,
+                    placeholder: "Minutes",
+                })
+                // $(`#${_this.startTimeHourId}`).select2({
+                //     dropdownParent: modalBody,
+                //     placeholder: "Hours",
+                // })
             });
     }
 
