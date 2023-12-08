@@ -241,7 +241,7 @@ class AddScheduleForm extends Form {
              * New schedule item can not start or end withing hours of another schedule item
              */
             if(currentHour === endHour && endMinute === '45'
-                || currentHour === startHour && startMinute === '00'
+                || (currentHour === startHour && startMinute === '00' && startHour !== endHour)
                 || currentHour > startHour && currentHour < endHour)
             {
                 $(this).prop('disabled', true);
@@ -259,7 +259,7 @@ class AddScheduleForm extends Form {
 
         for (const key in busyTimeIntervals) {
             let interval = busyTimeIntervals[key];
-            //console.log(interval);
+
             const start = interval.start_time.split(':');
             const end = interval.end_time.split(':');
 
@@ -271,30 +271,70 @@ class AddScheduleForm extends Form {
                     /**
                      * New schedule item can not start withing the time period of another schedule item
                      */
-                    if($(this).val() >= startMinute) {
-                        $(this).prop('disabled', true);
+                    let val = $(this).val();
+                    if (val >= startMinute) {
+                        /**
+                         * if start_time = 14:00:00
+                         * but end_time = 14:30:00
+                         *
+                         * disable only 00, 15, 30 (without 45, because we work within one hour)
+                         */
+                        if(endHour === startHour) {
+                            if(val <= endMinute) {
+                                $(this).prop('disabled', true);
+                            }
+                        } else {
+                            $(this).prop('disabled', true);
+                        }
                     }
                 })
-            } else {
-                if(clickedHour === endHour) {
-                    $(`#${minuteSelectId} option`).each(function() {
+            }
+            if(clickedHour === endHour) {
+                $(`#${minuteSelectId} option`).each(function() {
+
                         /**
                          * New schedule item can start at the time the other schedule item ends
                          */
                         if(hourSelectType === 'start') {
-                            if($(this).val() < endMinute) {
-                                $(this).prop('disabled', true);
+                            let val = $(this).val();
+                            if (val < endMinute) {
+                                /**
+                                 * if start_time = 17:15:00
+                                 *    end_time = 17:45:00
+                                 *
+                                 * we disable only: 15, 30, 45 (without 00, because we work within one hour)
+                                 */
+                                if(endHour === startHour) {
+                                    if(val >= startMinute) {
+                                        $(this).prop('disabled', true);
+                                    }
+                                } else {
+                                    $(this).prop('disabled', true);
+                                }
                             }
                         } else {
                             /**
                              * New schedule item can not end at the same time with another schedule items
                              */
-                            if($(this).val() <= endMinute) {
-                                $(this).prop('disabled', true);
+
+                            let val = $(this).val();
+                            if (val <= endMinute) {
+                                /**
+                                 * if start_time = 17:15:00
+                                 *    end_time = 17:45:00
+                                 *
+                                 * we disable only: 15, 30, 45 (without 00, because we work within one hour)
+                                 */
+                                if(endHour === startHour) {
+                                    if(val >= startMinute) {
+                                        $(this).prop('disabled', true);
+                                    }
+                                } else {
+                                    $(this).prop('disabled', true);
+                                }
                             }
                         }
                     })
-                }
             }
         }
         //$(`#${minuteSelectId}`).trigger('change');

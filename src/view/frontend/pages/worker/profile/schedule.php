@@ -245,6 +245,7 @@
                                                class="custom-control-input"
                                                name="make-lang-active"
                                                value=""
+                                               checked
                                                id="only-free-checkbox">
                                         <span class="custom-control-label custom-control-label-md  tx-16">
                                                 Show free schedules

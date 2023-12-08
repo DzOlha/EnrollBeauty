@@ -146,6 +146,8 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
 
     regenerateTheScheduleByServiceIdAndDay(serviceId, day) {
         this._setServiceSelectValue(serviceId);
+        let free = document.getElementById(this.onlyFreeCheckboxId);
+        free.checked = true;
         this._setDateRangeByDate(day);
         this.handleFormSubmission();
     }
