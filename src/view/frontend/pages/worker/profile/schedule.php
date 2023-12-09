@@ -93,7 +93,7 @@
                 <!-- Row -->
 
                 <div class="row row-sm available-schedules mb-40">
-                    <h3 class="">My Ordered Schedule</h3>
+                    <h3 class="">My Schedule</h3>
                     <div class="card-body">
                         <div class="row row-sm justify-content-start">
                             <div class="col-lg-4">
@@ -425,6 +425,9 @@
 
 <script src="/public/js/custom/common/pages/classes/loader/GifLoader.js"></script>
 <script src="/public/js/custom/common/pages/classes/loader/TableLoader.js"></script>
+
+<script src="/public/js/custom/common/pages/classes/element/Select2.js"></script>
+<script src="/public/js/custom/common/pages/classes/element/Input.js"></script>
 
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>

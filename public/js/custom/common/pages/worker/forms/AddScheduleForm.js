@@ -41,7 +41,6 @@ class AddScheduleForm extends Form {
 
         this.apiGetServicesAffiliates = '/api/worker/getServicesAffiliates?';
         this.apiGetFilledTimeIntervals = '/api/worker/getFilledTimeIntervals?';
-
     }
 
     _initDatepicker() {
@@ -194,6 +193,17 @@ class AddScheduleForm extends Form {
     }
 
     successCallbackGetServicesAffiliates(response) {
+        // this.select2 = new Select2(
+        //     this.modalForm.modalContentId,
+        //     'My Select2 Generated',
+        //     'Choose my',
+        //     'my-select',
+        //     true,
+        //     true,
+        //     $(`#${this.modalForm.modalId} .${this.modalBodyClass}`)
+        // )
+        // this.select2.populate(response.data.services);
+
         let serviceSelect = $(`#${this.serviceSelectId}`);
         this._populateSelectOptions(serviceSelect, response.data.services);
 
@@ -590,6 +600,7 @@ class AddScheduleForm extends Form {
             "Affiliate is required field!",
             'affiliate_id'
         );
+        //let myId = this.select2.validate('my_id');
 
         if (serviceId && affiliateId) {
             return {
@@ -842,7 +853,7 @@ class AddScheduleForm extends Form {
          * }
          */
         let data = this.validateFormData();
-        console.log(data);
+        //console.log(data);
 
         if (data) {
             this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);

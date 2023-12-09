@@ -70,15 +70,26 @@ class AppointmentsTable extends Table {
                             ${item.affiliate_city + ', ' + item.affiliate_address}
                       </td>`);
 
-            row.append(`<td>${this.dateRenderer.render(item.start_datetime)}</td>`);
-            row.append(`<td>${this.timeRenderer.render(item.start_datetime)}</td>`);
-            row.append(`<td>${this.timeRenderer.render(item.end_datetime)}</td>`);
-            row.append(`<td>${item.price + ' ' + item.currency}</td>`);
+            let day = this.dateRenderer.render(item.start_datetime);
+            let startTime = this.timeRenderer.render(item.start_datetime);
+            let endTime = this.timeRenderer.render(item.end_datetime);
+
+            row.append(`<td>${day}</td>`);
+            row.append(`<td>${startTime}</td>`);
+            row.append(`<td>${endTime}</td>`);
+
+            let price = item.price + ' ' + item.currency;
+            row.append(`<td>${price}</td>`);
 
             row.append(`<td>
                         <a class="btn ripple btn-manage cancel-button"
                            id="cancel-${item.id}"
                            data-appointment-id = "${item.id}"
+                           data-service-name = "${item.service_name}"
+                           data-day = "${day}"
+                           data-start-time="${startTime}"
+                           data-end-time="${endTime}"
+                           data-price="${price}"
                            href="">
                             <i class="fe fe-eye me-2"></i>
                             Cancel
@@ -103,10 +114,16 @@ class AppointmentsTable extends Table {
 
             let id = e.currentTarget.getAttribute('data-appointment-id');
 
+            let serviceName = e.currentTarget.getAttribute('data-service-name');
+            let day = e.currentTarget.getAttribute('data-day');
+            let startTime = e.currentTarget.getAttribute('data-start-time');
+            let endTime = e.currentTarget.getAttribute('data-end-time');
+            let price = e.currentTarget.getAttribute('data-price');
+
             this.confirmationModal.show(
                 'Confirmation!',
                 ``,
-                `Please confirm that you would like to cancel the appointment with id ${id}`
+                `Please confirm that you would like to <b>cancel</b> the appointment <b>"${serviceName}"</b> on ${day} at ${startTime} - ${endTime} with a total cost of ${price}`
             )
 
             this.confirmationModal.submit(handleConfirmClick, id);
