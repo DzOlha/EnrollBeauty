@@ -266,14 +266,7 @@ class WorkerAuthService extends AuthService
     }
 
     protected function _createRecoveryLink(string $recoveryCode) {
-        $builder = new UrlBuilder();
-        $url = $builder->baseUrl(ENROLL_BEAUTY_URL_HTTP_ROOT)
-                    ->controllerType('web')
-                    ->controllerPrefix('worker')
-                    ->controllerMethod('recoveryPassword')
-                    ->get('recovery_code', $recoveryCode)
-                 ->build();
-        return $url;
+        return ENROLL_BEAUTY_URL_HTTP_ROOT."web/worker/auth/recovery-password?recovery_code=$recoveryCode";
     }
 
     protected function _sendLetterToWelcomeWorker(

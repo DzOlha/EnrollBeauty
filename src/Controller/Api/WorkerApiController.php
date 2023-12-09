@@ -5,6 +5,7 @@ namespace Src\Controller\Api;
 use Src\DB\Database\MySql;
 use Src\Helper\Builder\impl\UrlBuilder;
 use Src\Helper\Session\SessionHelper;
+use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\WorkerDataMapper;
 use Src\Model\DataSource\extends\WorkerDataSource;
 use Src\Model\DTO\Read\UserReadDto;
@@ -27,7 +28,7 @@ class WorkerApiController extends ApiController
         $this->authService = $authService ?? new WorkerAuthService($this->dataMapper);
     }
 
-    public function getTypeDataMapper(): WorkerDataMapper
+    public function getTypeDataMapper(): DataMapper
     {
         return new WorkerDataMapper(new WorkerDataSource(MySql::getInstance()));
     }
@@ -83,6 +84,13 @@ class WorkerApiController extends ApiController
                          */
                         if($this->url[4] === 'all') {
                             $this->_getServicesAll();
+                        }
+
+                        /**
+                         * url = /api/worker/service/get/all-with-departments
+                         */
+                        if($this->url[4] === 'all-with-departments') {
+                            $this->_getServicesAllWithDepartments();
                         }
                     }
                 }
@@ -210,6 +218,13 @@ class WorkerApiController extends ApiController
                          */
                         if($this->url[4] === 'add') {
                            $this->_addServicePricing();
+                        }
+
+                        /**
+                         *  url = /api/worker/profile/service-pricing/edit
+                         */
+                        if($this->url[4] === 'edit') {
+                            $this->_editServicePricing();
                         }
                     }
                 }
@@ -527,9 +542,6 @@ class WorkerApiController extends ApiController
      * url = /api/worker/order/service/cancel
      */
     protected function _cancelServiceOrder() {
-        if (!SessionHelper::getWorkerSession()) {
-            $this->_accessDenied();
-        }
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $orderId = htmlspecialchars(trim($_POST['order_id']));
             $scheduleId = htmlspecialchars(trim($_POST['schedule_id']));
@@ -638,13 +650,7 @@ class WorkerApiController extends ApiController
     }
 
     protected function _createLinkToLogin() {
-        $builder = new UrlBuilder();
-        $url = $builder->baseUrl(ENROLL_BEAUTY_URL_HTTP_ROOT)
-                ->controllerType('web')
-                ->controllerPrefix('user')
-                ->controllerMethod('login')
-            ->build();
-        return $url;
+        return ENROLL_BEAUTY_URL_HTTP_ROOT.'web/user/auth/login';
     }
 
     protected function _sendLetterToInformUserAboutCancellation(
@@ -678,9 +684,6 @@ class WorkerApiController extends ApiController
      */
     protected function _completeServiceOrder()
     {
-        if (!SessionHelper::getWorkerSession()) {
-            $this->_accessDenied();
-        }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $orderId = htmlspecialchars(trim($_POST['order_id']));
 
@@ -704,14 +707,30 @@ class WorkerApiController extends ApiController
         }
     }
 
+
     /**
      * @return void
      *
-     * url = /api/worker/service/get/all
+     * url = /api/worker/service/get/all-with-departments
      */
-    protected function _getServicesAll()
+    protected function _getServicesAllWithDepartments()
     {
-        parent::_getServicesAll();
+        $param = $this->_getLimitPageFieldOrderOffset();
+        $services = $this->dataMapper->selectAllServicesWithDepartments(
+            $param['limit'],
+            $param['offset'],
+            $param['order_field'],
+            $param['order_direction']
+        );
+        if ($services === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all services'
+            ]);
+        }
+        $this->returnJson([
+            'success' => true,
+            'data' => $services
+        ]);
     }
 
     /**
@@ -720,9 +739,6 @@ class WorkerApiController extends ApiController
      * url = /api/worker/profile/service-pricing/add
      */
     protected function _addServicePricing() {
-        if(!SessionHelper::getWorkerSession()) {
-            $this->_accessDenied();
-        }
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
                 'worker_id' => $this->_getWorkerId(),
@@ -776,6 +792,53 @@ class WorkerApiController extends ApiController
                 'success' => 'You successfully added one more pricing!'
             ]);
         }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/service-pricing/edit
+     */
+    protected function _editServicePricing() {
+        $items = [
+            'worker_id' => $this->_getWorkerId(),
+            'service_id' => htmlspecialchars(trim($_POST['service_id'])),
+            'price' => htmlspecialchars(trim($_POST['price']))
+        ];
+        /**
+         * Validate Price
+         */
+        if(!$items['price']) {
+            $this->returnJson([
+                'error' => 'Price is the required field!'
+            ]);
+        }
+        if($items['price'] < 0){
+            $this->returnJson([
+                'error' => 'Price can not be negative number!'
+            ]);
+        }
+        if(!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
+            $this->returnJson([
+                'error' => 'Invalid price number was provided!'
+            ]);
+        }
+
+        /**
+         * Update pricing in db
+         */
+        $updated = $this->dataMapper->updateWorkerServicePricing(
+            $items['worker_id'], $items['service_id'], $items['price']
+        );
+        if($updated === false) {
+            $this->returnJson([
+                'error' => 'An error occurred while updating pricing details!'
+            ]);
+        }
+
+        $this->returnJson([
+            'success' => 'You successfully updated info about selected pricing!'
+        ]);
     }
 
     /**
@@ -881,9 +944,6 @@ class WorkerApiController extends ApiController
      * ]
      */
     protected function _addSchedule() {
-        if (!SessionHelper::getWorkerSession()) {
-            $this->_accessDenied();
-        }
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
                 'worker_id' => $this->_getWorkerId(),
@@ -936,6 +996,64 @@ class WorkerApiController extends ApiController
                     'service_id' => $items['service_id'],
                     'day' => $items['day']
                 ]
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/service/add
+     */
+    protected function _addService() {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $items = [
+                'service_name' => htmlspecialchars(trim($_POST['service_name'])),
+                'department_id' => htmlspecialchars(trim($_POST['department_id']))
+            ];
+            /**
+             * Validate service name
+             */
+            if(!$items['service_name']) {
+                $this->returnJson([
+                    'error' => 'Service name can not be empty!'
+                ]);
+            }
+            if(strlen($items['service_name']) < 3) {
+                $this->returnJson([
+                    'error' => 'Service name should be longer than 3 characters!'
+                ]);
+            }
+            /**
+             * Check if there is no service with such name in the selected department
+             */
+            $exists = $this->dataMapper->selectServiceIdByNameAndDepartmentId(
+                $items['service_name'], $items['department_id']
+            );
+            if($exists === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting service with provided name!'
+                ]);
+            }
+            if($exists) {
+                $this->returnJson([
+                    'error' => 'The service with provided name already exists in the selected department!'
+                ]);
+            }
+
+            /**
+             * Insert into database new service record
+             */
+            $serviceId = $this->dataMapper->insertNewService(
+                $items['service_name'], $items['department_id']
+            );
+            if($serviceId === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while inserting new service into database!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => "You successfully added new service '{$items['service_name']}'"
             ]);
         }
     }

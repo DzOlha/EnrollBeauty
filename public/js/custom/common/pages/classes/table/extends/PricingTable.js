@@ -39,13 +39,16 @@ class PricingTable extends Table {
 
             row.append(`<td>${item.name}</td>`);
 
-            row.append(`<td>${item.price + ' ' + item.currency}</td>`);
+            let price = item.price + ' ' + item.currency;
+            row.append(`<td>${price}</td>`);
 
             row.append(`<td>${item.updated_datetime}</td>`);
 
             row.append(`<td>
-                        <a class="btn ripple btn-manage manage-button"
+                        <a class="btn ripple btn-manage manage-button manage-pricing"
                            id="manage-${item.id}"
+                           data-service-id="${item.service_id}"
+                           data-service-price="${item.price}"
                            href="">
                             <i class="fe fe-eye me-2"></i>
                             Manage

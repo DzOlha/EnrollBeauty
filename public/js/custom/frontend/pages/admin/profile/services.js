@@ -1,7 +1,7 @@
 
 $(function () {
     let requester = new Requester();
-    let worker = new Worker(requester);
+    let admin = new Admin(requester);
     let servicesTable = new ServicesTable(requester);
 
     let formBuilder = new FormBuilder();
@@ -9,13 +9,13 @@ $(function () {
 
     let addNewServiceForm = new AddServiceForm(
         requester, modalForm, new OptionBuilder(), servicesTable,
-        '/api/worker/service/add'
+        '/api/admin/service/add'
     );
 
     /**
      * Fill the worker info
      */
-    worker.getUserInfo();
+    admin.getUserInfo();
 
     /**
      * Populate table of all workers

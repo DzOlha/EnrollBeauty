@@ -91,4 +91,12 @@ class UserDataMapper extends DataMapper
     {
         return $this->dataSource->selectScheduleIdByOrderId($orderId);
     }
+
+    public function selectScheduleForUserByTimeInterval(
+        string $email, string $startDatetime, string $endDatetime
+    ) {
+        return $this->dataSource->selectScheduleForUserByTimeInterval(
+            $email, $startDatetime, $endDatetime
+        );
+    }
 }

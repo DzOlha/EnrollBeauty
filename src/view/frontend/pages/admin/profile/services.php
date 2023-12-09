@@ -40,7 +40,7 @@
             <div class="main-sidebar-header main-container-1 active">
                 <div class="main-sidebar-body main-body-1">
                     <div class="slide-left disabled" id="slide-left"><i class="fe fe-chevron-left"></i></div>
-                    <?php require_once VIEW_COMMON."pages/worker/profile/menu/menu.php"?>
+                    <?php require_once VIEW_COMMON."pages/admin/profile/menu/menu.php"?>
                     <div class="slide-right" id="slide-right"><i class="fe fe-chevron-right"></i></div>
                 </div>
             </div>
@@ -237,9 +237,9 @@
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
 <script src="/public/js/custom/common/pages/user/profile/User.js"></script>
-<script src="/public/js/custom/common/pages/worker/profile/Worker.js"></script>
+<script src="/public/js/custom/common/pages/admin/profile/Admin.js"></script>
 
-<script src="/public/js/custom/frontend/pages/worker/profile/services.js"></script>
+<script src="/public/js/custom/frontend/pages/admin/profile/services.js"></script>
 
 </body>
 </html>

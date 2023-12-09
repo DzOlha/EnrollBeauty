@@ -58,8 +58,8 @@ class WorkerDataSource extends DataSource
             ]
         )->values(
             [':name', ':surname', ':password', ':email',
-                ':gender', ':age', ':experience', ':position_id',
-                ':salary', ':role_id', ':created_date'],
+             ':gender', ':age', ':experience', ':position_id',
+             ':salary', ':role_id', ':created_date'],
             [
                 $worker->getName(), $worker->getSurname(), $worker->getPassword(),
                 $worker->getEmail(), $worker->getGender(), $worker->getAge(),
@@ -189,12 +189,12 @@ class WorkerDataSource extends DataSource
     public function updateRecoveryCodeByRecoveryCode(string $recoveryCode)
     {
         $this->builder->update(WorkersSetting::$table)
-                ->setNull(WorkersSetting::$recovery_code)
-                ->whereEqual(
-                    WorkersSetting::$recovery_code,
-                    ':recovery_code',
-                    $recoveryCode
-                )
+            ->setNull(WorkersSetting::$recovery_code)
+            ->whereEqual(
+                WorkersSetting::$recovery_code,
+                ':recovery_code',
+                $recoveryCode
+            )
             ->build();
         if ($this->db->affectedRowsCount() > 0) {
             return true;
@@ -202,7 +202,8 @@ class WorkerDataSource extends DataSource
         return false;
     }
 
-    public function selectWorkerInfoById(int $workerId) {
+    public function selectWorkerInfoById(int $workerId)
+    {
         $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email])
             ->from(Workers::$table)
             ->whereEqual(Workers::$id, ':id', $workerId)
@@ -252,7 +253,8 @@ class WorkerDataSource extends DataSource
         $dateFrom = null, $dateTo = null,
         $timeFrom = null, $timeTo = null,
         $priceFrom = null, $priceTo = null,
-    ){
+    )
+    {
         $workerServiceSchedule = WorkersServiceSchedule::$table;
         $schedule_id = WorkersServiceSchedule::$id;
         $schedule_service_id = WorkersServiceSchedule::$service_id;
@@ -373,7 +375,8 @@ class WorkerDataSource extends DataSource
         $dateFrom = null, $dateTo = null,
         $timeFrom = null, $timeTo = null,
         $priceFrom = null, $priceTo = null,
-    ){
+    )
+    {
         $workerServiceSchedule = WorkersServiceSchedule::$table;
         $schedule_id = WorkersServiceSchedule::$id;
         $schedule_service_id = WorkersServiceSchedule::$service_id;
@@ -488,14 +491,15 @@ class WorkerDataSource extends DataSource
      *      ......
      * ]
      */
-    public function selectDepartmentsForWorker(int $workerId) {
+    public function selectDepartmentsForWorker(int $workerId)
+    {
         $this->builder->select([Departments::$id, Departments::$name])
-                ->from(Departments::$table)
-                ->innerJoin(Services::$table)
-                    ->on(Departments::$id, Services::$department_id)
-                ->innerJoin(WorkersServicePricing::$table)
-                    ->on(Services::$id, WorkersServicePricing::$service_id)
-                ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
+            ->from(Departments::$table)
+            ->innerJoin(Services::$table)
+            ->on(Departments::$id, Services::$department_id)
+            ->innerJoin(WorkersServicePricing::$table)
+            ->on(Services::$id, WorkersServicePricing::$service_id)
+            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
             ->build();
 
         return $this->db->manyRows();
@@ -510,10 +514,11 @@ class WorkerDataSource extends DataSource
      *  'email' =>
      * ]
      */
-    public function selectUserByOrderId(int $orderId) {
+    public function selectUserByOrderId(int $orderId)
+    {
         $this->builder->select([OrdersService::$user_id, OrdersService::$email])
-                ->from(OrdersService::$table)
-                ->whereEqual(OrdersService::$id, ':order_id', $orderId)
+            ->from(OrdersService::$table)
+            ->whereEqual(OrdersService::$id, ':order_id', $orderId)
             ->build();
 
         return $this->db->singleRow();
@@ -528,26 +533,28 @@ class WorkerDataSource extends DataSource
      *      'start_datetime' =>
      * ]
      */
-    public function selectOrderDetails(int $orderId) {
+    public function selectOrderDetails(int $orderId)
+    {
         $this->builder->select([OrdersService::$start_datetime, Services::$name])
-                ->from(OrdersService::$table)
-                ->innerJoin(Services::$table)
-                    ->on(OrdersService::$service_id, Services::$id)
-                ->whereEqual(OrdersService::$id, ':order_id', $orderId)
+            ->from(OrdersService::$table)
+            ->innerJoin(Services::$table)
+            ->on(OrdersService::$service_id, Services::$id)
+            ->whereEqual(OrdersService::$id, ':order_id', $orderId)
             ->build();
 
         return $this->db->singleRow();
     }
 
-    public function selectWorkerServicePricingByIds(int $workerId, $serviceId) {
+    public function selectWorkerServicePricingByIds(int $workerId, $serviceId)
+    {
         $this->builder->select([WorkersServicePricing::$id])
             ->from(WorkersServicePricing::$table)
             ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
             ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
-        ->build();
+            ->build();
 
         $result = $this->db->singleRow();
-        if($result) {
+        if ($result) {
             // workers_service_pricing.id -> id
             return $result[explode('.', WorkersServicePricing::$id)[1]];
         }
@@ -556,14 +563,15 @@ class WorkerDataSource extends DataSource
 
     public function insertWorkerServicePricing(
         int $workerId, int $serviceId, $price
-    ) {
+    )
+    {
         $this->builder->insertInto(WorkersServicePricing::$table, [
-                WorkersServicePricing::$worker_id, WorkersServicePricing::$service_id,
-                WorkersServicePricing::$price
-            ])
+            WorkersServicePricing::$worker_id, WorkersServicePricing::$service_id,
+            WorkersServicePricing::$price
+        ])
             ->values([':worker_id', ':service_id', ':price'],
-                    [$workerId, $serviceId, $price])
-        ->build();
+                [$workerId, $serviceId, $price])
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;
@@ -583,6 +591,7 @@ class WorkerDataSource extends DataSource
      * 0 => [
      *      'id' =>
      *      'name' => service name
+     *      'service_id' =>
      *      'price' =>
      *      'currency' =>
      *      'updated_datetime' =>
@@ -592,9 +601,10 @@ class WorkerDataSource extends DataSource
      * ]
      */
     public function selectAllWorkersServicePricing(
-        int $workerId, int $limit, int $offset,
+        int    $workerId, int $limit, int $offset,
         string $orderByField = 'workers_service_pricing.id', string $orderDirection = 'asc'
-    ) {
+    )
+    {
         $pricingTable = WorkersServicePricing::$table;
         $servicesTable = Services::$table;
 
@@ -609,20 +619,21 @@ class WorkerDataSource extends DataSource
         ";
 
         $this->builder->select([
-                WorkersServicePricing::$id, Services::$name, WorkersServicePricing::$price,
-                WorkersServicePricing::$currency, WorkersServicePricing::$updated_datetime
-            ])
+            WorkersServicePricing::$id, "$service_id as service_id", Services::$name,
+            WorkersServicePricing::$price,
+            WorkersServicePricing::$currency, WorkersServicePricing::$updated_datetime
+        ])
             ->from(WorkersServicePricing::$table)
             ->innerJoin(Services::$table)
-                ->on(WorkersServicePricing::$service_id, Services::$id)
+            ->on(WorkersServicePricing::$service_id, Services::$id)
             ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
             ->orderBy($orderByField, $orderDirection)
             ->limit($limit)
             ->offset($offset)
-        ->build();
+            ->build();
 
         $result = $this->db->manyRows();
-        if($result == null) {
+        if ($result == null) {
             return $result;
         }
         return $this->_appendTotalRowsCount($queryFrom, $result);
@@ -643,12 +654,13 @@ class WorkerDataSource extends DataSource
      */
     public function selectFilledTimeIntervalsByWorkerIdAndDay(
         int $workerId, string $day
-    ) {
+    )
+    {
         $this->builder->select([WorkersServiceSchedule::$start_time,
                                 WorkersServiceSchedule::$end_time])
-                    ->from(WorkersServiceSchedule::$table)
-                    ->whereEqual(WorkersServiceSchedule::$worker_id, ':worker_id', $workerId)
-                    ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
+            ->from(WorkersServiceSchedule::$table)
+            ->whereEqual(WorkersServiceSchedule::$worker_id, ':worker_id', $workerId)
+            ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
             ->build();
 
         return $this->db->manyRows();
@@ -656,7 +668,8 @@ class WorkerDataSource extends DataSource
 
     public function selectScheduleForWorkerByDayAndTime(
         int $workerId, string $day, string $startTime, string $endTime
-    ) {
+    )
+    {
         $schedule = WorkersServiceSchedule::$table;
         $start_time = WorkersServiceSchedule::$start_time;
         $end_time = WorkersServiceSchedule::$end_time;
@@ -707,21 +720,97 @@ class WorkerDataSource extends DataSource
     }
 
     public function insertWorkerServiceSchedule(
-        int $workerId, int $serviceId, int $affiliateId,
+        int    $workerId, int $serviceId, int $affiliateId,
         string $day, string $startTime, string $endTime
-    ) {
+    )
+    {
         $this->builder->insertInto(WorkersServiceSchedule::$table,
-                    [
-                        WorkersServiceSchedule::$worker_id, WorkersServiceSchedule::$service_id,
-                        WorkersServiceSchedule::$affiliate_id, WorkersServiceSchedule::$day,
-                        WorkersServiceSchedule::$start_time, WorkersServiceSchedule::$end_time
-                    ])
-                    ->values(
-                        [':worker_id', ':service_id', ':affiliate_id',
-                         ':day', ':start_time', ':end_time'],
-                        [$workerId, $serviceId, $affiliateId, $day, $startTime, $endTime]
-                    )
+            [
+                WorkersServiceSchedule::$worker_id, WorkersServiceSchedule::$service_id,
+                WorkersServiceSchedule::$affiliate_id, WorkersServiceSchedule::$day,
+                WorkersServiceSchedule::$start_time, WorkersServiceSchedule::$end_time
+            ])
+            ->values(
+                [':worker_id', ':service_id', ':affiliate_id',
+                 ':day', ':start_time', ':end_time'],
+                [$workerId, $serviceId, $affiliateId, $day, $startTime, $endTime]
+            )
             ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectAllServicesWithDepartments(
+        int $limit, int $offset,
+        string $orderByField = 'services.id', string $orderDirection = 'asc'
+    )
+    {
+        $services = Services::$table;
+        $servicesDepartmentId = Services::$department_id;
+
+        $departments = Departments::$table;
+        $departmentsId = Departments::$id;
+        $departmentsName = Departments::$name;
+
+        $queryFrom = "
+            $services INNER JOIN $departments ON $servicesDepartmentId = $departmentsId
+        ";
+        $this->builder->select([Services::$id, Services::$name,
+                                "$departmentsName as department_name",
+                                "$departmentsId as department_id"])
+            ->from(Services::$table)
+            ->innerJoin(Departments::$table)
+            ->on(Services::$department_id, $departmentsId)
+            ->orderBy($orderByField, $orderDirection)
+            ->limit($limit)
+            ->offset($offset)
+            ->build();
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
+
+    public function selectServiceIdByNameAndDepartmentId(
+        string $serviceName, int $departmentId
+    ) {
+        $this->builder->select([Services::$id])
+                    ->from(Services::$table)
+                    ->whereEqual(Services::$name, ':name', $serviceName)
+                    ->andEqual(Services::$department_id, ':department_id', $departmentId)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            // services.id -> id
+            return $result[explode('.', Services::$id)[1]];
+        }
+    }
+
+    public function insertNewService(string $serviceName, int $departmentId)
+    {
+        $this->builder->insertInto(Services::$table, [Services::$name, Services::$department_id])
+                    ->values([':name', ":department_id"], [$serviceName, $departmentId])
+                ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return $this->db->lastInsertedId();
+        }
+        return false;
+    }
+
+    public function updateWorkerServicePricing(int $workerId, int $serviceId, $price)
+    {
+        $this->builder->update(WorkersServicePricing::$table)
+            ->set(WorkersServicePricing::$price, ':price', $price)
+            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
+            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+        ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;

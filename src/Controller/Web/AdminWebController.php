@@ -148,6 +148,12 @@ class AdminWebController extends WebController
                 if ($menuItemName === 'workers') {
                    $this->_workers();
                 }
+                /**
+                 * url = /web/admin/profile/services
+                 */
+                if ($menuItemName === 'services') {
+                    $this->_services();
+                }
             }
         }
     }
@@ -177,5 +183,18 @@ class AdminWebController extends WebController
             'page_name' => 'Workers'
         ];
         $this->view(VIEW_FRONTEND . 'pages/admin/profile/workers', $data);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/admin/profile/services
+     */
+    protected function _services() {
+        $data = [
+            'title'     => 'Service Management',
+            'page_name' => 'Services'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/admin/profile/services', $data);
     }
 }

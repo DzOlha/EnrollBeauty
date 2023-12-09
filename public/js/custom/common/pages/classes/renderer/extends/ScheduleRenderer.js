@@ -634,7 +634,7 @@ class ScheduleRenderer {
     }
 
     _errorOrderSchedule(response) {
-        Notifier.showErrorMessage(response.error);
+        Notifier.showErrorMessage(response.error, 7);
     }
 
     addListenerOnLikeSchedule(scheduleId) {

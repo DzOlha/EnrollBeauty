@@ -14,6 +14,8 @@ class User {
         this.largeUserImgId = 'user-img-large';
 
         this.imgPath = '/public/images/custom/pages/user/';
+
+        this.roleName = '[User]';
     }
 
     setApiUserInfoUrl(userId) {
@@ -41,10 +43,10 @@ class User {
      */
     successCallbackUserInfo(response) {
         this.populateSmallUserInfo(
-            response.data.name, response.data.surname, response.data?.filename
+            response.data.name, response.data.surname + "\n" + this.roleName, response.data?.filename
         );
         this.populateLargeUserInfo(
-            response.data.name, response.data.surname, response.data?.filename
+            this.roleName + " " + response.data.name, response.data.surname, response.data?.filename
         );
     }
 

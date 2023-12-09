@@ -24,6 +24,8 @@ class AddPricingForm extends Form {
         this.modalBodyClass = 'modal-body';
 
         this.apiGetServices = '/api/worker/service/get/all';
+
+        this.modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
     }
     _initSelect2() {
         let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
@@ -201,7 +203,7 @@ class AddPricingForm extends Form {
         }
     }
     successCallbackSubmit(response) {
-        GifLoader.hide(this.requestTimeout );
+        GifLoader.hide(this.requestTimeout);
         /**
          * Show success message
          */
@@ -217,7 +219,7 @@ class AddPricingForm extends Form {
          */
         this.pricingTable.sendApiRequest(
             this.pricingTable.getItemsPerPage(),
-            Cookie.get('currentPage')
+            Cookie.get(this.pricingTable.currentPageCookie)
         );
     }
 }

@@ -3,7 +3,7 @@ class ServicesTable extends Table {
     constructor(requester) {
         super(
             requester,
-            '/api/worker/service/get/all?'
+            '/api/worker/service/get/all-with-departments?'
         )
         this.tableId = 'table-body';
     }

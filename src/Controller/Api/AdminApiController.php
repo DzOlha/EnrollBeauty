@@ -13,7 +13,7 @@ use Src\Service\Auth\Admin\AdminAuthService;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\User\UserAuthService;
 
-class AdminApiController extends ApiController
+class AdminApiController extends WorkerApiController
 {
     protected AuthService $authService;
 
@@ -162,6 +162,41 @@ class AdminApiController extends ApiController
         }
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/admin/service/
+     */
+    public function service() {
+        if (!SessionHelper::getAdminSession()) {
+            $this->_accessDenied();
+        }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/admin/service/get
+             */
+            if($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * /api/admin/service/get/all-with-departments
+                     */
+                    if($this->url[4] === 'all-with-departments') {
+                        $this->_getServicesAllWithDepartments();
+                    }
+                }
+            }
+            /**
+             * url = /api/admin/service/add
+             */
+            if($this->url[3] === 'add') {
+                $this->_addService();
+            }
+        }
+    }
+
+    protected function _getAllServicesWithDepartments() {
+
+    }
     /**
      * @return void
      *
@@ -326,5 +361,23 @@ class AdminApiController extends ApiController
         $this->returnJson(
             $this->authService->registerWorker()
         );
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/service/get/all-with-departments
+     */
+    protected function _getServicesAllWithDepartments() {
+        parent::_getServicesAllWithDepartments();
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/service/add
+     */
+    protected function _addService() {
+        parent::_addService();
     }
 }

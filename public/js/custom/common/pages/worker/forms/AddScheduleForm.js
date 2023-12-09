@@ -39,7 +39,7 @@ class AddScheduleForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetServices = '/api/worker/service/get/all';
+        this.apiGetServicesForWorker = '/api/worker/profile/service/get/all';
         this.apiGetAffiliates = '/api/worker/affiliate/get/all';
         this.apiGetFilledTimeIntervals = '/api/worker/schedule/get/busy-time-intervals?';
     }
@@ -186,7 +186,7 @@ class AddScheduleForm extends Form {
 
     getServices() {
         this.requester.get(
-            this.apiGetServices,
+            this.apiGetServicesForWorker,
             this.successCallbackGetServices.bind(this),
             (response) => {
                 Notifier.showErrorMessage(response.error);

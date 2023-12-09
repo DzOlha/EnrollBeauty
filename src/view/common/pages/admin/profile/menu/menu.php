@@ -48,6 +48,15 @@
         </ul>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="/web/admin/profile/services">
+            <span class="shape1"></span>
+            <span class="shape2"></span>
+            <i class="ti-palette sidemenu-icon menu-icon"></i>
+            <span class="sidemenu-label">Services</span>
+        </a>
+    </li>
+
 <!--    <li class="nav-item">-->
 <!--        <a class="nav-link" href="/web/admin/profile/services">-->
 <!--            <span class="shape1"></span>-->

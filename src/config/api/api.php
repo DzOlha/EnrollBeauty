@@ -12,17 +12,17 @@ $API = [
             ]
         ],
         'API' => [
-            'AUTH'    => [
+            'AUTH'      => [
                 'register' => '/api/user/auth/register',
                 'login'    => '/api/user/auth/login'
             ],
-            'PROFILE' => [
+            'PROFILE'   => [
                 'get'             => '/api/user/profile/get',
                 'social-networks' => [
                     'get' => '/api/user/profile/social-networks/get'
                 ]
             ],
-            'ORDER'   => [
+            'ORDER'     => [
                 'service' => [
                     'upcoming' => [
                         'get' => [
@@ -33,20 +33,20 @@ $API = [
                     'cancel'   => '/api/user/order/service/cancel'
                 ]
             ],
-            'SERVICE' => [
+            'SERVICE'   => [
                 'get' => [
                     'workers' => [
                         'all' => '/api/user/service/get/workers/all'
                     ],
-                    'all' => '/api/user/service/get/all'
+                    'all'     => '/api/user/service/get/all'
                 ]
             ],
-            'WORKER'  => [
+            'WORKER'    => [
                 'get' => [
                     'services' => [
                         'all' => '/api/user/worker/get/services/all'
                     ],
-                    'all' => '/api/user/worker/get/all'
+                    'all'      => '/api/user/worker/get/all'
                 ],
             ],
             'AFFILIATE' => [
@@ -54,7 +54,7 @@ $API = [
                     'all' => '/api/user/affiliate/get/all'
                 ]
             ],
-            'SCHEDULE' => [
+            'SCHEDULE'  => [
                 'search' => '/api/user/schedule/search'
             ]
         ]
@@ -81,7 +81,8 @@ $API = [
             'SERVICE'    => [
                 'add' => '/api/worker/service/add',
                 'get' => [
-                    'all' => '/api/worker/service/get/all'
+                    'all'                  => '/api/worker/service/get/all',
+                    'all-with-departments' => '/api/worker/service/get/all-with-departments'
                 ]
             ],
             'AFFILIATE'  => [
@@ -99,10 +100,11 @@ $API = [
             'PROFILE'    => [
                 'get'             => '/api/worker/profile/get',
                 'service-pricing' => [
-                    'get' => [
+                    'get'  => [
                         'all' => '/api/worker/profile/service-pricing/get/all',
                     ],
-                    'add' => '/api/worker/profile/service-pricing/add'
+                    'add'  => '/api/worker/profile/service-pricing/add',
+                    'edit' => '/api/worker/profile/service-pricing/edit'
                 ],
                 'service'         => [
                     'get' => [
@@ -125,25 +127,25 @@ $API = [
     ],
     'ADMIN'  => [
         'WEB' => [
-            'AUTH' => [
-                'login' => '/web/admin/auth/login',
+            'AUTH'    => [
+                'login'  => '/web/admin/auth/login',
                 'logout' => '/web/admin/auth/logout'
             ],
             'PROFILE' => [
-                'home' => '/web/admin/profile/home',
+                'home'    => '/web/admin/profile/home',
                 'workers' => '/web/admin/profile/workers'
             ]
         ],
         'API' => [
-            'AUTH' => [
+            'AUTH'     => [
                 'change-default-admin-info' => '/api/admin/auth/change-default-admin-info',
-                'login' => '/api/admin/auth/login'
+                'login'                     => '/api/admin/auth/login'
             ],
-            'PROFILE' => [
+            'PROFILE'  => [
                 'get' => '/api/admin/profile/get'
             ],
-            'WORKER' => [
-                'get' => [
+            'WORKER'   => [
+                'get'      => [
                     'all' => '/api/admin/worker/get/all'
                 ],
                 'register' => '/api/admin/worker/register'
@@ -153,10 +155,16 @@ $API = [
                     'all' => '/api/admin/position/get/all'
                 ]
             ],
-            'ROLE' => [
+            'ROLE'     => [
                 'get' => [
                     'all' => ' /api/admin/role/get/all'
                 ]
+            ],
+            'SERVICE'  => [
+                'get' => [
+                    'all-with-departments' => '/api/admin/service/get/all',
+                ],
+                'add' => '/api/admin/service/add'
             ]
         ]
     ]

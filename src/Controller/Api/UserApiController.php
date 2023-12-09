@@ -722,6 +722,24 @@ class UserApiController extends ApiController
             $start_datetime = $_start_datetime->format('Y-m-d H:i:s');
             $end_datetime = $_end_datetime->format('Y-m-d H:i:s');
 
+            /**
+             * Check if the current appointment is not overlapping with another service
+             * order of the user that want to order the current one
+             */
+            $isOverlapped = $this->dataMapper->selectScheduleForUserByTimeInterval(
+                $email, $start_datetime, $end_datetime
+            );
+            if($isOverlapped === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting your current schedule!'
+                ]);
+            }
+            if($isOverlapped) {
+                $this->returnJson([
+                    'error' => 'There is an overlapping with another of your appointments! Please, review your schedule for the selected day to choose available time intervals for one more appointment!'
+                ]);
+            }
+
             $this->dataMapper->beginTransaction();
 
             $orderID = $this->dataMapper->insertOrderService(

@@ -242,6 +242,7 @@ class WorkerDataMapper extends DataMapper
      *  0 => [
      *       'id' =>
      *       'name' => service name
+     *       'service_id' =>
      *       'price' =>
      *       'currency' =>
      *       'updated_datetime' =>
@@ -296,4 +297,32 @@ class WorkerDataMapper extends DataMapper
             $workerId, $serviceId, $affiliateId, $day, $startTime, $endTime
         );
     }
+
+    public function selectAllServicesWithDepartments(
+        int $limit, int $offset,
+        string $orderByField = 'services.id', string $orderDirection = 'asc'
+    ){
+        return $this->dataSource->selectAllServicesWithDepartments(
+            $limit, $offset, $orderByField, $orderDirection
+        );
+    }
+
+    public function selectServiceIdByNameAndDepartmentId(
+        string $serviceName, int $departmentId
+    ) {
+        return $this->dataSource->selectServiceIdByNameAndDepartmentId(
+            $serviceName, $departmentId
+        );
+    }
+
+    public function insertNewService(string $serviceName, int $departmentId)
+    {
+        return $this->dataSource->insertNewService($serviceName, $departmentId);
+    }
+
+    public function updateWorkerServicePricing(int $workerId, int $serviceId, $price)
+    {
+        $this->dataSource->updateWorkerServicePricing($workerId, $serviceId, $price);
+    }
+
 }

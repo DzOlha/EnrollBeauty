@@ -7,9 +7,15 @@ $(function () {
     let formBuilder = new FormBuilder();
     let modalForm = new FormModal(formBuilder);
 
+    let optionBuilder = new OptionBuilder();
     let addNewPricingForm = new AddPricingForm(
-        requester, modalForm, new OptionBuilder(), pricingTable
+        requester, modalForm, optionBuilder, pricingTable
     );
+
+    let editPricingForm = new EditPricingForm(
+        requester, modalForm, optionBuilder, pricingTable
+    );
+
 
     /**
      * Fill the worker info
@@ -26,4 +32,9 @@ $(function () {
      * to show the form in modal window
      */
     addNewPricingForm.addListenerShowAddPricingForm();
+
+    /**
+     * Listen click on 'Manage' button to edit or delete the specific pricing
+     */
+    editPricingForm.addListenerManagePricing();
 });
