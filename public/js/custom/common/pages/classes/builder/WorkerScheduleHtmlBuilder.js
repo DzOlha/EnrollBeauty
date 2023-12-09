@@ -20,6 +20,9 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
                                                   </span>`
             : '';
 
+        let iconOne = userId !== null ? 'fe-check' : 'fe-edit-3';
+        let iconTwo = userId !== null ? 'fe-x' : 'fe-trash-2';
+
         return `<div class="card" id="schedule-card-${scheduleId}" 
                         data-schedule-id="${scheduleId}"
                         data-user-id="${userId}" 
@@ -30,11 +33,11 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
                             ${serviceName}
                         </h5>
                         <div class="card-options">
-                            <i class="fe fe-check"
+                            <i class="fe ${iconOne}"
                                 data-schedule-id="${scheduleId}"
                                  data-order-id="${orderId}">
                             </i>
-                            <i class="fe fe-x" 
+                            <i class="fe ${iconTwo}" 
                                 data-schedule-id="${scheduleId}"
                                 data-order-id="${orderId}">
                             </i>

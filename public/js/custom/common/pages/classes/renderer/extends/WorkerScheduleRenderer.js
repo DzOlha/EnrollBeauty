@@ -12,6 +12,345 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         this.apiCompleteOrder = '/api/worker/completeServiceOrder';
     }
     /**
+     * response example
+     *  {
+     *      success: true,
+     *      data: {
+     *          schedule: {
+     *              0: {
+     *                schedule_id: ,
+     *                service_id: ,
+     *                department_id: ,
+     *                service_name: ,
+     *                worker_id: ,
+     *                worker_name: ,
+     *                worker_surname: ,
+     *                affiliate_id: ,
+     *                city: ,
+     *                address: ,
+     *                day: ,
+     *                start_time: ,
+     *                end_time: ,
+     *                price: ,
+     *                currency:
+     *              },
+     *              1: {
+     *
+     *              }
+     *              .........
+     *          },
+     *          departments: {
+     *              0: {
+     *                  id:
+     *                  name:
+     *              }
+     *              .........
+     *          },
+     *          active_department: {
+     *              id:
+     *              name:
+     *          },
+     *          active_day: start_date,
+     *          end_day: end_date,
+     *      }
+     *  }
+     */
+    // render(response) {
+    //     let activeDepartmentId = 'department_0';
+    //     let wrapper = document.getElementById(this.scheduleWrapperId);
+    //     wrapper.innerHTML = '';
+    //
+    //     /**
+    //      * Create the page with schedule content for corresponding department tab from menu
+    //      * @type {string}
+    //      */
+    //     let contentPage = this.htmlBuilder.createTabDepartmentContentPage(
+    //         activeDepartmentId, this.weekdaysMenuId, this.weekdaysContentId, true
+    //     );
+    //
+    //     /**
+    //      * Insert the manu item of the department and the corresponding
+    //      * content schedule page into the wrapper structure
+    //      */
+    //     wrapper.insertAdjacentHTML('beforeend', contentPage);
+    //
+    //     console.log('populateActiveDepartmentScheduleTab');
+    //     console.log('activeDepartmentTabId = ' + activeDepartmentId);
+    //     let daysMenuWrapper = document.querySelector(
+    //         `#${activeDepartmentId} .${this.daysMenuClass}`
+    //     );
+    //     daysMenuWrapper.innerHTML = '';
+    //
+    //     let daysContentWrapper = document.querySelector(
+    //         `#${activeDepartmentId} .${this.daysContentWrapperClass}`
+    //     );
+    //     daysContentWrapper.innerHTML = '';
+    //
+    //     let days = this.dateRenderer.getDatesBetween(
+    //         response.data.active_day, response.data.end_day
+    //     );
+    //     days.forEach((day) => {
+    //         console.log('days.forEach((day)');
+    //         /**
+    //          * day is in YYYY-MM-DD format
+    //          *
+    //          * Get short weekday code like 'Mn' or 'Fr'
+    //          * @type {string}
+    //          */
+    //         let shortWeekDayCode = this.dateRenderer.getDayOfWeek(day);
+    //
+    //         /**
+    //          * Get '2 Month' format
+    //          * @type {string}
+    //          */
+    //         let date = this.dateRenderer.shortRender(day);
+    //
+    //         /**
+    //          * Concatenate value to get something like '2 November: Tu'
+    //          * to display it on frontend
+    //          * @type {string}
+    //          */
+    //         let weekday = `${date}: ${shortWeekDayCode}`;
+    //
+    //         /**
+    //          * Use day in _YYYY-MM-DD format as a tab id to identify
+    //          * which schedule page to display
+    //          * @type {*}
+    //          */
+    //         let dayTabId = '_' + day;
+    //
+    //         /**
+    //          * id = weekday-tab-menu-item-_YYYY-MM-DD
+    //          * @type {string}
+    //          */
+    //         let menuItemId = `${this.weekdayMenuItemBase}-${dayTabId}`;
+    //
+    //         /**
+    //          * Check if the day is active
+    //          * @type {boolean}
+    //          */
+    //         let active = day === response.data.active_day;
+    //
+    //         /**
+    //          * Create menu item to navigate for the specific day schedule tab
+    //          * @type {string}
+    //          */
+    //         let menuItem = this.htmlBuilder.createTabWeekdayMenuLi(
+    //             weekday, dayTabId, this.weekdayMenuItemClass, menuItemId, day, active
+    //         );
+    //
+    //         /**
+    //          * Create the content page with schedule for the day with
+    //          * time separation by 9-12, 12-15, 15-18, 18-21 intervals
+    //          * @type {string}
+    //          */
+    //         let contentPage = this.htmlBuilder.createTabWeekdayContentPage(
+    //             dayTabId, active
+    //         );
+    //
+    //         daysMenuWrapper.insertAdjacentHTML('beforeend', menuItem);
+    //         daysContentWrapper.insertAdjacentHTML('beforeend', contentPage);
+    //
+    //         /**
+    //          * Set event listener to be able to navigate between schedule for
+    //          * different days within the selected period without need to
+    //          * send additional requests to the server
+    //          * @type {HTMLElement}
+    //          */
+    //         let a = document.getElementById(menuItemId);
+    //         a.addEventListener('click', () => {
+    //             console.log('weekday a.click');
+    //
+    //             /**
+    //              * #_YYYY-MM-DD -> _YYYY-MM-DD
+    //              * @type {string}
+    //              */
+    //             let contentTabId = a.getAttribute('href').substring(1);
+    //
+    //             this.populateActiveDayScheduleTab(
+    //                 activeDepartmentId, contentTabId, response.data.schedule
+    //             );
+    //         })
+    //     })
+    //
+    //     /**
+    //      * Get the active weekday .weekday-menu-item.active
+    //      * @type {Element}
+    //      */
+    //     let activeWeekdayTab = document.querySelector(
+    //         `#${activeDepartmentId} .${this.weekdayMenuItemClass}.active`
+    //     );
+    //
+    //     /**
+    //      * Get something like #_YYYY-MM-DD -> _YYYY-MM-DD
+    //      * @type {string}
+    //      */
+    //     let activeDayTabId = activeWeekdayTab.getAttribute('href')
+    //         .substring(1);
+    //
+    //     /**
+    //      * Fill the time intervals with schedule cards
+    //      */
+    //     this.populateActiveDayScheduleTab(
+    //         activeDepartmentId, activeDayTabId, response.data.schedule
+    //     );
+    // }
+    render(response) {
+        //console.log(' render(response)');
+        //console.log(JSON.stringify(response));
+        let wrapper = document.getElementById(this.scheduleWrapperId);
+        wrapper.innerHTML = '';
+
+        /**
+         * Insert departments tabs menu and wrappers for tabs' content
+         * @type {string}
+         */
+        let departmentInnerTabs = this.htmlBuilder.createAvailableSchedulePage();
+        wrapper.insertAdjacentHTML('beforeend', departmentInnerTabs);
+
+        /**
+         * Populate departments menu with names of the departments
+         * @type {HTMLElement}
+         */
+        let departmentsMenuWrapper = document.getElementById(this.departmentsMenuId);
+        departmentsMenuWrapper.innerHTML = '';
+
+        let departmentsContentWrapper = document.getElementById(
+            this.departmentsContentWrapperId
+        );
+        departmentsContentWrapper.innerHTML = '';
+
+        /**
+         * Insert the blueprint of the departments menu and schedule content
+         * into the page structure
+         */
+        let department = {
+            id: 0,
+            name: 'Schedule'
+        }
+        //console.log('response.data.departments.forEach((department)');
+        /**
+         * Set the tab id value which allows us to determine the identifier
+         * of the content page (with schedule) for specific department
+         * and show such content by clicking on the menu item
+         * @type {string}
+         */
+        let tabId = `${this.departmentTabContentBase}-${department.id}`;
+
+        /**
+         * Create menu item by clicking on which we open the page content
+         *  with schedules for the department
+         * @type {string}
+         */
+        let menuItemId = `${this.departmentMenuItemBase}-${department.id}`;
+
+        /**
+         * Detect if the menu item of the department should be set as active
+         * @type {boolean}
+         */
+        let active = true;
+
+        /**
+         * Create the item of the menu for navigation between different departments
+         * @type {string}
+         */
+        let menuItem = this.htmlBuilder.createTabDepartmentMenuLi(
+            department.name, department.id, tabId, menuItemId,
+            this.departmentMenuItemClass, active
+        );
+
+        /**
+         * Create the page with schedule content for corresponding department tab from menu
+         * @type {string}
+         */
+        let contentPage = this.htmlBuilder.createTabDepartmentContentPage(
+            tabId, this.weekdaysMenuId, this.weekdaysContentId, active
+        );
+
+        /**
+         * Insert the manu item of the department and the corresponding
+         * content schedule page into the wrapper structure
+         */
+        departmentsMenuWrapper.insertAdjacentHTML('beforeend', menuItem);
+        departmentsContentWrapper.insertAdjacentHTML('beforeend', contentPage);
+
+        /**
+         * Set event listener to be able to navigate between schedule for
+         * different departments within the selected period without need to
+         * send additional requests to the server
+         * @type {HTMLElement}
+         */
+        let a = document.getElementById(menuItemId);
+        a.addEventListener('click', () => {
+            //console.log('department a.click');
+            /**
+             * #department-tab-content-{id} -> department-tab-content-{id}
+             * @type {string}
+             */
+            let contentTabId = a.getAttribute('href').substring(1);
+
+            /**
+             * Get department_id number {id}
+             * @type {string}
+             */
+            let departmentId = a.getAttribute('data-id');
+            // console.log(contentTabId);
+            // console.log(departmentId);
+
+            /**
+             * Filter the initial server response to leave only schedules
+             * that belongs to the department with {id} = departmentId
+             */
+            let filteredSchedules = response.data.schedule.filter(
+                schedule => schedule.department_id == departmentId
+            );
+            //console.log(JSON.stringify(filteredSchedules));
+
+            /**
+             * Fill the schedule content page for the current department id
+             * with the information about days of search and schedules available
+             * withing time intervals
+             */
+            this.populateActiveDepartmentScheduleTab(
+                contentTabId, departmentId, response.data.active_day,
+                response.data.end_day, filteredSchedules
+            );
+        })
+
+        /**
+         * Get .department-menu-item.active element
+         * to detect the {id} of the active department and
+         * then populate it with information about days
+         * and available schedules withing time intervals
+         * @type {Element}
+         */
+        let activeDepartmentTab = document.querySelector(
+            `.${this.departmentMenuItemClass}.active`
+        );
+
+        /**
+         * get {id} of active department menu
+         * @type {string}
+         */
+        let activeDepartmentId = activeDepartmentTab.getAttribute('data-id');
+
+        /**
+         * #department-tab-content-{id} -> department-tab-content-{id}
+         * @type {string}
+         */
+        let activeTabId = activeDepartmentTab.getAttribute('href').substring(1);
+
+        /**
+         * Fill the schedule content page for the active department id
+         * with the information about days of search and schedules available
+         * withing time intervals
+         */
+        this.populateActiveDepartmentScheduleTab(
+            activeTabId, activeDepartmentId, response.data.active_day,
+            response.data.end_day, response.data.schedule
+        );
+    }
+    /**
      * @param schedules
      * {
      *     0: {
@@ -38,8 +377,8 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
     populateActiveDayScheduleTab(
         activeDepartmentTabId, activeDayTabId, schedules
     ) {
-        // console.log(JSON.stringify(schedules));
-        // console.log('populateActiveDayScheduleTab children');
+        console.log(JSON.stringify(schedules));
+        console.log('populateActiveDayScheduleTab children');
         /**
          * Filter schedules to leave only ones that are for the day, which tab is active now
          */
@@ -82,8 +421,8 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
             return comparisonStart;
         });
 
-        // console.log('activeDayTabId = ' + activeDayTabId);
-        //console.log(`#${activeDepartmentTabId} #${activeDayTabId} .${this.timeIntervalClass}.${this.from12To15Class}`);
+        console.log('activeDayTabId = ' + activeDayTabId);
+        console.log(`#${activeDepartmentTabId} #${activeDayTabId} .${this.timeIntervalClass}.${this.from12To15Class}`);
 
         /**
          * 9 - 12
@@ -119,10 +458,10 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         _18_21.innerHTML = '';
 
         schedulesForActiveDay.forEach((schedule) => {
-            // console.log('schedulesForActiveDay.forEach((schedule)');
-            // console.log('schedulesForDepartmentTab = ' + JSON.stringify(schedules));
-            // console.log('scheduleForActiveDay = ' + JSON.stringify(schedulesForActiveDay));
-            //console.log('scheduleItem = ' + JSON.stringify(schedule));
+            console.log('schedulesForActiveDay.forEach((schedule)');
+            console.log('schedulesForDepartmentTab = ' + JSON.stringify(schedules));
+            console.log('scheduleForActiveDay = ' + JSON.stringify(schedulesForActiveDay));
+            console.log('scheduleItem = ' + JSON.stringify(schedule));
             let startTime = this._timeToDecimal(schedule.start_time);
             let endTime = this._timeToDecimal(schedule.end_time);
 
@@ -176,13 +515,14 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
             }
 
             /**
-             * Add listeners on shop/like icons
+             * Add listeners on cancel/complete icons
              */
             if(schedule.hasOwnProperty('order_id')) {
                 this.addListenerOnCancelAppointment(schedule.schedule_id);
                 this.addListenerOnCompleteAppointment(schedule.schedule_id);
             } else {
-
+                this.addListenerOnEditAppointment(schedule.schedule_id);
+                this.addListenerOnDeleteAppointment(schedule.schedule_id);
             }
         })
         //console.log('-------------------------------------------------------------------------------------------------------------------');
@@ -294,5 +634,33 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
 
         checkIcon.removeEventListener('click', handleCheckIconClick); // Remove previous listener
         checkIcon.addEventListener('click', handleCheckIconClick);
+    }
+
+    addListenerOnEditAppointment(scheduleId) {
+        let editIcon = document.querySelector(
+            `#schedule-card-${scheduleId} .fe-edit-3`
+        );
+
+        if (editIcon === null) return;
+
+        const handleEditIconClick = (e) => {}
+        const handleConfirmClick = (dataToSend) => {}
+
+        editIcon.removeEventListener('click', handleEditIconClick); // Remove previous listener
+        editIcon.addEventListener('click', handleEditIconClick);
+    }
+
+    addListenerOnDeleteAppointment(scheduleId) {
+        let deleteIcon = document.querySelector(
+            `#schedule-card-${scheduleId} .fe-trash-2`
+        );
+
+        if (deleteIcon === null) return;
+
+        const handleDeleteIconClick = (e) => {}
+        const handleConfirmClick = (dataToSend) => {}
+
+        deleteIcon.removeEventListener('click', handleDeleteIconClick); // Remove previous listener
+        deleteIcon.addEventListener('click', handleDeleteIconClick);
     }
 }

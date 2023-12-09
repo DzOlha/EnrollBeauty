@@ -23,8 +23,7 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
             opens: 'right',
             showDropdowns: false,
             startDate: currentDate,
-            endDate: currentDate,
-            minDate: currentDate,  // Minimum selectable date (current date)
+            endDate: currentDate
         });
     }
     collectDataToSend(idAssoc = false) {
