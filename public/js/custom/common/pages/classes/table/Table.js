@@ -8,6 +8,10 @@ class Table {
         this.sortedBy = orderByField ?? 'id';
         this.sortingOrder = orderDirection ?? 'asc';
 
+        this.tableId = 'data-table';
+        this.currentPageCookie =  'currentPage';
+        this.totalRowsCountCookie = 'totalRowsCount';
+
         this.arrowDown = '/public/images/custom/system/icons/arrows_down.svg';
         this.arrowUp = '/public/images/custom/system/icons/arrows_up.svg';
 
@@ -15,7 +19,7 @@ class Table {
     }
 
     POPULATE() {
-        let current = Cookie.get('currentPage');
+        let current = Cookie.get( this.currentPageCookie);
         if (!current || !Number.isInteger(current)) {
             current = this.setInitialCookie();
         }
@@ -31,12 +35,12 @@ class Table {
     }
 
     resetCookie() {
-        Cookie.remove('currentPage');
-        Cookie.remove('totalRowsCount');
+        Cookie.remove( this.currentPageCookie);
+        Cookie.remove(this.totalRowsCountCookie);
     }
 
     setInitialCookie() {
-        Cookie.set('currentPage', 1);
+        Cookie.set( this.currentPageCookie, 1);
         return 1;
     }
 
@@ -62,13 +66,13 @@ class Table {
 
                     let newItemsPerPage = this.getItemsPerPage();
 
-                    let totalPages = this.getTotalPages(Cookie.get('totalRowsCount'), newItemsPerPage);
-                    let value = Math.ceil((Cookie.get('currentPage') * itemsPerPage) / newItemsPerPage);
+                    let totalPages = this.getTotalPages(Cookie.get(this.totalRowsCountCookie), newItemsPerPage);
+                    let value = Math.ceil((Cookie.get( this.currentPageCookie) * itemsPerPage) / newItemsPerPage);
                     let newCurrentPage = value > totalPages ? totalPages : value;
                     itemsPerPage = newItemsPerPage;
 
                     //console.log("newCurrentPage() = " + newCurrentPage);
-                    Cookie.set('currentPage', newCurrentPage);
+                    Cookie.set( this.currentPageCookie, newCurrentPage);
 
                     this.generatePaginationControls(totalPages, newCurrentPage);
                     this.sendApiRequest(this.getItemsPerPage(), newCurrentPage);
@@ -91,11 +95,12 @@ class Table {
     }
 
     sendApiRequest(itemsPerPage, currentPage, orderByField = null, orderDirection = null) {
-        let requestTimeout = setTimeout(() => {
-            // Hide the table and show the loader
-            $("#data-table").hide();
-            $("#dataTableLoader").show();
-        }, 800);
+        let requestTimeout = TableLoader.show(this.tableId);
+        //     setTimeout(() => {
+        //     // Hide the table and show the loader
+        //     $("#data-table").hide();
+        //     $("#dataTableLoader").show();
+        // }, 800);
 
         if (!orderByField || !orderDirection) {
             //let object = this.getSortedByAndOrder();
@@ -110,10 +115,12 @@ class Table {
         $.getJSON(this.getApiUrlFormat(itemsPerPage, currentPage, orderByField, orderDirection),
             (response) => {
                 // Clear the timeout since the response is received
-                clearTimeout(requestTimeout);
 
-                $("#dataTableLoader").hide();
-                $("#data-table").show();
+                TableLoader.hide(this.tableId, requestTimeout);
+                // clearTimeout(requestTimeout);
+                //
+                // $("#dataTableLoader").hide();
+                // $("#data-table").show();
 
                 this.populateTable(response);
 
@@ -121,7 +128,7 @@ class Table {
                 // regenerate pagination
                 this.totalRowsCount = response.data?.totalRowsCount;
 
-                Cookie.set('totalRowsCount', this.totalRowsCount);
+                Cookie.set(this.totalRowsCountCookie, this.totalRowsCount);
                 this.itemsPerPage = this.getItemsPerPage();
                 this.totalPages = this.getTotalPages();
                 this.generatePaginationControls(currentPage);
@@ -184,7 +191,7 @@ class Table {
 
     loadPage(page) {
         if (page >= 1 && page <= this.totalPages) {
-            Cookie.set('currentPage', page);
+            Cookie.set(this.currentPageCookie, page);
             this.sendApiRequest(this.getItemsPerPage(), page);
         }
     }
@@ -273,7 +280,7 @@ class Table {
                 this.sortedBy = sortArrows[i].getAttribute('data-column');
                 this.sortingOrder = sortArrows[i].getAttribute('data-order');
 
-                this.sendApiRequest(this.getItemsPerPage(), Cookie.get('currentPage'));
+                this.sendApiRequest(this.getItemsPerPage(), Cookie.get(this.currentPageCookie));
             })
         }
     }

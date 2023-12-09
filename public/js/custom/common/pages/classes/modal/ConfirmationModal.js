@@ -26,12 +26,10 @@ class ConfirmationModal {
 
     showLoader() {
         let confirm = document.getElementById(this.confirmationSubmitId);
-        confirm.insertAdjacentHTML(
-            'beforebegin', OptionBuilder.createGifLoader()
-        );
+        return GifLoader.showBeforeBegin(confirm);
     }
-    hideLoader() {
-        $('#gif-loader').remove();
+    hideLoader(requestTimeout) {
+        GifLoader.hide(requestTimeout);
     }
     submit(callback, data) {
 

@@ -228,6 +228,9 @@
 <script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
 <script src="/public/js/custom/common/pages/worker/forms/AddPricingForm.js"></script>
 
+<script src="/public/js/custom/common/pages/classes/loader/GifLoader.js"></script>
+<script src="/public/js/custom/common/pages/classes/loader/TableLoader.js"></script>
+
 <script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
 <script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
 <script src="/public/js/custom/common/pages/user/profile/User.js"></script>

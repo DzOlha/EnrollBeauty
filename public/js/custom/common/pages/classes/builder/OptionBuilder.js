@@ -8,7 +8,7 @@ class OptionBuilder {
                         ${name}
                  </option>`
     }
-    static createGifLoader() {
-        return `<img src="/public/images/mockup/pre-loader-1.gif" id="gif-loader">`
+    static createGifLoader(loaderId = 'gif-loader') {
+        return `<img src="/public/images/mockup/pre-loader-1.gif" id="${loaderId}">`
     }
 }

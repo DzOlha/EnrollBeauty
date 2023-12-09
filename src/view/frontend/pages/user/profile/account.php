@@ -448,6 +448,9 @@
 
 <script src="/public/js/custom/common/pages/classes/cookie/Cookie.js"></script>
 
+<script src="/public/js/custom/common/pages/classes/loader/GifLoader.js"></script>
+<script src="/public/js/custom/common/pages/classes/loader/TableLoader.js"></script>
+
 <script src="/public/js/custom/common/pages/classes/table/Table.js"></script>
 <script src="/public/js/custom/common/pages/classes/table/extends/AppointmentsTable.js"></script>
 <script src="/public/js/custom/common/pages/user/forms/Form.js"></script>

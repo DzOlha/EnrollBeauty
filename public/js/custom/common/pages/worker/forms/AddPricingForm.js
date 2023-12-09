@@ -188,22 +188,20 @@ class AddPricingForm extends Form {
         console.log(data);
 
         if(data) {
-            e.currentTarget.insertAdjacentHTML(
-                'beforebegin', OptionBuilder.createGifLoader()
-            );
+            this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
             this.requester.post(
                 this.submitActionUrl,
                 data,
                 this.successCallbackSubmit.bind(this),
                 (response) => {
-                    $(`#gif-loader`).remove();
+                    GifLoader.hide(this.requestTimeout );
                     Notifier.showErrorMessage(response.error);
                 }
             )
         }
     }
     successCallbackSubmit(response) {
-        $(`#gif-loader`).remove();
+        GifLoader.hide(this.requestTimeout );
         /**
          * Show success message
          */

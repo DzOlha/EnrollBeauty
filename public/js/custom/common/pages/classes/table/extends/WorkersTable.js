@@ -31,7 +31,7 @@ class WorkersTable extends Table {
         }
         $.each(response.data, (index, item) => {
             // just skip the number of all rows
-            if (index === 'totalRowsCount') {
+            if (index === this.totalRowsCountCookie) {
                 return true;
             }
             // Create a table row for each of workers

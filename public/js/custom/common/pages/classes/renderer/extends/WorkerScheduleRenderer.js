@@ -180,7 +180,7 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
              */
             if(schedule.hasOwnProperty('order_id')) {
                 this.addListenerOnCancelAppointment(schedule.schedule_id);
-                this.addListenerOnCompleteAppoitment(schedule.schedule_id);
+                this.addListenerOnCompleteAppointment(schedule.schedule_id);
             } else {
 
             }
@@ -218,7 +218,7 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         }
 
         const handleConfirmClick = (dataToSend) => {
-            this.confirmationModal.showLoader();
+            this.requestTimeout = this.confirmationModal.showLoader();
             this.requester.post(
                 this.apiCancelOrder,
                 dataToSend,
@@ -231,11 +231,11 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         cancelIcon.addEventListener('click', handleCancelIconClick);
     }
     _errorCancelOrderSchedule(response) {
-        this.confirmationModal.hideLoader();
+        this.confirmationModal.hideLoader(this.requestTimeout);
         Notifier.showErrorMessage(response.error);
     }
     _successCancelOrderSchedule(response) {
-        this.confirmationModal.hideLoader();
+        this.confirmationModal.hideLoader(this.requestTimeout);
         /**
          * Hide confirmation modal window
          */
@@ -254,7 +254,7 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         Notifier.showSuccessMessage(response.success);
     }
 
-    addListenerOnCompleteAppoitment(scheduleId) {
+    addListenerOnCompleteAppointment(scheduleId) {
         let checkIcon = document.querySelector(
             `#schedule-card-${scheduleId} .fe-check`
         );
@@ -283,7 +283,7 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         }
 
         const handleConfirmClick = (dataToSend) => {
-            this.confirmationModal.showLoader();
+            this.requestTimeout = this.confirmationModal.showLoader();
             this.requester.post(
                 this.apiCompleteOrder,
                 dataToSend,

@@ -50,7 +50,7 @@ class AppointmentsTable extends Table {
         }
         $.each(response.data, (index, item) => {
             // just skip the number of all rows
-            if (index === 'totalRowsCount') {
+            if (index === this.totalRowsCountCookie) {
                 return true;
             }
             // Create a table row for each of appointments
@@ -141,7 +141,7 @@ class AppointmentsTable extends Table {
         /**
          * Update the table of upcoming appointments
          */
-        this.sendApiRequest(this.itemsPerPage, Cookie.get('currentPage'));
+        this.sendApiRequest(this.itemsPerPage, Cookie.get(this.currentPageCookie));
     }
 
     _errorCancelOrder(response) {
