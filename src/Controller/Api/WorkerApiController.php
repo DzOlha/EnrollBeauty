@@ -651,11 +651,11 @@ class WorkerApiController extends ApiController
         $email, $name, $surname, $order
     ) {
         $email = new Email(
-            'enroll@beauty.com',
-            'Enroll Beauty',
+            COMPANY_EMAIL,
+            COMPANY_NAME,
             [$email],
             'order_canceled',
-            SRC.'/Service/Sender/impl/email/templates/email_with_link.html',
+            EMAIL_WITH_LINK,
         );
 
         $loginUrl = $this->_createLinkToLogin();
@@ -707,21 +707,11 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/worker/getServicesAll
+     * url = /api/worker/service/get/all
      */
     protected function _getServicesAll()
     {
-        $result = $this->dataMapper->selectAllServices();
-        if ($result === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all services'
-            ]);
-        }
-
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
+        parent::_getServicesAll();
     }
 
     /**

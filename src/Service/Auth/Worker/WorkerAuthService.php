@@ -280,11 +280,11 @@ class WorkerAuthService extends AuthService
         $email, $workerSettingId, $recoveryCode, $name, $surname
     ) {
         $email = new Email(
-            'enroll@beauty.com',
-            'Enroll Beauty',
+            COMPANY_EMAIL,
+            COMPANY_NAME,
             [$email],
             'welcome',
-            SRC.'/Service/Sender/impl/email/templates/email_with_link.html',
+            EMAIL_WITH_LINK,
         );
 
         $recoveryUrl = $this->_createRecoveryLink($recoveryCode);
