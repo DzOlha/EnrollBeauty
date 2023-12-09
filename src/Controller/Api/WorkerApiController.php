@@ -35,26 +35,291 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/worker/changePassword
+     * url = /api/worker/auth/
      */
-    public function changePassword() {
-        $changed =  $this->authService->changeWorkerPassword();
-        if(isset($changed['success'])) {
-            SessionHelper::removeRecoveryCodeSession();
+    public function auth() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/worker/auth/login
+             */
+            if ($this->url[3] === 'login') {
+                $this->_login();
+            }
+
+            /**
+             * url = /api/worker/auth/change-password
+             */
+            if ($this->url[3] === 'change-password') {
+                $this->_changePassword();
+            }
         }
-       $this->returnJson($changed);
     }
 
     /**
      * @return void
      *
-     * url = /api/worker/login
+     * url = /api/worker/service/
      */
-    public function login() {
+    public function service() {
+        $session = SessionHelper::getWorkerSession();
+        if (!$session) {
+            $this->_accessDenied();
+        } else {
+            if (isset($this->url[3])) {
+                /**
+                 * url = /api/worker/service/add
+                 */
+                if($this->url[3] === 'add') {
+                    $this->_addService();
+                }
+
+                /**
+                 * url = /api/worker/service/get/
+                 */
+                if($this->url[3] === 'get') {
+                    if(isset($this->url[4])) {
+                        /**
+                         * url = /api/worker/service/get/all
+                         */
+                        if($this->url[4] === 'all') {
+                            $this->_getServicesAll();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/affiliate/
+     */
+    public function affiliate() {
+        $session = SessionHelper::getWorkerSession();
+        if (!$session) {
+            $this->_accessDenied();
+        } else {
+            if (isset($this->url[3])) {
+//                /**
+//                 * url = /api/worker/affiliate/add
+//                 */
+//                if($this->url[3] === 'add') {
+//                    $this->_addAffiliate();
+//                }
+//
+                /**
+                 * url = /api/worker/affiliate/get/
+                 */
+                if($this->url[3] === 'get') {
+                    if(isset($this->url[4])) {
+                        /**
+                         * url = /api/worker/affiliate/get/all
+                         */
+                        if($this->url[4] === 'all') {
+                            $this->_getAffiliatesAll();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/schedule/
+     */
+    public function schedule() {
+        $session = SessionHelper::getWorkerSession();
+        if (!$session) {
+            $this->_accessDenied();
+        } else {
+            if (isset($this->url[3])) {
+                /**
+                 * url = /api/worker/schedule/add
+                 */
+                if($this->url[3] === 'add') {
+                    $this->_addSchedule();
+                }
+
+                /**
+                 * url = /api/worker/schedule/search
+                 */
+                if($this->url[3] === 'search') {
+                    $this->_searchSchedule();
+                }
+
+                /**
+                 * url = /api/worker/schedule/get/
+                 */
+                if($this->url[3] === 'get') {
+                    if(isset($this->url[4])) {
+                        /**
+                         * url = /api/worker/schedule/get/busy-time-intervals
+                         */
+                        if($this->url[4] === 'busy-time-intervals') {
+                            $this->_getBusyTimeIntervals();
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/
+     */
+    public function profile() {
+        $session = SessionHelper::getWorkerSession();
+        if (!$session) {
+            $this->_accessDenied();
+        } else {
+            if (isset($this->url[3])) {
+                /**
+                 * url = /api/worker/profile/get
+                 */
+                if($this->url[3] === 'get') {
+                    $this->_getWorker();
+                }
+
+                /**
+                 *  url = /api/worker/profile/service-pricing/
+                 */
+                if($this->url[3] === 'service-pricing') {
+                    if(isset($this->url[4])) {
+                        /**
+                         *  url = /api/worker/profile/service-pricing/get/
+                         */
+                        if($this->url[4] === 'get') {
+                            if(isset($this->url[5])) {
+                                /**
+                                 *  url = /api/worker/profile/service-pricing/get/all
+                                 */
+                                if($this->url[5] === 'all') {
+                                    $this->_getServicePricing();
+                                }
+                            }
+                        }
+
+                        /**
+                         *  url = /api/worker/profile/service-pricing/add
+                         */
+                        if($this->url[4] === 'add') {
+                           $this->_addServicePricing();
+                        }
+                    }
+                }
+
+                /**
+                 *  url = /api/worker/profile/service/
+                 */
+                if($this->url[3] === 'service') {
+                    if(isset($this->url[4])) {
+                        /**
+                         * url = /api/worker/profile/service/get/
+                         */
+                        if($this->url[4] === 'get') {
+                            if(isset($this->url[5])) {
+                                /**
+                                 * url = /api/worker/profile/service/get/all
+                                 */
+                                if($this->url[5] === 'all') {
+                                    $this->_getServicesAllForWorker();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/order/
+     */
+    public function order() {
+        $session = SessionHelper::getWorkerSession();
+        if (!$session) {
+            $this->_accessDenied();
+        } else {
+            if (isset($this->url[3])) {
+                /**
+                 * url = /api/worker/order/service
+                 */
+                if($this->url[3] === 'service') {
+                    if(isset($this->url[4])) {
+                        /**
+                         * url = /api/worker/order/service/cancel
+                         */
+                        if($this->url[4] === 'cancel') {
+                            $this->_cancelServiceOrder();
+                        }
+
+                        /**
+                         * url = /api/worker/order/service/complete
+                         */
+                        if($this->url[4] === 'complete') {
+                            $this->_completeServiceOrder();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/department/
+     */
+    public function department() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/worker/department/get
+             */
+            if ($this->url[3] === 'get') {
+                if (isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/department/get/all
+                     */
+                    if ($this->url[4] === 'all') {
+                        $this->_getDepartmentsAll();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/auth/change-password
+     */
+    protected function _changePassword() {
+        $changed =  $this->authService->changeWorkerPassword();
+        if(isset($changed['success'])) {
+            SessionHelper::removeRecoveryCodeSession();
+        }
+        $this->returnJson($changed);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/auth/login
+     */
+    protected function _login() {
         $this->returnJson(
             $this->authService->loginWorker()
         );
     }
+
 
     private function _getWorkerId()
     {
@@ -77,9 +342,9 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/worker/getWorkerInfo
+     * url = /api/worker/profile/get
      */
-    public function getWorkerInfo() {
+    protected function _getWorker() {
         if (!SessionHelper::getWorkerSession()) {
             $this->_accessDenied();
         }
@@ -108,11 +373,30 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/worker/getServicesAffiliates
+     * url = /api/worker/affiliate/get/all
      */
-    public function getServicesAffiliates() {
+    protected function _getAffiliatesAll() {
+        parent::_getAffiliatesAll();
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/departments/get/all
+     */
+    protected function _getDepartmentsAll() {
+        parent::_getDepartmentsAll();
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/service/get/all
+     */
+    protected function _getServicesAllForWorker() {
+        $workerId = $this->_getWorkerId();
         $services = $this->dataMapper->selectServicesForWorker(
-            SessionHelper::getWorkerSession()
+            $workerId
         );
         if ($services === false) {
             $this->returnJson([
@@ -120,27 +404,15 @@ class WorkerApiController extends ApiController
             ]);
         }
 
-        $affiliates = $this->dataMapper->selectAllAffiliates();
-        if ($affiliates === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all affiliates'
-            ]);
-        }
-        foreach ($affiliates as &$affiliate) {
-            $affiliate['name'] =
-                "{$affiliate['city']}, {$affiliate['address']}";
-        }
-
         $this->returnJson([
             'success' => true,
-            'data' => [
-                'services' => $services,
-                'affiliates' => $affiliates
-            ]
+            'data' => $services
         ]);
     }
 
-    public function searchSchedule() {
+
+
+    protected function _searchSchedule() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $workerId = $this->_getWorkerId();
             $items = [
@@ -251,11 +523,10 @@ class WorkerApiController extends ApiController
 
     /**
      * @return void
-     * @throws \Exception
      *
-     * url = /api/worker/cancelServiceOrder
+     * url = /api/worker/order/service/cancel
      */
-    public function cancelServiceOrder() {
+    protected function _cancelServiceOrder() {
         if (!SessionHelper::getWorkerSession()) {
             $this->_accessDenied();
         }
@@ -365,6 +636,7 @@ class WorkerApiController extends ApiController
             ]);
         }
     }
+
     protected function _createLinkToLogin() {
         $builder = new UrlBuilder();
         $url = $builder->baseUrl(ENROLL_BEAUTY_URL_HTTP_ROOT)
@@ -374,6 +646,7 @@ class WorkerApiController extends ApiController
             ->build();
         return $url;
     }
+
     protected function _sendLetterToInformUserAboutCancellation(
         $email, $name, $surname, $order
     ) {
@@ -401,9 +674,9 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/worker/completeServiceOrder
+     * url = /api/worker/order/service/complete
      */
-    public function completeServiceOrder()
+    protected function _completeServiceOrder()
     {
         if (!SessionHelper::getWorkerSession()) {
             $this->_accessDenied();
@@ -436,7 +709,7 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/getServicesAll
      */
-    public function getServicesAll()
+    protected function _getServicesAll()
     {
         $result = $this->dataMapper->selectAllServices();
         if ($result === false) {
@@ -454,9 +727,9 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/worker/addServicePricing
+     * url = /api/worker/profile/service-pricing/add
      */
-    public function addServicePricing() {
+    protected function _addServicePricing() {
         if(!SessionHelper::getWorkerSession()) {
             $this->_accessDenied();
         }
@@ -518,9 +791,9 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/worker/getServicePricing
+     * url = /api/worker/profile/service-pricing/get/all
      */
-    public function getServicePricing() {
+    protected function _getServicePricing() {
         if (!SessionHelper::getWorkerSession()) {
             $this->_accessDenied();
         }
@@ -573,7 +846,7 @@ class WorkerApiController extends ApiController
      * Get time intervals for the selected day for the current user
      * to know when there are free time spots for placing new schedule item
      */
-    public function getFilledTimeIntervals() {
+    protected function _getBusyTimeIntervals() {
         $day = null;
         if(isset($_GET['day']) && $_GET['day'] !== '') {
             $day = htmlspecialchars(trim($_GET['day']));
@@ -617,7 +890,7 @@ class WorkerApiController extends ApiController
      *      'end_time' => hh:ii:ss
      * ]
      */
-    public function addSchedule() {
+    protected function _addSchedule() {
         if (!SessionHelper::getWorkerSession()) {
             $this->_accessDenied();
         }

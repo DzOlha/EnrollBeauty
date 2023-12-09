@@ -3,7 +3,7 @@
     <?php require_once VIEW_COMMON."pages/user/profile/blocks/user_info.php"?>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/worker/account">
+        <a class="nav-link" href="/web/worker/profile/home">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-home sidemenu-icon menu-icon "></i>
@@ -33,6 +33,15 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link" href="/web/worker/profile/services">
+            <span class="shape1"></span>
+            <span class="shape2"></span>
+            <i class="ti-palette sidemenu-icon menu-icon"></i>
+            <span class="sidemenu-label">Services</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link" href="/web/worker/profile/pricing">
             <span class="shape1"></span>
             <span class="shape2"></span>
@@ -40,6 +49,7 @@
             <span class="sidemenu-label">Service Pricing</span>
         </a>
     </li>
+
 
 <!--    <li class="nav-item">-->
 <!--        <a class="nav-link with-sub" href="javascript:void(0)">-->

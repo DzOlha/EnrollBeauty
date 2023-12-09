@@ -5,13 +5,13 @@ class AppointmentsTable extends Table {
     ) {
         super(
             requester,
-            '/api/user/getUserComingAppointments?'
+            '/api/user/order/service/upcoming/get/all?'
         );
         this.tableId = 'table-body';
         this.confirmationModal = confirmationModal;
         this.dateRenderer = dateRenderer;
         this.timeRenderer = timeRenderer;
-        this.apiCancelOrder = '/api/user/cancelServiceOrder';
+        this.apiCancelOrder = '/api/user/order/service/cancel';
 
         this.searchScheduleButtonId = 'submit-search-button';
     }

@@ -77,15 +77,15 @@
                                     </a>
                                     <ul>
                                         <?php if(!SessionHelper::getUserSession()) {?>
-                                            <li><a href="/web/user/login">As a User</a></li>
+                                            <li><a href="/web/user/auth/login">As a User</a></li>
                                         <?php }?>
 
                                         <?php if(!SessionHelper::getWorkerSession()) {?>
-                                            <li><a href="/web/worker/login">As a Worker</a></li>
+                                            <li><a href="/web/worker/auth/login">As a Worker</a></li>
                                         <?php }?>
 
                                         <?php if(!SessionHelper::getAdminSession()) {?>
-                                            <li><a href="/web/admin/login">As an Admin</a></li>
+                                            <li><a href="/web/admin/auth/login">As an Admin</a></li>
                                         <?php }?>
                                     </ul>
                                 </li>
@@ -96,15 +96,15 @@
                                         </a>
                                         <ul>
                                             <?php if(SessionHelper::getUserSession()) {?>
-                                                <li><a href="/web/user/logout">As a User</a></li>
+                                                <li><a href="/web/user/auth/logout">As a User</a></li>
                                             <?php }?>
 
                                             <?php if(SessionHelper::getWorkerSession()) {?>
-                                                <li><a href="/web/worker/logout">As a Worker</a></li>
+                                                <li><a href="/web/worker/auth/logout">As a Worker</a></li>
                                             <?php }?>
 
                                             <?php if(SessionHelper::getAdminSession()) {?>
-                                                <li><a href="/web/admin/logout">As an Admin</a></li>
+                                                <li><a href="/web/admin/auth/logout">As an Admin</a></li>
                                             <?php }?>
                                         </ul>
                                     </li>
@@ -114,15 +114,15 @@
                                     </a>
                                     <ul>
                                         <?php if(SessionHelper::getUserSession()) {?>
-                                            <li><a href="/web/user/account">Of the User</a></li>
+                                            <li><a href="/web/user/profile/home">Of the User</a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getWorkerSession()) {?>
-                                            <li><a href="/web/worker/account">Of the Worker</a></li>
+                                            <li><a href="/web/worker/profile/home">Of the Worker</a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getAdminSession()) {?>
-                                            <li><a href="/web/admin/account">Of the Admin</a></li>
+                                            <li><a href="/web/admin/profile/home">Of the Admin</a></li>
                                         <?php }?>
                                     </ul>
                                 </li>

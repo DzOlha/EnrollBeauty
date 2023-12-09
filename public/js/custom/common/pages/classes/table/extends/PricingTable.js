@@ -3,7 +3,7 @@ class PricingTable extends Table {
     constructor(requester) {
         super(
             requester,
-            '/api/worker/getServicePricing?'
+            '/api/worker/profile/service-pricing/get/all?'
         )
         this.tableId = 'table-body';
     }

@@ -1,9 +1,9 @@
 
-class WorkersTable extends Table {
+class ServicesTable extends Table {
     constructor(requester) {
         super(
             requester,
-            '/api/admin/worker/get/all?'
+            '/api/worker/service/get/all?'
         )
         this.tableId = 'table-body';
     }
@@ -11,12 +11,9 @@ class WorkersTable extends Table {
      *  response.data =
      *  0: {
      *      'id':
-     *      'name':
-     *      'surname':
-     *      'email':
-     *      'position':
-     *      'salary':
-     *      'experience':
+     *      'name': it's service name
+     *      'department_id':
+     *      'department_name':
      * }
      * ....
      * 'totalRowsCount':
@@ -34,39 +31,20 @@ class WorkersTable extends Table {
             if (index === this.totalRowsCountCookie) {
                 return true;
             }
-            // Create a table row for each of workers
-            let row = $(`<tr data-worker-id = "${item.id}">`);
+            // Create a table row for each of service item
+            let row = $(`<tr data-pricing-id = "${item.id}">`);
 
             row.append(`<td>${item.id}</td>`);
 
-            row.append(`<td>
-                            ${item.name}
-                      </td>`);
+            row.append(`<td>${item.name}</td>`);
 
-            row.append(`<td>
-                            ${item.surname}
-                      </td>`);
-
-            row.append(`<td>
-                            ${item.email}
-                      </td>`);
-
-            row.append(`<td>
-                            ${item.position}
-                      </td>`);
-
-            row.append(`<td>
-                            ${Number(item.salary).toFixed(1)}
-                      </td>`);
-
-            row.append(`<td>
-                            ${Number(item.experience).toFixed(2)} years
+            row.append(`<td data-department-id="${item.department_id}">
+                            ${item.department_name}
                       </td>`);
 
             row.append(`<td>
                         <a class="btn ripple btn-manage manage-button"
                            id="manage-${item.id}"
-                           data-worker-id = "${item.id}"
                            href="">
                             <i class="fe fe-eye me-2"></i>
                             Manage

@@ -4,7 +4,7 @@ class ChangeDefaultForm extends Form {
         super(
             'change-default-form',
             'change-default-form-submit',
-            '/api/admin/changeDefault',
+            '/api/admin/auth/change-default-admin-info',
             new Requester()
         );
 
@@ -22,7 +22,7 @@ class ChangeDefaultForm extends Form {
         $(`#${this.newPasswordInputId}`).tooltip();
         $(`#${this.confirmPasswordInputId}`).tooltip();
 
-        this.loginUrl = "/web/admin/login";
+        this.loginUrl = "/web/admin/auth/login";
     }
     successCallbackSubmit(response) {
         this.showSuccessMessage(response.success);

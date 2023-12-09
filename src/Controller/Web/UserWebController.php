@@ -23,9 +23,39 @@ class UserWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/user/login
+     * url = /web/user/auth
      */
-    public function login()
+    public function auth() {
+        if(isset($this->url[3])) {
+            /**
+             * url = /web/user/auth/registration
+             */
+            if($this->url[3] === 'registration') {
+                $this->_registration();
+            }
+
+            /**
+             * url = /web/user/auth/login
+             */
+            if($this->url[3] === 'login') {
+                $this->_login();
+            }
+
+            /**
+             * url = /web/user/auth/logout
+             */
+            if($this->url[3] === 'logout') {
+                $this->_logout();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/user/auth/login
+     */
+    protected function _login()
     {
         $data = [
             'title' => 'Login'
@@ -36,9 +66,9 @@ class UserWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/user/registration
+     * url = /web/user/auth/registration
      */
-    public function registration()
+    protected function _registration()
     {
         $data = [
             'title' => 'Registration'
@@ -49,38 +79,29 @@ class UserWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/user/account
+     * url = /web/user/auth/logout
      */
-    public function account()
-    {
-        $session = SessionHelper::getUserSession();
-        if (!$session) {
-            $data = [
-                'title' => 'Page Not Found',
-                'message' => 'The requested page not found! Please, log in to visit your account!'
-            ];
-            $this->view(VIEW_FRONTEND . 'pages/system/error', $data);
-        } else {
-            $data = [
-                'title' => 'Account',
-                'page_name' => 'Homepage'
-            ];
-            $this->view(VIEW_FRONTEND . 'pages/user/profile/account', $data);
-        }
-    }
-
-    /**
-     * @return void
-     *
-     * url = /web/user/logout
-     */
-    public function logout()
+    protected function _logout()
     {
         SessionHelper::removeUserSession();
         $data = [
             'title' => 'Homepage'
         ];
         $this->view(VIEW_FRONTEND . 'index', $data);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/user/profile/home
+     */
+    protected function _home()
+    {
+        $data = [
+            'title' => 'Account',
+            'page_name' => 'Homepage'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/user/profile/home', $data);
     }
 
     private function _accessDenied() {
@@ -114,21 +135,12 @@ class UserWebController extends WebController
         } else {
             if (isset($this->url[3])) {
                 $menuItemName = $this->url[3];
-                if ($menuItemName === 'settings') {
 
-                }
-                if ($menuItemName === 'users') {
-
-                }
-                if ($menuItemName === 'workers') {
-                    $data = [
-                        'title' => 'User Management',
-                        'page_name' => 'Workers'
-                    ];
-                    $this->view(VIEW_FRONTEND . 'pages/admin/profile/workers', $data);
-                }
-                if ($menuItemName === 'admins') {
-
+                /**
+                 * url = /web/user/profile/home
+                 */
+                if ($menuItemName === 'home') {
+                    $this->_home();
                 }
             }
         }

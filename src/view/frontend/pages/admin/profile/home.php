@@ -275,7 +275,7 @@
 <script src="/public/js/custom/common/pages/user/profile/User.js"></script>
 <script src="/public/js/custom/common/pages/admin/profile/Admin.js"></script>
 
-<script src="/public/js/custom/frontend/pages/admin/profile/account.js"></script>
+<script src="/public/js/custom/frontend/pages/admin/profile/home.js"></script>
 
 </body>
 </html>

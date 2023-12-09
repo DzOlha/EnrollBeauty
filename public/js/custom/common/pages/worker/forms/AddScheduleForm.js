@@ -3,7 +3,7 @@ class AddScheduleForm extends Form {
         super(
             '',
             '',
-            '/api/worker/addSchedule',
+            '/api/worker/schedule/add',
             requester
         );
         this.modalForm = modalForm;
@@ -39,8 +39,9 @@ class AddScheduleForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetServicesAffiliates = '/api/worker/getServicesAffiliates?';
-        this.apiGetFilledTimeIntervals = '/api/worker/getFilledTimeIntervals?';
+        this.apiGetServices = '/api/worker/service/get/all';
+        this.apiGetAffiliates = '/api/worker/affiliate/get/all';
+        this.apiGetFilledTimeIntervals = '/api/worker/schedule/get/busy-time-intervals?';
     }
 
     _initDatepicker() {
@@ -175,42 +176,46 @@ class AddScheduleForm extends Form {
         );
 
         this._initSelect2();
-        this.getServicesAffiliates();
+        this.getServices();
+        this.getAffiliates();
         this.addListenerChangeDay();
         this.modalForm.close();
         this._initDatepicker();
         this.addListenerSubmitForm();
     }
 
-    getServicesAffiliates() {
+    getServices() {
         this.requester.get(
-            this.apiGetServicesAffiliates,
-            this.successCallbackGetServicesAffiliates.bind(this),
+            this.apiGetServices,
+            this.successCallbackGetServices.bind(this),
             (response) => {
                 Notifier.showErrorMessage(response.error);
             }
         )
     }
-
-    successCallbackGetServicesAffiliates(response) {
-        // this.select2 = new Select2(
-        //     this.modalForm.modalContentId,
-        //     'My Select2 Generated',
-        //     'Choose my',
-        //     'my-select',
-        //     true,
-        //     true,
-        //     $(`#${this.modalForm.modalId} .${this.modalBodyClass}`)
-        // )
-        // this.select2.populate(response.data.services);
-
+    successCallbackGetServices(response) {
         let serviceSelect = $(`#${this.serviceSelectId}`);
-        this._populateSelectOptions(serviceSelect, response.data.services);
+        this._populateSelectOptions(serviceSelect, response.data);
 
+        let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
+        this._initServiceSelect2(modalBody);
+    }
+
+    getAffiliates() {
+        this.requester.get(
+            this.apiGetAffiliates,
+            this.successCallbackGetAffiliates.bind(this),
+            (response) => {
+                Notifier.showErrorMessage(response.error);
+            }
+        )
+    }
+    successCallbackGetAffiliates(response) {
         let affiliateSelect = $(`#${this.affiliateSelectId}`);
-        this._populateSelectOptions(affiliateSelect, response.data.affiliates);
+        this._populateSelectOptions(affiliateSelect, response.data);
 
-        this._initSelect2();
+        let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
+        this._initAffiliateSelect2(modalBody);
     }
 
     addListenerChangeDay() {

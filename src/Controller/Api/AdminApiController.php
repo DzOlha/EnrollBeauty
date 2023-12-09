@@ -12,7 +12,6 @@ use Src\Model\DataSource\extends\UserDataSource;
 use Src\Service\Auth\Admin\AdminAuthService;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\User\UserAuthService;
-use Src\Service\Auth\Worker\WorkerAuthService;
 
 class AdminApiController extends ApiController
 {
@@ -39,16 +38,148 @@ class AdminApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/admin/changeDefault
+     * url = /api/admin/auth/
      */
-    public function changeDefault()
+    public function auth() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/admin/auth/change-default-admin-info
+             */
+            if($this->url[3] === 'change-default-admin-info') {
+                $this->_changeDefault();
+            }
+
+            /**
+             * url = /api/admin/auth/login
+             */
+            if($this->url[3] === 'login') {
+                $this->_login();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/profile/
+     */
+    public function profile() {
+        if (!SessionHelper::getAdminSession()) {
+            $this->_accessDenied();
+        }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/admin/profile/get
+             */
+            if($this->url[3] === 'get') {
+                $this->_getAdminInfo();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/worker/
+     */
+    public function worker() {
+        if (!SessionHelper::getAdminSession()) {
+            $this->_accessDenied();
+        }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/admin/worker/get
+             */
+            if($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * /api/admin/worker/get/all
+                     */
+                    if($this->url[4] === 'all') {
+                        $this->_getWorkers();
+                    }
+                }
+            }
+
+            /**
+             * url = /api/admin/worker/register
+             */
+            if($this->url[3] === 'register') {
+                $this->_registerWorker();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/position/
+     */
+    public function position() {
+        if (!SessionHelper::getAdminSession()) {
+            $this->_accessDenied();
+        }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/admin/position/get
+             */
+            if($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * /api/admin/position/get/all
+                     */
+                    if($this->url[4] === 'all') {
+                        $this->_getAllPositions();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/role/
+     */
+    public function role() {
+        if (!SessionHelper::getAdminSession()) {
+            $this->_accessDenied();
+        }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/admin/role/get
+             */
+            if($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * /api/admin/role/get/all
+                     */
+                    if($this->url[4] === 'all') {
+                        $this->_getAllRoles();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/auth/change-default-admin-info
+     */
+    protected function _changeDefault()
     {
         $this->returnJson(
             $this->authService->changeDefaultAdminData()
         );
     }
 
-    public function login()
+    /**
+     * @return void
+     *
+     * url = /api/admin/auth/login
+     */
+    protected function _login()
     {
         $this->returnJson(
             $this->authService->loginAdmin()
@@ -72,13 +203,10 @@ class AdminApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/admin/getAdminInfo
+     * url = /api/admin/profile/get
      */
-    public function getAdminInfo(): void
+    protected function _getAdminInfo(): void
     {
-        if (!SessionHelper::getAdminSession()) {
-            $this->_accessDenied();
-        }
         $adminId = $this->_getAdminId();
         /**
          *  [
@@ -104,13 +232,10 @@ class AdminApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/admin/workers
+     * url = /api/admin/worker/get/all
      */
-    public function getWorkers(): void
+    protected function _getWorkers(): void
     {
-        if (!SessionHelper::getAdminSession()) {
-            $this->_accessDenied();
-        }
         $param = $this->_getLimitPageFieldOrderOffset();
         /**
          *  * [
@@ -137,15 +262,18 @@ class AdminApiController extends ApiController
                 "The error occurred while getting data about all workers!"
             );
         }
-        $this->returnJsonSuccess(true, $result);
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
     }
 
     /**
      * @return void
      *
-     * url = /api/admin/getAllPositionsRoles
+     * url = /api/admin/position/get/all
      */
-    public function getAllPositionsRoles(): void
+    protected function _getAllPositions(): void
     {
         /**
          * Get positions
@@ -158,32 +286,42 @@ class AdminApiController extends ApiController
             $this->returnJson(['error' => "There are no positions found!"]);
         }
 
-        /**
-         * Get roles
-         */
-        $roles = $this->dataMapper->selectAllRoles();
-        if($positions === false) {
-            $this->returnJson(['error' => "An error occurred while getting all roles"]);
-        }
-        if($positions === null) {
-            $this->returnJson(['error' => "There are no roles found!"]);
-        }
-
         $this->returnJson([
             'success' => true,
-            'data' => [
-                'positions' => $positions,
-                'roles' => $roles
-            ]
+            'data' => $positions
         ]);
     }
 
     /**
      * @return void
      *
-     *  * url = /api/admin/registerWorker
+     * url = /api/admin/role/get/all
      */
-    public function registerWorker(): void
+    protected function _getAllRoles(): void
+    {
+        /**
+         * Get roles
+         */
+        $roles = $this->dataMapper->selectAllRoles();
+        if($roles === false) {
+            $this->returnJson(['error' => "An error occurred while getting all roles"]);
+        }
+        if($roles === null) {
+            $this->returnJson(['error' => "There are no roles found!"]);
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $roles
+        ]);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/worker/register
+     */
+    protected function _registerWorker(): void
     {
         $this->returnJson(
             $this->authService->registerWorker()

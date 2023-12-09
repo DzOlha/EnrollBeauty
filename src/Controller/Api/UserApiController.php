@@ -40,10 +40,236 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     *       type    controller      method
-     * url:  /api       /user        /register
+     * url = /api/user/auth/
      */
-    public function register()
+    public function auth() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/user/auth/register
+             */
+            if($this->url[3] === 'register') {
+                $this->_register();
+            }
+
+            /**
+             * url = /api/user/auth/login
+             */
+            if($this->url[3] === 'login') {
+                $this->_login();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/profile
+     */
+    public function profile() {
+        $session = SessionHelper::getUserSession();
+        if (!$session) {
+            $this->_accessDenied();
+        }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/user/profile/get
+             */
+            if($this->url[3] === 'get') {
+                $this->_getUserInfo();
+            }
+
+            if($this->url[3] === 'social-networks') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/user/profile/social-networks/get
+                     */
+                    if($this->url[4] === 'get') {
+                        $this->_getUserSocialNetworks();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     *  url = /api/user/order/
+     */
+    public function order() {
+        $session = SessionHelper::getUserSession();
+        if (!$session) {
+            $this->_accessDenied();
+        }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/user/order/service/
+             */
+            if($this->url[3] === 'service') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/user/order/service/upcoming/
+                     */
+                    if($this->url[4] === 'upcoming') {
+                        if(isset($this->url[5])) {
+                            /**
+                             *  url = /api/user/order/service/upcoming/get/
+                             */
+                            if($this->url[5] === 'get') {
+                                if(isset($this->url[6])) {
+                                    /**
+                                     *  url = /api/user/order/service/upcoming/get/all
+                                     */
+                                    if($this->url[6] === 'all') {
+                                        $this->_getUserComingAppointments();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    /**
+                     * url = /api/user/order/service/cancel
+                     */
+                    if($this->url[4] === 'cancel') {
+                        $this->_cancelServiceOrder();
+                    }
+
+                    /**
+                     * url = /api/user/order/service/add
+                     */
+                    if($this->url[4] === 'add') {
+                        $this->_orderServiceSchedule();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/service/
+     */
+    public function service() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/user/service/get/
+             */
+            if ($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/user/service/get/workers/
+                     */
+                    if($this->url[4] === 'workers') {
+                        if(isset($this->url[5])) {
+                            /**
+                             *  url = /api/user/service/get/workers/all
+                             */
+                            if($this->url[5] === 'all') {
+                               $this->_getWorkersForService();
+                            }
+                        }
+                    }
+
+                    /**
+                     *  url = /api/user/service/get/all
+                     */
+                    if($this->url[4] === 'all') {
+                        $this->_getServicesAll();
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/worker/get/services/all
+     */
+    public function worker() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/user/worker/get/
+             */
+            if ($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/user/worker/get/services/
+                     */
+                    if($this->url[4] === 'services') {
+                        if(isset($this->url[5])) {
+                            /**
+                             *  url = /api/user/worker/get/services/all
+                             */
+                            if($this->url[5] === 'all') {
+                                $this->_getServicesForWorker();
+                            }
+                        }
+                    }
+
+                    if($this->url[4] === 'all') {
+                        /**
+                         * url = /api/user/worker/get/all
+                         */
+                        $this->_getWorkersAll();
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/affiliate/
+     */
+    public function affiliate() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/user/affiliate/get/
+             */
+            if ($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+
+                    if($this->url[4] === 'all') {
+                        /**
+                         * url = /api/user/affiliate/get/all
+                         */
+                        $this->_getAffiliatesAll();
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/schedule/
+     */
+    public function schedule() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/user/schedule/search
+             */
+            if ($this->url[3] === 'search') {
+                $this->_searchSchedule();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     *       type    controller      method
+     * url:  /api       /user        /auth      /register
+     */
+    protected function _register()
     {
         $this->returnJson(
             $this->authService->registerUser()
@@ -53,9 +279,9 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/user/login
+     * url = /api/user/auth/login
      */
-    public function login()
+    protected function _login()
     {
         $this->returnJson(
             $this->authService->loginUser()
@@ -82,9 +308,9 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/user/getUserInfo
+     * url = /api/user/profile/get
      */
-    public function getUserInfo()
+    protected function _getUserInfo()
     {
         $userId = $this->_getUserId();
         /**
@@ -107,9 +333,9 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/user/getUserSocialNetworks
+     * url = /api/user/profile/social-networks/get
      */
-    public function getUserSocialNetworks()
+    protected function _getUserSocialNetworks()
     {
         $userId = $this->_getUserId();
         /**
@@ -131,9 +357,9 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/user/getUserComingAppointments
+     * url = /api/user/order/service/upcoming/get/all
      */
-    public function getUserComingAppointments()
+    protected function _getUserComingAppointments()
     {
         $userId = $this->_getUserId();
         $param = $this->_getLimitPageFieldOrderOffset();
@@ -194,9 +420,9 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/user/getWorkersForService
+     * url = /api/user/service/get/workers/all
      */
-    public function getWorkersForService()
+    protected function _getWorkersForService()
     {
         $serviceId = 0;
         if (isset($_GET['service_id']) && $_GET['service_id'] !== '') {
@@ -222,9 +448,9 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/user/getServicesForWorker
+     * url = /api/user/worker/get/services/all
      */
-    public function getServicesForWorker()
+    protected function _getServicesForWorker()
     {
         $workerId = 0;
         if (isset($_GET['worker_id']) && $_GET['worker_id'] !== '') {
@@ -245,145 +471,85 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/user/getServicesWorkersAffiliates
+     * url = /api/user/worker/get/all
      */
-    public function getServicesWorkersAffiliates()
+    protected function _getWorkersAll()
     {
-        $services = $this->dataMapper->selectAllServices();
-        if ($services === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all services'
-            ]);
-        }
-
-        $workers = $this->dataMapper->selectAllWorkers();
-        if ($workers === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all workers'
-            ]);
-        }
-        foreach ($workers as &$worker) {
-            $worker['name'] = $worker['name'] . " " . $worker['surname'];
-        }
-
-
-        $affiliates = $this->dataMapper->selectAllAffiliates();
-        if ($affiliates === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all affiliates'
-            ]);
-        }
-        foreach ($affiliates as &$affiliate) {
-            $affiliate['name'] =
-                "{$affiliate['city']}, {$affiliate['address']}";
-        }
-
-        $this->returnJson([
-            'success' => true,
-            'data' => [
-                'services' => $services,
-                'workers' => $workers,
-                'affiliates' => $affiliates
-            ]
-        ]);
+       parent::_getWorkersAll();
     }
 
     /**
      * @return void
      *
-     * url = /api/user/getWorkersAll
+     * url = /api/user/service/get/all
      */
-    public function getWorkersAll()
+    protected function _getServicesAll()
     {
-        $result = $this->dataMapper->selectAllWorkers();
-        if ($result === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all workers'
-            ]);
-        }
-
-        foreach ($result as &$worker) {
-            $worker['name'] = $worker['name'] . " " . $worker['surname'];
-        }
-
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
+        parent::_getServicesAll();
     }
 
     /**
      * @return void
      *
-     * url = /api/user/getServicesAll
+     * url = /api/user/affiliate/get/all
      */
-    public function getServicesAll()
+    protected function _getAffiliatesAll()
     {
-        $result = $this->dataMapper->selectAllServices();
-        if ($result === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all services'
-            ]);
-        }
-
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
+        parent::_getAffiliatesAll();
     }
 
     /**
      * @return void
      *
-     * url = /api/user/getInitialSchedule
+     * url = /api/user/schedule/get/initial
      */
-    public function getInitialSchedule()
-    {
-        /**
-         * Select all departments for the tab menu
-         */
-        $departments = $this->dataMapper->selectAllDepartments();
-        if ($departments === false) {
-            $this->returnJson([
-                'error' => 'There is error occurred while getting all departments'
-            ]);
-        }
-
-        if (!$departments) {
-            $this->returnJson([
-                'error' => 'There is no any departments yet!'
-            ]);
-        }
-
-        $defaultDepartment = $departments[0];
-
-        $scheduleForDepartment = $this->dataMapper->selectSchedule(
-            $defaultDepartment['id']
-        );
-        if ($scheduleForDepartment === false) {
-            $this->returnJson([
-                'error' => "The error occurred while getting schedule
-                            for {$defaultDepartment['name']} department"
-
-            ]);
-        }
-
-        $this->returnJson([
-            'success' => true,
-            'data' => [
-                'schedule' => $scheduleForDepartment,
-                'departments' => $departments,
-                'active_department' => $defaultDepartment
-            ]
-        ]);
-    }
+//    protected function _getInitialSchedule()
+//    {
+//        /**
+//         * Select all departments for the tab menu
+//         */
+//        $departments = $this->dataMapper->selectAllDepartments();
+//        if ($departments === false) {
+//            $this->returnJson([
+//                'error' => 'There is error occurred while getting all departments'
+//            ]);
+//        }
+//
+//        if (!$departments) {
+//            $this->returnJson([
+//                'error' => 'There is no any departments yet!'
+//            ]);
+//        }
+//
+//        $defaultDepartment = $departments[0];
+//
+//        $scheduleForDepartment = $this->dataMapper->selectSchedule(
+//            $defaultDepartment['id']
+//        );
+//        if ($scheduleForDepartment === false) {
+//            $this->returnJson([
+//                'error' => "The error occurred while getting schedule
+//                            for {$defaultDepartment['name']} department"
+//
+//            ]);
+//        }
+//
+//        $this->returnJson([
+//            'success' => true,
+//            'data' => [
+//                'schedule' => $scheduleForDepartment,
+//                'departments' => $departments,
+//                'active_department' => $defaultDepartment
+//            ]
+//        ]);
+//    }
 
     /**
      * @return void
      *
-     * url = /api/user/searchSchedule
+     * url = /api/user/schedule/search
      */
-    public function searchSchedule()
+    protected function _searchSchedule()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $items = [
@@ -464,7 +630,13 @@ class UserApiController extends ApiController
         }
     }
 
-    public function orderServiceSchedule() {
+    /**
+     * @return void
+     * @throws \Exception
+     *
+     * url = /api/user/order/service/add
+     */
+    protected function _orderServiceSchedule() {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             /**
              * Get user id to work with
@@ -585,7 +757,12 @@ class UserApiController extends ApiController
         }
     }
 
-    public function cancelServiceOrder() {
+    /**
+     * @return void
+     *
+     * url = /api/user/order/service/cancel
+     */
+    protected function _cancelServiceOrder() {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = htmlspecialchars(trim($_POST['order_id']));
 

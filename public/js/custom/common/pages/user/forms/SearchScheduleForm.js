@@ -1,12 +1,12 @@
 class SearchScheduleForm extends Form {
     constructor(
         requester, scheduleRenderer,
-        optionBuilder, dateRenderer, apiUrl
+        optionBuilder, dateRenderer
     ) {
         super(
             '',
             'submit-search-button',
-            apiUrl,
+            '/api/user/schedule/search',
             requester
         );
         this.renderer = scheduleRenderer;
@@ -40,14 +40,14 @@ class SearchScheduleForm extends Form {
         this.priceToInputId = 'price-to';
         this.priceToErrorId = 'price-to-input-error';
 
-        this.apiUrlGetWorkers = '/api/user/getWorkersForService?';
-        this.apiUrlGetServices = '/api/user/getServicesForWorker?';
-        this.apiUrlGetAll = '/api/user/getServicesWorkersAffiliates?';
+        this.apiUrlGetWorkers = '/api/user/service/get/workers/all';
+        this.apiUrlGetServices = '/api/user/worker/get/services/all';
 
-        this.apiUrlGetWorkersAll = '/api/user/getWorkersAll';
-        this.apiUrlGetServicesAll = '/api/user/getServicesAll';
+        this.apiUrlGetAffiliatesAll = '/api/user/affiliate/get/all';
+        this.apiUrlGetWorkersAll = '/api/user/worker/get/all';
+        this.apiUrlGetServicesAll = '/api/user/service/get/all';
 
-        this.submitActionUrl = apiUrl;
+        this.submitActionUrl = '/api/user/schedule/search';
     }
 
     _initializeDateRangePicker() {
@@ -369,7 +369,7 @@ class SearchScheduleForm extends Form {
             let value = e.params.data.id;
             console.log(value);
             /**
-             * If nothing is selected ot user reset the filter
+             * If nothing is selected or user reset the filter
              * we load all services into appropriate select
              */
             if (!value) {
@@ -404,12 +404,12 @@ class SearchScheduleForm extends Form {
 
 
     /**
-     * Populate service, workers, affiliates selectors
+     * Populate service
      */
-    getServicesWorkersAffiliates() {
+    getServices() {
         this.requester.get(
-            this.apiUrlGetAll,
-            this.successCallbackGetAll.bind(this),
+            this.apiUrlGetServicesAll,
+            this.successCallbackGetAllServices.bind(this),
             this.errorCallbackSubmit.bind(this),
             this.errorCallbackSubmit.bind(this)
         )
@@ -420,27 +420,64 @@ class SearchScheduleForm extends Form {
      * @param response = {
      *     success: true,
      *     data: {
-     *         services: {
-     *            {
-     *               id:
-     *               name
-     *            }
-     *          ....
-     *         }
-     *         workers:
-     *         affiliates
-     *     }
-     * }
+     *         id:
+     *         name:
+     *      }
      */
-    successCallbackGetAll(response) {
+    successCallbackGetAllServices(response) {
         let servicesSelect = $(`#${this.serviceNameSelectId}`);
-        this._populateSelectOptions(servicesSelect, response.data.services)
+        this._populateSelectOptions(servicesSelect, response.data)
+    }
 
+    /**
+     * Populate workers
+     */
+    getWorkers() {
+        this.requester.get(
+            this.apiUrlGetWorkersAll,
+            this.successCallbackGetAllWorkers.bind(this),
+            this.errorCallbackSubmit.bind(this),
+            this.errorCallbackSubmit.bind(this)
+        )
+    }
+    /**
+     *
+     * @param response = {
+     *     success: true,
+     *     data: {
+     *         id:
+     *         name:
+     *      }
+     */
+    successCallbackGetAllWorkers(response) {
         let workersSelect = $(`#${this.workerNameSelectId}`);
-        this._populateSelectOptions(workersSelect, response.data.workers)
+        this._populateSelectOptions(workersSelect, response.data)
+    }
 
+
+    /**
+     * Populate affiliates
+     */
+    getAffiliates() {
+        this.requester.get(
+            this.apiUrlGetAffiliatesAll,
+            this.successCallbackGetAllAffiliates.bind(this),
+            this.errorCallbackSubmit.bind(this),
+            this.errorCallbackSubmit.bind(this)
+        )
+    }
+    /**
+     *
+     * @param response = {
+     *     success: true,
+     *     data: {
+     *         id:
+     *         name:
+     *      }
+     */
+    successCallbackGetAllAffiliates(response) {
         let affiliatesSelect = $(`#${this.affiliateSelectId}`);
-        this._populateSelectOptions(affiliatesSelect, response.data.affiliates)
+        this._populateSelectOptions(affiliatesSelect, response.data)
     }
 
     /**

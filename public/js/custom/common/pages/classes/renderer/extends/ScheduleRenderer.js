@@ -43,7 +43,7 @@ class ScheduleRenderer {
         /**
          * API
          */
-        this.apiOrderSchedule = '/api/user/orderServiceSchedule';
+        this.apiOrderSchedule = '/api/user/order/service/add';
     }
 
     /**

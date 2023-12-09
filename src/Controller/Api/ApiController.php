@@ -106,4 +106,65 @@ class ApiController extends AbstractController
             'offset' => $offset
         ];
     }
+
+    protected function _getAffiliatesAll() {
+        $affiliates = $this->dataMapper->selectAllAffiliates();
+        if ($affiliates === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all affiliates'
+            ]);
+        }
+        foreach ($affiliates as &$affiliate) {
+            $affiliate['name'] =
+                "{$affiliate['city']}, {$affiliate['address']}";
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $affiliates
+        ]);
+    }
+
+    protected function _getDepartmentsAll() {
+        $departments = $this->dataMapper->selectAllDepartments();
+        if ($departments === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all affiliates'
+            ]);
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $departments
+        ]);
+    }
+
+    protected function _getWorkersAll() {
+        $workers = $this->dataMapper->selectAllWorkers();
+        if ($workers === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all workers'
+            ]);
+        }
+        foreach ($workers as &$worker) {
+            $worker['name'] = $worker['name'] . " " . $worker['surname'];
+        }
+        $this->returnJson([
+            'success' => true,
+            'data' => $workers
+        ]);
+    }
+
+    protected function _getServicesAll() {
+        $services = $this->dataMapper->selectAllServices();
+        if ($services === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting all services'
+            ]);
+        }
+        $this->returnJson([
+            'success' => true,
+            'data' => $services
+        ]);
+    }
 }

@@ -23,8 +23,7 @@ $(function () {
     );
     let searchScheduleForm = new WorkerSearchScheduleForm(
         requester, scheduleRenderer,
-        new OptionBuilder(), dateRenderer,
-        '/api/worker/searchSchedule'
+        new OptionBuilder(), dateRenderer
     );
 
     let formBuilder = new FormBuilder();
@@ -38,7 +37,8 @@ $(function () {
      * Get information for select elements of the form of searching
      * available schedules for appointments
      */
-    searchScheduleForm.getServicesAffiliatesForTheWorker();
+    searchScheduleForm.getServicesForTheWorker();
+    searchScheduleForm.getAffiliates();
 
     /**
      * Add the listener to handle submission of the form of schedule searching

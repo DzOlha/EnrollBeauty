@@ -3,13 +3,13 @@ class LoginForm extends Form {
         super(
             'login-form',
             'login-form-submit',
-            '/api/user/login',
+            '/api/user/auth/login',
             new Requester()
         );
         this.emailInputId = 'email-input';
         this.passwordInputId = 'password-input';
 
-        this.accountUrl = '/web/user/account'
+        this.accountUrl = '/web/user/profile/home'
     }
 
     successCallbackSubmit(response) {

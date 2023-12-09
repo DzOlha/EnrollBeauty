@@ -2,7 +2,7 @@ class User {
     constructor(requester) {
         this.requestor = requester;
 
-        this.apiUserInfoUrl = '/api/user/getUserInfo';
+        this.apiUserInfoUrl = '/api/user/profile/get';
 
         this.smallNameId = 'name-small';
         this.smallSurnameId = 'surname-small';
@@ -17,7 +17,7 @@ class User {
     }
 
     setApiUserInfoUrl(userId) {
-        this.apiUserInfoUrl = `/api/user/getUserInfo?user_id=${userId}`;
+        this.apiUserInfoUrl = `/api/user/profile/get?user_id=${userId}`;
     }
     getUserInfo() {
         this.requestor.get(

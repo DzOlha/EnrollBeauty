@@ -4,13 +4,13 @@ class ChangePasswordForm extends Form {
         super(
             'registration-form',
             'change-password-form-submit',
-            '/api/worker/changePassword',
+            '/api/worker/auth/change-password',
             new Requester()
         );
         this.passwordInputId = 'password-input';
         this.confirmPasswordInputId = 'confirm-password-input';
 
-        this.loginUrl = "/web/worker/login";
+        this.loginUrl = "/web/worker/auth/login";
 
         $(`#${this.passwordInputId}`).tooltip();
         $(`#${this.confirmPasswordInputId}`).tooltip();

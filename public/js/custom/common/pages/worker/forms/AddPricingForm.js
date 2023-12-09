@@ -4,7 +4,7 @@ class AddPricingForm extends Form {
         super(
             '',
             '',
-            '/api/worker/addServicePricing',
+            '/api/worker/profile/service-pricing/add',
             requester
         );
         //console.log(modalForm.modalSubmitId);
@@ -23,7 +23,7 @@ class AddPricingForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetServices = '/api/worker/getServicesAll';
+        this.apiGetServices = '/api/worker/service/get/all';
     }
     _initSelect2() {
         let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);

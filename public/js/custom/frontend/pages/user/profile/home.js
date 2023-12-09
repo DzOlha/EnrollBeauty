@@ -17,8 +17,7 @@ $(function () {
     );
     let searchScheduleForm = new SearchScheduleForm(
         requester, scheduleRenderer,
-        new OptionBuilder(), dateRenderer,
-        '/api/user/searchSchedule'
+        new OptionBuilder(), dateRenderer
     );
 
     /**
@@ -35,7 +34,9 @@ $(function () {
      * Get information for select elements of the form of searching
      * available schedules for appointments
      */
-    searchScheduleForm.getServicesWorkersAffiliates();
+    searchScheduleForm.getServices();
+    searchScheduleForm.getWorkers();
+    searchScheduleForm.getAffiliates();
 
     /**
      * Add listener to offer only valid workers for the selected service

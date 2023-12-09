@@ -2,16 +2,20 @@
 class WorkerSearchScheduleForm extends SearchScheduleForm {
     constructor(
         requester, scheduleRenderer,
-        optionBuilder, dateRenderer, apiUrl
+        optionBuilder, dateRenderer
     ) {
         super(
             requester, scheduleRenderer,
-            optionBuilder, dateRenderer, apiUrl
+            optionBuilder, dateRenderer,
+            '/api/worker/schedule/search'
         );
-        this.apiUrlGetAll = '/api/worker/getServicesAffiliates?';
+        this.apiUrlGetAllWorkerServices = '/api/worker/profile/service/get/all';
+        this.apiUrlGetAllAffiliates = '/api/worker/affiliate/get/all';
 
         this.onlyOrderedCheckboxId = 'only-ordered-checkbox';
         this.onlyFreeCheckboxId = 'only-free-checkbox';
+
+        this.submitActionUrl = '/api/worker/schedule/search';
     }
     _initializeDateRangePicker() {
         const currentDate = new Date();
@@ -104,19 +108,29 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
             'only_free': freeValue
         }
     }
-    getServicesAffiliatesForTheWorker() {
+
+    getServicesForTheWorker() {
         this.requester.get(
-            this.apiUrlGetAll,
-            this.successCallbackGetAll.bind(this),
+            this.apiUrlGetAllWorkerServices,
+            this.successCallbackGetServices.bind(this),
             this.errorCallbackSubmit.bind(this)
         )
     }
-    successCallbackGetAll(response) {
-        let servicesSelect = $(`#${this.serviceNameSelectId}`);
-        this._populateSelectOptions(servicesSelect, response.data.services)
+    getAffiliates() {
+        this.requester.get(
+            this.apiUrlGetAllAffiliates,
+            this.successCallbackGetAffiliates.bind(this),
+            this.errorCallbackSubmit.bind(this)
+        )
+    }
 
+    successCallbackGetServices(response) {
+        let servicesSelect = $(`#${this.serviceNameSelectId}`);
+        this._populateSelectOptions(servicesSelect, response.data)
+    }
+    successCallbackGetAffiliates(response) {
         let affiliatesSelect = $(`#${this.affiliateSelectId}`);
-        this._populateSelectOptions(affiliatesSelect, response.data.affiliates)
+        this._populateSelectOptions(affiliatesSelect, response.data)
     }
 
     /**

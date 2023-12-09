@@ -38,6 +38,31 @@ class AdminWebController extends WebController
     /**
      * @return void
      *
+     * url = /web/admin/auth/
+     */
+    public function auth()
+    {
+        if (isset($this->url[3])) {
+            /**
+             * url = /web/admin/auth/login
+             */
+            if ($this->url[3] === 'login') {
+                $this->_login();
+            }
+
+            /**
+             * url = /web/admin/auth/logout
+             */
+            if ($this->url[3] === 'logout') {
+                $this->_logout();
+            }
+        }
+    }
+
+
+    /**
+     * @return void
+     *
      * url = /{the admin registration url is here}
      */
     public function adminDefaultRegistration()
@@ -64,9 +89,9 @@ class AdminWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/admin/login
+     * url = /web/admin/auth/login
      */
-    public function login()
+    private function _login()
     {
         $data = [
             'title' => 'Login | Admin'
@@ -74,7 +99,8 @@ class AdminWebController extends WebController
         $this->view(VIEW_FRONTEND . 'pages/admin/forms/login', $data);
     }
 
-    private function _accessDenied() {
+    private function _accessDenied()
+    {
         $this->error(
             'Access Denied!',
             'The requested page not found! Please, log in as an Admin to visit your account!'
@@ -84,28 +110,9 @@ class AdminWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/admin/account
+     * url = /web/admin/auth/logout
      */
-    public function account()
-    {
-        $session = SessionHelper::getAdminSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            $data = [
-                'title' => 'Admin Account',
-                'page_name' => 'Homepage'
-            ];
-            $this->view(VIEW_FRONTEND . 'pages/admin/profile/account', $data);
-        }
-    }
-
-    /**
-     * @return void
-     *
-     * url = /web/admin/logout
-     */
-    public function logout()
+    protected function _logout()
     {
         SessionHelper::removeAdminSession();
         $data = [
@@ -129,23 +136,46 @@ class AdminWebController extends WebController
         } else {
             if (isset($this->url[3])) {
                 $menuItemName = $this->url[3];
-                if ($menuItemName === 'settings') {
-
+                /**
+                 * url = /web/admin/profile/home
+                 */
+                if ($menuItemName === 'home') {
+                    $this->_home();
                 }
-                if ($menuItemName === 'users') {
-
-                }
+                /**
+                 * url = /web/admin/profile/workers
+                 */
                 if ($menuItemName === 'workers') {
-                    $data = [
-                        'title' => 'User Management',
-                        'page_name' => 'Workers'
-                    ];
-                    $this->view(VIEW_FRONTEND . 'pages/admin/profile/workers', $data);
-                }
-                if ($menuItemName === 'admins') {
-
+                   $this->_workers();
                 }
             }
         }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/admin/profile/home
+     */
+    protected function _home()
+    {
+        $data = [
+            'title'     => 'Admin Account',
+            'page_name' => 'Homepage'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/admin/profile/home', $data);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/admin/profile/workers
+     */
+    protected function _workers() {
+        $data = [
+            'title'     => 'User Management',
+            'page_name' => 'Workers'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/admin/profile/workers', $data);
     }
 }

@@ -30,9 +30,39 @@ class WorkerWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/worker/recoveryPassword
+     * url = /web/worker/auth/
      */
-    public function recoveryPassword()
+    public function auth() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /web/worker/auth/login
+             */
+            if ($this->url[3] === 'login') {
+                $this->_login();
+            }
+
+            /**
+             * url = /web/worker/auth/recovery-password
+             */
+            if ($this->url[3] === 'recovery-password') {
+                $this->_recoveryPassword();
+            }
+
+            /**
+             * url = /web/worker/auth/logout
+             */
+            if ($this->url[3] === 'logout') {
+                $this->_logout();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/worker/auth/recovery-password
+     */
+    protected function _recoveryPassword()
     {
         $isValidRequest = $this->authService->recoveryWorkerPassword();
         if(isset($isValidRequest['error'])) {
@@ -52,9 +82,9 @@ class WorkerWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/worker/login
+     * url = /web/worker/auth/login
      */
-    public function login() {
+    protected function _login() {
         $data = [
             'title' => 'Login | Worker'
         ];
@@ -71,28 +101,9 @@ class WorkerWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/worker/account
+     * url = /web/worker/auth/logout
      */
-    public function account()
-    {
-        $session = SessionHelper::getWorkerSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            $data = [
-                'title' => 'Worker Account',
-                'page_name' => 'Homepage'
-            ];
-            $this->view(VIEW_FRONTEND . 'pages/worker/profile/account', $data);
-        }
-    }
-
-    /**
-     * @return void
-     *
-     * url = /web/worker/logout
-     */
-    public function logout()
+    protected function _logout()
     {
         SessionHelper::removeWorkerSession();
         $data = [
@@ -115,11 +126,17 @@ class WorkerWebController extends WebController
         } else {
             if (isset($this->url[3])) {
                 $menuItemName = $this->url[3];
-                if ($menuItemName === 'settings') {
 
+                if ($menuItemName === 'home') {
+                    $this->_home();
                 }
+
                 if ($menuItemName === 'schedule') {
                     $this->_schedule();
+                }
+
+                if ($menuItemName === 'services') {
+                    $this->_services();
                 }
 
                 if($menuItemName === 'pricing') {
@@ -128,6 +145,20 @@ class WorkerWebController extends WebController
                
             }
         }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/worker/profile/home
+     */
+    public function _home()
+    {
+        $data = [
+            'title' => 'Worker Account',
+            'page_name' => 'Homepage'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/worker/profile/home', $data);
     }
 
     /**
@@ -146,6 +177,19 @@ class WorkerWebController extends WebController
     /**
      * @return void
      *
+     * url = /web/worker/profile/services
+     */
+    private function _services() {
+        $data = [
+            'title' => 'Service Management',
+            'page_name' => 'Services'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/worker/profile/services', $data);
+    }
+
+    /**
+     * @return void
+     *
      * url = /web/worker/profile/pricing
      */
     private function _pricing() {
@@ -155,6 +199,4 @@ class WorkerWebController extends WebController
         ];
         $this->view(VIEW_FRONTEND . 'pages/worker/profile/pricing', $data);
     }
-
-
 }

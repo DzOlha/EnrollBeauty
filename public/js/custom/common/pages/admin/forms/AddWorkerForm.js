@@ -4,7 +4,7 @@ class AddWorkerForm extends Form {
         super(
             '',
             '',
-            '/api/admin/registerWorker',
+            '/api/admin/worker/register',
             requester
         );
         //console.log(modalForm.modalSubmitId);
@@ -32,7 +32,8 @@ class AddWorkerForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetPositionsRoles = '/api/admin/getAllPositionsRoles';
+        this.apiGetPositions = '/api/admin/position/get/all';
+        this.apiGetRoles = '/api/admin/role/get/all';
     }
 
     /**
@@ -96,7 +97,8 @@ class AddWorkerForm extends Form {
         //     this.getPositionsAndRoles();
         // };
         this._initSelect2();
-        this.getPositionsAndRoles();
+        this.getPositions();
+        this.getRoles();
         this.modalForm.close();
         this.addListenerSubmitForm();
     }
@@ -117,24 +119,36 @@ class AddWorkerForm extends Form {
         }
     }
 
-    getPositionsAndRoles() {
+    getPositions() {
         this.requester.get(
-            this.apiGetPositionsRoles,
-            this.successCallbackGetPositionsAndRoles.bind(this),
+            this.apiGetPositions,
+            this.successCallbackGetPositions.bind(this),
             (response) => {
                 Notifier.showErrorMessage(response.error);
             }
         )
     }
 
-    successCallbackGetPositionsAndRoles(response) {
-        console.log(response);
-
+    successCallbackGetPositions(response) {
         let positionsSelect = $(`#${this.positionSelectId}`);
-        this._populateSelectOptions(positionsSelect, response.data.positions);
+        this._populateSelectOptions(positionsSelect, response.data);
 
+        this._initSelect2();
+    }
+
+    getRoles() {
+        this.requester.get(
+            this.apiGetRoles,
+            this.successCallbackGetRoles.bind(this),
+            (response) => {
+                Notifier.showErrorMessage(response.error);
+            }
+        )
+    }
+
+    successCallbackGetRoles(response) {
         let rolesSelect = $(`#${this.roleSelectId}`);
-        this._populateSelectOptions(rolesSelect, response.data.roles);
+        this._populateSelectOptions(rolesSelect, response.data);
 
         this._initSelect2();
     }

@@ -460,7 +460,7 @@
 <script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
 <script src="/public/js/custom/common/pages/user/profile/User.js"></script>
 
-<script src="/public/js/custom/frontend/pages/user/profile/account.js"></script>
+<script src="/public/js/custom/frontend/pages/user/profile/home.js"></script>
 
 </body>
 </html>
