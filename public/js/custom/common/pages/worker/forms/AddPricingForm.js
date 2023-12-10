@@ -82,7 +82,6 @@ class AddPricingForm extends Form {
         );
         this._initSelect2();
         this.getServices();
-        this.getExistingServicePricing();
         this.modalForm.close();
         this.addListenerSubmitForm();
     }
@@ -110,6 +109,7 @@ class AddPricingForm extends Form {
         //console.log(response);
         let serviceSelect = $(`#${this.serviceSelectId}`);
         this._populateSelectOptions(serviceSelect, response.data);
+        this.getExistingServicePricing();
 
         this._initSelect2();
     }
@@ -136,7 +136,7 @@ class AddPricingForm extends Form {
                 }
             });
         }
-        this._initSelect2();
+        //this._initSelect2();
     }
     validateService() {
         let serviceSelect = document.getElementById(this.serviceSelectId);
