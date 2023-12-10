@@ -18,7 +18,6 @@ use Src\Model\Table\UsersPhoto;
 use Src\Model\Table\UsersSetting;
 use Src\Model\Table\UsersSocial;
 use Src\Model\Table\Workers;
-use Src\Model\Table\WorkersAffiliate;
 use Src\Model\Table\WorkersServicePricing;
 use Src\Model\Table\WorkersServiceSchedule;
 

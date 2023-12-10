@@ -2,12 +2,8 @@
 
 namespace Src\Model\DTO\Write;
 
-class WorkerWriteDTO
+class WorkerWriteDTO extends UserWriteDto
 {
-    public string $name;
-    public string $surname;
-    public string $password;
-    public string $email;
     public ?string $gender;
     public int $age;
     public float $years_of_experience;
@@ -18,7 +14,7 @@ class WorkerWriteDTO
     /**
      * @param string $name
      * @param string $surname
-     * @param string $password
+     * @param string $passwordHash
      * @param string $email
      * @param string|null $gender
      * @param int $age
@@ -28,15 +24,12 @@ class WorkerWriteDTO
      * @param int $role_id
      */
     public function __construct(
-        string  $name, string $surname, string $password, string $email,
+        string  $name, string $surname, string $passwordHash, string $email,
         ?string $gender, int $age, float $years_of_experience,
         int     $position_id, ?float $salary, int $role_id
     )
     {
-        $this->name = $name;
-        $this->surname = $surname;
-        $this->password = $password;
-        $this->email = $email;
+        parent::__construct($name, $surname, $email, $passwordHash);
         $this->gender = $gender;
         $this->age = $age;
         $this->years_of_experience = $years_of_experience;
@@ -83,15 +76,15 @@ class WorkerWriteDTO
      */
     public function getPassword(): string
     {
-        return $this->password;
+        return $this->passwordHash;
     }
 
     /**
-     * @param string $password
+     * @param string $passwordHash
      */
-    public function setPassword(string $password): void
+    public function setPassword(string $passwordHash): void
     {
-        $this->password = $password;
+        $this->passwordHash = $passwordHash;
     }
 
     /**
