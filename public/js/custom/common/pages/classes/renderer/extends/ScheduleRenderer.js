@@ -458,8 +458,8 @@ class ScheduleRenderer extends Renderer{
                 comparisonStart = -1;
             }
 
-            console.log(a);
-            console.log(b);
+            //console.log(a);
+            //console.log(b);
             // If start_time is the same, compare end_time
             if (comparisonStart === 0) {
                 let comparisonEnd = 0;
@@ -555,7 +555,7 @@ class ScheduleRenderer extends Renderer{
             // console.log(endTime);
             if (startTime >= 18 && startTime < 21) {
                 if (endTime <= 21) {
-                    console.log(_18_21.insertAdjacentHTML);
+                    //console.log(_18_21.insertAdjacentHTML);
                     _18_21.insertAdjacentHTML('beforeend', scheduleCard);
                 }
             }

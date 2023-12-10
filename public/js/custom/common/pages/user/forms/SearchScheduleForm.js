@@ -306,7 +306,7 @@ class SearchScheduleForm extends Form {
 
         serviceNameSelect.on('select2:select', (e) => {
             let value = e.params.data.id;
-            console.log(value);
+            //console.log(value);
             /**
              * If nothing is selected ot user reset the filter
              * we load all workers into appropriate select
@@ -370,7 +370,7 @@ class SearchScheduleForm extends Form {
 
         workerNameSelect.on('select2:select', (e) => {
             let value = e.params.data.id;
-            console.log(value);
+            //console.log(value);
             /**
              * If nothing is selected or user reset the filter
              * we load all services into appropriate select

@@ -110,7 +110,7 @@ class AddServiceForm extends Form {
          * }
          */
         let data = this.validateFormData();
-        console.log(data);
+        //console.log(data);
 
         if(data) {
             this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);

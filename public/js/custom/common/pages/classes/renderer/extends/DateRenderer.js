@@ -62,7 +62,7 @@ class DateRenderer extends Renderer {
         if (parsedDate.isValid()) {
             return parsedDate.unix();
         } else {
-            console.log(`Invalid date: ${trimmedDate}`);
+            //console.log(`Invalid date: ${trimmedDate}`);
             return null; // Handle invalid dates as needed
         }
     }

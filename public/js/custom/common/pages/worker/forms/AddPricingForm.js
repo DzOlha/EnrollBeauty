@@ -30,6 +30,7 @@ class AddPricingForm extends Form {
         this.modalBodyClass = 'modal-body';
 
         this.apiGetServices = API.WORKER.API.SERVICE.get.all;
+        this.apiGetExistingServicePricing = API.WORKER.API.PROFILE["service-pricing"].get.all;
 
         this.modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
     }
@@ -79,13 +80,9 @@ class AddPricingForm extends Form {
             this.modalForm.formBuilder.createAddPricingForm(),
             'Add'
         );
-        // Wait for the modal to fully show before initializing Select2
-        // this.modalForm.showCompleteCallback = () => {
-        //     this._initSelect2();
-        //     this.getPositionsAndRoles();
-        // };
         this._initSelect2();
         this.getServices();
+        this.getExistingServicePricing();
         this.modalForm.close();
         this.addListenerSubmitForm();
     }
@@ -110,11 +107,35 @@ class AddPricingForm extends Form {
         parent.select2('destroy').select2();
     }
     successCallbackGetServices(response) {
-        console.log(response);
-
+        //console.log(response);
         let serviceSelect = $(`#${this.serviceSelectId}`);
         this._populateSelectOptions(serviceSelect, response.data);
 
+        this._initSelect2();
+    }
+    getExistingServicePricing() {
+        this.requester.get(
+            this.apiGetExistingServicePricing,
+            this.successCallbackGetExistingServicePricing.bind(this),
+            (response) => {
+                Notifier.showErrorMessage(response.error);
+            }
+        )
+    }
+    successCallbackGetExistingServicePricing(response) {
+        /**
+         * Disable existing services to not let the user
+         * add pricing for them
+         */
+        for(const key in response.data) {
+            let pricing = response.data[key];
+
+            $(`#${this.serviceSelectId} option`).each(function() {
+                if($(this).val() == pricing.service_id) {
+                    $(this).prop('disabled', true);
+                }
+            });
+        }
         this._initSelect2();
     }
     validateService() {
@@ -196,7 +217,7 @@ class AddPricingForm extends Form {
          * }
          */
         let data = this.validateInputs();
-        console.log(data);
+        //console.log(data);
 
         if(data) {
             this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);

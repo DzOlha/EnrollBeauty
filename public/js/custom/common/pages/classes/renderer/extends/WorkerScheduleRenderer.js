@@ -196,8 +196,8 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
     populateActiveDayScheduleTab(
         activeDepartmentTabId, activeDayTabId, schedules
     ) {
-        console.log(JSON.stringify(schedules));
-        console.log('populateActiveDayScheduleTab children');
+        //console.log(JSON.stringify(schedules));
+        //console.log('populateActiveDayScheduleTab children');
         /**
          * Filter schedules to leave only ones that are for the day, which tab is active now
          */
@@ -224,8 +224,8 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
                 comparisonStart = -1;
             }
 
-            console.log(a);
-            console.log(b);
+            //console.log(a);
+            //console.log(b);
             // If start_time is the same, compare end_time
             if (comparisonStart === 0) {
                 let comparisonEnd = 0;
@@ -240,8 +240,8 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
             return comparisonStart;
         });
 
-        console.log('activeDayTabId = ' + activeDayTabId);
-        console.log(`#${activeDepartmentTabId} #${activeDayTabId} .${this.timeIntervalClass}.${this.from12To15Class}`);
+        //console.log('activeDayTabId = ' + activeDayTabId);
+        //console.log(`#${activeDepartmentTabId} #${activeDayTabId} .${this.timeIntervalClass}.${this.from12To15Class}`);
 
         /**
          * 9 - 12
@@ -277,10 +277,10 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         _18_21.innerHTML = '';
 
         schedulesForActiveDay.forEach((schedule) => {
-            console.log('schedulesForActiveDay.forEach((schedule)');
-            console.log('schedulesForDepartmentTab = ' + JSON.stringify(schedules));
-            console.log('scheduleForActiveDay = ' + JSON.stringify(schedulesForActiveDay));
-            console.log('scheduleItem = ' + JSON.stringify(schedule));
+            //('schedulesForActiveDay.forEach((schedule)');
+            //console.log('schedulesForDepartmentTab = ' + JSON.stringify(schedules));
+            //console.log('scheduleForActiveDay = ' + JSON.stringify(schedulesForActiveDay));
+            //console.log('scheduleItem = ' + JSON.stringify(schedule));
             let startTime = this._timeToDecimal(schedule.start_time);
             let endTime = this._timeToDecimal(schedule.end_time);
 
@@ -290,7 +290,7 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
             let userEmail = schedule.hasOwnProperty('user_email') ? schedule.user_email : null;
             let orderId = schedule.hasOwnProperty('order_id') ? schedule.order_id : null;
 
-            console.log(schedule.hasOwnProperty('user_id'));
+            //console.log(schedule.hasOwnProperty('user_id'));
             let scheduleCard = this.htmlBuilder.createScheduleCard(
                 schedule.schedule_id, userId, schedule.service_id,
                 schedule.affiliate_id, schedule.service_name,

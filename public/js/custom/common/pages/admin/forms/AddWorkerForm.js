@@ -1,6 +1,7 @@
 import Form from "../../user/forms/Form.js";
 import Notifier from "../../classes/notifier/Notifier.js";
 import API from "../../../../common/pages/api.js";
+import GifLoader from "../../classes/loader/GifLoader";
 
 class AddWorkerForm extends Form {
     constructor(requester, modalForm, optionBuilder, workersTable) {
@@ -175,7 +176,7 @@ class AddWorkerForm extends Form {
          * }
          */
         let data = this.validateInputs();
-        console.log(data);
+        //console.log(data);
 
         if(data) {
             this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
@@ -215,9 +216,9 @@ class AddWorkerForm extends Form {
         let positionRoleGender = this.validatePositionRoleGender();
         let ageExperienceSalary = this.validateAgeExperienceSalary();
 
-        console.log('nameSurnameEmail = ' + nameSurnameEmail);
-        console.log('positionRoleGender = ' + positionRoleGender);
-        console.log('ageExperienceSalary = ' + ageExperienceSalary);
+        //console.log('nameSurnameEmail = ' + nameSurnameEmail);
+        //console.log('positionRoleGender = ' + positionRoleGender);
+        //console.log('ageExperienceSalary = ' + ageExperienceSalary);
 
         if(nameSurnameEmail && positionRoleGender && ageExperienceSalary) {
             return {
@@ -318,7 +319,7 @@ class AddWorkerForm extends Form {
 
         // Return data if there are no errors
         if (noErrorWithText) {
-            console.log('noErrorWithText');
+            //console.log('noErrorWithText');
             return this._collectNameSurnameEmail();
         } else {
             return false;

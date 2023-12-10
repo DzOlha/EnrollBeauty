@@ -17,7 +17,7 @@ class EditPricingForm extends AddPricingForm {
             let manageButtons = Array.from(
                 document.getElementsByClassName(this.managePricingClass)
             );
-            console.log(manageButtons);
+            //console.log(manageButtons);
             manageButtons.forEach((button) => {
                 button.addEventListener('click', this.handleShowEditPricingForm)
             })
@@ -45,8 +45,8 @@ class EditPricingForm extends AddPricingForm {
         this.addListenerSubmitForm();
     }
     populateForm() {
-        console.log(this.oldServiceId);
-        console.log(this.oldPrice);
+        //console.log(this.oldServiceId);
+        //console.log(this.oldPrice);
 
         // Assuming this is your select element
         let select = $(`#${this.serviceSelectId}`);
