@@ -365,3 +365,4 @@ class FormBuilder {
             `
     }
 }
+export default FormBuilder;

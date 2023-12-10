@@ -1,4 +1,5 @@
 
+import ScheduleHtmlBuilder from "./ScheduleHtmlBuilder.js";
 class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
     constructor() {
         super();
@@ -83,3 +84,4 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
                </div>`
     }
 }
+export default WorkerScheduleHtmlBuilder;

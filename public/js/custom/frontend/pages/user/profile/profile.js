@@ -1,3 +1,6 @@
+import Requester from "../../../../common/pages/classes/requester/Requester.js";
+import User from "../../../../common/pages/user/profile/User.js";
+
 $(function () {
     let requester = new Requester();
     let user = new User(requester);

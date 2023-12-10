@@ -1,9 +1,13 @@
+import Form from "../../user/forms/Form.js";
+import Notifier from "../../classes/notifier/Notifier.js";
+import GifLoader from "../../classes/loader/GifLoader.js";
+import API from "../../../../common/pages/api.js";
 class AddScheduleForm extends Form {
     constructor(requester, modalForm, optionBuilder, searchForm) {
         super(
             '',
             '',
-            '/api/worker/schedule/add',
+            API.WORKER.API.SCHEDULE.add,
             requester
         );
         this.modalForm = modalForm;
@@ -39,9 +43,9 @@ class AddScheduleForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetServicesForWorker = '/api/worker/profile/service/get/all';
-        this.apiGetAffiliates = '/api/worker/affiliate/get/all';
-        this.apiGetFilledTimeIntervals = '/api/worker/schedule/get/busy-time-intervals?';
+        this.apiGetServicesForWorker = API.WORKER.API.PROFILE.service.get.all;
+        this.apiGetAffiliates = API.WORKER.API.AFFILIATE.get.all;
+        this.apiGetFilledTimeIntervals = API.WORKER.API.SCHEDULE.get["busy-time-intervals"];
     }
 
     _initDatepicker() {
@@ -49,74 +53,6 @@ class AddScheduleForm extends Form {
         $(`#${this.dayInputId}`).pDatePicker({
             container: modalBody,
             dateFormat: 'dd/mm/yy'
-        });
-    }
-
-    _initTimepickers() {
-        let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
-        const startTimeInput = $(`#${this.startTimeInputId}`);
-        const endTimeInput = $(`#${this.endTimeInputId}`);
-
-        startTimeInput.timepicker({
-            dropdownParent: modalBody,
-            maxTime: '20:59',
-            minTime: '09:00',
-        });
-
-        endTimeInput.timepicker({
-            dropdownParent: modalBody,
-            maxTime: '20:59',
-            minTime: '09:00',
-        });
-
-        // Attach a change event handler to the start time input
-        startTimeInput.on('change', function () {
-            // Get the selected times
-            const startTime = startTimeInput.timepicker('getTime');
-            const endTime = endTimeInput.timepicker('getTime');
-
-            // Compare the times
-            if (startTime && endTime && startTime.getTime() > endTime.getTime()) {
-                $(`#${this.startTimeInputId}-error`).html("The start time can not be greater than end time!")
-                // If start time is greater than end time, set end time to start time
-                //endTimeInput.timepicker('setTime', startTime);
-            }
-        });
-
-        // Attach a change event handler to the end time input
-        endTimeInput.on('change', function () {
-            // Get the selected times
-            const startTime = startTimeInput.timepicker('getTime');
-            const endTime = endTimeInput.timepicker('getTime');
-
-            // Compare the times
-            if (startTime && endTime && endTime.getTime() < startTime.getTime()) {
-                $(`#${this.endTimeInputId}-error`).html("The end time can not be less than start time!")
-                // If end time is less than start time, set start time to end time
-                //startTimeInput.timepicker('setTime', endTime);
-            }
-        });
-    }
-
-    _initTimescales() {
-        let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
-        const startTimeInput = $(`#${this.startTimeInputId}`);
-        const endTimeInput = $(`#${this.endTimeInputId}`);
-
-        startTimeInput.timescale({
-            minute_gap: 15,
-            value_gap: 2,
-            long_scale_height: 32,
-            short_scale_height: 24,
-            offset: 4
-        });
-
-        endTimeInput.timescale({
-            minute_gap: 15,
-            value_gap: 2,
-            long_scale_height: 32,
-            short_scale_height: 24,
-            offset: 4
         });
     }
 
@@ -231,7 +167,7 @@ class AddScheduleForm extends Form {
 
     getFilledTimeIntervals(day) {
         this.requester.get(
-            `${this.apiGetFilledTimeIntervals}day=${day}`,
+            `${this.apiGetFilledTimeIntervals}?day=${day}`,
             this.successCallbackGetFilledTimeIntervals.bind(this),
             (response) => {
                 Notifier.showErrorMessage(response.error);
@@ -895,3 +831,4 @@ class AddScheduleForm extends Form {
     }
 
 }
+export default AddScheduleForm;

@@ -1,3 +1,5 @@
+import GifLoader from "../loader/GifLoader.js";
+
 class ConfirmationModal {
     constructor() {
         this.confirmationModalId = 'modalAlertConfirmation';
@@ -58,3 +60,4 @@ class ConfirmationModal {
         close.addEventListener('click', callback);
     }
 }
+export default ConfirmationModal;

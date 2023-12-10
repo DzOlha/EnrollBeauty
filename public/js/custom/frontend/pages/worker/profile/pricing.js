@@ -1,4 +1,13 @@
 
+import Requester from "../../../../common/pages/classes/requester/Requester.js";
+import PricingTable from "../../../../common/pages/classes/table/extends/PricingTable.js";
+import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
+import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
+import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
+import AddPricingForm from "../../../../common/pages/worker/forms/AddPricingForm.js";
+import EditPricingForm from "../../../../common/pages/worker/forms/EditPricingForm.js";
+import Worker from "../../../../common/pages/worker/profile/Worker.js";
+
 $(function () {
     let requester = new Requester();
     let worker = new Worker(requester);
@@ -37,4 +46,11 @@ $(function () {
      * Listen click on 'Manage' button to edit or delete the specific pricing
      */
     editPricingForm.addListenerManagePricing();
+
+    /**
+     * Set update callback in pricing table
+     */
+    addNewPricingForm.setUpdateCallback(
+        editPricingForm.addListenerManagePricing, editPricingForm
+    );
 });

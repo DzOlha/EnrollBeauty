@@ -1,4 +1,4 @@
-
+import Renderer from "../Renderer.js";
 class DateRenderer extends Renderer {
     constructor() {
         super();
@@ -114,3 +114,4 @@ class DateRenderer extends Renderer {
         return `${day} ${monthAbbreviation}`;
     }
 }
+export default DateRenderer;

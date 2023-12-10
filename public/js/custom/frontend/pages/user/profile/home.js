@@ -1,3 +1,14 @@
+import Requester from "../../../../common/pages/classes/requester/Requester.js";
+import User from "../../../../common/pages/user/profile/User.js";
+import DateRenderer from "../../../../common/pages/classes/renderer/extends/DateRenderer.js";
+import TimeRenderer from "../../../../common/pages/classes/renderer/extends/TimeRenderer.js";
+import ConfirmationModal from "../../../../common/pages/classes/modal/ConfirmationModal.js";
+import AppointmentsTable from "../../../../common/pages/classes/table/extends/AppointmentsTable.js";
+import ScheduleRenderer from "../../../../common/pages/classes/renderer/extends/ScheduleRenderer.js";
+import ScheduleHtmlBuilder from "../../../../common/pages/classes/builder/ScheduleHtmlBuilder.js";
+import SearchScheduleForm from "../../../../common/pages/user/forms/SearchScheduleForm.js";
+import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
+
 $(function () {
     let requester = new Requester();
     let user = new User(requester);

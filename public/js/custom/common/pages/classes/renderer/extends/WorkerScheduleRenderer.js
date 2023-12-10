@@ -1,3 +1,5 @@
+import ScheduleRenderer from "./ScheduleRenderer.js";
+import API from "../../../../../common/pages/api.js";
 
 class WorkerScheduleRenderer extends ScheduleRenderer {
     constructor(
@@ -8,8 +10,8 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         super(requester, appointmentsTable,
             confirmationModal, htmlBuilder,
             dateRenderer, timeRenderer);
-        this.apiCancelOrder = '/api/worker/order/service/cancel';
-        this.apiCompleteOrder = '/api/worker/order/service/complete';
+        this.apiCancelOrder = API.WORKER.API.ORDER.service.cancel;
+        this.apiCompleteOrder = API.WORKER.API.ORDER.service.complete;
     }
 
     render(response) {
@@ -481,3 +483,4 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         deleteIcon.addEventListener('click', handleDeleteIconClick);
     }
 }
+export default WorkerScheduleRenderer;

@@ -1,10 +1,16 @@
 
+import Form from "../../user/forms/Form.js";
+import Notifier from "../../classes/notifier/Notifier.js";
+import Cookie from "../../classes/cookie/Cookie.js";
+import GifLoader from "../../classes/loader/GifLoader.js";
+import API from "../../../../common/pages/api.js";
+
 class AddPricingForm extends Form {
     constructor(requester, modalForm, optionBuilder, pricingTable) {
         super(
             '',
             '',
-            '/api/worker/profile/service-pricing/add',
+            API.WORKER.API.PROFILE["service-pricing"].add,
             requester
         );
         //console.log(modalForm.modalSubmitId);
@@ -23,9 +29,12 @@ class AddPricingForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetServices = '/api/worker/service/get/all';
+        this.apiGetServices = API.WORKER.API.SERVICE.get.all;
 
         this.modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
+    }
+    setUpdateCallback(callback, context) {
+        this.updateCallback = callback.bind(context);
     }
     _initSelect2() {
         let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
@@ -221,5 +230,11 @@ class AddPricingForm extends Form {
             this.pricingTable.getItemsPerPage(),
             Cookie.get(this.pricingTable.currentPageCookie)
         );
+
+        /**
+         * Update event listener on edit pricing
+         */
+        this.updateCallback();
     }
 }
+export default AddPricingForm;

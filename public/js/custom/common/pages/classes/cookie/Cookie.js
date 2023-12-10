@@ -1,3 +1,4 @@
+
 class Cookie {
     static set(name, value) {
         document.cookie = `${name}=${value}`;
@@ -23,3 +24,4 @@ class Cookie {
         document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     }
 }
+export default Cookie;

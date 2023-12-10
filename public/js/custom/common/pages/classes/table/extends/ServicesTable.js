@@ -1,9 +1,12 @@
+import Table from "../Table.js";
+import Notifier from "../../notifier/Notifier.js";
+import API from "../../../../../common/pages/api.js";
 
 class ServicesTable extends Table {
     constructor(requester) {
         super(
             requester,
-            '/api/worker/service/get/all-with-departments?'
+            API.WORKER.API.SERVICE.get["all-with-departments"] + '?'
         )
         this.tableId = 'table-body';
     }
@@ -59,3 +62,4 @@ class ServicesTable extends Table {
         // this.addListenerCancelAppointment();
     }
 }
+export default ServicesTable;

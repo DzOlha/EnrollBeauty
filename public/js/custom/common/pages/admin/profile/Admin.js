@@ -1,7 +1,11 @@
+import User from "../../user/profile/User.js";
+import API from "../../../../common/pages/api.js";
+
 class Admin extends User {
-    constructor(requestorObject) {
-        super(requestorObject);
-        this.apiUserInfoUrl = '/api/admin/profile/get';
+    constructor(requester) {
+        super(requester);
+        this.apiUserInfoUrl = API.ADMIN.API.PROFILE.get;
         this.roleName = '[Admin]';
     }
 }
+export default Admin;

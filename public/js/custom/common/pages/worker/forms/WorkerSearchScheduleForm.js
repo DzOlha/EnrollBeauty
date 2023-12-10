@@ -1,4 +1,5 @@
-
+import SearchScheduleForm from "../../user/forms/SearchScheduleForm.js";
+import API from "../../../../common/pages/api.js";
 class WorkerSearchScheduleForm extends SearchScheduleForm {
     constructor(
         requester, scheduleRenderer,
@@ -7,15 +8,15 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
         super(
             requester, scheduleRenderer,
             optionBuilder, dateRenderer,
-            '/api/worker/schedule/search'
+            API.WORKER.API.SCHEDULE.search
         );
-        this.apiUrlGetAllWorkerServices = '/api/worker/profile/service/get/all';
-        this.apiUrlGetAllAffiliates = '/api/worker/affiliate/get/all';
+        this.apiUrlGetAllWorkerServices = API.WORKER.API.PROFILE.service.get.all;
+        this.apiUrlGetAllAffiliates = API.WORKER.API.AFFILIATE.get.all;
 
         this.onlyOrderedCheckboxId = 'only-ordered-checkbox';
         this.onlyFreeCheckboxId = 'only-free-checkbox';
 
-        this.submitActionUrl = '/api/worker/schedule/search';
+        this.submitActionUrl = API.WORKER.API.SCHEDULE.search;
     }
     _initializeDateRangePicker() {
         const currentDate = new Date();
@@ -165,3 +166,4 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
         this.handleFormSubmission();
     }
 }
+export default WorkerSearchScheduleForm;

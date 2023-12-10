@@ -1,9 +1,13 @@
 
+import Table from "../Table.js";
+import Notifier from "../../notifier/Notifier.js";
+import API from "../../../../../common/pages/api.js";
+
 class WorkersTable extends Table {
     constructor(requester) {
         super(
             requester,
-            '/api/admin/worker/get/all?'
+            API.ADMIN.API.WORKER.get.all + '?'
         )
         this.tableId = 'table-body';
     }
@@ -81,3 +85,4 @@ class WorkersTable extends Table {
         // this.addListenerCancelAppointment();
     }
 }
+export default WorkersTable;

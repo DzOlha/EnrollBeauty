@@ -122,3 +122,4 @@ class Select2 {
         }
     }
 }
+export default Select2;

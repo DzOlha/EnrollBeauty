@@ -1,8 +1,11 @@
+
+import Notifier from "../../classes/notifier/Notifier.js";
+import API from "../../../../common/pages/api.js";
 class User {
     constructor(requester) {
         this.requestor = requester;
 
-        this.apiUserInfoUrl = '/api/user/profile/get';
+        this.apiUserInfoUrl = API.USER.API.PROFILE.get;
 
         this.smallNameId = 'name-small';
         this.smallSurnameId = 'surname-small';
@@ -19,7 +22,7 @@ class User {
     }
 
     setApiUserInfoUrl(userId) {
-        this.apiUserInfoUrl = `/api/user/profile/get?user_id=${userId}`;
+        this.apiUserInfoUrl = `${API.USER.API.PROFILE.get}?user_id=${userId}`;
     }
     getUserInfo() {
         this.requestor.get(
@@ -82,3 +85,4 @@ class User {
         Notifier.showErrorMessage(response.error);
     }
 }
+export default User;

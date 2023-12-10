@@ -1,3 +1,4 @@
+import ChangeDefaultForm from "../../../../common/pages/admin/forms/ChangeDefaultForm.js";
 
 
 $(function () {

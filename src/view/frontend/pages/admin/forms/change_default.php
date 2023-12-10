@@ -83,17 +83,7 @@
 
 <?php require_once VIEW_COMMON."pages/landing/footer/footer_scripts.php"?>
 
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
-<script nomodule src="/public/js/custom/common/libs/jquery.powertip.min.js"></script>
-
-<script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
-<script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
-<script src="/public/js/custom/common/pages/admin/forms/ChangeDefaultForm.js"></script>
-<script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
-
-<script src="/public/js/custom/frontend/pages/admin/forms/change_default.js"></script>
+<script type="module" src="/public/js/custom/frontend/pages/admin/forms/change_default.js"></script>
 
 </body>
 </html>

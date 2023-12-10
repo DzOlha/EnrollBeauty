@@ -1,10 +1,17 @@
+import Input from "../../classes/element/Input.js";
+import Notifier from "../../classes/notifier/Notifier.js";
+import Cookie from "../../classes/cookie/Cookie.js";
+import Select2 from "../../classes/element/Select2.js";
+import Form from "../../user/forms/Form.js";
+import GifLoader from "../../classes/loader/GifLoader.js";
+import API from "../../../../common/pages/api.js";
 
 class AddServiceForm extends Form {
     constructor(requester, modalForm, optionBuilder, servicesTable, apiUrl) {
         super(
             '',
             '',
-            '/api/worker/service/add',
+            API.WORKER.API.SERVICE.add,
             requester
         );
         this.modalForm = modalForm;
@@ -19,7 +26,7 @@ class AddServiceForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetDepartments = '/api/worker/department/get/all';
+        this.apiGetDepartments = API.WORKER.API.DEPARTMENT.get.all;
     }
     /**
      * Add listener to the 'Add Service' button
@@ -141,3 +148,4 @@ class AddServiceForm extends Form {
     }
 
 }
+export default AddServiceForm;

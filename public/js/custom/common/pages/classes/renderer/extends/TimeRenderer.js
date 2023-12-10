@@ -1,3 +1,4 @@
+import Renderer from "../Renderer.js";
 class TimeRenderer extends Renderer {
     constructor() {
         super();
@@ -51,3 +52,4 @@ class TimeRenderer extends Renderer {
     }
 
 }
+export default TimeRenderer;

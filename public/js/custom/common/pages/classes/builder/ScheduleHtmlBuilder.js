@@ -231,3 +231,4 @@ class ScheduleHtmlBuilder {
                 </div>`
     }
 }
+export default ScheduleHtmlBuilder;

@@ -1,3 +1,5 @@
+import Cookie from "../cookie/Cookie.js";
+import TableLoader from "../loader/TableLoader.js";
 class Table {
     constructor(requester, apiUrl, orderByField = null, orderDirection = null) {
         this.apiUrl = apiUrl; // Store the API URL
@@ -285,3 +287,4 @@ class Table {
         }
     }
 }
+export default Table;

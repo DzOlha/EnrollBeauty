@@ -1,10 +1,13 @@
+import Form from "../../user/forms/Form.js";
+import Requester from "../../classes/requester/Requester.js";
+import API from "../../../../common/pages/api.js";
 
 class ChangeDefaultForm extends Form {
     constructor() {
         super(
             'change-default-form',
             'change-default-form-submit',
-            '/api/admin/auth/change-default-admin-info',
+            API.ADMIN.API.AUTH["change-default-admin-info"],
             new Requester()
         );
 
@@ -22,7 +25,7 @@ class ChangeDefaultForm extends Form {
         $(`#${this.newPasswordInputId}`).tooltip();
         $(`#${this.confirmPasswordInputId}`).tooltip();
 
-        this.loginUrl = "/web/admin/auth/login";
+        this.loginUrl = API.ADMIN.WEB.AUTH.login;
     }
     successCallbackSubmit(response) {
         this.showSuccessMessage(response.success);
@@ -142,3 +145,4 @@ class ChangeDefaultForm extends Form {
         return formMessages;
     }
 }
+export default ChangeDefaultForm;

@@ -1,3 +1,10 @@
+import Requester from "../../../../common/pages/classes/requester/Requester.js";
+import Admin from "../../../../common/pages/admin/profile/Admin.js";
+import WorkersTable from "../../../../common/pages/classes/table/extends/WorkersTable.js";
+import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
+import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
+import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
+import AddWorkerForm from "../../../../common/pages/admin/forms/AddWorkerForm.js";
 
 $(function () {
     let requester = new Requester();

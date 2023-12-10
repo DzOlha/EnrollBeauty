@@ -12,3 +12,4 @@ class OptionBuilder {
         return `<img src="/public/images/mockup/pre-loader-1.gif" id="${loaderId}">`
     }
 }
+export default OptionBuilder;

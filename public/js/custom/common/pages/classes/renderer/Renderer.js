@@ -5,3 +5,4 @@ class Renderer {
     static render(value) {
     }
 }
+export default Renderer;

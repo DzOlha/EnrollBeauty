@@ -1,9 +1,13 @@
 
+import Table from "../Table.js";
+import Notifier from "../../notifier/Notifier.js";
+import API from "../../../../../common/pages/api.js";
+
 class PricingTable extends Table {
     constructor(requester) {
         super(
             requester,
-            '/api/worker/profile/service-pricing/get/all?'
+            API.WORKER.API.PROFILE["service-pricing"].get.all + "?"
         )
         this.tableId = 'table-body';
     }
@@ -63,3 +67,4 @@ class PricingTable extends Table {
         // this.addListenerCancelAppointment();
     }
 }
+export default PricingTable;

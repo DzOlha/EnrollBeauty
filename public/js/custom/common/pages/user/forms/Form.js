@@ -1,3 +1,5 @@
+
+import Notifier from "../../classes/notifier/Notifier.js";
 class Form {
     constructor(formClass, submitButtonId, submitActionUrl, requesterObject) {
         this.formClass = formClass;
@@ -124,3 +126,4 @@ class Form {
         Notifier.showSuccessMessage(message);
     }
 }
+export default Form;

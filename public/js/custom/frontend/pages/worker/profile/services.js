@@ -1,4 +1,11 @@
-
+import Requester from "../../../../common/pages/classes/requester/Requester.js";
+import Worker from "../../../../common/pages/worker/profile/Worker.js";
+import ServicesTable from "../../../../common/pages/classes/table/extends/ServicesTable.js";
+import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
+import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
+import AddServiceForm from "../../../../common/pages/worker/forms/AddServiceForm.js";
+import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
+import API from "../../../../common/pages/api.js";
 $(function () {
     let requester = new Requester();
     let worker = new Worker(requester);
@@ -9,7 +16,7 @@ $(function () {
 
     let addNewServiceForm = new AddServiceForm(
         requester, modalForm, new OptionBuilder(), servicesTable,
-        '/api/worker/service/add'
+        API.WORKER.API.SERVICE.add
     );
 
     /**

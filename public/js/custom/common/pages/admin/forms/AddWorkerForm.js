@@ -1,14 +1,15 @@
+import Form from "../../user/forms/Form.js";
+import Notifier from "../../classes/notifier/Notifier.js";
+import API from "../../../../common/pages/api.js";
 
 class AddWorkerForm extends Form {
     constructor(requester, modalForm, optionBuilder, workersTable) {
         super(
             '',
             '',
-            '/api/admin/worker/register',
+            API.ADMIN.API.WORKER.register,
             requester
         );
-        //console.log(modalForm.modalSubmitId);
-        //this.requester = requester;
         this.modalForm = modalForm;
         this.optionBuilder = optionBuilder;
         this.workersTable = workersTable;
@@ -32,8 +33,8 @@ class AddWorkerForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetPositions = '/api/admin/position/get/all';
-        this.apiGetRoles = '/api/admin/role/get/all';
+        this.apiGetPositions = API.ADMIN.API.POSITION.get.all;
+        this.apiGetRoles = API.ADMIN.API.ROLE.get.all;
     }
 
     /**
@@ -498,3 +499,4 @@ class AddWorkerForm extends Form {
         }
     }
 }
+export default AddWorkerForm;

@@ -1,16 +1,19 @@
+import Requester from "../../classes/requester/Requester.js";
+import Form from "../../user/forms/Form.js";
+import API from "../../../../common/pages/api.js";
 
 class ChangePasswordForm extends Form {
     constructor() {
         super(
             'registration-form',
             'change-password-form-submit',
-            '/api/worker/auth/change-password',
+            API.WORKER.API.AUTH["change-password"],
             new Requester()
         );
         this.passwordInputId = 'password-input';
         this.confirmPasswordInputId = 'confirm-password-input';
 
-        this.loginUrl = "/web/worker/auth/login";
+        this.loginUrl = API.WORKER.WEB.AUTH.login;
 
         $(`#${this.passwordInputId}`).tooltip();
         $(`#${this.confirmPasswordInputId}`).tooltip();
@@ -78,3 +81,4 @@ class ChangePasswordForm extends Form {
         return formMessages;
     }
 }
+export default ChangePasswordForm;

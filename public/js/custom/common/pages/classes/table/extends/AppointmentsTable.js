@@ -1,3 +1,8 @@
+import Table from "../Table.js";
+import Notifier from "../../notifier/Notifier.js";
+import Cookie from "../../cookie/Cookie.js";
+import API from "../../../../../common/pages/api.js";
+
 class AppointmentsTable extends Table {
     constructor(
         requester, confirmationModal,
@@ -5,7 +10,7 @@ class AppointmentsTable extends Table {
     ) {
         super(
             requester,
-            '/api/user/order/service/upcoming/get/all?'
+            API.USER.API.ORDER.service.upcoming.get.all + '?'
         );
         this.tableId = 'table-body';
         this.confirmationModal = confirmationModal;
@@ -166,3 +171,4 @@ class AppointmentsTable extends Table {
         Notifier.showErrorMessage(response.error);
     }
 }
+export default AppointmentsTable;

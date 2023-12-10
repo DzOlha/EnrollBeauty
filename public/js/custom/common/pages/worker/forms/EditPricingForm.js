@@ -1,13 +1,16 @@
 
+import AddPricingForm from "./AddPricingForm.js";
+import API from "../../../../common/pages/api.js";
 class EditPricingForm extends AddPricingForm {
     constructor(requester, modalForm, optionBuilder, pricingTable) {
         super(
             requester, modalForm, optionBuilder, pricingTable
         );
-        this.submitActionUrl = '/api/worker/profile/service-pricing/edit';
+        this.submitActionUrl = API.WORKER.API.PROFILE["service-pricing"].edit;
         this.managePricingClass = 'manage-pricing';
         this.oldServiceId = null;
         this.oldPrice = null;
+        this.updateCallback = this.addListenerManagePricing.bind(this);
     }
     addListenerManagePricing() {
         setTimeout(() => {
@@ -65,7 +68,6 @@ class EditPricingForm extends AddPricingForm {
         $(`#${this.priceInputId}`).val(this.oldPrice);
     }
 
-
     validateInputs() {
         let data = super.validateInputs();
         let notChanged = false;
@@ -88,3 +90,4 @@ class EditPricingForm extends AddPricingForm {
         this.oldServiceId = null;
     }
 }
+export default EditPricingForm;

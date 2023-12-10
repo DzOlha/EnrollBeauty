@@ -1,3 +1,5 @@
+import Requester from "../../../../common/pages/classes/requester/Requester.js";
+import Admin from "../../../../common/pages/admin/profile/Admin.js";
 
 $(function () {
     let requester = new Requester();

@@ -1,3 +1,6 @@
+import Form from "./Form.js";
+import Notifier from "../../classes/notifier/Notifier.js";
+import API from "../../../../common/pages/api.js";
 class SearchScheduleForm extends Form {
     constructor(
         requester, scheduleRenderer,
@@ -6,7 +9,7 @@ class SearchScheduleForm extends Form {
         super(
             '',
             'submit-search-button',
-            '/api/user/schedule/search',
+            API.USER.API.SCHEDULE.search,
             requester
         );
         this.renderer = scheduleRenderer;
@@ -40,14 +43,14 @@ class SearchScheduleForm extends Form {
         this.priceToInputId = 'price-to';
         this.priceToErrorId = 'price-to-input-error';
 
-        this.apiUrlGetWorkers = '/api/user/service/get/workers/all';
-        this.apiUrlGetServices = '/api/user/worker/get/services/all';
+        this.apiUrlGetWorkers = API.USER.API.SERVICE.get.workers.all;
+        this.apiUrlGetServices = API.USER.API.WORKER.get.services.all;
 
-        this.apiUrlGetAffiliatesAll = '/api/user/affiliate/get/all';
-        this.apiUrlGetWorkersAll = '/api/user/worker/get/all';
-        this.apiUrlGetServicesAll = '/api/user/service/get/all';
+        this.apiUrlGetAffiliatesAll = API.USER.API.AFFILIATE.get.all;
+        this.apiUrlGetWorkersAll = API.USER.API.WORKER.get.all;
+        this.apiUrlGetServicesAll = API.USER.API.SERVICE.get.all;
 
-        this.submitActionUrl = '/api/user/schedule/search';
+        this.submitActionUrl = API.USER.API.SCHEDULE.search;
     }
 
     _initializeDateRangePicker() {
@@ -484,3 +487,4 @@ class SearchScheduleForm extends Form {
      * --------------------------------------Schedule---------------------------------------
      */
 }
+export default SearchScheduleForm;

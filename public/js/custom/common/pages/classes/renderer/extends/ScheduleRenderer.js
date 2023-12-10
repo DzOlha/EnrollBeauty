@@ -1,9 +1,13 @@
-class ScheduleRenderer {
+import Renderer from "../Renderer.js";
+import API from "../../../../../common/pages/api.js";
+
+class ScheduleRenderer extends Renderer{
     constructor(
         requester, appointmentsTable,
         confirmationModal, htmlBuilder,
         dateRenderer, timeRenderer
     ) {
+        super();
         this.requester = requester;
         this.ordersTable = appointmentsTable;
         this.confirmationModal = confirmationModal;
@@ -43,7 +47,7 @@ class ScheduleRenderer {
         /**
          * API
          */
-        this.apiOrderSchedule = '/api/user/order/service/add';
+        this.apiOrderSchedule = API.USER.API.ORDER.service.add;
     }
 
     /**
@@ -650,3 +654,5 @@ class ScheduleRenderer {
     }
 
 }
+
+export default ScheduleRenderer;

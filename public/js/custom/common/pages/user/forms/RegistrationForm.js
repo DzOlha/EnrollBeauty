@@ -1,9 +1,13 @@
+import Requester from "../../classes/requester/Requester.js";
+import Form from "./Form.js";
+import API from "../../../../common/pages/api.js";
+
 class RegistrationForm extends Form {
     constructor() {
         super(
             'registration-form',
             'registration-form-submit',
-            '/api/user/auth/register',
+            API.USER.API.AUTH.register,
             new Requester()
         );
         this.nameInputId = 'name-input';
@@ -12,7 +16,7 @@ class RegistrationForm extends Form {
         this.passwordInputId = 'password-input';
         this.confirmPasswordInputId = 'confirm-password-input';
 
-        this.loginUrl = "/web/user/auth/login";
+        this.loginUrl = API.USER.WEB.AUTH.login;
 
         $(`#${this.nameInputId}`).tooltip();
         $(`#${this.surnameInputId}`).tooltip();
@@ -125,3 +129,4 @@ class RegistrationForm extends Form {
         return formMessages;
     }
 }
+export default RegistrationForm;

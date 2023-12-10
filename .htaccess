@@ -6,3 +6,7 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule  ^(.+)$ ?url=$1 [QSA,L]
 </IfModule>
+<FilesMatch "\.js$">
+  ForceType application/javascript
+  Header set Content-Type "application/javascript"
+</FilesMatch>

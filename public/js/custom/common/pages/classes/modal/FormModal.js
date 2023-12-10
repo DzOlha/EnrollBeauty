@@ -72,3 +72,4 @@ class FormModal {
         close.addEventListener('click', callback);
     }
 }
+export default FormModal;

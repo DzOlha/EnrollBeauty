@@ -404,42 +404,8 @@
 
 
 <!--Mine scripts-->
-<script src="/public/js/custom/common/pages/classes/builder/OptionBuilder.js"></script>
-<script src="/public/js/custom/common/pages/classes/renderer/Renderer.js"></script>
-<script src="/public/js/custom/common/pages/classes/renderer/extends/TimeRenderer.js"></script>
-<script src="/public/js/custom/common/pages/classes/renderer/extends/DateRenderer.js"></script>
-<script src="/public/js/custom/common/pages/classes/renderer/extends/ScheduleRenderer.js"></script>
-<script src="/public/js/custom/common/pages/classes/renderer/extends/WorkerScheduleRenderer.js"></script>
 
-<script src="/public/js/custom/common/pages/classes/modal/ConfirmationModal.js"></script>
-
-<script src="/public/js/custom/common/pages/classes/builder/ScheduleHtmlBuilder.js"></script>
-<script src="/public/js/custom/common/pages/classes/builder/WorkerScheduleHtmlBuilder.js"></script>
-
-<script src="/public/js/custom/common/pages/classes/cookie/Cookie.js"></script>
-
-<script src="/public/js/custom/common/pages/classes/table/Table.js"></script>
-<script src="/public/js/custom/common/pages/user/forms/Form.js"></script>
-<script src="/public/js/custom/common/pages/user/forms/SearchScheduleForm.js"></script>
-<script src="/public/js/custom/common/pages/worker/forms/WorkerSearchScheduleForm.js"></script>
-
-<script src="/public/js/custom/common/pages/classes/loader/GifLoader.js"></script>
-<script src="/public/js/custom/common/pages/classes/loader/TableLoader.js"></script>
-
-<script src="/public/js/custom/common/pages/classes/element/Select2.js"></script>
-<script src="/public/js/custom/common/pages/classes/element/Input.js"></script>
-
-<script src="/public/js/custom/common/pages/classes/notifier/Notifier.js"></script>
-<script src="/public/js/custom/common/pages/classes/requester/Requester.js"></script>
-<script src="/public/js/custom/common/pages/user/profile/User.js"></script>
-<script src="/public/js/custom/common/pages/worker/profile/Worker.js"></script>
-
-<!--Modal Add Schedule-->
-<script src="/public/js/custom/common/pages/classes/modal/FormModal.js"></script>
-<script src="/public/js/custom/common/pages/classes/builder/FormBuilder.js"></script>
-<script src="/public/js/custom/common/pages/worker/forms/AddScheduleForm.js"></script>
-
-<script src="/public/js/custom/frontend/pages/worker/profile/schedule.js"></script>
+<script type="module" src="/public/js/custom/frontend/pages/worker/profile/schedule.js"></script>
 
 </body>
 </html>

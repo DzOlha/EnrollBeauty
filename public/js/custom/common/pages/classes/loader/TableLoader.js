@@ -39,3 +39,4 @@ class TableLoader {
         $(`#${table}`).show();
     }
 }
+export default TableLoader;

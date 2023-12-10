@@ -67,7 +67,7 @@
                                         && !SessionHelper::getWorkerSession()
                                         && !SessionHelper::getAdminSession()) {?>
                                     <li class="register-button">
-                                        <a href="/web/user/registration">
+                                        <a href="/web/user/auth/registration">
                                             Register
                                         </a>
                                     </li>

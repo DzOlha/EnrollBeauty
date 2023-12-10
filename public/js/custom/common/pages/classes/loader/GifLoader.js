@@ -22,3 +22,4 @@ class GifLoader {
         $(`#${GifLoader.loaderId}`).remove();
     }
 }
+export default GifLoader;

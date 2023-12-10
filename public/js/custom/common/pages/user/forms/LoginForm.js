@@ -1,15 +1,19 @@
+import Requester from "../../classes/requester/Requester.js";
+import Form from "./Form.js";
+import API from "../../../../common/pages/api.js";
+
 class LoginForm extends Form {
     constructor() {
         super(
             'login-form',
             'login-form-submit',
-            '/api/user/auth/login',
+            API.USER.API.AUTH.login,
             new Requester()
         );
         this.emailInputId = 'email-input';
         this.passwordInputId = 'password-input';
 
-        this.accountUrl = '/web/user/profile/home'
+        this.accountUrl = API.USER.WEB.PROFILE.home;
     }
 
     successCallbackSubmit(response) {
@@ -75,3 +79,4 @@ class LoginForm extends Form {
         return formMessages;
     }
 }
+export default LoginForm;
