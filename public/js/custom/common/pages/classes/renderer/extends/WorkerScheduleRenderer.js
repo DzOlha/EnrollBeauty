@@ -1,4 +1,5 @@
 import ScheduleRenderer from "./ScheduleRenderer.js";
+import Notifier from "../../notifier/Notifier.js";
 import API from "../../../../../common/pages/api.js";
 
 class WorkerScheduleRenderer extends ScheduleRenderer {

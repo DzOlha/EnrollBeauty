@@ -1,4 +1,6 @@
 import Renderer from "../Renderer.js";
+import Notifier from "../../notifier/Notifier.js";
+import Cookie from "../../cookie/Cookie.js";
 import API from "../../../../../common/pages/api.js";
 
 class ScheduleRenderer extends Renderer{

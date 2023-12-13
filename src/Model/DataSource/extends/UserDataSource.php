@@ -327,6 +327,8 @@ class UserDataSource extends DataSource
         string $email, string $startDatetime, string $endDatetime
     ) {
         $ordersService = OrdersService::$table;
+        $completed_time = OrdersService::$completed_datetime;
+        $canceled_time = OrdersService::$canceled_datetime;
         $order_id = OrdersService::$id;
         $start_datetime = OrdersService::$start_datetime;
         $end_datetime = OrdersService::$end_datetime;
@@ -335,6 +337,8 @@ class UserDataSource extends DataSource
         $this->db->query("
             SELECT $order_id FROM $ordersService
             WHERE $email_column = :email
+            AND $completed_time IS NULL
+            AND $canceled_time IS NULL
             AND (
                  ($start_datetime <= :start_datetime AND $start_datetime < :end_datetime 
                     AND $end_datetime > :start_datetime AND $end_datetime >= :end_datetime)
