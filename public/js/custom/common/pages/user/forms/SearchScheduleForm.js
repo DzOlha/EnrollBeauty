@@ -326,7 +326,7 @@ class SearchScheduleForm extends Form {
              */
             else {
                 this.requester.get(
-                    `${this.apiUrlGetWorkers}service_id=${value}`,
+                    `${this.apiUrlGetWorkers}?service_id=${value}`,
                     this.successCallbackGetWorkers.bind(this),
                     this.errorCallbackSubmit.bind(this),
                     this.errorCallbackSubmit.bind(this)
