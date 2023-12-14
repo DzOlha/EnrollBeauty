@@ -118,7 +118,7 @@
                                         <!--                                        --><?php //require_once "tmp/admin/panel/common/html/confirm_mass_action_button.html";?>
                                     </div>
 
-                                    <?php require_once "src/view/common/pages/admin/profile/blocks/search_by.php";?>
+<!--                                    --><?php //require_once "src/view/common/pages/admin/profile/blocks/search_by.php";?>
 
 
                                 </div>
