@@ -10,7 +10,9 @@ import API from "../../../../common/pages/api.js";
 $(function () {
     let requester = new Requester();
     let admin = new Admin(requester);
-    let servicesTable = new ServicesTable(requester);
+    let servicesTable = new ServicesTable(
+        requester, API.ADMIN.API.SERVICE.get["all-with-departments"]
+    );
 
     let formBuilder = new FormBuilder();
     let modalForm = new FormModal(formBuilder);

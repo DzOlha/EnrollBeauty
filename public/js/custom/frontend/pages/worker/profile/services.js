@@ -9,7 +9,9 @@ import API from "../../../../common/pages/api.js";
 $(function () {
     let requester = new Requester();
     let worker = new Worker(requester);
-    let servicesTable = new ServicesTable(requester);
+    let servicesTable = new ServicesTable(
+        requester, API.WORKER.API.SERVICE.get["all-with-departments"]
+    );
 
     let formBuilder = new FormBuilder();
     let modalForm = new FormModal(formBuilder);

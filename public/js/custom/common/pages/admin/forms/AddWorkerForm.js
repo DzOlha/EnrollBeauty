@@ -2,6 +2,7 @@ import Form from "../../user/forms/Form.js";
 import Notifier from "../../classes/notifier/Notifier.js";
 import GifLoader from "../../classes/loader/GifLoader.js";
 import API from "../../../../common/pages/api.js";
+import Cookie from "../../classes/cookie/Cookie.js";
 
 class AddWorkerForm extends Form {
     constructor(requester, modalForm, optionBuilder, workersTable) {

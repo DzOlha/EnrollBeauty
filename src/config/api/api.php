@@ -162,7 +162,7 @@ $API = [
             ],
             'SERVICE'  => [
                 'get' => [
-                    'all-with-departments' => '/api/admin/service/get/all',
+                    'all-with-departments' => '/api/admin/service/get/all-with-departments',
                 ],
                 'add' => '/api/admin/service/add'
             ]

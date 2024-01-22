@@ -3,10 +3,10 @@ import Notifier from "../../notifier/Notifier.js";
 import API from "../../../../../common/pages/api.js";
 
 class ServicesTable extends Table {
-    constructor(requester) {
+    constructor(requester, apiUrl) {
         super(
             requester,
-            API.WORKER.API.SERVICE.get["all-with-departments"] + '?'
+            apiUrl + '?'
         )
         this.tableId = 'table-body';
     }

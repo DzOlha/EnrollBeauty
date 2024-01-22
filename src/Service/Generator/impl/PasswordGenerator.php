@@ -10,8 +10,16 @@ class PasswordGenerator implements IGenerator
     private int $minLength = 8;
     private int $maxLength = 30;
 
+    public function generate($pattern = null): string
+    {
+        do {
+            $password = $this->generateRandomPassword();
+        } while (!preg_match($this->pattern, $password));
 
-    public function generate($pattern = null)
+        return $password;
+    }
+
+    private function generateRandomPassword(): string
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ#@$!%*?&';
         $randomLength = rand($this->minLength, $this->maxLength);

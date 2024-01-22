@@ -7,11 +7,14 @@ import GifLoader from "../../classes/loader/GifLoader.js";
 import API from "../../../../common/pages/api.js";
 
 class AddServiceForm extends Form {
-    constructor(requester, modalForm, optionBuilder, servicesTable, apiUrl) {
+    constructor(
+        requester, modalForm, optionBuilder, servicesTable,
+        addApiUrl
+    ) {
         super(
             '',
             '',
-            API.WORKER.API.SERVICE.add,
+            addApiUrl,
             requester
         );
         this.modalForm = modalForm;
