@@ -37,26 +37,10 @@ class UserApiController extends ApiController
         return new UserDataMapper(new UserDataSource(MySql::getInstance()));
     }
 
-    /**
-     * @return void
-     *
-     * url = /api/user/auth/
-     */
-    public function auth() {
-        if (isset($this->url[3])) {
-            /**
-             * url = /api/user/auth/register
-             */
-            if($this->url[3] === 'register') {
-                $this->_register();
-            }
-
-            /**
-             * url = /api/user/auth/login
-             */
-            if($this->url[3] === 'login') {
-                $this->_login();
-            }
+    public function checkPermission(): void
+    {
+        if(!SessionHelper::getUserSession()) {
+            $this->_accessDenied();
         }
     }
 
@@ -66,10 +50,6 @@ class UserApiController extends ApiController
      * url = /api/user/profile
      */
     public function profile() {
-        $session = SessionHelper::getUserSession();
-        if (!$session) {
-            $this->_accessDenied();
-        }
         if (isset($this->url[3])) {
             /**
              * url = /api/user/profile/get
@@ -97,10 +77,6 @@ class UserApiController extends ApiController
      *  url = /api/user/order/
      */
     public function order() {
-        $session = SessionHelper::getUserSession();
-        if (!$session) {
-            $this->_accessDenied();
-        }
         if (isset($this->url[3])) {
             /**
              * url = /api/user/order/service/
@@ -261,31 +237,6 @@ class UserApiController extends ApiController
                 $this->_searchSchedule();
             }
         }
-    }
-
-    /**
-     * @return void
-     *
-     *       type    controller      method
-     * url:  /api       /user        /auth      /register
-     */
-    protected function _register()
-    {
-        $this->returnJson(
-            $this->authService->registerUser()
-        );
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/user/auth/login
-     */
-    protected function _login()
-    {
-        $this->returnJson(
-            $this->authService->loginUser()
-        );
     }
 
     /**

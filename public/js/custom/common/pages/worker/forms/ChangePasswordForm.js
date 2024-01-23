@@ -7,13 +7,13 @@ class ChangePasswordForm extends Form {
         super(
             'registration-form',
             'change-password-form-submit',
-            API.WORKER.API.AUTH["change-password"],
+            API.AUTH.API.WORKER["change-password"],
             new Requester()
         );
         this.passwordInputId = 'password-input';
         this.confirmPasswordInputId = 'confirm-password-input';
 
-        this.loginUrl = API.WORKER.WEB.AUTH.login;
+        this.loginUrl = API.AUTH.WEB.WORKER.login;
 
         $(`#${this.passwordInputId}`).tooltip();
         $(`#${this.confirmPasswordInputId}`).tooltip();

@@ -20,74 +20,11 @@ class UserWebController extends WebController
         return new MainDataMapper(new MainDataSource(MySql::getInstance()));
     }
 
-    /**
-     * @return void
-     *
-     * url = /web/user/auth
-     */
-    public function auth() {
-        if(isset($this->url[3])) {
-            /**
-             * url = /web/user/auth/registration
-             */
-            if($this->url[3] === 'registration') {
-                $this->_registration();
-            }
-
-            /**
-             * url = /web/user/auth/login
-             */
-            if($this->url[3] === 'login') {
-                $this->_login();
-            }
-
-            /**
-             * url = /web/user/auth/logout
-             */
-            if($this->url[3] === 'logout') {
-                $this->_logout();
-            }
+    public function checkPermission(): void
+    {
+        if(!SessionHelper::getUserSession()) {
+            $this->_accessDenied();
         }
-    }
-
-    /**
-     * @return void
-     *
-     * url = /web/user/auth/login
-     */
-    protected function _login()
-    {
-        $data = [
-            'title' => 'Login'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/user/forms/login', $data);
-    }
-
-    /**
-     * @return void
-     *
-     * url = /web/user/auth/registration
-     */
-    protected function _registration()
-    {
-        $data = [
-            'title' => 'Registration'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/user/forms/registration', $data);
-    }
-
-    /**
-     * @return void
-     *
-     * url = /web/user/auth/logout
-     */
-    protected function _logout()
-    {
-        SessionHelper::removeUserSession();
-        $data = [
-            'title' => 'Homepage'
-        ];
-        $this->view(VIEW_FRONTEND . 'index', $data);
     }
 
     /**
@@ -119,29 +56,24 @@ class UserWebController extends WebController
      */
     public function profile()
     {
-        if(!isset($this->url[3]) && isset($_GET['user_id']) && $_GET['user_id'] !== '') {
-            if(SessionHelper::getAdminSession() || SessionHelper::getWorkerSession()) {
-                $data = [
-                    'title' => 'User Profile',
-                    'page_name' => 'User Profile'
-                ];
-                $this->view(VIEW_FRONTEND . 'pages/user/profile/profile', $data);
-            }
-        }
+//        if(!isset($this->url[3]) && isset($_GET['user_id']) && $_GET['user_id'] !== '') {
+//            if(SessionHelper::getAdminSession() || SessionHelper::getWorkerSession()) {
+//                $data = [
+//                    'title' => 'User Profile',
+//                    'page_name' => 'User Profile'
+//                ];
+//                $this->view(VIEW_FRONTEND . 'pages/user/profile/profile', $data);
+//            }
+//        }
 
-        $session = SessionHelper::getUserSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            if (isset($this->url[3])) {
-                $menuItemName = $this->url[3];
+        if (isset($this->url[3])) {
+            $menuItemName = $this->url[3];
 
-                /**
-                 * url = /web/user/profile/home
-                 */
-                if ($menuItemName === 'home') {
-                    $this->_home();
-                }
+            /**
+             * url = /web/user/profile/home
+             */
+            if ($menuItemName === 'home') {
+                $this->_home();
             }
         }
     }

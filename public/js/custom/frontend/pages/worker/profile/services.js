@@ -18,7 +18,7 @@ $(function () {
 
     let addNewServiceForm = new AddServiceForm(
         requester, modalForm, new OptionBuilder(), servicesTable,
-        API.WORKER.API.SERVICE.add
+        API.WORKER.API.SERVICE.add, API.WORKER.API.DEPARTMENT.get.all
     );
 
     /**

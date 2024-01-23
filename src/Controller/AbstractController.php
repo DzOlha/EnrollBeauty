@@ -14,6 +14,7 @@ abstract class AbstractController
      */
     public function __construct(array $url)
     {
+        $this->checkPermission();
         $this->dataMapper = $this->dataMapper();
         $this->url = $url;
     }
@@ -25,4 +26,6 @@ abstract class AbstractController
     {
         return $this->getTypeDataMapper();
     }
+
+    public function checkPermission(): void {}
 }

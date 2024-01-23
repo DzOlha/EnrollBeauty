@@ -7,7 +7,7 @@ class LoginForm extends Form {
         super(
             'login-form',
             'login-form-submit',
-            API.USER.API.AUTH.login,
+            API.AUTH.API.USER.login,
             new Requester()
         );
         this.emailInputId = 'email-input';

@@ -1,21 +1,44 @@
 <?php
-$API = [
+const API = [
+    'AUTH' => [
+        'WEB' => [
+            'USER' => [
+                'registration' => '/web/auth/user/registration',
+                'login' => '/web/auth/user/login',
+                'logout' => '/web/auth/user/logout'
+            ],
+            'WORKER' => [
+                'login' => '/web/auth/worker/login',
+                'logout' => '/web/auth/worker/logout',
+                'recovery-password' => '/web/auth/worker/recovery-password'
+            ],
+            'ADMIN' => [
+                'login' => '/web/auth/admin/login',
+                'logout' => '/web/auth/admin/logout'
+            ]
+        ],
+        'API' => [
+            'USER' => [
+                'register' => '/api/auth/user/register',
+                'login' => '/api/auth/use/login'
+            ],
+            'WORKER' => [
+                'login' => '/api/auth/worker/login',
+                'change-password' => '/api/auth/worker/change-password'
+            ],
+            'ADMIN' => [
+                'change-default-admin-info' => '/api/auth/admin/change-default-admin-info',
+                'login' => '/api/auth/admin/login'
+            ]
+        ]
+    ],
     'USER'   => [
         'WEB' => [
-            'AUTH'    => [
-                'registration' => '/web/user/auth/registration',
-                'login'        => '/web/user/auth/login',
-                'logout'       => '/web/user/auth/logout'
-            ],
             'PROFILE' => [
                 'home' => '/web/user/profile/home'
             ]
         ],
         'API' => [
-            'AUTH'      => [
-                'register' => '/api/user/auth/register',
-                'login'    => '/api/user/auth/login'
-            ],
             'PROFILE'   => [
                 'get'             => '/api/user/profile/get',
                 'social-networks' => [
@@ -61,11 +84,6 @@ $API = [
     ],
     'WORKER' => [
         'WEB' => [
-            'AUTH'    => [
-                'login'             => '/web/worker/auth/login',
-                'recovery-password' => '/web/worker/auth/recovery-password',
-                'logout'            => '/web/worker/auth/logout'
-            ],
             'PROFILE' => [
                 'home'     => '/web/worker/profile/home',
                 'schedule' => '/web/worker/profile/schedule',
@@ -74,10 +92,6 @@ $API = [
             ]
         ],
         'API' => [
-            'AUTH'       => [
-                'login'           => '/api/worker/auth/login',
-                'change-password' => '/api/worker/auth/change-password'
-            ],
             'SERVICE'    => [
                 'add' => '/api/worker/service/add',
                 'get' => [
@@ -127,20 +141,12 @@ $API = [
     ],
     'ADMIN'  => [
         'WEB' => [
-            'AUTH'    => [
-                'login'  => '/web/admin/auth/login',
-                'logout' => '/web/admin/auth/logout'
-            ],
             'PROFILE' => [
                 'home'    => '/web/admin/profile/home',
                 'workers' => '/web/admin/profile/workers'
             ]
         ],
         'API' => [
-            'AUTH'     => [
-                'change-default-admin-info' => '/api/admin/auth/change-default-admin-info',
-                'login'                     => '/api/admin/auth/login'
-            ],
             'PROFILE'  => [
                 'get' => '/api/admin/profile/get'
             ],
@@ -165,6 +171,11 @@ $API = [
                     'all-with-departments' => '/api/admin/service/get/all-with-departments',
                 ],
                 'add' => '/api/admin/service/add'
+            ],
+            'DEPARTMENT' => [
+                'get' => [
+                    'all' => ' /api/admin/department/get/all'
+                ]
             ]
         ]
     ]

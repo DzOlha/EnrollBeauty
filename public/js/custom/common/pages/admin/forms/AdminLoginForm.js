@@ -4,7 +4,7 @@ import API from "../../../../common/pages/api.js";
 class AdminLoginForm extends LoginForm {
     constructor() {
         super();
-        this.submitActionUrl = API.ADMIN.API.AUTH.login;
+        this.submitActionUrl = API.AUTH.API.ADMIN.login;
         this.accountUrl = API.ADMIN.WEB.PROFILE.home;
     }
 }

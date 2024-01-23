@@ -9,7 +9,7 @@ import API from "../../../../common/pages/api.js";
 class AddServiceForm extends Form {
     constructor(
         requester, modalForm, optionBuilder, servicesTable,
-        addApiUrl
+        addApiUrl, getDepartmentUrl
     ) {
         super(
             '',
@@ -29,7 +29,7 @@ class AddServiceForm extends Form {
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetDepartments = API.WORKER.API.DEPARTMENT.get.all;
+        this.apiGetDepartments = getDepartmentUrl;
     }
     /**
      * Add listener to the 'Add Service' button

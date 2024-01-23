@@ -7,7 +7,7 @@ class RegistrationForm extends Form {
         super(
             'registration-form',
             'registration-form-submit',
-            API.USER.API.AUTH.register,
+            API.AUTH.API.USER.register,
             new Requester()
         );
         this.nameInputId = 'name-input';
@@ -16,7 +16,7 @@ class RegistrationForm extends Form {
         this.passwordInputId = 'password-input';
         this.confirmPasswordInputId = 'confirm-password-input';
 
-        this.loginUrl = API.USER.WEB.AUTH.login;
+        this.loginUrl = API.AUTH.WEB.USER.login;
 
         $(`#${this.nameInputId}`).tooltip();
         $(`#${this.surnameInputId}`).tooltip();

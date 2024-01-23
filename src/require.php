@@ -26,6 +26,11 @@ require_once 'config/folder_constants.php';
 require_once SRC.'/config/url_constants.php';
 
 /**
+ * api constants
+ */
+require_once SRC.'/config/api/api.php';
+
+/**
  * set database credentials to connect.
  */
 require_once SRC.'/DB/Config/connection.php';

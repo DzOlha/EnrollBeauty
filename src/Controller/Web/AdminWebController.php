@@ -35,30 +35,11 @@ class AdminWebController extends WebController
         return new AdminDataMapper(new AdminDataSource(MySql::getInstance()));
     }
 
-    /**
-     * @return void
-     *
-     * url = /web/admin/auth/
-     */
-    public function auth()
-    {
-        if (isset($this->url[3])) {
-            /**
-             * url = /web/admin/auth/login
-             */
-            if ($this->url[3] === 'login') {
-                $this->_login();
-            }
-
-            /**
-             * url = /web/admin/auth/logout
-             */
-            if ($this->url[3] === 'logout') {
-                $this->_logout();
-            }
+    public function checkPermission(): void {
+        if(!SessionHelper::getAdminSession()) {
+            $this->_accessDenied();
         }
     }
-
 
     /**
      * @return void
@@ -86,19 +67,6 @@ class AdminWebController extends WebController
         }
     }
 
-    /**
-     * @return void
-     *
-     * url = /web/admin/auth/login
-     */
-    private function _login()
-    {
-        $data = [
-            'title' => 'Login | Admin'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/admin/forms/login', $data);
-    }
-
     private function _accessDenied()
     {
         $this->error(
@@ -110,50 +78,30 @@ class AdminWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/admin/auth/logout
-     */
-    protected function _logout()
-    {
-        SessionHelper::removeAdminSession();
-        $data = [
-            'title' => 'Homepage'
-        ];
-        $this->view(VIEW_FRONTEND . 'index', $data);
-    }
-
-
-    /**
-     * @return void
-     *
      * url = /web/admin/profile/...
      *         0    1       2
      */
     public function profile()
     {
-        $session = SessionHelper::getAdminSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            if (isset($this->url[3])) {
-                $menuItemName = $this->url[3];
-                /**
-                 * url = /web/admin/profile/home
-                 */
-                if ($menuItemName === 'home') {
-                    $this->_home();
-                }
-                /**
-                 * url = /web/admin/profile/workers
-                 */
-                if ($menuItemName === 'workers') {
-                   $this->_workers();
-                }
-                /**
-                 * url = /web/admin/profile/services
-                 */
-                if ($menuItemName === 'services') {
-                    $this->_services();
-                }
+        if (isset($this->url[3])) {
+            $menuItemName = $this->url[3];
+            /**
+             * url = /web/admin/profile/home
+             */
+            if ($menuItemName === 'home') {
+                $this->_home();
+            }
+            /**
+             * url = /web/admin/profile/workers
+             */
+            if ($menuItemName === 'workers') {
+               $this->_workers();
+            }
+            /**
+             * url = /web/admin/profile/services
+             */
+            if ($menuItemName === 'services') {
+                $this->_services();
             }
         }
     }

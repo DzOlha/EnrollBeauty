@@ -7,7 +7,7 @@ class ChangeDefaultForm extends Form {
         super(
             'change-default-form',
             'change-default-form-submit',
-            API.ADMIN.API.AUTH["change-default-admin-info"],
+            API.AUTH.API.ADMIN["change-default-admin-info"],
             new Requester()
         );
 
@@ -25,7 +25,7 @@ class ChangeDefaultForm extends Form {
         $(`#${this.newPasswordInputId}`).tooltip();
         $(`#${this.confirmPasswordInputId}`).tooltip();
 
-        this.loginUrl = API.ADMIN.WEB.AUTH.login;
+        this.loginUrl = API.AUTH.WEB.ADMIN.login;
     }
     successCallbackSubmit(response) {
         this.showSuccessMessage(response.success);

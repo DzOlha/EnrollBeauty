@@ -3,6 +3,7 @@ import Notifier from "../../classes/notifier/Notifier.js";
 import GifLoader from "../../classes/loader/GifLoader.js";
 import API from "../../../../common/pages/api.js";
 import Cookie from "../../classes/cookie/Cookie.js";
+import Input from "../../classes/element/Input.js";
 
 class AddWorkerForm extends Form {
     constructor(requester, modalForm, optionBuilder, workersTable) {
@@ -229,102 +230,80 @@ class AddWorkerForm extends Form {
             return false;
         }
     }
-    _getNameSurnameEmailRules() {
-        const formRules = {};
 
-        formRules[this.nameInputId] = {
-            required: true,
-            pattern: /^[A-Za-zА-Яа-яіїІЇ]{3,}$/
-        };
-        formRules[this.surnameInputId] = {
-            required: true,
-            pattern: /^[A-Za-zА-Яа-яіїІЇ]{3,}$/
-        };
-        formRules[this.emailInputId] = {
-            required: true,
-            pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
-        };
-        return formRules;
-    }
+    nameValidationCallback = (value) => {
+        let result = {};
 
-    _getNameSurnameEmailMessages() {
-        const formMessages = {};
-
-        formMessages[this.nameInputId] = {
-            required: 'Please enter your name',
-            pattern: 'Name must be at least 3 characters long and contain only letters'
-        };
-        formMessages[this.surnameInputId] = {
-            required: 'Please enter your surname',
-            pattern: 'Surname must be at least 3 characters long and contain only letters'
-        };
-        formMessages[this.emailInputId] = {
-            required: 'Please enter your email address',
-            pattern: 'Please enter an email address in the format myemail@mailservice.domain'
-        };
-        return formMessages;
-    }
-
-    /**
-     *
-     * @param idAssoc
-     * @returns {{}|{surname: any, name: any, email: any}}
-     * @private
-     */
-    _collectNameSurnameEmail(idAssoc = false) {
-        let name = document.getElementById(this.nameInputId);
-        if (name === null) return;
-        name = name.value.trim();
-
-        let surname = document.getElementById(this.surnameInputId);
-        if (surname === null) return;
-        surname = surname.value.trim();
-
-        let email = document.getElementById(this.emailInputId);
-        if (email === null) return;
-        email = email.value.trim();
-
-        if (idAssoc === true) {
-            let result = {};
-            result[this.nameInputId] = name;
-            result[this.surnameInputId] = surname;
-            result[this.emailInputId] = email;
-
+        if(!value) {
+            result.error = "Name is the required field!";
             return result;
         }
-        return {
-            'name': name,
-            'surname': surname,
-            'email': email
-        };
+
+        let pattern = /^[A-Za-zА-Яа-яіїІЇ]{3,}$/;
+        if(!pattern.test(value)) {
+            result.error = "Name must be at least 3 characters long and contain only letters"
+        }
+
+        return result;
     }
 
-    /**
-     *
-     * @returns {boolean|{}|{surname: HTMLElement, name: HTMLElement, email: HTMLElement}}
-     */
-    validateNameSurnameEmail() {
-        let formRules = this._getNameSurnameEmailRules();
-        let formMessages = this._getNameSurnameEmailMessages();
-        let nameSurnameEmail = this._collectNameSurnameEmail(true);
+    surnameValidationCallback = (value) => {
+        let result = {};
 
-        // Call the validation function and get the errors
-        const validationErrors = this.validateFormData(nameSurnameEmail, formRules, formMessages);
-
-        this.displayErrors(validationErrors);
-
-        // Check if there are no div.error elements with text content
-        const noErrorWithText = $("div.error").get().every(function (element) {
-            return $(element).text().trim() === '';
-        });
-
-        // Return data if there are no errors
-        if (noErrorWithText) {
-            //console.log('noErrorWithText');
-            return this._collectNameSurnameEmail();
-        } else {
-            return false;
+        if(!value) {
+            result.error = "Surname is the required field!";
+            return result;
         }
+
+        let pattern = /^[A-Za-zА-Яа-яіїІЇ]{3,}$/;
+        if(!pattern.test(value)) {
+            result.error = "Surname must be at least 3 characters long and contain only letters"
+        }
+
+        return result;
+    }
+
+    emailValidationCallback = (value) => {
+        let result = {};
+
+        if(!value) {
+            result.error = 'Email is the required field!';
+            return result;
+        }
+
+        let pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        if(!pattern.test(value)) {
+            result.error = 'Please enter an email address in the format myemail@mailservice.domain';
+        }
+
+        return result;
+    }
+
+    validateNameSurnameEmail() {
+        let name = Input.validateInput(
+            this.nameInputId,
+            'name',
+            this.nameValidationCallback
+        );
+
+        let surname = Input.validateInput(
+            this.surnameInputId,
+            'surname',
+            this.surnameValidationCallback
+        );
+
+        let email = Input.validateInput(
+            this.emailInputId,
+            'email',
+            this.emailValidationCallback
+        );
+
+        if(name && surname && email) {
+            return {
+                ...name, ...surname, ...email
+            }
+        }
+        return false;
     }
 
     _checkSelectAndSetErrorBorder(value, wrapperClass, errorId, errorMessage) {

@@ -27,68 +27,11 @@ class WorkerWebController extends WebController
         return new WorkerDataMapper(new WorkerDataSource(MySql::getInstance()));
     }
 
-    /**
-     * @return void
-     *
-     * url = /web/worker/auth/
-     */
-    public function auth() {
-        if (isset($this->url[3])) {
-            /**
-             * url = /web/worker/auth/login
-             */
-            if ($this->url[3] === 'login') {
-                $this->_login();
-            }
-
-            /**
-             * url = /web/worker/auth/recovery-password
-             */
-            if ($this->url[3] === 'recovery-password') {
-                $this->_recoveryPassword();
-            }
-
-            /**
-             * url = /web/worker/auth/logout
-             */
-            if ($this->url[3] === 'logout') {
-                $this->_logout();
-            }
-        }
-    }
-
-    /**
-     * @return void
-     *
-     * url = /web/worker/auth/recovery-password
-     */
-    protected function _recoveryPassword()
+    public function checkPermission(): void
     {
-        $isValidRequest = $this->authService->recoveryWorkerPassword();
-        if(isset($isValidRequest['error'])) {
-            $this->error(
-                $isValidRequest['error']['title'],
-                $isValidRequest['error']['message']
-            );
-        } else {
-            $data = [
-                'title' => 'Change Password'
-            ];
-            SessionHelper::setRecoveryCodeSession($isValidRequest['recovery_code']);
-            $this->view(VIEW_FRONTEND . 'pages/worker/forms/change_password', $data);
+        if(!SessionHelper::getWorkerSession()) {
+            $this->_accessDenied();
         }
-    }
-
-    /**
-     * @return void
-     *
-     * url = /web/worker/auth/login
-     */
-    protected function _login() {
-        $data = [
-            'title' => 'Login | Worker'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/worker/forms/login', $data);
     }
 
     private function _accessDenied() {
@@ -101,48 +44,28 @@ class WorkerWebController extends WebController
     /**
      * @return void
      *
-     * url = /web/worker/auth/logout
-     */
-    protected function _logout()
-    {
-        SessionHelper::removeWorkerSession();
-        $data = [
-            'title' => 'Homepage'
-        ];
-        $this->view(VIEW_FRONTEND . 'index', $data);
-    }
-
-    /**
-     * @return void
-     *
      * url = /web/worker/profile/...
      *         0    1       2
      */
     public function profile()
     {
-        $session = SessionHelper::getWorkerSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            if (isset($this->url[3])) {
-                $menuItemName = $this->url[3];
+        if (isset($this->url[3])) {
+            $menuItemName = $this->url[3];
 
-                if ($menuItemName === 'home') {
-                    $this->_home();
-                }
+            if ($menuItemName === 'home') {
+                $this->_home();
+            }
 
-                if ($menuItemName === 'schedule') {
-                    $this->_schedule();
-                }
+            if ($menuItemName === 'schedule') {
+                $this->_schedule();
+            }
 
-                if ($menuItemName === 'services') {
-                    $this->_services();
-                }
+            if ($menuItemName === 'services') {
+                $this->_services();
+            }
 
-                if($menuItemName === 'pricing') {
-                    $this->_pricing();
-                }
-               
+            if($menuItemName === 'pricing') {
+                $this->_pricing();
             }
         }
     }

@@ -73,8 +73,8 @@ class EditPricingForm extends AddPricingForm {
         let notChanged = false;
         let error = $(`#${this.priceInputId}-error`);
         if(data) {
-            if($(`#${this.serviceSelectId}`).val() === this.oldServiceId
-            && $(`#${this.priceInputId}`).val() === this.oldPrice) {
+            //$(`#${this.serviceSelectId}`).val() === this.oldServiceId
+            if($(`#${this.priceInputId}`).val() === this.oldPrice) {
                 notChanged = true;
                 error.html('Please, modify service price to submit the form!')
             }
@@ -83,6 +83,7 @@ class EditPricingForm extends AddPricingForm {
                 return data;
             }
         }
+        return false;
     }
     successCallbackSubmit(response) {
         super.successCallbackSubmit(response);

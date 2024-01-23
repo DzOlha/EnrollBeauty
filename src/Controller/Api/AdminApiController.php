@@ -35,26 +35,9 @@ class AdminApiController extends WorkerApiController
         return new AdminDataMapper(new AdminDataSource(MySql::getInstance()));
     }
 
-    /**
-     * @return void
-     *
-     * url = /api/admin/auth/
-     */
-    public function auth() {
-        if (isset($this->url[3])) {
-            /**
-             * url = /api/admin/auth/change-default-admin-info
-             */
-            if($this->url[3] === 'change-default-admin-info') {
-                $this->_changeDefault();
-            }
-
-            /**
-             * url = /api/admin/auth/login
-             */
-            if($this->url[3] === 'login') {
-                $this->_login();
-            }
+    public function checkPermission(): void {
+        if(!SessionHelper::getAdminSession()) {
+            $this->_accessDenied();
         }
     }
 
@@ -64,9 +47,6 @@ class AdminApiController extends WorkerApiController
      * url = /api/admin/profile/
      */
     public function profile() {
-        if (!SessionHelper::getAdminSession()) {
-            $this->_accessDenied();
-        }
         if (isset($this->url[3])) {
             /**
              * url = /api/admin/profile/get
@@ -83,9 +63,6 @@ class AdminApiController extends WorkerApiController
      * url = /api/admin/worker/
      */
     public function worker() {
-        if (!SessionHelper::getAdminSession()) {
-            $this->_accessDenied();
-        }
         if (isset($this->url[3])) {
             /**
              * url = /api/admin/worker/get
@@ -116,9 +93,6 @@ class AdminApiController extends WorkerApiController
      * url = /api/admin/position/
      */
     public function position() {
-        if (!SessionHelper::getAdminSession()) {
-            $this->_accessDenied();
-        }
         if (isset($this->url[3])) {
             /**
              * url = /api/admin/position/get
@@ -142,9 +116,6 @@ class AdminApiController extends WorkerApiController
      * url = /api/admin/role/
      */
     public function role() {
-        if (!SessionHelper::getAdminSession()) {
-            $this->_accessDenied();
-        }
         if (isset($this->url[3])) {
             /**
              * url = /api/admin/role/get
@@ -168,9 +139,6 @@ class AdminApiController extends WorkerApiController
      * url = /api/admin/service/
      */
     public function service() {
-        if (!SessionHelper::getAdminSession()) {
-            $this->_accessDenied();
-        }
         if (isset($this->url[3])) {
             /**
              * url = /api/admin/service/get
@@ -194,31 +162,31 @@ class AdminApiController extends WorkerApiController
         }
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/admin/department/
+     */
+    public function department() {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/admin/department/get
+             */
+            if ($this->url[3] === 'get') {
+                if (isset($this->url[4])) {
+                    /**
+                     * url = /api/admin/department/get/all
+                     */
+                    if ($this->url[4] === 'all') {
+                        $this->_getDepartmentsAll();
+                    }
+                }
+            }
+        }
+    }
+
     protected function _getAllServicesWithDepartments() {
 
-    }
-    /**
-     * @return void
-     *
-     * url = /api/admin/auth/change-default-admin-info
-     */
-    protected function _changeDefault()
-    {
-        $this->returnJson(
-            $this->authService->changeDefaultAdminData()
-        );
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/admin/auth/login
-     */
-    protected function _login()
-    {
-        $this->returnJson(
-            $this->authService->loginAdmin()
-        );
     }
 
     private function _getAdminId()

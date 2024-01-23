@@ -67,7 +67,7 @@
                                         && !SessionHelper::getWorkerSession()
                                         && !SessionHelper::getAdminSession()) {?>
                                     <li class="register-button">
-                                        <a href="/web/user/auth/registration">
+                                        <a href="<?=API['AUTH']['WEB']['USER']['registration']?>">
                                             Register
                                         </a>
                                     </li>
@@ -77,15 +77,21 @@
                                     </a>
                                     <ul>
                                         <?php if(!SessionHelper::getUserSession()) {?>
-                                            <li><a href="/web/user/auth/login">Log In as a User</a></li>
+                                            <li><a href="<?=API['AUTH']['WEB']['USER']['login']?>">
+                                                    Log In as a User
+                                                </a></li>
                                         <?php }?>
 
                                         <?php if(!SessionHelper::getWorkerSession()) {?>
-                                            <li><a href="/web/worker/auth/login">Log In as a Worker</a></li>
+                                            <li><a href="<?=API['AUTH']['WEB']['WORKER']['login']?>">
+                                                    Log In as a Worker
+                                                </a></li>
                                         <?php }?>
 
                                         <?php if(!SessionHelper::getAdminSession()) {?>
-                                            <li><a href="/web/admin/auth/login">Log In as an Admin</a></li>
+                                            <li><a href="<?=API['AUTH']['WEB']['ADMIN']['login']?>">
+                                                    Log In as an Admin
+                                                </a></li>
                                         <?php }?>
                                     </ul>
                                 </li>
@@ -96,15 +102,21 @@
                                         </a>
                                         <ul>
                                             <?php if(SessionHelper::getUserSession()) {?>
-                                                <li><a href="/web/user/auth/logout">Log out as a User</a></li>
+                                                <li><a href="<?=API['AUTH']['WEB']['USER']['logout']?>">
+                                                        Log out as a User
+                                                    </a></li>
                                             <?php }?>
 
                                             <?php if(SessionHelper::getWorkerSession()) {?>
-                                                <li><a href="/web/worker/auth/logout">Log out as a Worker</a></li>
+                                                <li><a href="<?=API['AUTH']['WEB']['WORKER']['logout']?>">
+                                                        Log out as a Worker
+                                                    </a></li>
                                             <?php }?>
 
                                             <?php if(SessionHelper::getAdminSession()) {?>
-                                                <li><a href="/web/admin/auth/logout">Log out as an Admin</a></li>
+                                                <li><a href="<?=API['AUTH']['WEB']['ADMIN']['logout']?>">
+                                                        Log out as an Admin
+                                                    </a></li>
                                             <?php }?>
                                         </ul>
                                     </li>
@@ -114,15 +126,21 @@
                                     </a>
                                     <ul>
                                         <?php if(SessionHelper::getUserSession()) {?>
-                                            <li><a href="/web/user/profile/home">Profile of the User</a></li>
+                                            <li><a href="<?=API['USER']['WEB']['PROFILE']['home']?>">
+                                                    Profile of the User
+                                                </a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getWorkerSession()) {?>
-                                            <li><a href="/web/worker/profile/home">Profile of the Worker</a></li>
+                                            <li><a href="<?=API['WORKER']['WEB']['PROFILE']['home']?>">
+                                                    Profile of the Worker
+                                                </a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getAdminSession()) {?>
-                                            <li><a href="/web/admin/profile/home">Profile of the Admin</a></li>
+                                            <li><a href="<?=API['ADMIN']['WEB']['PROFILE']['home']?>">
+                                                    Profile of the Admin
+                                                </a></li>
                                         <?php }?>
                                     </ul>
                                 </li>

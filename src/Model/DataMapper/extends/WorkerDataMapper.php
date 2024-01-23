@@ -322,7 +322,7 @@ class WorkerDataMapper extends DataMapper
 
     public function updateWorkerServicePricing(int $workerId, int $serviceId, $price)
     {
-        $this->dataSource->updateWorkerServicePricing($workerId, $serviceId, $price);
+        return $this->dataSource->updateWorkerServicePricing($workerId, $serviceId, $price);
     }
 
 }

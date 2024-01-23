@@ -33,26 +33,10 @@ class WorkerApiController extends ApiController
         return new WorkerDataMapper(new WorkerDataSource(MySql::getInstance()));
     }
 
-    /**
-     * @return void
-     *
-     * url = /api/worker/auth/
-     */
-    public function auth() {
-        if (isset($this->url[3])) {
-            /**
-             * url = /api/worker/auth/login
-             */
-            if ($this->url[3] === 'login') {
-                $this->_login();
-            }
-
-            /**
-             * url = /api/worker/auth/change-password
-             */
-            if ($this->url[3] === 'change-password') {
-                $this->_changePassword();
-            }
+    public function checkPermission(): void
+    {
+        if(!SessionHelper::getWorkerSession()) {
+            $this->_accessDenied();
         }
     }
 
@@ -62,36 +46,31 @@ class WorkerApiController extends ApiController
      * url = /api/worker/service/
      */
     public function service() {
-        $session = SessionHelper::getWorkerSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            if (isset($this->url[3])) {
-                /**
-                 * url = /api/worker/service/add
-                 */
-                if($this->url[3] === 'add') {
-                    $this->_addService();
-                }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/worker/service/add
+             */
+            if($this->url[3] === 'add') {
+                $this->_addService();
+            }
 
-                /**
-                 * url = /api/worker/service/get/
-                 */
-                if($this->url[3] === 'get') {
-                    if(isset($this->url[4])) {
-                        /**
-                         * url = /api/worker/service/get/all
-                         */
-                        if($this->url[4] === 'all') {
-                            $this->_getServicesAll();
-                        }
+            /**
+             * url = /api/worker/service/get/
+             */
+            if($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/service/get/all
+                     */
+                    if($this->url[4] === 'all') {
+                        $this->_getServicesAll();
+                    }
 
-                        /**
-                         * url = /api/worker/service/get/all-with-departments
-                         */
-                        if($this->url[4] === 'all-with-departments') {
-                            $this->_getServicesAllWithDepartments();
-                        }
+                    /**
+                     * url = /api/worker/service/get/all-with-departments
+                     */
+                    if($this->url[4] === 'all-with-departments') {
+                        $this->_getServicesAllWithDepartments();
                     }
                 }
             }
@@ -104,11 +83,7 @@ class WorkerApiController extends ApiController
      * url = /api/worker/affiliate/
      */
     public function affiliate() {
-        $session = SessionHelper::getWorkerSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            if (isset($this->url[3])) {
+        if (isset($this->url[3])) {
 //                /**
 //                 * url = /api/worker/affiliate/add
 //                 */
@@ -116,21 +91,21 @@ class WorkerApiController extends ApiController
 //                    $this->_addAffiliate();
 //                }
 //
-                /**
-                 * url = /api/worker/affiliate/get/
-                 */
-                if($this->url[3] === 'get') {
-                    if(isset($this->url[4])) {
-                        /**
-                         * url = /api/worker/affiliate/get/all
-                         */
-                        if($this->url[4] === 'all') {
-                            $this->_getAffiliatesAll();
-                        }
+            /**
+             * url = /api/worker/affiliate/get/
+             */
+            if($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/affiliate/get/all
+                     */
+                    if($this->url[4] === 'all') {
+                        $this->_getAffiliatesAll();
                     }
                 }
             }
         }
+
     }
 
     /**
@@ -139,41 +114,37 @@ class WorkerApiController extends ApiController
      * url = /api/worker/schedule/
      */
     public function schedule() {
-        $session = SessionHelper::getWorkerSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            if (isset($this->url[3])) {
-                /**
-                 * url = /api/worker/schedule/add
-                 */
-                if($this->url[3] === 'add') {
-                    $this->_addSchedule();
-                }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/worker/schedule/add
+             */
+            if($this->url[3] === 'add') {
+                $this->_addSchedule();
+            }
 
-                /**
-                 * url = /api/worker/schedule/search
-                 */
-                if($this->url[3] === 'search') {
-                    $this->_searchSchedule();
-                }
+            /**
+             * url = /api/worker/schedule/search
+             */
+            if($this->url[3] === 'search') {
+                $this->_searchSchedule();
+            }
 
-                /**
-                 * url = /api/worker/schedule/get/
-                 */
-                if($this->url[3] === 'get') {
-                    if(isset($this->url[4])) {
-                        /**
-                         * url = /api/worker/schedule/get/busy-time-intervals
-                         */
-                        if($this->url[4] === 'busy-time-intervals') {
-                            $this->_getBusyTimeIntervals();
-                        }
+            /**
+             * url = /api/worker/schedule/get/
+             */
+            if($this->url[3] === 'get') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/schedule/get/busy-time-intervals
+                     */
+                    if($this->url[4] === 'busy-time-intervals') {
+                        $this->_getBusyTimeIntervals();
                     }
                 }
-
             }
+
         }
+
     }
 
     /**
@@ -182,75 +153,71 @@ class WorkerApiController extends ApiController
      * url = /api/worker/profile/
      */
     public function profile() {
-        $session = SessionHelper::getWorkerSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            if (isset($this->url[3])) {
-                /**
-                 * url = /api/worker/profile/get
-                 */
-                if($this->url[3] === 'get') {
-                    $this->_getWorker();
-                }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/worker/profile/get
+             */
+            if($this->url[3] === 'get') {
+                $this->_getWorker();
+            }
 
-                /**
-                 *  url = /api/worker/profile/service-pricing/
-                 */
-                if($this->url[3] === 'service-pricing') {
-                    if(isset($this->url[4])) {
-                        /**
-                         *  url = /api/worker/profile/service-pricing/get/
-                         */
-                        if($this->url[4] === 'get') {
-                            if(isset($this->url[5])) {
-                                /**
-                                 *  url = /api/worker/profile/service-pricing/get/all
-                                 */
-                                if($this->url[5] === 'all') {
-                                    $this->_getServicePricing();
-                                }
+            /**
+             *  url = /api/worker/profile/service-pricing/
+             */
+            if($this->url[3] === 'service-pricing') {
+                if(isset($this->url[4])) {
+                    /**
+                     *  url = /api/worker/profile/service-pricing/get/
+                     */
+                    if($this->url[4] === 'get') {
+                        if(isset($this->url[5])) {
+                            /**
+                             *  url = /api/worker/profile/service-pricing/get/all
+                             */
+                            if($this->url[5] === 'all') {
+                                $this->_getServicePricing();
                             }
                         }
+                    }
 
-                        /**
-                         *  url = /api/worker/profile/service-pricing/add
-                         */
-                        if($this->url[4] === 'add') {
-                           $this->_addServicePricing();
-                        }
+                    /**
+                     *  url = /api/worker/profile/service-pricing/add
+                     */
+                    if($this->url[4] === 'add') {
+                       $this->_addServicePricing();
+                    }
 
-                        /**
-                         *  url = /api/worker/profile/service-pricing/edit
-                         */
-                        if($this->url[4] === 'edit') {
-                            $this->_editServicePricing();
-                        }
+                    /**
+                     *  url = /api/worker/profile/service-pricing/edit
+                     */
+                    if($this->url[4] === 'edit') {
+                        $this->_editServicePricing();
                     }
                 }
+            }
 
-                /**
-                 *  url = /api/worker/profile/service/
-                 */
-                if($this->url[3] === 'service') {
-                    if(isset($this->url[4])) {
-                        /**
-                         * url = /api/worker/profile/service/get/
-                         */
-                        if($this->url[4] === 'get') {
-                            if(isset($this->url[5])) {
-                                /**
-                                 * url = /api/worker/profile/service/get/all
-                                 */
-                                if($this->url[5] === 'all') {
-                                    $this->_getServicesAllForWorker();
-                                }
+            /**
+             *  url = /api/worker/profile/service/
+             */
+            if($this->url[3] === 'service') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/profile/service/get/
+                     */
+                    if($this->url[4] === 'get') {
+                        if(isset($this->url[5])) {
+                            /**
+                             * url = /api/worker/profile/service/get/all
+                             */
+                            if($this->url[5] === 'all') {
+                                $this->_getServicesAllForWorker();
                             }
                         }
                     }
                 }
             }
         }
+
     }
 
     /**
@@ -259,29 +226,24 @@ class WorkerApiController extends ApiController
      * url = /api/worker/order/
      */
     public function order() {
-        $session = SessionHelper::getWorkerSession();
-        if (!$session) {
-            $this->_accessDenied();
-        } else {
-            if (isset($this->url[3])) {
-                /**
-                 * url = /api/worker/order/service
-                 */
-                if($this->url[3] === 'service') {
-                    if(isset($this->url[4])) {
-                        /**
-                         * url = /api/worker/order/service/cancel
-                         */
-                        if($this->url[4] === 'cancel') {
-                            $this->_cancelServiceOrder();
-                        }
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/worker/order/service
+             */
+            if($this->url[3] === 'service') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/order/service/cancel
+                     */
+                    if($this->url[4] === 'cancel') {
+                        $this->_cancelServiceOrder();
+                    }
 
-                        /**
-                         * url = /api/worker/order/service/complete
-                         */
-                        if($this->url[4] === 'complete') {
-                            $this->_completeServiceOrder();
-                        }
+                    /**
+                     * url = /api/worker/order/service/complete
+                     */
+                    if($this->url[4] === 'complete') {
+                        $this->_completeServiceOrder();
                     }
                 }
             }
@@ -311,31 +273,6 @@ class WorkerApiController extends ApiController
         }
     }
 
-    /**
-     * @return void
-     *
-     * url = /api/worker/auth/change-password
-     */
-    protected function _changePassword() {
-        $changed =  $this->authService->changeWorkerPassword();
-        if(isset($changed['success'])) {
-            SessionHelper::removeRecoveryCodeSession();
-        }
-        $this->returnJson($changed);
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/worker/auth/login
-     */
-    protected function _login() {
-        $this->returnJson(
-            $this->authService->loginWorker()
-        );
-    }
-
-
     private function _getWorkerId()
     {
         $workerId = 0;
@@ -360,9 +297,6 @@ class WorkerApiController extends ApiController
      * url = /api/worker/profile/get
      */
     protected function _getWorker() {
-        if (!SessionHelper::getWorkerSession()) {
-            $this->_accessDenied();
-        }
         $workerId = $this->_getWorkerId();
         /**
          *  [
@@ -847,9 +781,6 @@ class WorkerApiController extends ApiController
      * url = /api/worker/profile/service-pricing/get/all
      */
     protected function _getServicePricing() {
-        if (!SessionHelper::getWorkerSession()) {
-            $this->_accessDenied();
-        }
         $param = $this->_getLimitPageFieldOrderOffset();
         /**
          *  * [

@@ -21,9 +21,13 @@ class SessionHelper
         }
     }
 
-    public static function removeUserSession(): void
+    public static function removeUserSession(): bool
     {
-        unset($_SESSION['user_id']);
+        if(SessionHelper::getUserSession()) {
+            unset($_SESSION['user_id']);
+            return true;
+        }
+        return false;
     }
 
     /***
@@ -43,9 +47,13 @@ class SessionHelper
         }
     }
 
-    public static function removeWorkerSession(): void
+    public static function removeWorkerSession(): bool
     {
-        unset($_SESSION['worker_id']);
+        if(SessionHelper::getWorkerSession()) {
+            unset($_SESSION['worker_id']);
+            return true;
+        }
+        return false;
     }
 
     /***
@@ -67,7 +75,11 @@ class SessionHelper
 
     public static function removeAdminSession()
     {
-        unset($_SESSION['admin_id']);
+        if(SessionHelper::getAdminSession()) {
+            unset($_SESSION['admin_id']);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -89,8 +101,12 @@ class SessionHelper
         }
     }
 
-    public static function removeRecoveryCodeSession(): void
+    public static function removeRecoveryCodeSession(): bool
     {
-        unset($_SESSION['recovery_code']);
+        if(SessionHelper::getRecoveryCodeSession()) {
+            unset($_SESSION['recovery_code']);
+            return true;
+        }
+        return false;
     }
 }
