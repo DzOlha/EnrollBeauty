@@ -8,20 +8,17 @@ class EditPricingForm extends AddPricingForm {
         );
         this.submitActionUrl = API.WORKER.API.PROFILE["service-pricing"].edit;
         this.managePricingClass = 'manage-pricing';
+
+        this.manageBase = 'manage';
         this.oldServiceId = null;
         this.oldPrice = null;
-        this.updateCallback = this.addListenerManagePricing.bind(this);
     }
-    addListenerManagePricing() {
-        setTimeout(() => {
-            let manageButtons = Array.from(
-                document.getElementsByClassName(this.managePricingClass)
-            );
-            //console.log(manageButtons);
-            manageButtons.forEach((button) => {
-                button.addEventListener('click', this.handleShowEditPricingForm)
-            })
-        }, 400)
+
+    addListenerManagePricing(id) {
+        let btn = document.getElementById(
+            `${this.manageBase}-${id}`
+        );
+        btn.addEventListener('click', this.handleShowEditPricingForm)
     }
     handleShowEditPricingForm = (e) =>
     {
@@ -38,11 +35,16 @@ class EditPricingForm extends AddPricingForm {
         );
         this._initSelect2();
         this.getServices();
-        setTimeout(() => {
-            this.populateForm();
-        }, 100);
+
         this.modalForm.close();
         this.addListenerSubmitForm();
+    }
+    successCallbackGetServices(response) {
+        let serviceSelect = $(`#${this.serviceSelectId}`);
+        this._populateSelectOptions(serviceSelect, response.data);
+        this._initSelect2();
+
+        this.populateForm();
     }
     populateForm() {
         //console.log(this.oldServiceId);

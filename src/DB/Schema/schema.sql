@@ -185,7 +185,7 @@ CREATE TABLE workers_service_pricing (
       service_id INT NOT NULL,
       price DECIMAL(10, 2) NOT NULL,
       currency VARCHAR(5) DEFAULT 'UAH',
-      updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
       FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
 );

@@ -32,8 +32,13 @@ $(function () {
     worker.getUserInfo();
 
     /**
+     * Set update callback for the pricing item
+     * and
      * Populate table of all workers
      */
+    pricingTable.setUpdateCallback(
+        editPricingForm.addListenerManagePricing, editPricingForm
+    );
     pricingTable.POPULATE();
 
     /**

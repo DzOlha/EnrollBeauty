@@ -11,6 +11,9 @@ class PricingTable extends Table {
         )
         this.tableId = 'table-body';
     }
+    setUpdateCallback(callback, context) {
+        this.updateCallback = callback.bind(context);
+    }
     /**
      *  response.data =
      *  0: {
@@ -63,8 +66,9 @@ class PricingTable extends Table {
 
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
+
+            this.updateCallback(item.id);
         });
-        // this.addListenerCancelAppointment();
     }
 }
 export default PricingTable;
