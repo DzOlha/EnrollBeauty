@@ -7,6 +7,8 @@ import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilde
 import AddPricingForm from "../../../../common/pages/worker/forms/AddPricingForm.js";
 import EditPricingForm from "../../../../common/pages/worker/forms/EditPricingForm.js";
 import Worker from "../../../../common/pages/worker/profile/Worker.js";
+import API from "../../../../common/pages/api.js";
+import DeletePricingForm from "../../../../common/pages/worker/forms/DeletePricingForm.js";
 
 $(function () {
     let requester = new Requester();
@@ -23,6 +25,11 @@ $(function () {
 
     let editPricingForm = new EditPricingForm(
         requester, modalForm, optionBuilder, pricingTable
+    );
+
+    let deleteForm = new DeletePricingForm(
+        requester, API.WORKER.API.PROFILE["service-pricing"].delete,
+        formBuilder
     );
 
 
@@ -48,14 +55,9 @@ $(function () {
     addNewPricingForm.addListenerShowAddPricingForm();
 
     /**
-     * Listen click on 'Manage' button to edit or delete the specific pricing
+     * Set delete callback for the edit form
      */
-    editPricingForm.addListenerManagePricing();
-
-    /**
-     * Set update callback in pricing table
-     */
-    addNewPricingForm.setUpdateCallback(
-        editPricingForm.addListenerManagePricing, editPricingForm
+    editPricingForm.setDeleteCallback(
+        deleteForm.addListenerDelete, deleteForm
     );
 });

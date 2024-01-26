@@ -34,9 +34,6 @@ class AddPricingForm extends Form {
 
         this.modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
     }
-    setUpdateCallback(callback, context) {
-        this.updateCallback = callback.bind(context);
-    }
     _initSelect2() {
         let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
         this._initServiceSelect2(modalBody);
@@ -232,6 +229,16 @@ class AddPricingForm extends Form {
             )
         }
     }
+
+    /**
+     *
+     * @param response = {
+     *     success:
+     *     data: {
+     *         id:
+     *     }
+     * }
+     */
     successCallbackSubmit(response) {
         GifLoader.hide(this.requestTimeout);
         /**
@@ -251,11 +258,6 @@ class AddPricingForm extends Form {
             this.pricingTable.getItemsPerPage(),
             Cookie.get(this.pricingTable.currentPageCookie)
         );
-
-        /**
-         * Update event listener on edit pricing
-         */
-        this.updateCallback();
     }
 }
 export default AddPricingForm;

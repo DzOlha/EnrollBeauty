@@ -193,6 +193,13 @@ class WorkerApiController extends ApiController
                     if($this->url[4] === 'edit') {
                         $this->_editServicePricing();
                     }
+
+                    /**
+                     *  url = /api/worker/profile/service-pricing/delete
+                     */
+                    if($this->url[4] === 'delete') {
+                        $this->_deleteServicePricing();
+                    }
                 }
             }
 
@@ -713,17 +720,20 @@ class WorkerApiController extends ApiController
             /**
              * Insert new pricing into db
              */
-            $inserted = $this->dataMapper->insertWorkerServicePricing(
+            $insertedId = $this->dataMapper->insertWorkerServicePricing(
                 $items['worker_id'], $items['service_id'], $items['price']
             );
-            if($inserted === false) {
+            if($insertedId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new pricing into database!'
                 ]);
             }
 
             $this->returnJson([
-                'success' => 'You successfully added one more pricing!'
+                'success' => 'You successfully added one more pricing!',
+                'data' => [
+                    'id' => $insertedId
+                ]
             ]);
         }
     }
@@ -773,6 +783,93 @@ class WorkerApiController extends ApiController
         $this->returnJson([
             'success' => 'You successfully updated info about selected pricing!'
         ]);
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/service-pricing/delete
+     */
+    protected function _deleteServicePricing()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $pricingId = (int)htmlspecialchars(trim($_POST['id']));
+            /**
+             * [
+             *      0 => [
+             *          id =>
+             *      ]
+             * ]
+             */
+            $existingOrders = $this->dataMapper->selectActiveOrdersByPricingId($pricingId);
+            if($existingOrders === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting information about active orders'
+                ]);
+            }
+
+            /**
+             * If some active orders for the pricing were found,
+             * we can not delete the pricing,
+             * worker should complete the left orders
+             * before removing pricing that is related to such orders
+             */
+            if($existingOrders) {
+               $this->returnJson([
+                   'error' => 'You can not remove this pricing because there are left some uncompleted orders with it'
+               ]);
+            }
+
+            $this->dataMapper->beginTransaction();
+
+            /**
+             * [
+             *      0 => [
+             *          id =>
+             *      ]
+             * ]
+             */
+            $existingFreeSchedules = $this->dataMapper->selectFreeSchedulesByPricingId($pricingId);
+            if($existingFreeSchedules === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting information about free schedules'
+                ]);
+            }
+
+            if(count($existingFreeSchedules) > 0) {
+                /**
+                 * Delete all free schedules created by the worker
+                 * using the deleted pricing item for the service there
+                 */
+                $freeSchedulesDeleted = $this->dataMapper->deleteFreeSchedulesByPricingId($pricingId);
+                if($freeSchedulesDeleted === false) {
+                    $this->dataMapper->rollBackTransaction();
+                    $this->returnJson([
+                        'error' => 'An error occurred while deleting free schedule items for the pricing'
+                    ]);
+                }
+            }
+
+            /**
+             * Delete the pricing itself
+             */
+            $deleted = $this->dataMapper->deleteWorkerServicePricingById($pricingId);
+            if($deleted === false) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'An error occurred while deleting the pricing item!'
+                ]);
+            }
+
+            $this->dataMapper->commitTransaction();
+            $this->returnJson([
+                'success' => 'You successfully deleted the pricing!',
+                'data' => [
+                    'id' => $pricingId
+                ]
+            ]);
+        }
     }
 
     /**

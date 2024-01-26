@@ -118,7 +118,8 @@ const API = [
                         'all' => '/api/worker/profile/service-pricing/get/all',
                     ],
                     'add'  => '/api/worker/profile/service-pricing/add',
-                    'edit' => '/api/worker/profile/service-pricing/edit'
+                    'edit' => '/api/worker/profile/service-pricing/edit',
+                    'delete' => '/api/worker/profile/service-pricing/delete'
                 ],
                 'service'         => [
                     'get' => [

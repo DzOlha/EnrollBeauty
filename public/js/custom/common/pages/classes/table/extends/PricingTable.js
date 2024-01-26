@@ -54,6 +54,7 @@ class PricingTable extends Table {
             row.append(`<td>
                         <a class="btn ripple btn-manage manage-button manage-pricing"
                            id="manage-${item.id}"
+                           data-pricing-id="${item.id}"
                            data-service-id="${item.service_id}"
                            data-service-price="${item.price}"
                            href="">

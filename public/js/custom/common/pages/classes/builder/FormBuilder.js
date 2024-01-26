@@ -157,8 +157,11 @@ class FormBuilder {
             `
     }
 
-    createEditPricingForm() {
-        return `<div class="form-group service-selector-parent">
+    createEditPricingForm(id) {
+        return `<div class="icons-wrapper-right" id="modal-icons-menu">
+                    <i class="fe fe-trash-2 delete" id="delete-${id}" data-pricing-id="${id}"></i>
+                </div>
+                <div class="form-group service-selector-parent">
                     <p class="mg-b-0"><span>*</span>Service</p>
                     <select class="form-control select2-with-search"
                             id="service-select">
@@ -183,6 +186,20 @@ class FormBuilder {
                     </div>
                </div>
             `
+    }
+
+    createDeleteConfirmationBlock(id) {
+        return `<div class="delete-confirmation-block" id="delete-confirmation-block-${id}">
+                    <button aria-label="Confirm"
+                            class="btn ripple delete-confirm-button pd-x-25"
+                            id="delete-confirm-submit-${id}"
+                            data-bs-dismiss="modal" type="button">
+                            Confirm Deletion
+                    </button>
+                    <button class="close-modal float-end" id="delete-confirm-close-${id}" type="button">
+                        <img src="/public/images/custom/system/icons/close.svg">
+                    </button>
+                </div>`
     }
 
     createAddScheduleForm() {

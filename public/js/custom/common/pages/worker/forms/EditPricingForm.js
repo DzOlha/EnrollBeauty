@@ -12,11 +12,23 @@ class EditPricingForm extends AddPricingForm {
         this.manageBase = 'manage';
         this.oldServiceId = null;
         this.oldPrice = null;
+
+        this.pricingId = null;
+        this.dataAttrPricingId = 'data-pricing-id';
+    }
+
+    closeModal() {
+
+    }
+
+    setDeleteCallback(callback, context) {
+        this.deleteCallback = callback.bind(context);
     }
 
     addListenerManagePricing(id) {
+        let selector = `${this.manageBase}-${id}`;
         let btn = document.getElementById(
-            `${this.manageBase}-${id}`
+            selector
         );
         btn.addEventListener('click', this.handleShowEditPricingForm)
     }
@@ -26,17 +38,20 @@ class EditPricingForm extends AddPricingForm {
         this.oldServiceId = e.currentTarget.getAttribute('data-service-id');
         this.oldPrice = e.currentTarget.getAttribute('data-service-price');
 
+        this.pricingId = e.currentTarget.getAttribute(this.dataAttrPricingId);
+
         this.modalForm.setSelectors('modalEditPricing');
         this.submitButtonId = this.modalForm.modalSubmitId;
         this.modalForm.show(
             'Edit Pricing',
-            this.modalForm.formBuilder.createEditPricingForm(),
+            this.modalForm.formBuilder.createEditPricingForm(this.pricingId),
             'Update'
         );
         this._initSelect2();
         this.getServices();
 
         this.modalForm.close();
+        this.deleteCallback(this.pricingId);
         this.addListenerSubmitForm();
     }
     successCallbackGetServices(response) {
@@ -91,6 +106,7 @@ class EditPricingForm extends AddPricingForm {
         super.successCallbackSubmit(response);
         this.oldPrice = null;
         this.oldServiceId = null;
+        this.pricingId = null;
     }
 }
 export default EditPricingForm;

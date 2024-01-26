@@ -278,8 +278,8 @@ class SqlBuilder implements IBuilder
         return $this;
     }
 
-    public function delete() {
-        $this->query .= "DELETE ";
+    public function delete($table = '') {
+        $this->query .= "DELETE $table ";
         return $this;
     }
 

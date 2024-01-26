@@ -574,7 +574,7 @@ class WorkerDataSource extends DataSource
             ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
-            return true;
+            return $this->db->lastInsertedId();
         }
         return false;
     }
@@ -810,6 +810,68 @@ class WorkerDataSource extends DataSource
             ->set(WorkersServicePricing::$price, ':price', $price)
             ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
             ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectActiveOrdersByPricingId(int $pricingId)
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $this->builder->select([OrdersService::$id])
+            ->from(OrdersService::$table)
+                ->innerJoin(WorkersServicePricing::$table)
+                    ->on(OrdersService::$worker_id, WorkersServicePricing::$worker_id)
+                    ->andOn(OrdersService::$service_id, WorkersServicePricing::$service_id)
+            ->whereEqual(WorkersServicePricing::$id, ':id', $pricingId)
+            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
+            ->andIsNull(OrdersService::$completed_datetime)
+            ->andIsNull(OrdersService::$canceled_datetime)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function deleteWorkerServicePricingById(int $pricingId)
+    {
+        $this->builder->delete()
+            ->from(WorkersServicePricing::$table)
+            ->whereEqual(WorkersServicePricing::$id, ':id', $pricingId)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectFreeSchedulesByPricingId(int $pricingId)
+    {
+        $this->builder->select([WorkersServiceSchedule::$id])
+            ->from(WorkersServiceSchedule::$table)
+                ->innerJoin(WorkersServicePricing::$table)
+                    ->on(WorkersServiceSchedule::$worker_id, WorkersServicePricing::$worker_id)
+                    ->andOn(WorkersServiceSchedule::$service_id, WorkersServicePricing::$service_id)
+            ->whereEqual(WorkersServicePricing::$id, ':pricing_id', $pricingId)
+            ->andIsNull(WorkersServiceSchedule::$order_id)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function deleteFreeSchedulesByPricingId(int $pricingId)
+    {
+        $this->builder->delete(WorkersServiceSchedule::$table)
+            ->from(WorkersServiceSchedule::$table)
+                ->innerJoin(WorkersServicePricing::$table)
+                    ->on(WorkersServiceSchedule::$worker_id, WorkersServicePricing::$worker_id)
+                    ->andOn(WorkersServiceSchedule::$service_id, WorkersServicePricing::$service_id)
+            ->whereEqual(WorkersServicePricing::$id, ':pricing_id', $pricingId)
+            ->andIsNull(WorkersServiceSchedule::$order_id)
         ->build();
 
         if ($this->db->affectedRowsCount() > 0) {

@@ -325,4 +325,23 @@ class WorkerDataMapper extends DataMapper
         return $this->dataSource->updateWorkerServicePricing($workerId, $serviceId, $price);
     }
 
+    public function selectActiveOrdersByPricingId(int $pricingId)
+    {
+        return $this->dataSource->selectActiveOrdersByPricingId($pricingId);
+    }
+
+    public function deleteWorkerServicePricingById(int $pricingId)
+    {
+        return $this->dataSource->deleteWorkerServicePricingById($pricingId);
+    }
+
+    public function selectFreeSchedulesByPricingId(int $pricingId)
+    {
+        return $this->dataSource->selectFreeSchedulesByPricingId($pricingId);
+    }
+
+    public function deleteFreeSchedulesByPricingId(int $pricingId)
+    {
+        return $this->dataSource->deleteFreeSchedulesByPricingId($pricingId);
+    }
 }
