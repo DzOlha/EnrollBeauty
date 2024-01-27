@@ -879,4 +879,29 @@ class WorkerDataSource extends DataSource
         }
         return false;
     }
+
+    public function selectServiceById(int $id)
+    {
+        $this->builder->select([Services::$id, Services::$name, Services::$department_id])
+                ->from(Services::$table)
+                ->whereEqual(Services::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function updateServiceById(
+        int $id, string $name, int $departmentId
+    ) {
+        $this->builder->update(Services::$table)
+                ->set(Services::$name, ':name', $name)
+                ->andSet(Services::$department_id, ':department_id', $departmentId)
+            ->whereEqual(Services::$id, ':id', $id)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 }

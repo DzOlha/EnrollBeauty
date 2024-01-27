@@ -94,7 +94,10 @@ const API = [
         'API' => [
             'SERVICE'    => [
                 'add' => '/api/worker/service/add',
+                'edit' => '/api/worker/service/edit',
+                'delete' => '/api/worker/service/delete',
                 'get' => [
+                    'one' => '/api/worker/service/get/one',
                     'all'                  => '/api/worker/service/get/all',
                     'all-with-departments' => '/api/worker/service/get/all-with-departments'
                 ]
@@ -164,18 +167,21 @@ const API = [
             ],
             'ROLE'     => [
                 'get' => [
-                    'all' => ' /api/admin/role/get/all'
+                    'all' => '/api/admin/role/get/all'
                 ]
             ],
             'SERVICE'  => [
+                'add' => '/api/admin/service/add',
+                'edit' => '/api/admin/service/edit',
+                'delete' => '/api/admin/service/delete',
                 'get' => [
+                    'one' =>  '/api/admin/service/get/one',
                     'all-with-departments' => '/api/admin/service/get/all-with-departments',
                 ],
-                'add' => '/api/admin/service/add'
             ],
             'DEPARTMENT' => [
                 'get' => [
-                    'all' => ' /api/admin/department/get/all'
+                    'all' => '/api/admin/department/get/all'
                 ]
             ]
         ]

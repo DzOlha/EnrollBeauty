@@ -151,6 +151,12 @@ class AdminApiController extends WorkerApiController
                     if($this->url[4] === 'all-with-departments') {
                         $this->_getServicesAllWithDepartments();
                     }
+                    /**
+                     * url = /api/admin/service/get/one
+                     */
+                    if($this->url[4] === 'one') {
+                        $this->_getServiceById();
+                    }
                 }
             }
             /**
@@ -158,6 +164,20 @@ class AdminApiController extends WorkerApiController
              */
             if($this->url[3] === 'add') {
                 $this->_addService();
+            }
+
+            /**
+             * url = /api/worker/service/edit
+             */
+            if($this->url[3] === 'edit') {
+                $this->_editService();
+            }
+
+            /**
+             * url = /api/worker/service/delete
+             */
+            if($this->url[3] === 'delete') {
+                $this->_deleteService();
             }
         }
     }

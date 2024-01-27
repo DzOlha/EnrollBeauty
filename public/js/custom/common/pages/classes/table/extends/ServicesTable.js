@@ -10,6 +10,9 @@ class ServicesTable extends Table {
         )
         this.tableId = 'table-body';
     }
+    setManageCallback(callback, context) {
+        this.manageCallback = callback.bind(context);
+    }
     /**
      *  response.data =
      *  0: {
@@ -48,6 +51,7 @@ class ServicesTable extends Table {
             row.append(`<td>
                         <a class="btn ripple btn-manage manage-button"
                            id="manage-${item.id}"
+                           data-service-id="${item.id}"
                            href="">
                             <i class="fe fe-eye me-2"></i>
                             Manage
@@ -58,6 +62,8 @@ class ServicesTable extends Table {
 
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
+
+            this.manageCallback(item.id);
         });
         // this.addListenerCancelAppointment();
     }

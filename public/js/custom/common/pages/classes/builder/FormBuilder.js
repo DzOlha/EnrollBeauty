@@ -381,5 +381,25 @@ class FormBuilder {
                 </div>
             `
     }
+
+    createEditServiceForm(id, withDelete)
+    {
+        let _delete = withDelete === true
+            ? `<i class="fe fe-trash-2 delete" id="delete-${id}" data-service-id="${id}"></i>`
+            : ``;
+
+        return `<div class="icons-wrapper-right" id="modal-icons-menu">
+                    ${_delete}
+                </div>
+                <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Service Name</p>
+                    <div class="input-group mb-3">
+                        <input name="name" type="text" placeholder="Service Name" autocomplete="off"
+                               required="required" class="form-control" id="service-name-input">
+                        <div class="error text-danger" id="service-name-input-error"></div>
+                    </div>
+                </div>
+            `
+    }
 }
 export default FormBuilder;

@@ -43,7 +43,7 @@ $(function () {
      * and
      * Populate table of all workers
      */
-    pricingTable.setUpdateCallback(
+    pricingTable.setManageCallback(
         editPricingForm.addListenerManagePricing, editPricingForm
     );
     pricingTable.POPULATE();

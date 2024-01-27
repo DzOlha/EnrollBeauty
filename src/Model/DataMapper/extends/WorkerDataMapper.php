@@ -344,4 +344,17 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->deleteFreeSchedulesByPricingId($pricingId);
     }
+
+    public function selectServiceById(int $id)
+    {
+        return $this->dataSource->selectServiceById($id);
+    }
+
+    public function updateServiceById(
+        int $id, string $name, int $departmentId
+    ) {
+        return $this->dataSource->updateServiceById(
+            $id, $name, $departmentId
+        );
+    }
 }

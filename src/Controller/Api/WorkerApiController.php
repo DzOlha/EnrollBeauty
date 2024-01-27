@@ -55,10 +55,30 @@ class WorkerApiController extends ApiController
             }
 
             /**
+             * url = /api/worker/service/edit
+             */
+            if($this->url[3] === 'edit') {
+                $this->_editService();
+            }
+
+            /**
+             * url = /api/worker/service/delete
+             */
+            if($this->url[3] === 'delete') {
+                $this->_deleteService();
+            }
+
+            /**
              * url = /api/worker/service/get/
              */
             if($this->url[3] === 'get') {
                 if(isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/service/get/one
+                     */
+                    if($this->url[4] === 'one') {
+                        $this->_getServiceById();
+                    }
                     /**
                      * url = /api/worker/service/get/all
                      */
@@ -366,8 +386,6 @@ class WorkerApiController extends ApiController
         ]);
     }
 
-
-
     protected function _searchSchedule() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $workerId = $this->_getWorkerId();
@@ -646,6 +664,38 @@ class WorkerApiController extends ApiController
                 'success' => 'You successfully marked the appointment as completed!'
             ]);
         }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/service/get/one
+     */
+    public function _getServiceById()
+    {
+        $serviceId = 0;
+        if(isset($_GET['id']) && $_GET['id'] !== '') {
+            $serviceId = (int)htmlspecialchars(trim($_GET['id']));
+        }
+
+        /**
+         * [
+         *      id:
+         *      name:
+         *      department_id:
+         * ]
+         */
+        $result = $this->dataMapper->selectServiceById($serviceId);
+        if($result === false) {
+            $this->returnJson([
+                'error' => 'An error occurred while getting service details!'
+            ]);
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
     }
 
 
@@ -1085,4 +1135,74 @@ class WorkerApiController extends ApiController
             ]);
         }
     }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/service/edit
+     */
+    protected function _editService()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $items = [
+                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
+                'service_name' => htmlspecialchars(trim($_POST['service_name'])),
+                'department_id' => htmlspecialchars(trim($_POST['department_id']))
+            ];
+            /**
+             * Validate service name
+             */
+            if(!$items['service_name']) {
+                $this->returnJson([
+                    'error' => 'Service name can not be empty!'
+                ]);
+            }
+            if(strlen($items['service_name']) < 3) {
+                $this->returnJson([
+                    'error' => 'Service name should be longer than 3 characters!'
+                ]);
+            }
+            /**
+             * Check if there is no service with such name in the selected department
+             */
+            $exists = $this->dataMapper->selectServiceIdByNameAndDepartmentId(
+                $items['service_name'], $items['department_id']
+            );
+            if($exists === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting service with provided name!'
+                ]);
+            }
+            if($exists) {
+                $this->returnJson([
+                    'error' => 'The service with provided name already exists in the selected department!'
+                ]);
+            }
+
+            /**
+             * Update in the database info about the service
+             */
+            $serviceId = $this->dataMapper->updateServiceById(
+                $items['service_id'], $items['service_name'], $items['department_id']
+            );
+            if($serviceId === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while updating information about the service in the database!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => "You successfully updated the service '{$items['service_name']}'",
+                'data' => [
+                    'id' => $items['service_id']
+                ]
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/service/delete
+     */
+    protected function _deleteService() {}
 }

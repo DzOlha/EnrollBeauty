@@ -11,8 +11,8 @@ class PricingTable extends Table {
         )
         this.tableId = 'table-body';
     }
-    setUpdateCallback(callback, context) {
-        this.updateCallback = callback.bind(context);
+    setManageCallback(callback, context) {
+        this.manageCallback = callback.bind(context);
     }
     /**
      *  response.data =
@@ -68,7 +68,7 @@ class PricingTable extends Table {
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
 
-            this.updateCallback(item.id);
+            this.manageCallback(item.id);
         });
     }
 }

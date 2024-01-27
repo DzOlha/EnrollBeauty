@@ -6,6 +6,8 @@ import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
 import AddServiceForm from "../../../../common/pages/worker/forms/AddServiceForm.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
 import API from "../../../../common/pages/api.js";
+import EditServiceForm from "../../../../common/pages/worker/forms/EditServiceForm.js";
+import DeleteServiceForm from "../../../../common/pages/worker/forms/DeleteServiceForm.js";
 
 $(function () {
     let requester = new Requester();
@@ -22,6 +24,24 @@ $(function () {
         API.ADMIN.API.SERVICE.add, API.ADMIN.API.DEPARTMENT.get.all
     );
 
+    let editForm = new EditServiceForm(
+        requester, modalForm, new OptionBuilder(), servicesTable,
+        API.ADMIN.API.SERVICE.add, API.ADMIN.API.DEPARTMENT.get.all,
+        API.ADMIN.API.SERVICE.edit, true
+    );
+
+    let deleteForm = new DeleteServiceForm(
+        requester, API.ADMIN.API.SERVICE.delete,
+        formBuilder
+    )
+
+    /**
+     * Set the delete callback on the edit form
+     */
+    editForm.setDeleteCallback(
+        deleteForm.addListenerDelete, deleteForm
+    );
+
     /**
      * Fill the worker info
      */
@@ -30,6 +50,9 @@ $(function () {
     /**
      * Populate table of all workers
      */
+    servicesTable.setManageCallback(
+        editForm.addListenerManage, editForm
+    );
     servicesTable.POPULATE();
 
     /**

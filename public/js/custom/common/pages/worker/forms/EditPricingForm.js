@@ -17,10 +17,6 @@ class EditPricingForm extends AddPricingForm {
         this.dataAttrPricingId = 'data-pricing-id';
     }
 
-    closeModal() {
-
-    }
-
     setDeleteCallback(callback, context) {
         this.deleteCallback = callback.bind(context);
     }
