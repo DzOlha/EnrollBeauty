@@ -257,8 +257,7 @@ class WorkerDataSource extends DataSource
     {
         $workerServiceSchedule = WorkersServiceSchedule::$table;
         $schedule_id = WorkersServiceSchedule::$id;
-        $schedule_service_id = WorkersServiceSchedule::$service_id;
-        $schedule_worker_id = WorkersServiceSchedule::$worker_id;
+        $schedule_price_id = WorkersServiceSchedule::$price_id;
         $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
         $schedule_day = WorkersServiceSchedule::$day;
         $schedule_start_time = WorkersServiceSchedule::$start_time;
@@ -285,14 +284,15 @@ class WorkerDataSource extends DataSource
         $affiliates_address = Affiliates::$address;
 
         $workersServicePricing = WorkersServicePricing::$table;
+        $pricing_id = WorkersServicePricing::$id;
         $pricing_service_id = WorkersServicePricing::$service_id;
         $pricing_worker_id = WorkersServicePricing::$worker_id;
         $pricing_price = WorkersServicePricing::$price;
         $pricing_currency = WorkersServicePricing::$currency;
 
         $departmentFilter = $this->_departmentFilter($departmentId);
-        $serviceFilter = $this->_serviceFilter($serviceId, $schedule_service_id);
-        $workerFilter = $this->_workerFilter($workerId, $schedule_worker_id);
+        $serviceFilter = $this->_serviceFilter($serviceId, $pricing_service_id);
+        $workerFilter = $this->_workerFilter($workerId, $pricing_worker_id);
         $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
         $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
         $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
@@ -310,13 +310,11 @@ class WorkerDataSource extends DataSource
                    $pricing_price, $pricing_currency
             
             FROM $workerServiceSchedule 
-                INNER JOIN $services ON $schedule_service_id = $services_id
-                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                 INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
                 INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
                 INNER JOIN $orders ON $schedule_order_id = $ordersOrderId
-                INNER JOIN $workersServicePricing 
-                    ON $schedule_worker_id = $pricing_worker_id
-                    AND $schedule_service_id = $pricing_service_id
             
             WHERE $schedule_order_id IS NOT NULL AND $completedTime IS NULL
                 {$departmentFilter['where']}
@@ -336,20 +334,18 @@ class WorkerDataSource extends DataSource
             SELECT $schedule_id as schedule_id, $services_id as service_id,
                    $services_serviceName as service_name,
                    $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
-                   $services_departmentId as department_id,
+                   $services_departmentId as department_id, 
                    $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
                    $schedule_day, 
                    $schedule_start_time, $schedule_end_time,
                    $pricing_price, $pricing_currency
             
             FROM $workerServiceSchedule 
-                INNER JOIN $services ON $schedule_service_id = $services_id
-                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
                 INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
                 INNER JOIN $orders ON $schedule_order_id = $ordersOrderId
-                INNER JOIN $workersServicePricing 
-                    ON $schedule_worker_id = $pricing_worker_id
-                    AND $schedule_service_id = $pricing_service_id
             
             WHERE $schedule_order_id IS NOT NULL AND $completedTime IS NULL
                 {$departmentFilter['where']}
@@ -379,8 +375,7 @@ class WorkerDataSource extends DataSource
     {
         $workerServiceSchedule = WorkersServiceSchedule::$table;
         $schedule_id = WorkersServiceSchedule::$id;
-        $schedule_service_id = WorkersServiceSchedule::$service_id;
-        $schedule_worker_id = WorkersServiceSchedule::$worker_id;
+        $schedule_price_id = WorkersServiceSchedule::$price_id;
         $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
         $schedule_day = WorkersServiceSchedule::$day;
         $schedule_start_time = WorkersServiceSchedule::$start_time;
@@ -401,14 +396,15 @@ class WorkerDataSource extends DataSource
         $affiliates_address = Affiliates::$address;
 
         $workersServicePricing = WorkersServicePricing::$table;
+        $pricing_id = WorkersServicePricing::$id;
         $pricing_service_id = WorkersServicePricing::$service_id;
         $pricing_worker_id = WorkersServicePricing::$worker_id;
         $pricing_price = WorkersServicePricing::$price;
         $pricing_currency = WorkersServicePricing::$currency;
 
         $departmentFilter = $this->_departmentFilter($departmentId);
-        $serviceFilter = $this->_serviceFilter($serviceId, $schedule_service_id);
-        $workerFilter = $this->_workerFilter($workerId, $schedule_worker_id);
+        $serviceFilter = $this->_serviceFilter($serviceId, $pricing_service_id);
+        $workerFilter = $this->_workerFilter($workerId, $pricing_worker_id);
         $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
         $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
         $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
@@ -425,12 +421,10 @@ class WorkerDataSource extends DataSource
                    $pricing_price, $pricing_currency
             
             FROM $workerServiceSchedule 
-                INNER JOIN $services ON $schedule_service_id = $services_id
-                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
                 INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-                INNER JOIN $workersServicePricing 
-                    ON $schedule_worker_id = $pricing_worker_id
-                    AND $schedule_service_id = $pricing_service_id
             
             WHERE $schedule_order_id IS NULL
                 {$departmentFilter['where']}
@@ -456,12 +450,10 @@ class WorkerDataSource extends DataSource
                    $pricing_price, $pricing_currency
             
             FROM $workerServiceSchedule 
-                INNER JOIN $services ON $schedule_service_id = $services_id
-                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
                 INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-                INNER JOIN $workersServicePricing 
-                    ON $schedule_worker_id = $pricing_worker_id
-                    AND $schedule_service_id = $pricing_service_id
             
             WHERE $schedule_order_id IS NULL
                 {$departmentFilter['where']}
@@ -537,8 +529,10 @@ class WorkerDataSource extends DataSource
     {
         $this->builder->select([OrdersService::$start_datetime, Services::$name])
             ->from(OrdersService::$table)
-            ->innerJoin(Services::$table)
-            ->on(OrdersService::$service_id, Services::$id)
+                ->innerJoin(WorkersServicePricing::$table)
+                    ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+                ->innerJoin(Services::$table)
+                    ->on(WorkersServicePricing::$service_id, Services::$id)
             ->whereEqual(OrdersService::$id, ':order_id', $orderId)
             ->build();
 
@@ -659,7 +653,9 @@ class WorkerDataSource extends DataSource
         $this->builder->select([WorkersServiceSchedule::$start_time,
                                 WorkersServiceSchedule::$end_time])
             ->from(WorkersServiceSchedule::$table)
-            ->whereEqual(WorkersServiceSchedule::$worker_id, ':worker_id', $workerId)
+                ->innerJoin(WorkersServicePricing::$table)
+                    ->on(WorkersServiceSchedule::$price_id, WorkersServicePricing::$id)
+                ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
             ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
             ->build();
 
@@ -670,16 +666,21 @@ class WorkerDataSource extends DataSource
         int $workerId, string $day, string $startTime, string $endTime
     )
     {
+        $pricing = WorkersServicePricing::$table;
+        $pricing_id = WorkersServicePricing::$id;
+        $pricing_worker_id = WorkersServicePricing::$worker_id;
+
         $schedule = WorkersServiceSchedule::$table;
+        $schedule_price_id = WorkersServiceSchedule::$price_id;
         $start_time = WorkersServiceSchedule::$start_time;
         $end_time = WorkersServiceSchedule::$end_time;
         $day_column = WorkersServiceSchedule::$day;
-        $worker_id = WorkersServiceSchedule::$worker_id;
         $id = WorkersServiceSchedule::$id;
 
         $q = "
             SELECT $id FROM $schedule
-            WHERE $worker_id = :worker_id
+            INNER JOIN $pricing ON $schedule_price_id = $pricing_id
+            WHERE $pricing_worker_id = :worker_id
             AND $day_column = :day
             AND (
                  ($start_time <= :start_time AND $start_time < :end_time 
@@ -696,7 +697,8 @@ class WorkerDataSource extends DataSource
 
         $this->db->query("
             SELECT $id FROM $schedule
-            WHERE $worker_id = :worker_id
+            INNER JOIN $pricing ON $schedule_price_id = $pricing_id
+            WHERE $pricing_worker_id = :worker_id
             AND $day_column = :day
             AND (
                  ($start_time <= :start_time AND $start_time < :end_time 
@@ -707,8 +709,6 @@ class WorkerDataSource extends DataSource
                 
                 OR ($start_time >= :start_time AND  $start_time < :end_time
                     AND $end_time > :start_time AND $end_time >= :end_time)
-                
-                OR ($start_time >= :start_time AND $end_time <= :end_time)
             )
         ");
         $this->db->bind(':worker_id', $workerId);
@@ -719,21 +719,40 @@ class WorkerDataSource extends DataSource
         return $this->db->manyRows();
     }
 
+    public function selectPriceIdByWorkerIdServiceId(
+        int $workerId, int $serviceId
+    ) {
+        $this->builder->select([WorkersServicePricing::$id])
+            ->from(WorkersServicePricing::$table)
+            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
+            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+        ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            /**
+             * workers_service_pricing.id -> id
+             */
+            return $result[explode('.', WorkersServicePricing::$id)[1]];
+        }
+        return $result;
+    }
+
     public function insertWorkerServiceSchedule(
-        int    $workerId, int $serviceId, int $affiliateId,
+        int    $priceId, int $affiliateId,
         string $day, string $startTime, string $endTime
     )
     {
         $this->builder->insertInto(WorkersServiceSchedule::$table,
             [
-                WorkersServiceSchedule::$worker_id, WorkersServiceSchedule::$service_id,
+                WorkersServiceSchedule::$price_id,
                 WorkersServiceSchedule::$affiliate_id, WorkersServiceSchedule::$day,
                 WorkersServiceSchedule::$start_time, WorkersServiceSchedule::$end_time
             ])
             ->values(
-                [':worker_id', ':service_id', ':affiliate_id',
+                [':price_id', ':affiliate_id',
                  ':day', ':start_time', ':end_time'],
-                [$workerId, $serviceId, $affiliateId, $day, $startTime, $endTime]
+                [$priceId, $affiliateId, $day, $startTime, $endTime]
             )
             ->build();
 
@@ -825,8 +844,7 @@ class WorkerDataSource extends DataSource
         $this->builder->select([OrdersService::$id])
             ->from(OrdersService::$table)
                 ->innerJoin(WorkersServicePricing::$table)
-                    ->on(OrdersService::$worker_id, WorkersServicePricing::$worker_id)
-                    ->andOn(OrdersService::$service_id, WorkersServicePricing::$service_id)
+                    ->on(OrdersService::$price_id, WorkersServicePricing::$id)
             ->whereEqual(WorkersServicePricing::$id, ':id', $pricingId)
             ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
             ->andIsNull(OrdersService::$completed_datetime)
@@ -841,37 +859,6 @@ class WorkerDataSource extends DataSource
         $this->builder->delete()
             ->from(WorkersServicePricing::$table)
             ->whereEqual(WorkersServicePricing::$id, ':id', $pricingId)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    public function selectFreeSchedulesByPricingId(int $pricingId)
-    {
-        $this->builder->select([WorkersServiceSchedule::$id])
-            ->from(WorkersServiceSchedule::$table)
-                ->innerJoin(WorkersServicePricing::$table)
-                    ->on(WorkersServiceSchedule::$worker_id, WorkersServicePricing::$worker_id)
-                    ->andOn(WorkersServiceSchedule::$service_id, WorkersServicePricing::$service_id)
-            ->whereEqual(WorkersServicePricing::$id, ':pricing_id', $pricingId)
-            ->andIsNull(WorkersServiceSchedule::$order_id)
-        ->build();
-
-        return $this->db->manyRows();
-    }
-
-    public function deleteFreeSchedulesByPricingId(int $pricingId)
-    {
-        $this->builder->delete(WorkersServiceSchedule::$table)
-            ->from(WorkersServiceSchedule::$table)
-                ->innerJoin(WorkersServicePricing::$table)
-                    ->on(WorkersServiceSchedule::$worker_id, WorkersServicePricing::$worker_id)
-                    ->andOn(WorkersServiceSchedule::$service_id, WorkersServicePricing::$service_id)
-            ->whereEqual(WorkersServicePricing::$id, ':pricing_id', $pricingId)
-            ->andIsNull(WorkersServiceSchedule::$order_id)
         ->build();
 
         if ($this->db->affectedRowsCount() > 0) {

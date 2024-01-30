@@ -871,48 +871,16 @@ class WorkerApiController extends ApiController
                ]);
             }
 
-            $this->dataMapper->beginTransaction();
-
-            /**
-             * [
-             *      0 => [
-             *          id =>
-             *      ]
-             * ]
-             */
-            $existingFreeSchedules = $this->dataMapper->selectFreeSchedulesByPricingId($pricingId);
-            if($existingFreeSchedules === false) {
-                $this->returnJson([
-                    'error' => 'An error occurred while getting information about free schedules'
-                ]);
-            }
-
-            if(count($existingFreeSchedules) > 0) {
-                /**
-                 * Delete all free schedules created by the worker
-                 * using the deleted pricing item for the service there
-                 */
-                $freeSchedulesDeleted = $this->dataMapper->deleteFreeSchedulesByPricingId($pricingId);
-                if($freeSchedulesDeleted === false) {
-                    $this->dataMapper->rollBackTransaction();
-                    $this->returnJson([
-                        'error' => 'An error occurred while deleting free schedule items for the pricing'
-                    ]);
-                }
-            }
-
             /**
              * Delete the pricing itself
              */
             $deleted = $this->dataMapper->deleteWorkerServicePricingById($pricingId);
             if($deleted === false) {
-                $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while deleting the pricing item!'
                 ]);
             }
 
-            $this->dataMapper->commitTransaction();
             $this->returnJson([
                 'success' => 'You successfully deleted the pricing!',
                 'data' => [
@@ -1057,10 +1025,22 @@ class WorkerApiController extends ApiController
             }
 
             /**
+             * Select id of the pricing item (by worker_id and service_id)
+             */
+            $priceId = $this->dataMapper->selectPriceIdByWorkerIdServiceId(
+                $items['worker_id'], $items['service_id']
+            );
+            if($priceId === false) {
+                $this->returnJson([
+                    'error' => 'There is no pricing for the selected worker and service!'
+                ]);
+            }
+
+            /**
              * Insert new schedule
              */
             $inserted = $this->dataMapper->insertWorkerServiceSchedule(
-                $items['worker_id'], $items['service_id'], $items['affiliate_id'],
+                $priceId, $items['affiliate_id'],
                 $items['day'], $items['start_time'], $items['end_time']
             );
             if($inserted === false) {

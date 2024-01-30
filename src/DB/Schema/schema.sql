@@ -195,8 +195,7 @@ CREATE TABLE orders_service (
     user_id INT,
     schedule_id INT,
     email VARCHAR(100) NOT NULL,
-    service_id INT NOT NULL,
-    worker_id INT NOT NULL,
+    price_id INT NOT NULL,
     affiliate_id INT NOT NULL,
     start_datetime DATETIME NOT NULL,
     end_datetime DATETIME NOT NULL,
@@ -205,22 +204,19 @@ CREATE TABLE orders_service (
     created_datetime DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (schedule_id) REFERENCES workers_service_schedule(id) ON DELETE CASCADE,
-    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
-    FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
+    FOREIGN KEY (price_id) REFERENCES workers_service_pricing(id) ON DELETE CASCADE,
     FOREIGN KEY (affiliate_id) REFERENCES affiliates(id) ON DELETE CASCADE
 );
 CREATE TABLE workers_service_schedule (
       id INT AUTO_INCREMENT PRIMARY KEY,
-      worker_id INT NOT NULL,
+      price_id INT NOT NULL,
       affiliate_id INT NOT NULL,
-      service_id INT NOT NULL,
       day DATE NOT NULL,
       start_time TIME NOT NULL,
       end_time TIME NOT NULL,
       order_id INT COMMENT 'If not null, the time window has been taken',
-      FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
+      FOREIGN KEY (price_id) REFERENCES workers_service_pricing(id) ON DELETE CASCADE,
       FOREIGN KEY (affiliate_id) REFERENCES affiliates(id) ON DELETE CASCADE,
-      FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE,
       FOREIGN KEY (order_id) REFERENCES orders_service(id) ON DELETE SET NULL
 );
 CREATE TABLE categories (

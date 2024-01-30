@@ -322,41 +322,6 @@ class UserApiController extends ApiController
             $param['order_direction']
         );
         if ($result !== false) {
-            $resultArrayTest = [
-                [
-                    'id' => 1,
-                    'service_id' => 101,
-                    'service_name' => 'Haircut',
-                    'worker_id' => 201,
-                    'worker_name' => 'John',
-                    'worker_surname' => 'Doe',
-                    'affiliate_id' => 301,
-                    'affiliate_city' => 'New York',
-                    'affiliate_address' => '123 Main St',
-                    'start_datetime' => '2023-11-03 13:00:00',
-                    'end_datetime' => '2023-11-03 14:00:00',
-                    'price' => 50,
-                    'currency' => 'USD',
-                ],
-                [
-                    'id' => 2,
-                    'service_id' => 102,
-                    'service_name' => 'Massage',
-                    'worker_id' => 202,
-                    'worker_name' => 'Sarah',
-                    'worker_surname' => 'Smith',
-                    'affiliate_id' => 302,
-                    'affiliate_city' => 'Los Angeles',
-                    'affiliate_address' => '456 Elm St',
-                    'start_datetime' => '2023-11-04 15:30:00',
-                    'end_datetime' => '2023-11-04 16:30:00',
-                    'price' => 80,
-                    'currency' => 'USD',
-                ],
-                'totalRowsCount' => 2
-            ];
-
-            //$data = $result ? $result : $resultArrayTest;
             $this->returnJson([
                 'success' => true,
                 'data' => $result
@@ -651,8 +616,7 @@ class UserApiController extends ApiController
             /**
              * Insert the new row into order_service
              */
-            $service_id = explode('.', WorkersServiceSchedule::$service_id)[1];
-            $worker_id = explode('.', WorkersServiceSchedule::$worker_id)[1];
+            $price_id = explode('.', WorkersServiceSchedule::$price_id)[1];
             $affiliate_id = explode('.', WorkersServiceSchedule::$affiliate_id)[1];
             $day = explode('.', WorkersServiceSchedule::$day)[1];
             $start_time = explode('.', WorkersServiceSchedule::$start_time)[1];
@@ -694,9 +658,8 @@ class UserApiController extends ApiController
             $this->dataMapper->beginTransaction();
 
             $orderID = $this->dataMapper->insertOrderService(
-                $scheduleId, $userId, $email, $scheduleDetails[$service_id],
-                $scheduleDetails[$worker_id], $scheduleDetails[$affiliate_id],
-                $start_datetime, $end_datetime,
+                $scheduleId, $userId, $email, $scheduleDetails[$price_id],
+                $scheduleDetails[$affiliate_id], $start_datetime, $end_datetime,
             );
             if($orderID === false) {
                 $this->dataMapper->rollBackTransaction();

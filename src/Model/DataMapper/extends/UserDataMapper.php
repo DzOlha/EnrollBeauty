@@ -68,12 +68,12 @@ class UserDataMapper extends DataMapper
     }
 
     public function insertOrderService(
-        ?int $scheduleId, ?int $userId, string $email, int $serviceId, int $workerId,
+        ?int $scheduleId, ?int $userId, string $email, int $priceId,
         int  $affiliateId, string $startDatetime, string $endDatetime
     )
     {
         return $this->dataSource->insertOrderService(
-            $scheduleId, $userId, $email, $serviceId, $workerId,
+            $scheduleId, $userId, $email, $priceId,
             $affiliateId, $startDatetime, $endDatetime
         );
     }

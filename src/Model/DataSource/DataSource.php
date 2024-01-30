@@ -426,8 +426,7 @@ abstract class DataSource
     {
         $workerServiceSchedule = WorkersServiceSchedule::$table;
         $schedule_id = WorkersServiceSchedule::$id;
-        $schedule_service_id = WorkersServiceSchedule::$service_id;
-        $schedule_worker_id = WorkersServiceSchedule::$worker_id;
+        $schedule_price_id = WorkersServiceSchedule::$price_id;
         $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
         $schedule_day = WorkersServiceSchedule::$day;
         $schedule_start_time = WorkersServiceSchedule::$start_time;
@@ -450,14 +449,16 @@ abstract class DataSource
         $affiliates_address = Affiliates::$address;
 
         $workersServicePricing = WorkersServicePricing::$table;
+
+        $pricing_id = WorkersServicePricing::$id;
         $pricing_service_id = WorkersServicePricing::$service_id;
         $pricing_worker_id = WorkersServicePricing::$worker_id;
         $pricing_price = WorkersServicePricing::$price;
         $pricing_currency = WorkersServicePricing::$currency;
 
         $departmentFilter = $this->_departmentFilter($departmentId);
-        $serviceFilter = $this->_serviceFilter($serviceId, $schedule_service_id);
-        $workerFilter = $this->_workerFilter($workerId, $schedule_worker_id);
+        $serviceFilter = $this->_serviceFilter($serviceId, $pricing_service_id);
+        $workerFilter = $this->_workerFilter($workerId, $pricing_worker_id);
         $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
         $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
         $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
@@ -476,12 +477,10 @@ abstract class DataSource
                    $pricing_price, $pricing_currency
             
             FROM $workerServiceSchedule 
-                INNER JOIN $services ON $schedule_service_id = $services_id
-                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
                 INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-                INNER JOIN $workersServicePricing 
-                    ON $schedule_worker_id = $pricing_worker_id
-                    AND $schedule_service_id = $pricing_service_id
             
             WHERE $schedule_order_id IS NULL 
                 {$departmentFilter['where']}
@@ -509,12 +508,10 @@ abstract class DataSource
                    $pricing_price, $pricing_currency
             
             FROM $workerServiceSchedule 
-                INNER JOIN $services ON $schedule_service_id = $services_id
-                INNER JOIN $workers ON $schedule_worker_id = $workers_id 
+                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
                 INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-                INNER JOIN $workersServicePricing 
-                    ON $schedule_worker_id = $pricing_worker_id
-                    AND $schedule_service_id = $pricing_service_id
             
             WHERE $schedule_order_id IS NULL 
                 {$departmentFilter['where']}

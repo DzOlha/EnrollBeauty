@@ -289,12 +289,18 @@ class WorkerDataMapper extends DataMapper
         );
     }
 
+    public function selectPriceIdByWorkerIdServiceId(
+        int $workerId, int $serviceId
+    ) {
+        return $this->dataSource->selectPriceIdByWorkerIdServiceId($workerId, $serviceId);
+    }
+
     public function insertWorkerServiceSchedule(
-        int $workerId, int $serviceId, int $affiliateId,
+        int $priceId, int $affiliateId,
         string $day, string $startTime, string $endTime
     ) {
         return $this->dataSource->insertWorkerServiceSchedule(
-            $workerId, $serviceId, $affiliateId, $day, $startTime, $endTime
+            $priceId, $affiliateId, $day, $startTime, $endTime
         );
     }
 
@@ -333,16 +339,6 @@ class WorkerDataMapper extends DataMapper
     public function deleteWorkerServicePricingById(int $pricingId)
     {
         return $this->dataSource->deleteWorkerServicePricingById($pricingId);
-    }
-
-    public function selectFreeSchedulesByPricingId(int $pricingId)
-    {
-        return $this->dataSource->selectFreeSchedulesByPricingId($pricingId);
-    }
-
-    public function deleteFreeSchedulesByPricingId(int $pricingId)
-    {
-        return $this->dataSource->deleteFreeSchedulesByPricingId($pricingId);
     }
 
     public function selectServiceById(int $id)

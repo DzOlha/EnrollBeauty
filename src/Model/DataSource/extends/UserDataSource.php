@@ -147,16 +147,16 @@ class UserDataSource extends DataSource
     {
         $ordersService = OrdersService::$table;
         $user_id = OrdersService::$user_id;
-        $service_id = OrdersService::$service_id;
-        $worker_id = OrdersService::$worker_id;
+        $price_id = OrdersService::$price_id;
         $affiliate_id = OrdersService::$affiliate_id;
         $start_datetime = OrdersService::$start_datetime;
         $canceled = OrdersService::$canceled_datetime;
         $completed = OrdersService::$completed_datetime;
 
-        $workersService = WorkersServicePricing::$table;
-        $workersServiceWorkerId = WorkersServicePricing::$worker_id;
-        $workersServiceServiceId = WorkersServicePricing::$service_id;
+        $workersPricing = WorkersServicePricing::$table;
+        $workersPricingId = WorkersServicePricing::$id;
+        $workersPricingWorkerId = WorkersServicePricing::$worker_id;
+        $workersPricingServiceId = WorkersServicePricing::$service_id;
 
         $workers = Workers::$table;
         $workerId = Workers::$id;
@@ -171,11 +171,11 @@ class UserDataSource extends DataSource
 
         $queryFrom = "
             $ordersService 
-                INNER JOIN $workers ON $worker_id = $workerId
+                INNER JOIN $workersPricing ON $price_id = $workersPricingId
+                INNER JOIN $workers ON $workersPricingWorkerId = $workerId
                 INNER JOIN $affiliates ON $affiliate_id = $affiliateId
-                INNER JOIN $services ON $service_id = $serviceId
-                INNER JOIN $workersService ON $worker_id = $workersServiceWorkerId
-                                          AND $service_id = $workersServiceServiceId
+                INNER JOIN $services ON $workersPricingServiceId = $serviceId
+                                         
             WHERE $user_id = $userId
                 AND $canceled IS NULL
                 AND $completed IS NULL
@@ -184,27 +184,30 @@ class UserDataSource extends DataSource
 
         $currentDatetime = date('Y-m-d H:i:s');
         $this->builder->select(
-                [OrdersService::$id, OrdersService::$service_id, Services::$name, OrdersService::$worker_id,
+                [OrdersService::$id, Services::$id, Services::$name, Workers::$id,
                 Workers::$name, Workers::$surname, OrdersService::$affiliate_id, Affiliates::$city,
                 Affiliates::$address, OrdersService::$start_datetime, OrdersService::$end_datetime,
                 WorkersServicePricing::$price, WorkersServicePricing::$currency],
                 [
-                    OrdersService::$service_id => 'service_id', Services::$name => 'service_name',
-                    OrdersService::$worker_id => 'worker_id', Workers::$name => 'worker_name',
+                    Services::$id => 'service_id', Services::$name => 'service_name',
+                    Workers::$id => 'worker_id', Workers::$name => 'worker_name',
                     Workers::$surname => 'worker_surname', OrdersService::$affiliate_id => 'affiliate_id',
                     Affiliates::$city => 'affiliate_city', Affiliates::$address => 'affiliate_address'
                 ]
             )
             ->from(OrdersService::$table)
+                ->innerJoin(WorkersServicePricing::$table)
+                    ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+
                 ->innerJoin(Workers::$table)
-                    ->on(OrdersService::$worker_id, Workers::$id)
+                    ->on(WorkersServicePricing::$worker_id, Workers::$id)
+
                 ->innerJoin(Affiliates::$table)
                     ->on(OrdersService::$affiliate_id, Affiliates::$id)
+
                 ->innerJoin(Services::$table)
-                    ->on(OrdersService::$service_id, Services::$id)
-                ->innerJoin(WorkersServicePricing::$table)
-                    ->on(OrdersService::$worker_id, WorkersServicePricing::$worker_id)
-                    ->andOn(OrdersService::$service_id, WorkersServicePricing::$service_id)
+                    ->on(WorkersServicePricing::$service_id, Services::$id)
+
             ->whereEqual(OrdersService::$user_id, ':user_id', $userId)
                 ->andIsNull(OrdersService::$canceled_datetime)
                 ->andIsNull(OrdersService::$completed_datetime)
@@ -268,23 +271,22 @@ class UserDataSource extends DataSource
     }
 
     public function insertOrderService(
-        ?int $scheduleId, ?int $userId, string $email, int $serviceId, int $workerId,
+        ?int $scheduleId, ?int $userId, string $email, int $priceId,
         int $affiliateId, string $startDatetime, string $endDatetime
     ) {
         $currentDatetime = date('Y-m-d H:i:s');
         $this->builder->insertInto(OrdersService::$table,
                     [
                         OrdersService::$user_id, OrdersService::$schedule_id,
-                        OrdersService::$email, OrdersService::$service_id,
-                        OrdersService::$worker_id, OrdersService::$affiliate_id,
-                        OrdersService::$start_datetime, OrdersService::$end_datetime,
-                        OrdersService::$created_datetime
+                        OrdersService::$email, OrdersService::$price_id,
+                        OrdersService::$affiliate_id, OrdersService::$start_datetime,
+                        OrdersService::$end_datetime, OrdersService::$created_datetime
                     ]
                 )
                 ->values(
-                    [':user_id', ':schedule_id', ':email', ':service_id', ':worker_id',
+                    [':user_id', ':schedule_id', ':email', ':price_id',
                      ':affiliate_id', ':start', ':end', ':created_datetime'],
-                    [$userId, $scheduleId, $email, $serviceId, $workerId,
+                    [$userId, $scheduleId, $email, $priceId,
                      $affiliateId, $startDatetime, $endDatetime, $currentDatetime]
                 )
             ->build();
