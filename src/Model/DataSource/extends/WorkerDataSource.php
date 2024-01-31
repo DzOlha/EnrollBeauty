@@ -654,9 +654,12 @@ class WorkerDataSource extends DataSource
             ->from(WorkersServiceSchedule::$table)
                 ->innerJoin(WorkersServicePricing::$table)
                     ->on(WorkersServiceSchedule::$price_id, WorkersServicePricing::$id)
+                ->leftJoin(OrdersService::$table)
+                    ->on(WorkersServiceSchedule::$order_id, OrdersService::$id)
                 ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
                 ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
-                ->andIsNull(WorkersServiceSchedule::$order_id)
+                ->andIsNull(OrdersService::$completed_datetime)
+                ->andIsNull(OrdersService::$canceled_datetime)
             ->build();
 
         return $this->db->manyRows();
@@ -670,6 +673,11 @@ class WorkerDataSource extends DataSource
         $pricing_id = WorkersServicePricing::$id;
         $pricing_worker_id = WorkersServicePricing::$worker_id;
 
+        $orders = OrdersService::$table;
+        $orders_id = OrdersService::$id;
+        $orders_completed = OrdersService::$completed_datetime;
+        $orders_canceled = OrdersService::$canceled_datetime;
+
         $schedule = WorkersServiceSchedule::$table;
         $schedule_price_id = WorkersServiceSchedule::$price_id;
         $schedule_order_id = WorkersServiceSchedule::$order_id;
@@ -681,10 +689,11 @@ class WorkerDataSource extends DataSource
         $q = "
             SELECT $id FROM $schedule
             INNER JOIN $pricing ON $schedule_price_id = $pricing_id
+            LEFT JOIN $orders ON $schedule_order_id = $orders_id
             WHERE $pricing_worker_id = :worker_id
             AND $day_column = :day
-            AND $schedule_order_id IS NULL
-            AND 
+            AND $orders_canceled IS NULL
+            AND $orders_completed IS NULL
             AND (
                  ($start_time <= :start_time AND $start_time < :end_time 
                     AND $end_time > :start_time AND $end_time >= :end_time)
@@ -701,9 +710,11 @@ class WorkerDataSource extends DataSource
         $this->db->query("
             SELECT $id FROM $schedule
             INNER JOIN $pricing ON $schedule_price_id = $pricing_id
+            LEFT JOIN $orders ON $schedule_order_id = $orders_id
             WHERE $pricing_worker_id = :worker_id
             AND $day_column = :day
-            AND $schedule_order_id IS NULL
+            AND $orders_canceled IS NULL
+            AND $orders_completed IS NULL
             AND (
                  ($start_time <= :start_time AND $start_time < :end_time 
                     AND $end_time > :start_time AND $end_time >= :end_time)
