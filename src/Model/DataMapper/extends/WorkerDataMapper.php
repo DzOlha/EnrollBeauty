@@ -353,4 +353,14 @@ class WorkerDataMapper extends DataMapper
             $id, $name, $departmentId
         );
     }
+
+    public function selectActiveOrdersByServiceId(int $serviceId)
+    {
+        return $this->dataSource->selectActiveOrdersByServiceId($serviceId);
+    }
+
+    public function deleteServiceById(int $serviceId)
+    {
+        return $this->dataSource->deleteServiceById($serviceId);
+    }
 }

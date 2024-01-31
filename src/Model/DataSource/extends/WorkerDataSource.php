@@ -648,15 +648,15 @@ class WorkerDataSource extends DataSource
      */
     public function selectFilledTimeIntervalsByWorkerIdAndDay(
         int $workerId, string $day
-    )
-    {
+    ){
         $this->builder->select([WorkersServiceSchedule::$start_time,
                                 WorkersServiceSchedule::$end_time])
             ->from(WorkersServiceSchedule::$table)
                 ->innerJoin(WorkersServicePricing::$table)
                     ->on(WorkersServiceSchedule::$price_id, WorkersServicePricing::$id)
                 ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-            ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
+                ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
+                ->andIsNull(WorkersServiceSchedule::$order_id)
             ->build();
 
         return $this->db->manyRows();
@@ -672,6 +672,7 @@ class WorkerDataSource extends DataSource
 
         $schedule = WorkersServiceSchedule::$table;
         $schedule_price_id = WorkersServiceSchedule::$price_id;
+        $schedule_order_id = WorkersServiceSchedule::$order_id;
         $start_time = WorkersServiceSchedule::$start_time;
         $end_time = WorkersServiceSchedule::$end_time;
         $day_column = WorkersServiceSchedule::$day;
@@ -682,6 +683,8 @@ class WorkerDataSource extends DataSource
             INNER JOIN $pricing ON $schedule_price_id = $pricing_id
             WHERE $pricing_worker_id = :worker_id
             AND $day_column = :day
+            AND $schedule_order_id IS NULL
+            AND 
             AND (
                  ($start_time <= :start_time AND $start_time < :end_time 
                     AND $end_time > :start_time AND $end_time >= :end_time)
@@ -700,6 +703,7 @@ class WorkerDataSource extends DataSource
             INNER JOIN $pricing ON $schedule_price_id = $pricing_id
             WHERE $pricing_worker_id = :worker_id
             AND $day_column = :day
+            AND $schedule_order_id IS NULL
             AND (
                  ($start_time <= :start_time AND $start_time < :end_time 
                     AND $end_time > :start_time AND $end_time >= :end_time)
@@ -884,6 +888,36 @@ class WorkerDataSource extends DataSource
                 ->set(Services::$name, ':name', $name)
                 ->andSet(Services::$department_id, ':department_id', $departmentId)
             ->whereEqual(Services::$id, ':id', $id)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectActiveOrdersByServiceId(int $serviceId)
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $this->builder->select([OrdersService::$id])
+            ->from(OrdersService::$table)
+                ->innerJoin(WorkersServicePricing::$table)
+                    ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+                ->whereEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+                ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
+                ->andIsNull(OrdersService::$completed_datetime)
+                ->andIsNull(OrdersService::$canceled_datetime)
+            ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function deleteServiceById(int $serviceId)
+    {
+        $this->builder->delete()
+            ->from(Services::$table)
+            ->whereEqual(Services::$id, ':id', $serviceId)
         ->build();
 
         if ($this->db->affectedRowsCount() > 0) {

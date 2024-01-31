@@ -38,7 +38,7 @@ class ServicesTable extends Table {
                 return true;
             }
             // Create a table row for each of service item
-            let row = $(`<tr data-pricing-id = "${item.id}">`);
+            let row = $(`<tr data-service-id = "${item.id}">`);
 
             row.append(`<td>${item.id}</td>`);
 

@@ -35,7 +35,7 @@ class WorkerApiController extends ApiController
 
     public function checkPermission(): void
     {
-        if(!SessionHelper::getWorkerSession()) {
+        if (!SessionHelper::getWorkerSession()) {
             $this->_accessDenied();
         }
     }
@@ -45,51 +45,52 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/service/
      */
-    public function service() {
+    public function service()
+    {
         if (isset($this->url[3])) {
             /**
              * url = /api/worker/service/add
              */
-            if($this->url[3] === 'add') {
+            if ($this->url[3] === 'add') {
                 $this->_addService();
             }
 
             /**
              * url = /api/worker/service/edit
              */
-            if($this->url[3] === 'edit') {
+            if ($this->url[3] === 'edit') {
                 $this->_editService();
             }
 
             /**
              * url = /api/worker/service/delete
              */
-            if($this->url[3] === 'delete') {
+            if ($this->url[3] === 'delete') {
                 $this->_deleteService();
             }
 
             /**
              * url = /api/worker/service/get/
              */
-            if($this->url[3] === 'get') {
-                if(isset($this->url[4])) {
+            if ($this->url[3] === 'get') {
+                if (isset($this->url[4])) {
                     /**
                      * url = /api/worker/service/get/one
                      */
-                    if($this->url[4] === 'one') {
+                    if ($this->url[4] === 'one') {
                         $this->_getServiceById();
                     }
                     /**
                      * url = /api/worker/service/get/all
                      */
-                    if($this->url[4] === 'all') {
+                    if ($this->url[4] === 'all') {
                         $this->_getServicesAll();
                     }
 
                     /**
                      * url = /api/worker/service/get/all-with-departments
                      */
-                    if($this->url[4] === 'all-with-departments') {
+                    if ($this->url[4] === 'all-with-departments') {
                         $this->_getServicesAllWithDepartments();
                     }
                 }
@@ -102,7 +103,8 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/affiliate/
      */
-    public function affiliate() {
+    public function affiliate()
+    {
         if (isset($this->url[3])) {
 //                /**
 //                 * url = /api/worker/affiliate/add
@@ -114,12 +116,12 @@ class WorkerApiController extends ApiController
             /**
              * url = /api/worker/affiliate/get/
              */
-            if($this->url[3] === 'get') {
-                if(isset($this->url[4])) {
+            if ($this->url[3] === 'get') {
+                if (isset($this->url[4])) {
                     /**
                      * url = /api/worker/affiliate/get/all
                      */
-                    if($this->url[4] === 'all') {
+                    if ($this->url[4] === 'all') {
                         $this->_getAffiliatesAll();
                     }
                 }
@@ -133,31 +135,32 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/schedule/
      */
-    public function schedule() {
+    public function schedule()
+    {
         if (isset($this->url[3])) {
             /**
              * url = /api/worker/schedule/add
              */
-            if($this->url[3] === 'add') {
+            if ($this->url[3] === 'add') {
                 $this->_addSchedule();
             }
 
             /**
              * url = /api/worker/schedule/search
              */
-            if($this->url[3] === 'search') {
+            if ($this->url[3] === 'search') {
                 $this->_searchSchedule();
             }
 
             /**
              * url = /api/worker/schedule/get/
              */
-            if($this->url[3] === 'get') {
-                if(isset($this->url[4])) {
+            if ($this->url[3] === 'get') {
+                if (isset($this->url[4])) {
                     /**
                      * url = /api/worker/schedule/get/busy-time-intervals
                      */
-                    if($this->url[4] === 'busy-time-intervals') {
+                    if ($this->url[4] === 'busy-time-intervals') {
                         $this->_getBusyTimeIntervals();
                     }
                 }
@@ -172,29 +175,30 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/profile/
      */
-    public function profile() {
+    public function profile()
+    {
         if (isset($this->url[3])) {
             /**
              * url = /api/worker/profile/get
              */
-            if($this->url[3] === 'get') {
+            if ($this->url[3] === 'get') {
                 $this->_getWorker();
             }
 
             /**
              *  url = /api/worker/profile/service-pricing/
              */
-            if($this->url[3] === 'service-pricing') {
-                if(isset($this->url[4])) {
+            if ($this->url[3] === 'service-pricing') {
+                if (isset($this->url[4])) {
                     /**
                      *  url = /api/worker/profile/service-pricing/get/
                      */
-                    if($this->url[4] === 'get') {
-                        if(isset($this->url[5])) {
+                    if ($this->url[4] === 'get') {
+                        if (isset($this->url[5])) {
                             /**
                              *  url = /api/worker/profile/service-pricing/get/all
                              */
-                            if($this->url[5] === 'all') {
+                            if ($this->url[5] === 'all') {
                                 $this->_getServicePricing();
                             }
                         }
@@ -203,21 +207,21 @@ class WorkerApiController extends ApiController
                     /**
                      *  url = /api/worker/profile/service-pricing/add
                      */
-                    if($this->url[4] === 'add') {
-                       $this->_addServicePricing();
+                    if ($this->url[4] === 'add') {
+                        $this->_addServicePricing();
                     }
 
                     /**
                      *  url = /api/worker/profile/service-pricing/edit
                      */
-                    if($this->url[4] === 'edit') {
+                    if ($this->url[4] === 'edit') {
                         $this->_editServicePricing();
                     }
 
                     /**
                      *  url = /api/worker/profile/service-pricing/delete
                      */
-                    if($this->url[4] === 'delete') {
+                    if ($this->url[4] === 'delete') {
                         $this->_deleteServicePricing();
                     }
                 }
@@ -226,17 +230,17 @@ class WorkerApiController extends ApiController
             /**
              *  url = /api/worker/profile/service/
              */
-            if($this->url[3] === 'service') {
-                if(isset($this->url[4])) {
+            if ($this->url[3] === 'service') {
+                if (isset($this->url[4])) {
                     /**
                      * url = /api/worker/profile/service/get/
                      */
-                    if($this->url[4] === 'get') {
-                        if(isset($this->url[5])) {
+                    if ($this->url[4] === 'get') {
+                        if (isset($this->url[5])) {
                             /**
                              * url = /api/worker/profile/service/get/all
                              */
-                            if($this->url[5] === 'all') {
+                            if ($this->url[5] === 'all') {
                                 $this->_getServicesAllForWorker();
                             }
                         }
@@ -252,24 +256,25 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/order/
      */
-    public function order() {
+    public function order()
+    {
         if (isset($this->url[3])) {
             /**
              * url = /api/worker/order/service
              */
-            if($this->url[3] === 'service') {
-                if(isset($this->url[4])) {
+            if ($this->url[3] === 'service') {
+                if (isset($this->url[4])) {
                     /**
                      * url = /api/worker/order/service/cancel
                      */
-                    if($this->url[4] === 'cancel') {
+                    if ($this->url[4] === 'cancel') {
                         $this->_cancelServiceOrder();
                     }
 
                     /**
                      * url = /api/worker/order/service/complete
                      */
-                    if($this->url[4] === 'complete') {
+                    if ($this->url[4] === 'complete') {
                         $this->_completeServiceOrder();
                     }
                 }
@@ -282,7 +287,8 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/department/
      */
-    public function department() {
+    public function department()
+    {
         if (isset($this->url[3])) {
             /**
              * url = /api/worker/department/get
@@ -306,7 +312,7 @@ class WorkerApiController extends ApiController
         if (isset($_GET['worker_id']) && $_GET['worker_id'] !== '') {
             $workerId = htmlspecialchars(trim($_GET['worker_id']));
         } else {
-            if(isset($_POST['worker_id']) && $_POST['worker_id'] !== '') {
+            if (isset($_POST['worker_id']) && $_POST['worker_id'] !== '') {
                 $workerId = htmlspecialchars(trim($_POST['worker_id']));
             } else {
                 $sessionWorkerId = SessionHelper::getWorkerSession();
@@ -323,7 +329,8 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/profile/get
      */
-    protected function _getWorker() {
+    protected function _getWorker()
+    {
         $workerId = $this->_getWorkerId();
         /**
          *  [
@@ -337,7 +344,7 @@ class WorkerApiController extends ApiController
         if ($result) {
             $this->returnJson([
                 'success' => true,
-                'data' => $result
+                'data'    => $result
             ]);
         } else {
             $this->returnJson([
@@ -351,7 +358,8 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/affiliate/get/all
      */
-    protected function _getAffiliatesAll() {
+    protected function _getAffiliatesAll()
+    {
         parent::_getAffiliatesAll();
     }
 
@@ -360,7 +368,8 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/departments/get/all
      */
-    protected function _getDepartmentsAll() {
+    protected function _getDepartmentsAll()
+    {
         parent::_getDepartmentsAll();
     }
 
@@ -369,7 +378,8 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/profile/service/get/all
      */
-    protected function _getServicesAllForWorker() {
+    protected function _getServicesAllForWorker()
+    {
         $workerId = $this->_getWorkerId();
         $services = $this->dataMapper->selectServicesForWorker(
             $workerId
@@ -382,25 +392,26 @@ class WorkerApiController extends ApiController
 
         $this->returnJson([
             'success' => true,
-            'data' => $services
+            'data'    => $services
         ]);
     }
 
-    protected function _searchSchedule() {
+    protected function _searchSchedule()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $workerId = $this->_getWorkerId();
             $items = [
-                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
-                'worker_id' => $workerId,
+                'service_id'   => htmlspecialchars(trim($_POST['service_id'])),
+                'worker_id'    => $workerId,
                 'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
-                'start_date' => htmlspecialchars(trim($_POST['start_date'])),
-                'end_date' => htmlspecialchars(trim($_POST['end_date'])),
-                'start_time' => htmlspecialchars(trim($_POST['start_time'])),
-                'end_time' => htmlspecialchars(trim($_POST['end_time'])),
+                'start_date'   => htmlspecialchars(trim($_POST['start_date'])),
+                'end_date'     => htmlspecialchars(trim($_POST['end_date'])),
+                'start_time'   => htmlspecialchars(trim($_POST['start_time'])),
+                'end_time'     => htmlspecialchars(trim($_POST['end_time'])),
                 'price_bottom' => htmlspecialchars(trim($_POST['price_bottom'])),
-                'price_top' => htmlspecialchars(trim($_POST['price_top'])),
+                'price_top'    => htmlspecialchars(trim($_POST['price_top'])),
                 'only_ordered' => htmlspecialchars(trim($_POST['only_ordered'])),
-                'only_free' => htmlspecialchars(trim($_POST['only_free']))
+                'only_free'    => htmlspecialchars(trim($_POST['only_free']))
             ];
 
             $items['only_ordered'] = !($items['only_ordered'] === 'false');
@@ -437,13 +448,13 @@ class WorkerApiController extends ApiController
             }
 
             $activeDepartment = null;
-            if(!$items['service_id']) {
+            if (!$items['service_id']) {
                 $activeDepartment = $departments[0];
             } else {
                 $activeDepartment = $this->dataMapper->selectDepartmentByServiceId(
                     $items['service_id']
                 );
-                if($activeDepartment === false) {
+                if ($activeDepartment === false) {
                     $this->returnJson([
                         'error' => 'The error occurred while getting the department for the service'
                     ]);
@@ -451,28 +462,28 @@ class WorkerApiController extends ApiController
             }
 
             $scheduleOrdered = [];
-            if($items['only_ordered']) {
+            if ($items['only_ordered']) {
                 $scheduleOrdered = $this->dataMapper->selectWorkerOrderedSchedule(
                     null, $items['service_id'], $items['worker_id'],
                     $items['affiliate_id'], $items['start_date'], $items['end_date'],
                     $items['start_time'], $items['end_time'],
                     $items['price_bottom'], $items['price_top']
                 );
-                if($scheduleOrdered === false) {
+                if ($scheduleOrdered === false) {
                     $this->returnJson([
                         'error' => 'An error occurred while getting ordered schedules!'
                     ]);
                 }
             }
             $scheduleFree = [];
-            if($items['only_free']) {
+            if ($items['only_free']) {
                 $scheduleFree = $this->dataMapper->selectWorkerFreeSchedule(
                     null, $items['service_id'], $items['worker_id'],
                     $items['affiliate_id'], $items['start_date'], $items['end_date'],
                     $items['start_time'], $items['end_time'],
                     $items['price_bottom'], $items['price_top']
                 );
-                if($scheduleFree === false) {
+                if ($scheduleFree === false) {
                     $this->returnJson([
                         'error' => 'An error occurred while getting free schedules!'
                     ]);
@@ -484,12 +495,12 @@ class WorkerApiController extends ApiController
             //var_dump($schedule);
             $this->returnJson([
                 'success' => true,
-                'data' => [
-                    'schedule' => $schedule,
-                    'departments' => $departments,
+                'data'    => [
+                    'schedule'          => $schedule,
+                    'departments'       => $departments,
                     'active_department' => $activeDepartment,
-                    'active_day' => $items['start_date'],
-                    'end_day' => $items['end_date'],
+                    'active_day'        => $items['start_date'],
+                    'end_day'           => $items['end_date'],
                 ]
             ]);
         }
@@ -500,8 +511,9 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/order/service/cancel
      */
-    protected function _cancelServiceOrder() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    protected function _cancelServiceOrder()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $orderId = htmlspecialchars(trim($_POST['order_id']));
             $scheduleId = htmlspecialchars(trim($_POST['schedule_id']));
 
@@ -516,7 +528,7 @@ class WorkerApiController extends ApiController
              *
              */
             $user = $this->dataMapper->selectUserByOrderId($orderId);
-            if($user === false) {
+            if ($user === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while getting info about the user placed the order!'
@@ -524,15 +536,15 @@ class WorkerApiController extends ApiController
             }
 
             $userNameSurname = [
-                'name' => 'Dear',
+                'name'    => 'Dear',
                 'surname' => 'Customer'
             ];
-            if($user['user_id'] !== null) {
+            if ($user['user_id'] !== null) {
                 /**
                  * @var UserReadDto $userNameSurname
                  */
                 $userNameSurname = $this->dataMapper->selectUserInfoById($user['user_id']);
-                if($userNameSurname === false) {
+                if ($userNameSurname === false) {
                     $this->dataMapper->rollBackTransaction();
                     $this->returnJson([
                         'error' => 'The error occurred while getting name/surname of the user placed the order!'
@@ -547,7 +559,7 @@ class WorkerApiController extends ApiController
              * start_datetime
              */
             $order = $this->dataMapper->selectOrderDetails($orderId);
-            if($order === false) {
+            if ($order === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while getting order details!'
@@ -564,7 +576,7 @@ class WorkerApiController extends ApiController
              * Changed the cancellation time of the service order
              */
             $canceled = $this->dataMapper->updateServiceOrderCanceledDatetimeById($orderId);
-            if($canceled === false) {
+            if ($canceled === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating cancellation datetime of the order!'
@@ -577,7 +589,7 @@ class WorkerApiController extends ApiController
              * (because previous person, who ordered it, canceled appointment)
              */
             $updatedOrderId = $this->dataMapper->updateOrderIdByScheduleId($scheduleId);
-            if($updatedOrderId === false) {
+            if ($updatedOrderId === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating order id!'
@@ -591,7 +603,7 @@ class WorkerApiController extends ApiController
             $emailSent = $this->_sendLetterToInformUserAboutCancellation(
                 $user['email'], $userNameSurname->name, $userNameSurname->surname, $order
             );
-            if($emailSent !== true) {
+            if ($emailSent !== true) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while sending informational letter to the user who placed the canceled order!'
@@ -608,13 +620,15 @@ class WorkerApiController extends ApiController
         }
     }
 
-    protected function _createLinkToLogin() {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT.'web/user/auth/login';
+    protected function _createLinkToLogin()
+    {
+        return ENROLL_BEAUTY_URL_HTTP_ROOT . 'web/user/auth/login';
     }
 
     protected function _sendLetterToInformUserAboutCancellation(
         $email, $name, $surname, $order
-    ) {
+    )
+    {
         $email = new Email(
             COMPANY_EMAIL,
             COMPANY_NAME,
@@ -650,7 +664,7 @@ class WorkerApiController extends ApiController
              * Update completed datetime of the order
              */
             $updated = $this->dataMapper->updateCompletedDatetimeByOrderId($orderId);
-            if($updated === false) {
+            if ($updated === false) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating completed datetime of the order!'
@@ -674,7 +688,7 @@ class WorkerApiController extends ApiController
     public function _getServiceById()
     {
         $serviceId = 0;
-        if(isset($_GET['id']) && $_GET['id'] !== '') {
+        if (isset($_GET['id']) && $_GET['id'] !== '') {
             $serviceId = (int)htmlspecialchars(trim($_GET['id']));
         }
 
@@ -686,7 +700,7 @@ class WorkerApiController extends ApiController
          * ]
          */
         $result = $this->dataMapper->selectServiceById($serviceId);
-        if($result === false) {
+        if ($result === false) {
             $this->returnJson([
                 'error' => 'An error occurred while getting service details!'
             ]);
@@ -694,7 +708,7 @@ class WorkerApiController extends ApiController
 
         $this->returnJson([
             'success' => true,
-            'data' => $result
+            'data'    => $result
         ]);
     }
 
@@ -720,7 +734,7 @@ class WorkerApiController extends ApiController
         }
         $this->returnJson([
             'success' => true,
-            'data' => $services
+            'data'    => $services
         ]);
     }
 
@@ -729,27 +743,28 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/profile/service-pricing/add
      */
-    protected function _addServicePricing() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    protected function _addServicePricing()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
-                'worker_id' => $this->_getWorkerId(),
+                'worker_id'  => $this->_getWorkerId(),
                 'service_id' => htmlspecialchars(trim($_POST['service_id'])),
-                'price' => htmlspecialchars(trim($_POST['price']))
+                'price'      => htmlspecialchars(trim($_POST['price']))
             ];
             /**
              * Validate Price
              */
-            if(!$items['price']) {
+            if (!$items['price']) {
                 $this->returnJson([
                     'error' => 'Price is the required field!'
                 ]);
             }
-            if($items['price'] < 0){
+            if ($items['price'] < 0) {
                 $this->returnJson([
                     'error' => 'Price can not be negative number!'
                 ]);
             }
-            if(!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
+            if (!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
                 $this->returnJson([
                     'error' => 'Invalid price number was provided!'
                 ]);
@@ -761,7 +776,7 @@ class WorkerApiController extends ApiController
             $pricingId = $this->dataMapper->selectWorkerServicePricingByIds(
                 $items['worker_id'], $items['service_id']
             );
-            if($pricingId) {
+            if ($pricingId) {
                 $this->returnJson([
                     'error' => 'The pricing for the selected service has already been added before!'
                 ]);
@@ -773,7 +788,7 @@ class WorkerApiController extends ApiController
             $insertedId = $this->dataMapper->insertWorkerServicePricing(
                 $items['worker_id'], $items['service_id'], $items['price']
             );
-            if($insertedId === false) {
+            if ($insertedId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new pricing into database!'
                 ]);
@@ -781,7 +796,7 @@ class WorkerApiController extends ApiController
 
             $this->returnJson([
                 'success' => 'You successfully added one more pricing!',
-                'data' => [
+                'data'    => [
                     'id' => $insertedId
                 ]
             ]);
@@ -793,26 +808,27 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/profile/service-pricing/edit
      */
-    protected function _editServicePricing() {
+    protected function _editServicePricing()
+    {
         $items = [
-            'worker_id' => $this->_getWorkerId(),
+            'worker_id'  => $this->_getWorkerId(),
             'service_id' => htmlspecialchars(trim($_POST['service_id'])),
-            'price' => htmlspecialchars(trim($_POST['price']))
+            'price'      => htmlspecialchars(trim($_POST['price']))
         ];
         /**
          * Validate Price
          */
-        if(!$items['price']) {
+        if (!$items['price']) {
             $this->returnJson([
                 'error' => 'Price is the required field!'
             ]);
         }
-        if($items['price'] < 0){
+        if ($items['price'] < 0) {
             $this->returnJson([
                 'error' => 'Price can not be negative number!'
             ]);
         }
-        if(!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
+        if (!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
             $this->returnJson([
                 'error' => 'Invalid price number was provided!'
             ]);
@@ -824,7 +840,7 @@ class WorkerApiController extends ApiController
         $updated = $this->dataMapper->updateWorkerServicePricing(
             $items['worker_id'], $items['service_id'], $items['price']
         );
-        if($updated === false) {
+        if ($updated === false) {
             $this->returnJson([
                 'error' => 'An error occurred while updating pricing details!'
             ]);
@@ -843,7 +859,7 @@ class WorkerApiController extends ApiController
      */
     protected function _deleteServicePricing()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pricingId = (int)htmlspecialchars(trim($_POST['id']));
             /**
              * [
@@ -853,7 +869,7 @@ class WorkerApiController extends ApiController
              * ]
              */
             $existingOrders = $this->dataMapper->selectActiveOrdersByPricingId($pricingId);
-            if($existingOrders === false) {
+            if ($existingOrders === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting information about active orders'
                 ]);
@@ -865,17 +881,17 @@ class WorkerApiController extends ApiController
              * worker should complete the left orders
              * before removing pricing that is related to such orders
              */
-            if($existingOrders) {
-               $this->returnJson([
-                   'error' => 'You can not remove this pricing because there are left some uncompleted orders with it'
-               ]);
+            if ($existingOrders) {
+                $this->returnJson([
+                    'error' => 'You can not remove this pricing because there are left some upcoming orders with it'
+                ]);
             }
 
             /**
              * Delete the pricing itself
              */
             $deleted = $this->dataMapper->deleteWorkerServicePricingById($pricingId);
-            if($deleted === false) {
+            if ($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deleting the pricing item!'
                 ]);
@@ -883,7 +899,7 @@ class WorkerApiController extends ApiController
 
             $this->returnJson([
                 'success' => 'You successfully deleted the pricing!',
-                'data' => [
+                'data'    => [
                     'id' => $pricingId
                 ]
             ]);
@@ -895,7 +911,8 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/profile/service-pricing/get/all
      */
-    protected function _getServicePricing() {
+    protected function _getServicePricing()
+    {
         $param = $this->_getLimitPageFieldOrderOffset();
         /**
          *  * [
@@ -918,14 +935,14 @@ class WorkerApiController extends ApiController
             $param['order_field'],
             $param['order_direction']
         );
-        if($result === false) {
+        if ($result === false) {
             $this->returnJsonError(
                 "The error occurred while getting data about pricing!"
             );
         }
 
         foreach ($result as $key => &$value) {
-            if($key === 'totalRowsCount') continue;
+            if ($key === 'totalRowsCount') continue;
             $datetime = new \DateTime($value['updated_datetime']);
             /**
              * Format the updated datetime as November 24, 15:00
@@ -935,7 +952,7 @@ class WorkerApiController extends ApiController
 
         $this->returnJson([
             'success' => true,
-            'data' => $result
+            'data'    => $result
         ]);
     }
 
@@ -945,9 +962,10 @@ class WorkerApiController extends ApiController
      * Get time intervals for the selected day for the current user
      * to know when there are free time spots for placing new schedule item
      */
-    protected function _getBusyTimeIntervals() {
+    protected function _getBusyTimeIntervals()
+    {
         $day = null;
-        if(isset($_GET['day']) && $_GET['day'] !== '') {
+        if (isset($_GET['day']) && $_GET['day'] !== '') {
             $day = htmlspecialchars(trim($_GET['day']));
         }
 
@@ -965,14 +983,14 @@ class WorkerApiController extends ApiController
         $filledIntervals = $this->dataMapper->selectFilledTimeIntervalsByWorkerIdAndDay(
             $workerId, $day
         );
-        if($filledIntervals === false) {
+        if ($filledIntervals === false) {
             $this->returnJson([
                 'error' => 'An error occurred while getting filled time intervals for the selected day!'
             ]);
         }
         $this->returnJson([
             'success' => true,
-            'data' => $filledIntervals
+            'data'    => $filledIntervals
         ]);
     }
 
@@ -989,15 +1007,16 @@ class WorkerApiController extends ApiController
      *      'end_time' => hh:ii:ss
      * ]
      */
-    protected function _addSchedule() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    protected function _addSchedule()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
-                'worker_id' => $this->_getWorkerId(),
-                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
+                'worker_id'    => $this->_getWorkerId(),
+                'service_id'   => htmlspecialchars(trim($_POST['service_id'])),
                 'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
-                'day' => htmlspecialchars(trim($_POST['day'])),
-                'start_time' => htmlspecialchars(trim($_POST['start_time'])),
-                'end_time' => htmlspecialchars(trim($_POST['end_time']))
+                'day'          => htmlspecialchars(trim($_POST['day'])),
+                'start_time'   => htmlspecialchars(trim($_POST['start_time'])),
+                'end_time'     => htmlspecialchars(trim($_POST['end_time']))
             ];
 
             /**
@@ -1005,7 +1024,7 @@ class WorkerApiController extends ApiController
              */
             $startTime = \DateTime::createFromFormat('H:i:s', $items['start_time']);
             $endTime = \DateTime::createFromFormat('H:i:s', $items['end_time']);
-            if($startTime >= $endTime) {
+            if ($startTime >= $endTime) {
                 $this->returnJson([
                     'error' => 'Start time should be less than end time!'
                 ]);
@@ -1018,7 +1037,7 @@ class WorkerApiController extends ApiController
             $scheduleExists = $this->dataMapper->selectScheduleForWorkerByDayAndTime(
                 $items['worker_id'], $items['day'], $items['start_time'], $items['end_time']
             );
-            if($scheduleExists) {
+            if ($scheduleExists) {
                 $this->returnJson([
                     'error' => 'There is an overlapping with another of your schedule items! Please, review your schedule for the selected day to choose available time intervals!'
                 ]);
@@ -1030,7 +1049,7 @@ class WorkerApiController extends ApiController
             $priceId = $this->dataMapper->selectPriceIdByWorkerIdServiceId(
                 $items['worker_id'], $items['service_id']
             );
-            if($priceId === false) {
+            if ($priceId === false) {
                 $this->returnJson([
                     'error' => 'There is no pricing for the selected worker and service!'
                 ]);
@@ -1043,16 +1062,16 @@ class WorkerApiController extends ApiController
                 $priceId, $items['affiliate_id'],
                 $items['day'], $items['start_time'], $items['end_time']
             );
-            if($inserted === false) {
+            if ($inserted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new schedule item!'
                 ]);
             }
             $this->returnJson([
                 'success' => 'You successfully added new schedule item!',
-                'data' => [
+                'data'    => [
                     'service_id' => $items['service_id'],
-                    'day' => $items['day']
+                    'day'        => $items['day']
                 ]
             ]);
         }
@@ -1063,21 +1082,22 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/service/add
      */
-    protected function _addService() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    protected function _addService()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
-                'service_name' => htmlspecialchars(trim($_POST['service_name'])),
+                'service_name'  => htmlspecialchars(trim($_POST['service_name'])),
                 'department_id' => htmlspecialchars(trim($_POST['department_id']))
             ];
             /**
              * Validate service name
              */
-            if(!$items['service_name']) {
+            if (!$items['service_name']) {
                 $this->returnJson([
                     'error' => 'Service name can not be empty!'
                 ]);
             }
-            if(strlen($items['service_name']) < 3) {
+            if (strlen($items['service_name']) < 3) {
                 $this->returnJson([
                     'error' => 'Service name should be longer than 3 characters!'
                 ]);
@@ -1088,12 +1108,12 @@ class WorkerApiController extends ApiController
             $exists = $this->dataMapper->selectServiceIdByNameAndDepartmentId(
                 $items['service_name'], $items['department_id']
             );
-            if($exists === false) {
+            if ($exists === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting service with provided name!'
                 ]);
             }
-            if($exists) {
+            if ($exists) {
                 $this->returnJson([
                     'error' => 'The service with provided name already exists in the selected department!'
                 ]);
@@ -1105,7 +1125,7 @@ class WorkerApiController extends ApiController
             $serviceId = $this->dataMapper->insertNewService(
                 $items['service_name'], $items['department_id']
             );
-            if($serviceId === false) {
+            if ($serviceId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new service into database!'
                 ]);
@@ -1123,21 +1143,21 @@ class WorkerApiController extends ApiController
      */
     protected function _editService()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $items = [
-                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
-                'service_name' => htmlspecialchars(trim($_POST['service_name'])),
+                'service_id'    => htmlspecialchars(trim($_POST['service_id'])),
+                'service_name'  => htmlspecialchars(trim($_POST['service_name'])),
                 'department_id' => htmlspecialchars(trim($_POST['department_id']))
             ];
             /**
              * Validate service name
              */
-            if(!$items['service_name']) {
+            if (!$items['service_name']) {
                 $this->returnJson([
                     'error' => 'Service name can not be empty!'
                 ]);
             }
-            if(strlen($items['service_name']) < 3) {
+            if (strlen($items['service_name']) < 3) {
                 $this->returnJson([
                     'error' => 'Service name should be longer than 3 characters!'
                 ]);
@@ -1148,12 +1168,12 @@ class WorkerApiController extends ApiController
             $exists = $this->dataMapper->selectServiceIdByNameAndDepartmentId(
                 $items['service_name'], $items['department_id']
             );
-            if($exists === false) {
+            if ($exists === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting service with provided name!'
                 ]);
             }
-            if($exists) {
+            if ($exists) {
                 $this->returnJson([
                     'error' => 'The service with provided name already exists in the selected department!'
                 ]);
@@ -1165,14 +1185,14 @@ class WorkerApiController extends ApiController
             $serviceId = $this->dataMapper->updateServiceById(
                 $items['service_id'], $items['service_name'], $items['department_id']
             );
-            if($serviceId === false) {
+            if ($serviceId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating information about the service in the database!'
                 ]);
             }
             $this->returnJson([
                 'success' => "You successfully updated the service '{$items['service_name']}'",
-                'data' => [
+                'data'    => [
                     'id' => $items['service_id']
                 ]
             ]);
@@ -1184,5 +1204,49 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/service/delete
      */
-    protected function _deleteService() {}
+    protected function _deleteService()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (empty($_POST['id'])) {
+                //http_response_code(422);
+                $this->returnJson([
+                    'error' => 'Empty post request!'
+                ]);
+            }
+            $serviceId = htmlspecialchars(trim($_POST['id']));
+
+            /**
+             * Check if there is no future order for the service
+             * that we would like to delete
+             */
+            $activeOrders = $this->dataMapper->selectActiveOrdersByServiceId($serviceId);
+            if($activeOrders === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting information about active orders for the provided service!'
+                ]);
+            }
+            if($activeOrders) {
+                $this->returnJson([
+                    'error' => 'You can not remove this service because there are left some upcoming orders with it'
+                ]);
+            }
+
+            /**
+             * Delete the service
+             */
+            $deleted = $this->dataMapper->deleteServiceById($serviceId);
+            if($deleted === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while deletion of the service!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully deleted the service!',
+                'data' => [
+                    'id' => $serviceId
+                ]
+            ]);
+        }
+    }
 }
