@@ -8,6 +8,9 @@ import ScheduleRenderer from "../../../../common/pages/classes/renderer/extends/
 import ScheduleHtmlBuilder from "../../../../common/pages/classes/builder/ScheduleHtmlBuilder.js";
 import SearchScheduleForm from "../../../../common/pages/user/forms/SearchScheduleForm.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
+import CancelOrderUser from "../../../../common/pages/user/forms/order/CancelOrderUser.js";
+import API from "../../../../common/pages/api.js";
+import MakeOrderUser from "../../../../common/pages/user/forms/order/MakeOrderUser.js";
 
 $(function () {
     let requester = new Requester();
@@ -22,13 +25,44 @@ $(function () {
         dateRenderer, timeRenderer
     );
 
+    /**
+     * Create class for processing an appointment cancellation
+     * @type {CancelOrderUser}
+     */
+    let cancelOrderUser = new CancelOrderUser(
+        requester, confirmationModal, API.USER.API.ORDER.service.cancel
+    );
+    appointmentsTable.setCancelOrderCallback(
+        cancelOrderUser.addListener, cancelOrderUser
+    );
+
+    /**
+     * Initialize the renderer of the schedule
+     * @type {ScheduleRenderer}
+     */
     let scheduleRenderer = new ScheduleRenderer(
             requester, appointmentsTable, confirmationModal,
             new ScheduleHtmlBuilder(), dateRenderer, timeRenderer
     );
+    /**
+     * Initialize the form of search free schedule for services
+     * @type {SearchScheduleForm}
+     */
     let searchScheduleForm = new SearchScheduleForm(
         requester, scheduleRenderer,
         new OptionBuilder(), dateRenderer
+    );
+    searchScheduleForm.init();
+
+    /**
+     * Create class to process making new order(appointment)
+     */
+    let makeOrderUser = new MakeOrderUser(
+        requester, confirmationModal, API.USER.API.ORDER.service.add,
+        appointmentsTable
+    );
+    scheduleRenderer.setMakeOrderCallback(
+        makeOrderUser.addListener, makeOrderUser
     );
 
     /**
@@ -40,29 +74,4 @@ $(function () {
      * Populate upcoming appointments table
      */
     appointmentsTable.POPULATE();
-
-    /**
-     * Get information for select elements of the form of searching
-     * available schedules for appointments
-     */
-    searchScheduleForm.getServices();
-    searchScheduleForm.getWorkers();
-    searchScheduleForm.getAffiliates();
-
-    /**
-     * Add listener to offer only valid workers for the selected service
-     */
-    searchScheduleForm.addListenerChangeServiceName();
-    //userInfo.addListenerChangeWorkerName();
-
-    /**
-     * Add the listener to handle submission of the form of schedule searching
-     */
-    searchScheduleForm.addListenerSubmitForm(searchScheduleForm);
-
-    /**
-     * Make initial submission of the form to show the available schedules
-     * in all services/departments for the current date
-     */
-    searchScheduleForm.handleFormSubmission();
 });

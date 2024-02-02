@@ -36,6 +36,10 @@ class Table {
         });
     }
 
+    regenerate() {
+        this.sendApiRequest(this.getItemsPerPage(), Cookie.get(this.currentPageCookie));
+    }
+
     resetCookie() {
         Cookie.remove( this.currentPageCookie);
         Cookie.remove(this.totalRowsCountCookie);

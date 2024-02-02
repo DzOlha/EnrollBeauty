@@ -53,6 +53,32 @@ class SearchScheduleForm extends Form {
         this.submitActionUrl = API.USER.API.SCHEDULE.search;
     }
 
+    init() {
+        /**
+         * Get information for select elements of the form of searching
+         * available schedules for appointments
+         */
+        this.getServices();
+        this.getWorkers();
+        this.getAffiliates();
+
+        /**
+         * Add listener to offer only valid workers for the selected service
+         */
+        this.addListenerChangeServiceName();
+
+        /**
+         * Add the listener to handle submission of the form of schedule searching
+         */
+        this.addListenerSubmitForm();
+
+        /**
+         * Make initial submission of the form to show the available schedules
+         * in all services/departments for the current date
+         */
+        this.handleFormSubmission();
+    }
+
     _initializeDateRangePicker() {
         const currentDate = new Date();
 

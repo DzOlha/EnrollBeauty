@@ -10,6 +10,9 @@ import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilde
 import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
 import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
 import AddScheduleForm from "../../../../common/pages/worker/forms/AddScheduleForm.js";
+import CancelOrderWorker from "../../../../common/pages/worker/forms/order/CancelOrderWorker.js";
+import API from "../../../../common/pages/api.js";
+import CompleteOrderWorker from "../../../../common/pages/worker/forms/order/CompleteOrderWorker.js";
 $(function () {
     let requester = new Requester();
     let worker = new Worker(requester);
@@ -32,6 +35,31 @@ $(function () {
         requester, null, confirmationModal,
         new WorkerScheduleHtmlBuilder(), dateRenderer, timeRenderer
     );
+
+    /**
+     * Cancel order by worker
+     * @type {CancelOrderWorker}
+     */
+    let cancelOrderWorker = new CancelOrderWorker(
+        requester, confirmationModal, API.WORKER.API.ORDER.service.cancel
+    );
+    scheduleRenderer.setCancelOrderCallback(
+        cancelOrderWorker.addListener, cancelOrderWorker
+    );
+
+
+    /**
+     * Complete order by worker
+     * @type {CompleteOrderWorker}
+     */
+    let completeOrderWorker = new CompleteOrderWorker(
+        requester, confirmationModal, API.WORKER.API.ORDER.service.complete
+    );
+    scheduleRenderer.setCompleteOrderCallback(
+        completeOrderWorker.addListener, completeOrderWorker
+    );
+
+
     let searchScheduleForm = new WorkerSearchScheduleForm(
         requester, scheduleRenderer,
         new OptionBuilder(), dateRenderer

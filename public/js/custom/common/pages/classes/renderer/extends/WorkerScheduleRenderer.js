@@ -15,6 +15,15 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         this.apiCompleteOrder = API.WORKER.API.ORDER.service.complete;
     }
 
+    setCancelOrderCallback(callback, context)
+    {
+        this.cancelOrderCallaback = callback.bind(context);
+    }
+    setCompleteOrderCallback(callback, context)
+    {
+        this.completeOrderCallaback = callback.bind(context);
+    }
+
     render(response) {
         //console.log(' render(response)');
         //console.log(JSON.stringify(response));
@@ -338,122 +347,14 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
              * Add listeners on cancel/complete icons
              */
             if(schedule.hasOwnProperty('order_id')) {
-                this.addListenerOnCancelAppointment(schedule.schedule_id);
-                this.addListenerOnCompleteAppointment(schedule.schedule_id);
+                this.cancelOrderCallaback(schedule.schedule_id);
+                this.completeOrderCallaback(schedule.schedule_id);
             } else {
                 this.addListenerOnEditAppointment(schedule.schedule_id);
                 this.addListenerOnDeleteAppointment(schedule.schedule_id);
             }
         })
         //console.log('-------------------------------------------------------------------------------------------------------------------');
-    }
-    addListenerOnCancelAppointment(scheduleId) {
-        let cancelIcon = document.querySelector(
-            `#schedule-card-${scheduleId} .fe-x`
-        );
-
-        if (cancelIcon === null) return;
-
-        /**
-         * Create order for service
-         */
-        const handleCancelIconClick = (e) => {
-            let scheduleId = cancelIcon.getAttribute('data-schedule-id');
-            let orderId = cancelIcon.getAttribute('data-order-id');
-
-            let selectedCard = document.getElementById(`schedule-card-${scheduleId}`);
-            let card = selectedCard.cloneNode(true);
-
-            this.confirmationModal.show(
-                'Confirmation!',
-                 card,
-                'Please, confirm that you would like to <b>cancel</b> the appointment for the selected schedule item.'
-            )
-            let data = {
-                'order_id': orderId,
-                'schedule_id': scheduleId
-            }
-            this.confirmationModal.submit(handleConfirmClick, data);
-            this.confirmationModal.close();
-        }
-
-        const handleConfirmClick = (dataToSend) => {
-            this.requestTimeout = this.confirmationModal.showLoader();
-            this.requester.post(
-                this.apiCancelOrder,
-                dataToSend,
-                this._successCancelOrderSchedule.bind(this),
-                this._errorCancelOrderSchedule.bind(this)
-            );
-        }
-
-        cancelIcon.removeEventListener('click', handleCancelIconClick); // Remove previous listener
-        cancelIcon.addEventListener('click', handleCancelIconClick);
-    }
-    _errorCancelOrderSchedule(response) {
-        this.confirmationModal.hideLoader(this.requestTimeout);
-        Notifier.showErrorMessage(response.error);
-    }
-    _successCancelOrderSchedule(response) {
-        this.confirmationModal.hideLoader(this.requestTimeout);
-        /**
-         * Hide confirmation modal window
-         */
-        this.confirmationModal.hide();
-        /**
-         * Regenerate available schedules
-         */
-        $(`#submit-search-button`).click();
-        /**
-         * Regenerate orders table
-         */
-        //this.ordersTable.sendApiRequest(this.ordersTable.itemsPerPage, Cookie.get('currentPage'));
-        /**
-         * Show success message
-         */
-        Notifier.showSuccessMessage(response.success);
-    }
-
-    addListenerOnCompleteAppointment(scheduleId) {
-        let checkIcon = document.querySelector(
-            `#schedule-card-${scheduleId} .fe-check`
-        );
-
-        if (checkIcon === null) return;
-        /**
-         * Create order for service
-         */
-        const handleCheckIconClick = (e) => {
-            let scheduleId = checkIcon.getAttribute('data-schedule-id');
-            let orderId = checkIcon.getAttribute('data-order-id');
-
-            let selectedCard = document.getElementById(`schedule-card-${scheduleId}`);
-            let card = selectedCard.cloneNode(true);
-
-            this.confirmationModal.show(
-                'Confirmation!',
-                card,
-                'Please, confirm that you would like to <b>mark as completed</b> the appointment for the selected schedule item.'
-            )
-            let data = {
-                'order_id': orderId,
-            }
-            this.confirmationModal.submit(handleConfirmClick, data);
-            this.confirmationModal.close();
-        }
-
-        const handleConfirmClick = (dataToSend) => {
-            this.requestTimeout = this.confirmationModal.showLoader();
-            this.requester.post(
-                this.apiCompleteOrder,
-                dataToSend,
-                this._successCancelOrderSchedule.bind(this),
-                this._errorCancelOrderSchedule.bind(this)
-            );
-        }
-
-        checkIcon.removeEventListener('click', handleCheckIconClick); // Remove previous listener
-        checkIcon.addEventListener('click', handleCheckIconClick);
     }
 
     addListenerOnEditAppointment(scheduleId) {

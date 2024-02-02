@@ -16,9 +16,14 @@ class AppointmentsTable extends Table {
         this.confirmationModal = confirmationModal;
         this.dateRenderer = dateRenderer;
         this.timeRenderer = timeRenderer;
-        this.apiCancelOrder = '/api/user/order/service/cancel';
+        this.apiCancelOrder = API.USER.API.ORDER.service.cancel;
 
         this.searchScheduleButtonId = 'submit-search-button';
+    }
+
+    setCancelOrderCallback(callback, context)
+    {
+        this.cancelOrderCallback = callback.bind(context);
     }
 
     POPULATE() {
@@ -105,70 +110,9 @@ class AppointmentsTable extends Table {
 
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
+
+            this.cancelOrderCallback(item.id);
         });
-        this.addListenerCancelAppointment();
-    }
-
-    addListenerCancelAppointment() {
-        let cancelButtons = Array.from(
-            document.getElementsByClassName('cancel-button')
-        );
-        // cancelButton.removeEventListener('click', handleShopIconClick); // Remove previous listener
-        const handleCancelAppointment = (e) => {
-            e.preventDefault();
-
-            let id = e.currentTarget.getAttribute('data-appointment-id');
-
-            let serviceName = e.currentTarget.getAttribute('data-service-name');
-            let day = e.currentTarget.getAttribute('data-day');
-            let startTime = e.currentTarget.getAttribute('data-start-time');
-            let endTime = e.currentTarget.getAttribute('data-end-time');
-            let price = e.currentTarget.getAttribute('data-price');
-
-            this.confirmationModal.show(
-                'Confirmation!',
-                ``,
-                `Please confirm that you would like to <b>cancel</b> the appointment <b>"${serviceName}"</b> on ${day} at ${startTime} - ${endTime} with a total cost of ${price}`
-            )
-
-            this.confirmationModal.submit(handleConfirmClick, id);
-            this.confirmationModal.close();
-        }
-        let handleConfirmClick = (id) => {
-            this.requester.post(
-                this.apiCancelOrder,
-                {'order_id': id},
-                this._successCancelOrder.bind(this),
-                this._errorCancelOrder.bind(this)
-            );
-        }
-
-        cancelButtons.forEach((cancelButton) => {
-            cancelButton.addEventListener('click', handleCancelAppointment);
-        })
-    }
-
-    _successCancelOrder(response) {
-        this.confirmationModal.hide();
-        /**
-         * Research available schedules
-         */
-        $(`#${this.searchScheduleButtonId}`).click();
-
-        /**
-         * Show success message
-         */
-        Notifier.showSuccessMessage(response.success);
-
-        /**
-         * Update the table of upcoming appointments
-         */
-        this.sendApiRequest(this.itemsPerPage, Cookie.get(this.currentPageCookie));
-    }
-
-    _errorCancelOrder(response) {
-        //this.confirmationModal.hide();
-        Notifier.showErrorMessage(response.error);
     }
 }
 export default AppointmentsTable;

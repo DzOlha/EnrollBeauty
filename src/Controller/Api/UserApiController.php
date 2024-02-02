@@ -751,7 +751,10 @@ class UserApiController extends ApiController
              */
             $this->dataMapper->commitTransaction();
             $this->returnJson([
-                'success' => 'You successfully canceled the appointment!'
+                'success' => 'You successfully canceled the appointment!',
+                'data' => [
+                    'id' => $id
+                ]
             ]);
         }
     }

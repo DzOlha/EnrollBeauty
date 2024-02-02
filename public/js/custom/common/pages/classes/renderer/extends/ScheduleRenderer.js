@@ -52,6 +52,11 @@ class ScheduleRenderer extends Renderer{
         this.apiOrderSchedule = API.USER.API.ORDER.service.add;
     }
 
+    setMakeOrderCallback(callback, context)
+    {
+        this.makeOrderCallback = callback.bind(context);
+    }
+
     /**
      * response example
      *  {
@@ -565,7 +570,7 @@ class ScheduleRenderer extends Renderer{
             /**
              * Add listeners on shop/like icons
              */
-            this.addListenerOnOrderSchedule(schedule.schedule_id);
+            this.makeOrderCallback(schedule.schedule_id);
             this.addListenerOnLikeSchedule(schedule.schedule_id);
         })
         //console.log('-------------------------------------------------------------------------------------------------------------------');
@@ -579,68 +584,6 @@ class ScheduleRenderer extends Renderer{
         const decimalTime = hours + minutes / 60 + seconds / 3600;
 
         return decimalTime;
-    }
-
-    addListenerOnOrderSchedule(scheduleId) {
-        let shopIcon = document.querySelector(
-            `#schedule-card-${scheduleId} .fe-shopping-cart`
-        );
-
-        if (shopIcon === null) return;
-
-        /**
-         * Create order for service
-         */
-        const handleShopIconClick = () => {
-            let scheduleId = shopIcon.getAttribute('data-schedule-id');
-
-            let selectedCard = document.getElementById(`schedule-card-${scheduleId}`);
-            let card = selectedCard.cloneNode(true);
-
-            this.confirmationModal.show(
-                'Confirmation!',
-                card,
-                'Please confirm that you would like to <b>order</b> the selected item from available schedules.'
-            )
-
-            this.confirmationModal.submit(handleConfirmClick, scheduleId);
-            this.confirmationModal.close();
-        }
-
-        const handleConfirmClick = (id) => {
-            this.requester.post(
-                this.apiOrderSchedule,
-                {'schedule_id': id},
-                this._successOrderSchedule.bind(this),
-                this._errorOrderSchedule.bind(this)
-            );
-        }
-
-        shopIcon.removeEventListener('click', handleShopIconClick); // Remove previous listener
-        shopIcon.addEventListener('click', handleShopIconClick);
-    }
-
-    _successOrderSchedule(response) {
-        /**
-         * Hide confirmation modal window
-         */
-        this.confirmationModal.hide();
-        /**
-         * Regenerate available schedules
-         */
-        $(`#submit-search-button`).click();
-        /**
-         * Regenerate orders table
-         */
-        this.ordersTable.sendApiRequest(this.ordersTable.itemsPerPage, Cookie.get('currentPage'));
-        /**
-         * Show success message
-         */
-        Notifier.showSuccessMessage(response.success);
-    }
-
-    _errorOrderSchedule(response) {
-        Notifier.showErrorMessage(response.error, 7);
     }
 
     addListenerOnLikeSchedule(scheduleId) {
