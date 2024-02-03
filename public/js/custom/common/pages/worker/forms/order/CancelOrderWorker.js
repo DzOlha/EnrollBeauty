@@ -1,11 +1,15 @@
-import Notifier from "../../../classes/notifier/Notifier.js";
+import OrderConfirmationModal from "../../../classes/modal/OrderConfirmationModal.js";
+import TimeRenderer from "../../../classes/renderer/extends/TimeRenderer.js";
 
-class CancelOrderWorker
+class CancelOrderWorker extends OrderConfirmationModal
 {
-    constructor(requester, confirmationModal, apiUrl) {
-        this.requester = requester;
-        this.confirmationModal = confirmationModal;
-        this.apiUrl = apiUrl;
+    constructor(requester, confirmationModal, apiUrl,
+                scheduleBuilder, dateRenderer, timeRenderer) {
+        super(requester, confirmationModal, apiUrl);
+        this.scheduleBuilder = scheduleBuilder;
+        this.dateRenderer = dateRenderer;
+        this.timeRenderer = timeRenderer;
+
         this.submitSearchButtonId = 'submit-search-button';
         this.cardBaseId = 'schedule-card';
     }
@@ -33,72 +37,59 @@ class CancelOrderWorker
             'message': 'Please, confirm that you would like to <b>cancel</b> the appointment for the selected schedule item.'
         }
     }
-    addListener(scheduleId) {
-        let triggerIcon = this.getTriggerIcon(scheduleId);
 
-        if (triggerIcon === null) return;
-
-        /**
-         * Create order for service
-         */
-        const handleTriggerIconClick = (e) => {
-            e.preventDefault();
-            let selectedCard = document.getElementById(`${this.cardBaseId}-${scheduleId}`);
-            let card = null;
-            if(selectedCard !== null) {
-                card = selectedCard.cloneNode(true);
-            }
-
-            let window = this.getConfirmationModalContent(card, triggerIcon);
-            this.confirmationModal.show(
-                window.headline,
-                window.content,
-                window.message
-            )
-
-            let data = this.getDataAttributes(triggerIcon);
-            this.confirmationModal.submit(
-                handleConfirmClick,
-                this.getDataToSend(data)
-            );
-            this.confirmationModal.close();
-        }
-
-        const handleConfirmClick = (dataToSend) => {
-            this.requestTimeout = this.confirmationModal.showLoader();
-            this.requester.post(
-                this.apiUrl,
-                dataToSend,
-                this._successCallback.bind(this),
-                this._errorCallback.bind(this)
-            );
-        }
-
-        triggerIcon.removeEventListener('click', handleTriggerIconClick); // Remove previous listener
-        triggerIcon.addEventListener('click', handleTriggerIconClick);
-    }
-    _errorCallback(response) {
-        this.confirmationModal.hideLoader(this.requestTimeout);
-        Notifier.showErrorMessage(response.error);
-    }
+    /**
+     * @param response = {
+     *     success:
+     *     data: {
+     *          schedule_id:
+     *          order_id: nullable
+     *          service_id:
+     *          department_id:
+     *          service_name:
+     *          user_id: nullable
+     *          user_email: nullable
+     *          affiliate_id:
+     *          city:
+     *          address:
+     *          day:
+     *          start_time:
+     *          end_time:
+     *          price:
+     *          currency:
+     *     }
+     * }
+     * @protected
+     */
     _successCallback(response) {
-        this.confirmationModal.hideLoader(this.requestTimeout);
+        super._successCallback(response);
+        // /**
+        //  * Regenerate available schedules search result
+        //  */
+        // $(`#${this.submitSearchButtonId}`).click();
+
         /**
-         * Hide confirmation modal window
+         * Update the schedule card after cancelling
          */
-        this.confirmationModal.hide();
-        /**
-         * Regenerate available schedules
-         */
-        $(`#${this.submitSearchButtonId}`).click();
-        /**
-         * Regenerate orders table
-         */
-        //this.ordersTable.sendApiRequest(this.ordersTable.itemsPerPage, Cookie.get('currentPage'));
-        /**
-         * Show success message
-         */
-        Notifier.showSuccessMessage(response.success);
+        let oldCard = document.getElementById(
+            `${this.cardBaseId}-${response.data.schedule_id}`
+        );
+
+        let newCard = this.scheduleBuilder.createScheduleCard(
+            response.data.schedule_id, response.data.user_id, response.data.service_id,
+            response.data.affiliate_id, response.data.service_name,
+            response.data.price, response.data.currency,
+            response.data.user_email,
+            this.dateRenderer.render(response.data.day),
+            this.timeRenderer.renderShortTime(response.data.start_time),
+            this.timeRenderer.renderShortTime(response.data.end_time),
+            `c. ${response.data.city}, ${response.data.address}`,
+            response.data.order_id
+        );
+        let div = document.createElement('div');
+        div.insertAdjacentHTML('afterbegin', newCard);
+
+        oldCard.replaceWith(div.firstChild);
     }
 }
 export default CancelOrderWorker;

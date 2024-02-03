@@ -364,6 +364,109 @@ class WorkerDataSource extends DataSource
         return $this->db->manyRows();
     }
 
+    /**
+     * @param int $scheduleId
+     * @return array|false
+     *
+     * return = [
+     *          'schedule_id' =>,
+     *          'order_id' => null,
+     *          'service_id' =>,
+     *          'department_id' =>,
+     *          'service_name' =>,
+     *          'user_id' => null,
+     *          'user_email' => null,
+     *          'affiliate_id' =>,
+     *          'city' =>,
+     *          'address' =>,
+     *          'day' =>,
+     *          'start_time' =>,
+     *          'end_time' =>,
+     *          'price' =>,
+     *          'currency' =>
+     *       ]
+     */
+    public function selectWorkerScheduleById(int $scheduleId)
+    {
+        $workerServiceSchedule = WorkersServiceSchedule::$table;
+        $workerServiceScheduleId = WorkersServiceSchedule::$id;
+
+        $schedule_id = WorkersServiceSchedule::$id;
+        $schedule_price_id = WorkersServiceSchedule::$price_id;
+        $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
+        $schedule_day = WorkersServiceSchedule::$day;
+        $schedule_start_time = WorkersServiceSchedule::$start_time;
+        $schedule_end_time = WorkersServiceSchedule::$end_time;
+        $schedule_order_id = WorkersServiceSchedule::$order_id;
+
+        $services = Services::$table;
+        $services_id = Services::$id;
+        $services_serviceName = Services::$name;
+        $services_departmentId = Services::$department_id;
+
+        $workers = Workers::$table;
+        $workers_id = Workers::$id;
+
+        $orders = OrdersService::$table;
+        $ordersOrderId = OrdersService::$id;
+        $ordersUserId = OrdersService::$user_id;
+        $ordersUserEmail = OrdersService::$email;
+
+        $affiliates = Affiliates::$table;
+        $affiliates_id = Affiliates::$id;
+        $affiliates_city = Affiliates::$city;
+        $affiliates_address = Affiliates::$address;
+
+        $workersServicePricing = WorkersServicePricing::$table;
+        $pricing_id = WorkersServicePricing::$id;
+        $pricing_service_id = WorkersServicePricing::$service_id;
+        $pricing_worker_id = WorkersServicePricing::$worker_id;
+        $pricing_price = WorkersServicePricing::$price;
+        $pricing_currency = WorkersServicePricing::$currency;
+
+        $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
+                   $services_departmentId as department_id, 
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency
+            
+            FROM $workerServiceSchedule 
+                 INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                LEFT JOIN $orders ON $schedule_order_id = $ordersOrderId
+            
+            WHERE $workerServiceScheduleId = $scheduleId
+        ";
+        //echo $q;
+        $this->db->query("
+            SELECT $schedule_id as schedule_id, $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
+                   $services_departmentId as department_id, 
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency
+            
+            FROM $workerServiceSchedule 
+                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                LEFT JOIN $orders ON $schedule_order_id = $ordersOrderId
+            
+            WHERE $workerServiceScheduleId = :id
+        ");
+        $this->db->bind(':id', $scheduleId);
+
+        return $this->db->singleRow();
+    }
+
 
     public function selectWorkerFreeSchedule(
         $departmentId = null, $serviceId = null,

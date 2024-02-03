@@ -1,6 +1,6 @@
-import CancelOrderWorker from "../../../worker/forms/order/CancelOrderWorker.js";
+import OrderConfirmationModal from "../../../classes/modal/OrderConfirmationModal.js";
 
-class CancelOrderUser extends CancelOrderWorker
+class CancelOrderUser extends OrderConfirmationModal
 {
     constructor(requester, confirmationModal, apiUrl) {
         super(requester, confirmationModal, apiUrl);
@@ -39,6 +39,11 @@ class CancelOrderUser extends CancelOrderWorker
 
     _successCallback(response) {
         super._successCallback(response);
+
+        /**
+         * Regenerate available schedules search result
+         */
+        $(`#${this.submitSearchButtonId}`).click();
 
         let row = document.querySelector(
             `tr[${this.dataAttributeId}='${response.data.id}']`

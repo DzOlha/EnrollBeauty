@@ -1,12 +1,14 @@
-import CancelOrderWorker from "../../../worker/forms/order/CancelOrderWorker.js";
+import OrderConfirmationModal from "../../../classes/modal/OrderConfirmationModal.js";
 
-class MakeOrderUser extends CancelOrderWorker
+class MakeOrderUser extends OrderConfirmationModal
 {
     constructor(requester, confirmationModal, apiUrl, table) {
         super(requester, confirmationModal, apiUrl);
         this.cardBaseId = '';
         this.dataAttributeId = 'data-schedule-id';
         this.table = table;
+
+        this.scheduleCardBase = 'schedule-card';
     }
     getTriggerIcon(id) {
         return document.querySelector(
@@ -30,8 +32,32 @@ class MakeOrderUser extends CancelOrderWorker
             'message': 'Please confirm that you would like to <b>order</b> the selected item from available schedules.'
         }
     }
+
+    /**
+     * @param response = {
+     *     success:
+     *     data: {
+     *         schedule_id:
+     *     }
+     * }
+     * @protected
+     */
     _successCallback(response) {
         super._successCallback(response);
+
+        // /**
+        //  * Remove the ordered schedule item from the result list
+        //  */
+        // $(`#${this.scheduleCardBase}-${response.data.schedule_id}`).remove();
+
+        /**
+         * Regenerate available schedules search result
+         */
+        $(`#${this.submitSearchButtonId}`).click();
+
+        /**
+         * Regenerate table of orders
+         */
         this.table.regenerate();
     }
 }

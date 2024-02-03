@@ -1,5 +1,5 @@
-import SearchScheduleForm from "../../user/forms/SearchScheduleForm.js";
-import API from "../../../../common/pages/api.js";
+import SearchScheduleForm from "../../../user/forms/SearchScheduleForm.js";
+import API from "../../../../../common/pages/api.js";
 class WorkerSearchScheduleForm extends SearchScheduleForm {
     constructor(
         requester, scheduleRenderer,
@@ -18,6 +18,27 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
 
         this.submitActionUrl = API.WORKER.API.SCHEDULE.search;
     }
+
+    init(){
+        /**
+         * Get information for select elements of the form of searching
+         * available schedules for appointments
+         */
+        this.getServicesForTheWorker();
+        this.getAffiliates();
+
+        /**
+         * Add the listener to handle submission of the form of schedule searching
+         */
+        this.addListenerSubmitForm();
+
+        /**
+         * Make initial submission of the form to show the available schedules
+         * in all services/departments for the current date
+         */
+        this.handleFormSubmission();
+    }
+
     _initializeDateRangePicker() {
         const currentDate = new Date();
 
@@ -163,6 +184,31 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
         let free = document.getElementById(this.onlyFreeCheckboxId);
         free.checked = true;
         this._setDateRangeByDate(day);
+        this.handleFormSubmission();
+    }
+    regenerateTheScheduleByDay(day) {
+        /**
+         * Display free schedule items
+         * @type {HTMLElement}
+         */
+        let free = document.getElementById(this.onlyFreeCheckboxId);
+        free.checked = true;
+
+        /**
+         * Display ordered schedule items
+         * @type {HTMLElement}
+         */
+        let ordered = document.getElementById(this.onlyOrderedCheckboxId);
+        ordered.checked = true;
+
+        /**
+         * Set the day for which to show the worker's schedule
+         */
+        this._setDateRangeByDate(day);
+
+        /**
+         * Submit the form of searching the worker's schedule
+         */
         this.handleFormSubmission();
     }
 }

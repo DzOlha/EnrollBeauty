@@ -3,11 +3,11 @@ import Admin from "../../../../common/pages/admin/profile/Admin.js";
 import ServicesTable from "../../../../common/pages/classes/table/extends/ServicesTable.js";
 import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
 import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
-import AddServiceForm from "../../../../common/pages/worker/forms/AddServiceForm.js";
+import AddServiceForm from "../../../../common/pages/worker/forms/service/AddServiceForm.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
 import API from "../../../../common/pages/api.js";
-import EditServiceForm from "../../../../common/pages/worker/forms/EditServiceForm.js";
-import DeleteServiceForm from "../../../../common/pages/worker/forms/DeleteServiceForm.js";
+import EditServiceForm from "../../../../common/pages/worker/forms/service/EditServiceForm.js";
+import DeleteServiceForm from "../../../../common/pages/worker/forms/service/DeleteServiceForm.js";
 
 $(function () {
     let requester = new Requester();

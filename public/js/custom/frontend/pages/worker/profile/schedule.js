@@ -5,14 +5,15 @@ import TimeRenderer from "../../../../common/pages/classes/renderer/extends/Time
 import ConfirmationModal from "../../../../common/pages/classes/modal/ConfirmationModal.js";
 import WorkerScheduleRenderer from "../../../../common/pages/classes/renderer/extends/WorkerScheduleRenderer.js";
 import WorkerScheduleHtmlBuilder from "../../../../common/pages/classes/builder/WorkerScheduleHtmlBuilder.js";
-import WorkerSearchScheduleForm from "../../../../common/pages/worker/forms/WorkerSearchScheduleForm.js";
+import WorkerSearchScheduleForm from "../../../../common/pages/worker/forms/schedule/WorkerSearchScheduleForm.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
 import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
 import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
-import AddScheduleForm from "../../../../common/pages/worker/forms/AddScheduleForm.js";
+import AddScheduleForm from "../../../../common/pages/worker/forms/schedule/AddScheduleForm.js";
 import CancelOrderWorker from "../../../../common/pages/worker/forms/order/CancelOrderWorker.js";
 import API from "../../../../common/pages/api.js";
 import CompleteOrderWorker from "../../../../common/pages/worker/forms/order/CompleteOrderWorker.js";
+import optionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
 $(function () {
     let requester = new Requester();
     let worker = new Worker(requester);
@@ -31,9 +32,10 @@ $(function () {
     //     dateRenderer, timeRenderer
     // );
 
+    let scheduleBuilder = new WorkerScheduleHtmlBuilder();
     let scheduleRenderer = new WorkerScheduleRenderer(
         requester, null, confirmationModal,
-        new WorkerScheduleHtmlBuilder(), dateRenderer, timeRenderer
+        scheduleBuilder, dateRenderer, timeRenderer
     );
 
     /**
@@ -41,7 +43,8 @@ $(function () {
      * @type {CancelOrderWorker}
      */
     let cancelOrderWorker = new CancelOrderWorker(
-        requester, confirmationModal, API.WORKER.API.ORDER.service.cancel
+        requester, confirmationModal, API.WORKER.API.ORDER.service.cancel,
+        scheduleBuilder, dateRenderer, timeRenderer
     );
     scheduleRenderer.setCancelOrderCallback(
         cancelOrderWorker.addListener, cancelOrderWorker
@@ -64,6 +67,7 @@ $(function () {
         requester, scheduleRenderer,
         new OptionBuilder(), dateRenderer
     );
+    searchScheduleForm.init();
 
     let formBuilder = new FormBuilder();
     let modalForm = new FormModal(formBuilder);
@@ -71,24 +75,6 @@ $(function () {
     let addNewScheduleForm = new AddScheduleForm(
         requester, modalForm, new OptionBuilder(), searchScheduleForm
     );
-
-    /**
-     * Get information for select elements of the form of searching
-     * available schedules for appointments
-     */
-    searchScheduleForm.getServicesForTheWorker();
-    searchScheduleForm.getAffiliates();
-
-    /**
-     * Add the listener to handle submission of the form of schedule searching
-     */
-    searchScheduleForm.addListenerSubmitForm(searchScheduleForm);
-
-    /**
-     * Make initial submission of the form to show the available schedules
-     * in all services/departments for the current date
-     */
-    searchScheduleForm.handleFormSubmission();
 
     /**
      * Listen click on 'Add Schedule Item' button

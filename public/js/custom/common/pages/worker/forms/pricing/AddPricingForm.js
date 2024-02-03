@@ -1,9 +1,9 @@
 
-import Form from "../../user/forms/Form.js";
-import Notifier from "../../classes/notifier/Notifier.js";
-import Cookie from "../../classes/cookie/Cookie.js";
-import GifLoader from "../../classes/loader/GifLoader.js";
-import API from "../../../../common/pages/api.js";
+import Form from "../../../user/forms/Form.js";
+import Notifier from "../../../classes/notifier/Notifier.js";
+import Cookie from "../../../classes/cookie/Cookie.js";
+import GifLoader from "../../../classes/loader/GifLoader.js";
+import API from "../../../../../common/pages/api.js";
 
 class AddPricingForm extends Form {
     constructor(requester, modalForm, optionBuilder, pricingTable) {

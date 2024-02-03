@@ -175,6 +175,12 @@ class WorkerDataMapper extends DataMapper
             $priceFrom, $priceTo
         );
     }
+
+    public function selectWorkerScheduleById(int $scheduleId)
+    {
+        return $this->dataSource->selectWorkerScheduleById($scheduleId);
+    }
+
     /**
      * @return array|false
      *

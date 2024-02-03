@@ -1,7 +1,7 @@
-import Form from "../../user/forms/Form.js";
-import Notifier from "../../classes/notifier/Notifier.js";
-import GifLoader from "../../classes/loader/GifLoader.js";
-import API from "../../../../common/pages/api.js";
+import Form from "../../../user/forms/Form.js";
+import Notifier from "../../../classes/notifier/Notifier.js";
+import GifLoader from "../../../classes/loader/GifLoader.js";
+import API from "../../../../../common/pages/api.js";
 class AddScheduleForm extends Form {
     constructor(requester, modalForm, optionBuilder, searchForm) {
         super(
@@ -699,6 +699,15 @@ class AddScheduleForm extends Form {
         }
     }
 
+    /**
+     * @param response = {
+     *     success:
+     *     data: {
+     *         service_id:
+     *         day: in yyyy-mm-dd format
+     *     }
+     * }
+     */
     successCallbackSubmit(response) {
         GifLoader.hide(this.requestTimeout);
         /**
@@ -712,10 +721,11 @@ class AddScheduleForm extends Form {
         $(`#${this.modalForm.modalCloseId}`).click();
 
         /**
-         * Regenerate the schedule of pricing to show the newly added pricing there
+         * Regenerate the schedule search results
+         * to show the newly added schedule item there
          */
-        this.searchForm.regenerateTheScheduleByServiceIdAndDay(
-            response.data.service_id, response.data.day
+        this.searchForm.regenerateTheScheduleByDay(
+            response.data.day
         );
     }
 

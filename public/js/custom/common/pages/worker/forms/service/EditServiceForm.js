@@ -1,8 +1,8 @@
 import AddServiceForm from "./AddServiceForm.js";
-import Select2 from "../../classes/element/Select2.js";
-import API from "../../api.js";
-import Notifier from "../../classes/notifier/Notifier.js";
-import Input from "../../classes/element/Input.js";
+import Select2 from "../../../classes/element/Select2.js";
+import API from "../../../api.js";
+import Notifier from "../../../classes/notifier/Notifier.js";
+import Input from "../../../classes/element/Input.js";
 
 class EditServiceForm extends AddServiceForm
 {

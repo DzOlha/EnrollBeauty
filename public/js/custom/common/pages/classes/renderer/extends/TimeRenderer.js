@@ -51,5 +51,19 @@ class TimeRenderer extends Renderer {
         return formattedTime;
     }
 
+    /**
+     *
+     * @param timeString in hh:mm:ss
+     * @returns {*}
+     */
+    static timeToDecimal(timeString) {
+        // Split the time string into hours, minutes, and seconds
+        const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+        // Calculate the decimal representation
+        const decimalTime = hours + minutes / 60 + seconds / 3600;
+
+        return decimalTime;
+    }
 }
 export default TimeRenderer;

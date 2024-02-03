@@ -4,11 +4,11 @@ import PricingTable from "../../../../common/pages/classes/table/extends/Pricing
 import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
 import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
-import AddPricingForm from "../../../../common/pages/worker/forms/AddPricingForm.js";
-import EditPricingForm from "../../../../common/pages/worker/forms/EditPricingForm.js";
+import AddPricingForm from "../../../../common/pages/worker/forms/pricing/AddPricingForm.js";
+import EditPricingForm from "../../../../common/pages/worker/forms/pricing/EditPricingForm.js";
 import Worker from "../../../../common/pages/worker/profile/Worker.js";
 import API from "../../../../common/pages/api.js";
-import DeletePricingForm from "../../../../common/pages/worker/forms/DeletePricingForm.js";
+import DeletePricingForm from "../../../../common/pages/worker/forms/pricing/DeletePricingForm.js";
 
 $(function () {
     let requester = new Requester();

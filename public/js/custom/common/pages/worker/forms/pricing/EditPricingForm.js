@@ -1,6 +1,6 @@
 
 import AddPricingForm from "./AddPricingForm.js";
-import API from "../../../../common/pages/api.js";
+import API from "../../../../../common/pages/api.js";
 class EditPricingForm extends AddPricingForm {
     constructor(requester, modalForm, optionBuilder, pricingTable) {
         super(

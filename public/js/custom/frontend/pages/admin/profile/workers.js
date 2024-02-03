@@ -4,7 +4,7 @@ import WorkersTable from "../../../../common/pages/classes/table/extends/Workers
 import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
 import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
-import AddWorkerForm from "../../../../common/pages/admin/forms/AddWorkerForm.js";
+import AddWorkerForm from "../../../../common/pages/admin/forms/worker/AddWorkerForm.js";
 
 $(function () {
     let requester = new Requester();

@@ -111,6 +111,7 @@ const API = [
                 'add'    => '/api/worker/schedule/add',
                 'search' => '/api/worker/schedule/search',
                 'get'    => [
+                    'one' => '/api/worker/schedule/get/one',
                     'busy-time-intervals' => '/api/worker/schedule/get/busy-time-intervals'
                 ]
             ],

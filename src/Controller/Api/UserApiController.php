@@ -685,6 +685,9 @@ class UserApiController extends ApiController
             $this->dataMapper->commitTransaction();
             $this->returnJson([
                 'success' => "You successfully created the order for the service",
+                'data' => [
+                    'schedule_id' => $scheduleId
+                ]
             ]);
         }
     }

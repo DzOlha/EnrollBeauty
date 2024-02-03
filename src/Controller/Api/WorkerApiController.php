@@ -163,6 +163,13 @@ class WorkerApiController extends ApiController
                     if ($this->url[4] === 'busy-time-intervals') {
                         $this->_getBusyTimeIntervals();
                     }
+
+                    /**
+                     * url = /api/worker/schedule/get/one
+                     */
+                    if ($this->url[4] === 'one') {
+                        $this->_getOneSchedule();
+                    }
                 }
             }
 
@@ -610,12 +617,21 @@ class WorkerApiController extends ApiController
                 ]);
             }
 
+            $updatedScheduleItem = $this->dataMapper->selectWorkerScheduleById($scheduleId);
+            if($updatedScheduleItem === false) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'An error occurred while getting schedule item!'
+                ]);
+            }
+
             /**
              * Return success
              */
             $this->dataMapper->commitTransaction();
             $this->returnJson([
-                'success' => 'You successfully canceled the appointment!'
+                'success' => 'You successfully canceled the appointment!',
+                'data' => $updatedScheduleItem
             ]);
         }
     }
@@ -659,6 +675,7 @@ class WorkerApiController extends ApiController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $orderId = htmlspecialchars(trim($_POST['order_id']));
+            $scheduleId = htmlspecialchars(trim($_POST['schedule_id']));
 
             /**
              * Update completed datetime of the order
@@ -675,7 +692,10 @@ class WorkerApiController extends ApiController
              * Return success
              */
             $this->returnJson([
-                'success' => 'You successfully marked the appointment as completed!'
+                'success' => 'You successfully marked the appointment as completed!',
+                'data' => [
+                    'schedule_id' => $scheduleId
+                ]
             ]);
         }
     }
@@ -992,6 +1012,31 @@ class WorkerApiController extends ApiController
             'success' => true,
             'data'    => $filledIntervals
         ]);
+    }
+
+    protected function _getOneSchedule()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {
+            if(empty($_POST['schedule_id'])){
+                $this->returnJson([
+                    'error' => 'Missing schedule ID!'
+                ]);
+            }
+            $id = htmlspecialchars(trim($_POST['schedule_id']));
+
+            $result = $this->dataMapper->selectWorkerScheduleById($id);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the schedule item!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
     }
 
     /**
