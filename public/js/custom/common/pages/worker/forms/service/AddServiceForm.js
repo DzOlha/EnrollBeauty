@@ -144,10 +144,7 @@ class AddServiceForm extends Form {
         /**
          * Regenerate the table of services to show the newly added service there
          */
-        this.servicesTable.sendApiRequest(
-            this.servicesTable.getItemsPerPage(),
-            Cookie.get(this.servicesTable.currentPageCookie)
-        );
+        this.servicesTable.regenerate();
     }
 
 }

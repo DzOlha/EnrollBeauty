@@ -1039,4 +1039,19 @@ class WorkerDataSource extends DataSource
         }
         return false;
     }
+
+    public function selectServiceWithDepartmentById(int $id)
+    {
+        $this->builder->select([Services::$id, Services::$name,
+                                Services::$department_id,
+                                Departments::$name],
+                    [Departments::$name => 'department_name'])
+                    ->from(Services::$table)
+                    ->innerJoin(Departments::$table)
+                        ->on(Services::$department_id, Departments::$id)
+                    ->whereEqual(Services::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
 }

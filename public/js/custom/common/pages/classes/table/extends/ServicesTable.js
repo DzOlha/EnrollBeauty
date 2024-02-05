@@ -13,6 +13,33 @@ class ServicesTable extends Table {
     setManageCallback(callback, context) {
         this.manageCallback = callback.bind(context);
     }
+
+    populateRow(item){
+        // Create a table row for each of service item
+        let row = $(`<tr data-service-id = "${item.id}">`);
+
+        row.append(`<td>${item.id}</td>`);
+
+        row.append(`<td>${item.name}</td>`);
+
+        row.append(`<td data-department-id="${item.department_id}">
+                            ${item.department_name}
+                      </td>`);
+
+        row.append(`<td>
+                        <a class="btn ripple btn-manage manage-button"
+                           id="manage-${item.id}"
+                           data-service-id="${item.id}"
+                           href="">
+                            <i class="fe fe-eye me-2"></i>
+                            Manage
+                        </a>
+                    </td>`);
+
+        row.append('</tr>');
+        return row;
+    }
+
     /**
      *  response.data =
      *  0: {
@@ -37,29 +64,7 @@ class ServicesTable extends Table {
             if (index === this.totalRowsCountCookie) {
                 return true;
             }
-            // Create a table row for each of service item
-            let row = $(`<tr data-service-id = "${item.id}">`);
-
-            row.append(`<td>${item.id}</td>`);
-
-            row.append(`<td>${item.name}</td>`);
-
-            row.append(`<td data-department-id="${item.department_id}">
-                            ${item.department_name}
-                      </td>`);
-
-            row.append(`<td>
-                        <a class="btn ripple btn-manage manage-button"
-                           id="manage-${item.id}"
-                           data-service-id="${item.id}"
-                           href="">
-                            <i class="fe fe-eye me-2"></i>
-                            Manage
-                        </a>
-                    </td>`);
-
-            row.append('</tr>');
-
+            let row = this.populateRow(item);
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
 

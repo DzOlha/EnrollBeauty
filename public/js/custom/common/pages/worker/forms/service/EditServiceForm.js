@@ -3,6 +3,7 @@ import Select2 from "../../../classes/element/Select2.js";
 import API from "../../../api.js";
 import Notifier from "../../../classes/notifier/Notifier.js";
 import Input from "../../../classes/element/Input.js";
+import GifLoader from "../../../classes/loader/GifLoader.js";
 
 class EditServiceForm extends AddServiceForm
 {
@@ -125,8 +126,38 @@ class EditServiceForm extends AddServiceForm
         }
         return false;
     }
+
+    /**
+     * @param response = {
+     *     success:
+     *     data: {
+     *         id:
+     *         name:
+     *         department_id:
+     *         department_name:
+     *     }
+     * }
+     */
     successCallbackSubmit(response) {
-        super.successCallbackSubmit(response);
+        GifLoader.hide(this.requestTimeout);
+        /**
+         * Show success message
+         */
+        Notifier.showSuccessMessage(response.success);
+
+        /**
+         * Close modal window with form
+         */
+        $(`#${this.modalForm.modalCloseId}`).click();
+
+        /**
+         * Update only one row in the table to reflect
+         * the changes of the service on the frontend
+         */
+        $(`tr[${this.dataAttributeServiceId}=${response.data.id}]`).replaceWith(
+            this.servicesTable.populateRow(response.data)
+        );
+        this.servicesTable.manageCallback(response.data.id);
 
         this.departmentId = null;
     }

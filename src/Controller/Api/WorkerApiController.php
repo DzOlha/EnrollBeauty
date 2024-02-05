@@ -1235,11 +1235,17 @@ class WorkerApiController extends ApiController
                     'error' => 'An error occurred while updating information about the service in the database!'
                 ]);
             }
+
+            $updatedService = $this->dataMapper->selectServiceWithDepartmentById($items['service_id']);
+            if($updatedService === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting updated service!'
+                ]);
+            }
+
             $this->returnJson([
                 'success' => "You successfully updated the service '{$items['service_name']}'",
-                'data'    => [
-                    'id' => $items['service_id']
-                ]
+                'data'    => $updatedService
             ]);
         }
     }
