@@ -1054,4 +1054,19 @@ class WorkerDataSource extends DataSource
 
         return $this->db->singleRow();
     }
+
+    public function selectWorkerServicePricing(int $workerId, int $serviceId)
+    {
+        $this->builder->select([WorkersServicePricing::$id, Services::$name,
+            WorkersServicePricing::$price, WorkersServicePricing::$currency,
+            WorkersServicePricing::$updated_datetime, WorkersServicePricing::$service_id])
+            ->from(WorkersServicePricing::$table)
+            ->innerJoin(Services::$table)
+                ->on(WorkersServicePricing::$service_id, Services::$id)
+            ->whereEqual(WorkersServicePricing::$worker_id, ":worker_id", $workerId)
+            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+        ->build();
+
+        return $this->db->singleRow();
+    }
 }

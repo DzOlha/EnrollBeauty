@@ -1,6 +1,8 @@
 
 import AddPricingForm from "./AddPricingForm.js";
 import API from "../../../../../common/pages/api.js";
+import GifLoader from "../../../classes/loader/GifLoader.js";
+import Notifier from "../../../classes/notifier/Notifier.js";
 class EditPricingForm extends AddPricingForm {
     constructor(requester, modalForm, optionBuilder, pricingTable) {
         super(
@@ -58,8 +60,8 @@ class EditPricingForm extends AddPricingForm {
         this.populateForm();
     }
     populateForm() {
-        //console.log(this.oldServiceId);
-        //console.log(this.oldPrice);
+        console.log(this.oldServiceId);
+        console.log(this.oldPrice);
 
         // Assuming this is your select element
         let select = $(`#${this.serviceSelectId}`);
@@ -98,11 +100,52 @@ class EditPricingForm extends AddPricingForm {
         }
         return false;
     }
+
+    /**
+     * @param response = {
+     *     success:
+     *     data: {
+     *         id:
+     *         service_id:
+     *         name:
+     *         price:
+     *         currency:
+     *         updated_datetime:
+     *     }
+     * }
+     */
     successCallbackSubmit(response) {
-        super.successCallbackSubmit(response);
+        /**
+         * Reset the properties
+         * @type {null}
+         */
         this.oldPrice = null;
         this.oldServiceId = null;
         this.pricingId = null;
+
+        /**
+         * Hide gif loader
+         */
+        GifLoader.hide(this.requestTimeout);
+
+        /**
+         * Show success message
+         */
+        Notifier.showSuccessMessage(response.success);
+
+        /**
+         * Close modal window with form
+         */
+        $(`#${this.modalForm.modalCloseId}`).click();
+
+        /**
+         * Update the single row of the table that
+         * has been modified right now
+         */
+        $(`tr[${this.dataAttrPricingId}=${response.data.id}]`).replaceWith(
+            this.pricingTable.populateRow(response.data)
+        );
+        this.addListenerManagePricing(response.data.id);
     }
 }
 export default EditPricingForm;

@@ -374,4 +374,9 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->selectServiceWithDepartmentById($id);
     }
+
+    public function selectWorkerServicePricing(int $workerId, int $serviceId)
+    {
+        return $this->dataSource->selectWorkerServicePricing($workerId, $serviceId);
+    }
 }

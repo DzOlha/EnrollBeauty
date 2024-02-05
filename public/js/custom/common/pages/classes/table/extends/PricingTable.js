@@ -14,10 +14,41 @@ class PricingTable extends Table {
     setManageCallback(callback, context) {
         this.manageCallback = callback.bind(context);
     }
+
+    populateRow(item) {
+        let row = $(`<tr data-pricing-id = "${item.id}">`);
+
+        row.append(`<td>${item.id}</td>`);
+
+        row.append(`<td>${item.name}</td>`);
+
+        let price = item.price + ' ' + item.currency;
+        row.append(`<td>${price}</td>`);
+
+        row.append(`<td>${item.updated_datetime}</td>`);
+
+        row.append(`<td>
+                        <a class="btn ripple btn-manage manage-button manage-pricing"
+                           id="manage-${item.id}"
+                           data-pricing-id="${item.id}"
+                           data-service-id="${item.service_id}"
+                           data-service-price="${item.price}"
+                           href="">
+                            <i class="fe fe-eye me-2"></i>
+                            Manage
+                        </a>
+                    </td>`);
+
+        row.append('</tr>');
+
+        return row;
+    }
+
     /**
      *  response.data =
      *  0: {
      *      'id':
+     *      'service_id':
      *      'name': it's service name
      *      'price':
      *      'currency':
@@ -40,30 +71,7 @@ class PricingTable extends Table {
                 return true;
             }
             // Create a table row for each of pricing item
-            let row = $(`<tr data-pricing-id = "${item.id}">`);
-
-            row.append(`<td>${item.id}</td>`);
-
-            row.append(`<td>${item.name}</td>`);
-
-            let price = item.price + ' ' + item.currency;
-            row.append(`<td>${price}</td>`);
-
-            row.append(`<td>${item.updated_datetime}</td>`);
-
-            row.append(`<td>
-                        <a class="btn ripple btn-manage manage-button manage-pricing"
-                           id="manage-${item.id}"
-                           data-pricing-id="${item.id}"
-                           data-service-id="${item.service_id}"
-                           data-service-price="${item.price}"
-                           href="">
-                            <i class="fe fe-eye me-2"></i>
-                            Manage
-                        </a>
-                    </td>`);
-
-            row.append('</tr>');
+            let row = this.populateRow(item);
 
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);

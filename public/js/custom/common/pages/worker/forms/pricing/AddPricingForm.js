@@ -254,10 +254,7 @@ class AddPricingForm extends Form {
         /**
          * Regenerate the table of pricing to show the newly added pricing there
          */
-        this.pricingTable.sendApiRequest(
-            this.pricingTable.getItemsPerPage(),
-            Cookie.get(this.pricingTable.currentPageCookie)
-        );
+        this.pricingTable.regenerate();
     }
 }
 export default AddPricingForm;

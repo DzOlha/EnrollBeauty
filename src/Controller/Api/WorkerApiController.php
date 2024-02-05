@@ -866,8 +866,18 @@ class WorkerApiController extends ApiController
             ]);
         }
 
+        $updatedPricing = $this->dataMapper->selectWorkerServicePricing(
+            $items['worker_id'], $items['service_id']
+        );
+        if($updatedPricing === false) {
+            $this->returnJson([
+                'error' => 'An error occurred while getting updated service pricing!'
+            ]);
+        }
+
         $this->returnJson([
-            'success' => 'You successfully updated info about selected pricing!'
+            'success' => 'You successfully updated info about selected pricing!',
+            'data' => $updatedPricing
         ]);
     }
 

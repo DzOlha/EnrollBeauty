@@ -157,7 +157,7 @@ class EditServiceForm extends AddServiceForm
         $(`tr[${this.dataAttributeServiceId}=${response.data.id}]`).replaceWith(
             this.servicesTable.populateRow(response.data)
         );
-        this.servicesTable.manageCallback(response.data.id);
+        this.addListenerManage(response.data.id);
 
         this.departmentId = null;
     }
