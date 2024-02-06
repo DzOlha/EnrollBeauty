@@ -11,17 +11,21 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
         super(requester, appointmentsTable,
             confirmationModal, htmlBuilder,
             dateRenderer, timeRenderer);
-        this.apiCancelOrder = API.WORKER.API.ORDER.service.cancel;
-        this.apiCompleteOrder = API.WORKER.API.ORDER.service.complete;
     }
 
-    setCancelOrderCallback(callback, context)
-    {
+    setCancelOrderCallback(callback, context) {
         this.cancelOrderCallaback = callback.bind(context);
     }
-    setCompleteOrderCallback(callback, context)
-    {
+    setCompleteOrderCallback(callback, context) {
         this.completeOrderCallaback = callback.bind(context);
+    }
+
+    setEditScheduleCallback(callback, context) {
+        this.editScheduleCallback = callback.bind(context);
+    }
+
+    setDeleteScheduleCallback(callback, context) {
+        this.deleteScheduleCallback = callback.bind(context);
     }
 
     render(response) {
@@ -350,6 +354,7 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
                 this.cancelOrderCallaback(schedule.schedule_id);
                 this.completeOrderCallaback(schedule.schedule_id);
             } else {
+                this.editScheduleCallback(schedule.schedule_id);
                 this.addListenerOnEditAppointment(schedule.schedule_id);
                 this.addListenerOnDeleteAppointment(schedule.schedule_id);
             }

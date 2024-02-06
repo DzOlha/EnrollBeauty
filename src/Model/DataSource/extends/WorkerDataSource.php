@@ -1069,4 +1069,130 @@ class WorkerDataSource extends DataSource
 
         return $this->db->singleRow();
     }
+
+    public function updateWorkerServiceSchedule(
+        int $id, int $priceId, int $affiliateId,
+        string $day, string $startTime, string $endTime
+    ) {
+        $this->builder->update(WorkersServiceSchedule::$table)
+                ->set(WorkersServiceSchedule::$price_id, ':price_id', $priceId)
+                ->andSet(WorkersServiceSchedule::$affiliate_id, ':affiliate_id', $affiliateId)
+                ->andSet(WorkersServiceSchedule::$day, ':day', $day)
+                ->andSet(WorkersServiceSchedule::$start_time, ':start', $startTime)
+                ->andSet(WorkersServiceSchedule::$end_time, ':end', $endTime)
+            ->whereEqual(WorkersServiceSchedule::$id, ':id', $id)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param int $workerId
+     * @param string $day
+     * @param int $scheduleId
+     * @return array|false
+     *
+     *  [
+     *       0 => [
+     *           'start_time' =>
+     *           'end_time' =>
+     *       ]
+     *   ........................
+     *  ]
+     */
+    public function selectEditFilledTimeIntervalsByWorkerIdAndDay(
+        int $workerId, string $day, int $scheduleId
+    ){
+        $this->builder->select([WorkersServiceSchedule::$start_time,
+                                WorkersServiceSchedule::$end_time])
+            ->from(WorkersServiceSchedule::$table)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(WorkersServiceSchedule::$price_id, WorkersServicePricing::$id)
+            ->leftJoin(OrdersService::$table)
+                ->on(WorkersServiceSchedule::$order_id, OrdersService::$id)
+            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
+            ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
+            ->andNotEqual(WorkersServiceSchedule::$id, ':id', $scheduleId)
+            ->andIsNull(OrdersService::$completed_datetime)
+            ->andIsNull(OrdersService::$canceled_datetime)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function selectEditScheduleForWorkerByDayAndTime(
+        int $workerId, string $day, string $startTime,
+        string $endTime, int $scheduleId
+    ) {
+        $pricing = WorkersServicePricing::$table;
+        $pricing_id = WorkersServicePricing::$id;
+        $pricing_worker_id = WorkersServicePricing::$worker_id;
+
+        $orders = OrdersService::$table;
+        $orders_id = OrdersService::$id;
+        $orders_completed = OrdersService::$completed_datetime;
+        $orders_canceled = OrdersService::$canceled_datetime;
+
+        $schedule = WorkersServiceSchedule::$table;
+        $schedule_price_id = WorkersServiceSchedule::$price_id;
+        $schedule_order_id = WorkersServiceSchedule::$order_id;
+        $start_time = WorkersServiceSchedule::$start_time;
+        $end_time = WorkersServiceSchedule::$end_time;
+        $day_column = WorkersServiceSchedule::$day;
+        $id = WorkersServiceSchedule::$id;
+
+        $q = "
+            SELECT $id FROM $schedule
+            INNER JOIN $pricing ON $schedule_price_id = $pricing_id
+            LEFT JOIN $orders ON $schedule_order_id = $orders_id
+            WHERE $pricing_worker_id = :worker_id
+            AND $day_column = :day
+            AND $id != :schedule_id
+            AND $orders_canceled IS NULL
+            AND $orders_completed IS NULL
+            AND (
+                 ($start_time <= :start_time AND $start_time < :end_time 
+                    AND $end_time > :start_time AND $end_time >= :end_time)
+                
+                OR ($start_time <= :start_time AND $start_time < :end_time 
+                    AND $end_time > :start_time AND $end_time <= :end_time)
+                
+                OR ($start_time >= :start_time AND  $start_time < :end_time
+                    AND $end_time > :start_time AND $end_time >= :end_time)
+            )
+        ";
+        //echo $q;
+
+        $this->db->query("
+            SELECT $id FROM $schedule
+            INNER JOIN $pricing ON $schedule_price_id = $pricing_id
+            LEFT JOIN $orders ON $schedule_order_id = $orders_id
+            WHERE $pricing_worker_id = :worker_id
+            AND $day_column = :day
+            AND $id != :schedule_id
+            AND $orders_canceled IS NULL
+            AND $orders_completed IS NULL
+            AND (
+                 ($start_time <= :start_time AND $start_time < :end_time 
+                    AND $end_time > :start_time AND $end_time >= :end_time)
+                
+                OR ($start_time <= :start_time AND $start_time < :end_time 
+                    AND $end_time > :start_time AND $end_time <= :end_time)
+                
+                OR ($start_time >= :start_time AND  $start_time < :end_time
+                    AND $end_time > :start_time AND $end_time >= :end_time)
+            )
+        ");
+        $this->db->bind(':worker_id', $workerId);
+        $this->db->bind(':day', $day);
+        $this->db->bind(':schedule_id', $scheduleId);
+        $this->db->bind(':start_time', $startTime);
+        $this->db->bind(':end_time', $endTime);
+
+        return $this->db->manyRows();
+    }
+
 }

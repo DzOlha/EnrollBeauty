@@ -108,10 +108,12 @@ const API = {
             },
             SCHEDULE: {
                 add: '/api/worker/schedule/add',
+                edit: '/api/worker/schedule/edit',
                 search: '/api/worker/schedule/search',
                 get: {
                     one: '/api/worker/schedule/get/one',
-                    'busy-time-intervals': '/api/worker/schedule/get/busy-time-intervals'
+                    'busy-time-intervals': '/api/worker/schedule/get/busy-time-intervals',
+                    'edit-busy-time-intervals': '/api/worker/schedule/get/edit-busy-time-intervals',
                 }
             },
             PROFILE: {

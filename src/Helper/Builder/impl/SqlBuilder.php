@@ -125,6 +125,13 @@ class SqlBuilder implements IBuilder
         $this->query .= "AND $column = $placeholder ";
         return $this;
     }
+    public function andNotEqual(string $column, string $placeholder, string $value) {
+        $this->placeholders += [
+            $placeholder => $value
+        ];
+        $this->query .= "AND $column != $placeholder ";
+        return $this;
+    }
     public function andIsNull(string $column) {
         $this->query .= "AND $column IS NULL ";
         return $this;

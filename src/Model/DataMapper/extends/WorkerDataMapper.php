@@ -379,4 +379,30 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->selectWorkerServicePricing($workerId, $serviceId);
     }
+
+    public function updateWorkerServiceSchedule(
+        int $id, int $priceId, int $affiliateId,
+        string $day, string $startTime, string $endTime
+    ) {
+        return $this->dataSource->updateWorkerServiceSchedule(
+            $id, $priceId, $affiliateId, $day, $startTime, $endTime
+        );
+    }
+
+    public function selectEditFilledTimeIntervalsByWorkerIdAndDay(
+        int $workerId, string $day, int $scheduleId
+    ){
+        return $this->dataSource->selectEditFilledTimeIntervalsByWorkerIdAndDay(
+            $workerId, $day, $scheduleId
+        );
+    }
+
+    public function selectEditScheduleForWorkerByDayAndTime(
+        int $workerId, string $day, string $startTime,
+        string $endTime, int $scheduleId
+    ) {
+        return $this->dataSource->selectEditScheduleForWorkerByDayAndTime(
+            $workerId, $day, $startTime, $endTime, $scheduleId
+        );
+    }
 }

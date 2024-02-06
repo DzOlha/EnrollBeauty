@@ -179,13 +179,13 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
         datepicker.data('daterangepicker').setEndDate(formattedDate);
     }
 
-    regenerateTheScheduleByServiceIdAndDay(serviceId, day) {
-        this._setServiceSelectValue(serviceId);
-        let free = document.getElementById(this.onlyFreeCheckboxId);
-        free.checked = true;
-        this._setDateRangeByDate(day);
-        this.handleFormSubmission();
-    }
+    // regenerateTheScheduleByServiceIdAndDay(serviceId, day) {
+    //     this._setServiceSelectValue(serviceId);
+    //     let free = document.getElementById(this.onlyFreeCheckboxId);
+    //     free.checked = true;
+    //     this._setDateRangeByDate(day);
+    //     this.handleFormSubmission();
+    // }
     regenerateTheScheduleByDay(day) {
         /**
          * Display free schedule items

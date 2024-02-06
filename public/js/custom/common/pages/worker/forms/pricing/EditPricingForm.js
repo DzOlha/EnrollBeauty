@@ -60,8 +60,8 @@ class EditPricingForm extends AddPricingForm {
         this.populateForm();
     }
     populateForm() {
-        console.log(this.oldServiceId);
-        console.log(this.oldPrice);
+        // console.log(this.oldServiceId);
+        // console.log(this.oldPrice);
 
         // Assuming this is your select element
         let select = $(`#${this.serviceSelectId}`);

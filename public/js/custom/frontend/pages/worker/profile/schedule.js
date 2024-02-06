@@ -13,7 +13,7 @@ import AddScheduleForm from "../../../../common/pages/worker/forms/schedule/AddS
 import CancelOrderWorker from "../../../../common/pages/worker/forms/order/CancelOrderWorker.js";
 import API from "../../../../common/pages/api.js";
 import CompleteOrderWorker from "../../../../common/pages/worker/forms/order/CompleteOrderWorker.js";
-import optionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
+import EditScheduleForm from "../../../../common/pages/worker/forms/schedule/EditScheduleForm.js";
 $(function () {
     let requester = new Requester();
     let worker = new Worker(requester);
@@ -26,11 +26,6 @@ $(function () {
     let timeRenderer = new TimeRenderer();
 
     let confirmationModal = new ConfirmationModal();
-
-    // let appointmentsTable = new AppointmentsTable(
-    //     requester, confirmationModal,
-    //     dateRenderer, timeRenderer
-    // );
 
     let scheduleBuilder = new WorkerScheduleHtmlBuilder();
     let scheduleRenderer = new WorkerScheduleRenderer(
@@ -62,7 +57,6 @@ $(function () {
         completeOrderWorker.addListener, completeOrderWorker
     );
 
-
     let searchScheduleForm = new WorkerSearchScheduleForm(
         requester, scheduleRenderer,
         new OptionBuilder(), dateRenderer
@@ -72,8 +66,9 @@ $(function () {
     let formBuilder = new FormBuilder();
     let modalForm = new FormModal(formBuilder);
 
+    let optionBuilder = new OptionBuilder();
     let addNewScheduleForm = new AddScheduleForm(
-        requester, modalForm, new OptionBuilder(), searchScheduleForm
+        requester, modalForm, optionBuilder, searchScheduleForm
     );
 
     /**
@@ -81,4 +76,18 @@ $(function () {
      * to show the form in modal window
      */
     addNewScheduleForm.addListenerShowAddScheduleForm();
+
+    /**
+     * Edit schedule form
+     */
+    let editForm = new EditScheduleForm(
+        requester, modalForm, optionBuilder, searchScheduleForm,
+        scheduleBuilder, dateRenderer, timeRenderer
+    );
+    scheduleRenderer.setEditScheduleCallback(
+        editForm.addListenerEdit, editForm
+    );
+    cancelOrderWorker.setEditScheduleCallback(
+        editForm.addListenerEdit, editForm
+    );
 });

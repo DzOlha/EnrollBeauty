@@ -13,6 +13,12 @@ class CancelOrderWorker extends OrderConfirmationModal
         this.submitSearchButtonId = 'submit-search-button';
         this.cardBaseId = 'schedule-card';
     }
+    setEditScheduleCallback(callback, context) {
+        this.editScheduleCallback = callback.bind(context);
+    }
+    setDeleteScheduleCallback(callback, context) {
+        this.deleteScheduleCallback = callback.bind(context);
+    }
     getTriggerIcon(id) {
         return document.querySelector(
             `#schedule-card-${id} .fe-x`
@@ -90,6 +96,9 @@ class CancelOrderWorker extends OrderConfirmationModal
         div.insertAdjacentHTML('afterbegin', newCard);
 
         oldCard.replaceWith(div.firstChild);
+
+        this.editScheduleCallback(response.data.schedule_id);
+        //this.deleteScheduleCallback(response.data.schedule_id);
     }
 }
 export default CancelOrderWorker;
