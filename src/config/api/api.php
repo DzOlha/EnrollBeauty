@@ -1,34 +1,34 @@
 <?php
 const API = [
-    'AUTH' => [
+    'AUTH'   => [
         'WEB' => [
-            'USER' => [
+            'USER'   => [
                 'registration' => '/web/auth/user/registration',
-                'login' => '/web/auth/user/login',
-                'logout' => '/web/auth/user/logout'
+                'login'        => '/web/auth/user/login',
+                'logout'       => '/web/auth/user/logout'
             ],
             'WORKER' => [
-                'login' => '/web/auth/worker/login',
-                'logout' => '/web/auth/worker/logout',
+                'login'             => '/web/auth/worker/login',
+                'logout'            => '/web/auth/worker/logout',
                 'recovery-password' => '/web/auth/worker/recovery-password'
             ],
-            'ADMIN' => [
-                'login' => '/web/auth/admin/login',
+            'ADMIN'  => [
+                'login'  => '/web/auth/admin/login',
                 'logout' => '/web/auth/admin/logout'
             ]
         ],
         'API' => [
-            'USER' => [
+            'USER'   => [
                 'register' => '/api/auth/user/register',
-                'login' => '/api/auth/use/login'
+                'login'    => '/api/auth/use/login'
             ],
             'WORKER' => [
-                'login' => '/api/auth/worker/login',
+                'login'           => '/api/auth/worker/login',
                 'change-password' => '/api/auth/worker/change-password'
             ],
-            'ADMIN' => [
+            'ADMIN'  => [
                 'change-default-admin-info' => '/api/auth/admin/change-default-admin-info',
-                'login' => '/api/auth/admin/login'
+                'login'                     => '/api/auth/admin/login'
             ]
         ]
     ],
@@ -93,11 +93,11 @@ const API = [
         ],
         'API' => [
             'SERVICE'    => [
-                'add' => '/api/worker/service/add',
-                'edit' => '/api/worker/service/edit',
+                'add'    => '/api/worker/service/add',
+                'edit'   => '/api/worker/service/edit',
                 'delete' => '/api/worker/service/delete',
-                'get' => [
-                    'one' => '/api/worker/service/get/one',
+                'get'    => [
+                    'one'                  => '/api/worker/service/get/one',
                     'all'                  => '/api/worker/service/get/all',
                     'all-with-departments' => '/api/worker/service/get/all-with-departments'
                 ]
@@ -109,20 +109,22 @@ const API = [
             ],
             'SCHEDULE'   => [
                 'add'    => '/api/worker/schedule/add',
+                'edit'   => '/api/worker/schedule/edit',
                 'search' => '/api/worker/schedule/search',
                 'get'    => [
-                    'one' => '/api/worker/schedule/get/one',
-                    'busy-time-intervals' => '/api/worker/schedule/get/busy-time-intervals'
+                    'one'                      => '/api/worker/schedule/get/one',
+                    'busy-time-intervals'      => '/api/worker/schedule/get/busy-time-intervals',
+                    'edit-busy-time-intervals' => '/api/worker/schedule/get/edit-busy-time-intervals',
                 ]
             ],
             'PROFILE'    => [
                 'get'             => '/api/worker/profile/get',
                 'service-pricing' => [
-                    'get'  => [
+                    'get'    => [
                         'all' => '/api/worker/profile/service-pricing/get/all',
                     ],
-                    'add'  => '/api/worker/profile/service-pricing/add',
-                    'edit' => '/api/worker/profile/service-pricing/edit',
+                    'add'    => '/api/worker/profile/service-pricing/add',
+                    'edit'   => '/api/worker/profile/service-pricing/edit',
                     'delete' => '/api/worker/profile/service-pricing/delete'
                 ],
                 'service'         => [
@@ -152,31 +154,31 @@ const API = [
             ]
         ],
         'API' => [
-            'PROFILE'  => [
+            'PROFILE'    => [
                 'get' => '/api/admin/profile/get'
             ],
-            'WORKER'   => [
+            'WORKER'     => [
                 'get'      => [
                     'all' => '/api/admin/worker/get/all'
                 ],
                 'register' => '/api/admin/worker/register'
             ],
-            'POSITION' => [
+            'POSITION'   => [
                 'get' => [
                     'all' => '/api/admin/position/get/all'
                 ]
             ],
-            'ROLE'     => [
+            'ROLE'       => [
                 'get' => [
                     'all' => '/api/admin/role/get/all'
                 ]
             ],
-            'SERVICE'  => [
-                'add' => '/api/admin/service/add',
-                'edit' => '/api/admin/service/edit',
+            'SERVICE'    => [
+                'add'    => '/api/admin/service/add',
+                'edit'   => '/api/admin/service/edit',
                 'delete' => '/api/admin/service/delete',
-                'get' => [
-                    'one' =>  '/api/admin/service/get/one',
+                'get'    => [
+                    'one'                  => '/api/admin/service/get/one',
                     'all-with-departments' => '/api/admin/service/get/all-with-departments',
                 ],
             ],
