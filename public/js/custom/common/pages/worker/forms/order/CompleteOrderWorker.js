@@ -2,14 +2,16 @@ import OrderConfirmationModal from "../../../classes/modal/OrderConfirmationModa
 
 class CompleteOrderWorker extends OrderConfirmationModal
 {
-    constructor(requester, confirmationModal, apiUrl) {
+    constructor(requester, confirmationModal, apiUrl)
+    {
         super(requester, confirmationModal, apiUrl);
 
         this.scheduleCardBase = 'schedule-card';
+        this.completeIconClass = 'fe-check';
     }
     getTriggerIcon(id) {
         return document.querySelector(
-            `#schedule-card-${id} .fe-check`
+            `#${this.cardBaseId}-${id} .${this.completeIconClass}`
         );
     }
     getConfirmationModalContent(card = null) {

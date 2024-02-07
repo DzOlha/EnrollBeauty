@@ -355,39 +355,10 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
                 this.completeOrderCallaback(schedule.schedule_id);
             } else {
                 this.editScheduleCallback(schedule.schedule_id);
-                this.addListenerOnEditAppointment(schedule.schedule_id);
-                this.addListenerOnDeleteAppointment(schedule.schedule_id);
+                this.deleteScheduleCallback(schedule.schedule_id);
             }
         })
         //console.log('-------------------------------------------------------------------------------------------------------------------');
-    }
-
-    addListenerOnEditAppointment(scheduleId) {
-        let editIcon = document.querySelector(
-            `#schedule-card-${scheduleId} .fe-edit-3`
-        );
-
-        if (editIcon === null) return;
-
-        const handleEditIconClick = (e) => {}
-        const handleConfirmClick = (dataToSend) => {}
-
-        editIcon.removeEventListener('click', handleEditIconClick); // Remove previous listener
-        editIcon.addEventListener('click', handleEditIconClick);
-    }
-
-    addListenerOnDeleteAppointment(scheduleId) {
-        let deleteIcon = document.querySelector(
-            `#schedule-card-${scheduleId} .fe-trash-2`
-        );
-
-        if (deleteIcon === null) return;
-
-        const handleDeleteIconClick = (e) => {}
-        const handleConfirmClick = (dataToSend) => {}
-
-        deleteIcon.removeEventListener('click', handleDeleteIconClick); // Remove previous listener
-        deleteIcon.addEventListener('click', handleDeleteIconClick);
     }
 }
 export default WorkerScheduleRenderer;

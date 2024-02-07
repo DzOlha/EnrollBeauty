@@ -153,6 +153,13 @@ class WorkerApiController extends ApiController
             }
 
             /**
+             * url = /api/worker/schedule/delete
+             */
+            if ($this->url[3] === 'delete') {
+                $this->_deleteSchedule();
+            }
+
+            /**
              * url = /api/worker/schedule/search
              */
             if ($this->url[3] === 'search') {
@@ -1272,6 +1279,33 @@ class WorkerApiController extends ApiController
             $this->returnJson([
                 'success' => 'You successfully updated the schedule item!',
                 'data'    => $updatedSchedule
+            ]);
+        }
+    }
+
+    protected function _deleteSchedule()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['schedule_id'])) {
+                $this->returnJson([
+                    'error' => 'Missing post fields!'
+                ]);
+            }
+
+            $id = htmlspecialchars(trim($_POST['schedule_id']));
+
+            $deleted = $this->dataMapper->deleteWorkerScheduleItemById($id);
+            if($deleted === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while deletion of the schedule item!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully deleted the schedule item!',
+                'data' => [
+                    'schedule_id' => $id
+                ]
             ]);
         }
     }

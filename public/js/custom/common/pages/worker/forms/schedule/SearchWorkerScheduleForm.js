@@ -1,6 +1,6 @@
 import SearchScheduleForm from "../../../user/forms/SearchScheduleForm.js";
 import API from "../../../../../common/pages/api.js";
-class WorkerSearchScheduleForm extends SearchScheduleForm {
+class SearchWorkerScheduleForm extends SearchScheduleForm {
     constructor(
         requester, scheduleRenderer,
         optionBuilder, dateRenderer
@@ -212,4 +212,4 @@ class WorkerSearchScheduleForm extends SearchScheduleForm {
         this.handleFormSubmission();
     }
 }
-export default WorkerSearchScheduleForm;
+export default SearchWorkerScheduleForm;

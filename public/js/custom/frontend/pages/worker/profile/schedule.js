@@ -5,7 +5,7 @@ import TimeRenderer from "../../../../common/pages/classes/renderer/extends/Time
 import ConfirmationModal from "../../../../common/pages/classes/modal/ConfirmationModal.js";
 import WorkerScheduleRenderer from "../../../../common/pages/classes/renderer/extends/WorkerScheduleRenderer.js";
 import WorkerScheduleHtmlBuilder from "../../../../common/pages/classes/builder/WorkerScheduleHtmlBuilder.js";
-import WorkerSearchScheduleForm from "../../../../common/pages/worker/forms/schedule/WorkerSearchScheduleForm.js";
+import SearchWorkerScheduleForm from "../../../../common/pages/worker/forms/schedule/SearchWorkerScheduleForm.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
 import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js";
 import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
@@ -14,6 +14,7 @@ import CancelOrderWorker from "../../../../common/pages/worker/forms/order/Cance
 import API from "../../../../common/pages/api.js";
 import CompleteOrderWorker from "../../../../common/pages/worker/forms/order/CompleteOrderWorker.js";
 import EditScheduleForm from "../../../../common/pages/worker/forms/schedule/EditScheduleForm.js";
+import DeleteScheduleForm from "../../../../common/pages/worker/forms/schedule/DeleteScheduleForm.js";
 $(function () {
     let requester = new Requester();
     let worker = new Worker(requester);
@@ -57,7 +58,7 @@ $(function () {
         completeOrderWorker.addListener, completeOrderWorker
     );
 
-    let searchScheduleForm = new WorkerSearchScheduleForm(
+    let searchScheduleForm = new SearchWorkerScheduleForm(
         requester, scheduleRenderer,
         new OptionBuilder(), dateRenderer
     );
@@ -77,6 +78,7 @@ $(function () {
      */
     addNewScheduleForm.addListenerShowAddScheduleForm();
 
+
     /**
      * Edit schedule form
      */
@@ -89,5 +91,18 @@ $(function () {
     );
     cancelOrderWorker.setEditScheduleCallback(
         editForm.addListenerEdit, editForm
+    );
+
+    /**
+     * Delete schedule form
+     */
+    let deleteForm = new DeleteScheduleForm(
+        requester, confirmationModal, API.WORKER.API.SCHEDULE.delete
+    );
+    scheduleRenderer.setDeleteScheduleCallback(
+        deleteForm.addListener, deleteForm
+    );
+    cancelOrderWorker.setDeleteScheduleCallback(
+        deleteForm.addListener, deleteForm
     );
 });

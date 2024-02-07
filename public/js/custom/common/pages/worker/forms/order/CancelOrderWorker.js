@@ -1,10 +1,10 @@
 import OrderConfirmationModal from "../../../classes/modal/OrderConfirmationModal.js";
-import TimeRenderer from "../../../classes/renderer/extends/TimeRenderer.js";
 
 class CancelOrderWorker extends OrderConfirmationModal
 {
     constructor(requester, confirmationModal, apiUrl,
-                scheduleBuilder, dateRenderer, timeRenderer) {
+                scheduleBuilder, dateRenderer, timeRenderer)
+    {
         super(requester, confirmationModal, apiUrl);
         this.scheduleBuilder = scheduleBuilder;
         this.dateRenderer = dateRenderer;
@@ -12,6 +12,7 @@ class CancelOrderWorker extends OrderConfirmationModal
 
         this.submitSearchButtonId = 'submit-search-button';
         this.cardBaseId = 'schedule-card';
+        this.cancelIconClass = 'fe-x';
     }
     setEditScheduleCallback(callback, context) {
         this.editScheduleCallback = callback.bind(context);
@@ -21,7 +22,7 @@ class CancelOrderWorker extends OrderConfirmationModal
     }
     getTriggerIcon(id) {
         return document.querySelector(
-            `#schedule-card-${id} .fe-x`
+            `#${this.cardBaseId}-${id} .${this.cancelIconClass}`
         );
     }
     getDataAttributes(triggerIcon) {
@@ -98,7 +99,7 @@ class CancelOrderWorker extends OrderConfirmationModal
         oldCard.replaceWith(div.firstChild);
 
         this.editScheduleCallback(response.data.schedule_id);
-        //this.deleteScheduleCallback(response.data.schedule_id);
+        this.deleteScheduleCallback(response.data.schedule_id);
     }
 }
 export default CancelOrderWorker;

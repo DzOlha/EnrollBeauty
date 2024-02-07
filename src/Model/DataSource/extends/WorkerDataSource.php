@@ -1195,4 +1195,18 @@ class WorkerDataSource extends DataSource
         return $this->db->manyRows();
     }
 
+    public function deleteWorkerScheduleItemById(int $id)
+    {
+        $this->builder->delete()
+            ->from(WorkersServiceSchedule::$table)
+            ->whereEqual(WorkersServiceSchedule::$id, ':id', $id)
+            ->andIsNull(WorkersServiceSchedule::$order_id)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
 }

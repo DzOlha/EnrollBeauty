@@ -109,6 +109,7 @@ const API = {
             SCHEDULE: {
                 add: '/api/worker/schedule/add',
                 edit: '/api/worker/schedule/edit',
+                delete: '/api/worker/schedule/delete',
                 search: '/api/worker/schedule/search',
                 get: {
                     one: '/api/worker/schedule/get/one',

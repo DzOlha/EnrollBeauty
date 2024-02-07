@@ -405,4 +405,9 @@ class WorkerDataMapper extends DataMapper
             $workerId, $day, $startTime, $endTime, $scheduleId
         );
     }
+
+    public function deleteWorkerScheduleItemById(int $id)
+    {
+        return $this->dataSource->deleteWorkerScheduleItemById($id);
+    }
 }
