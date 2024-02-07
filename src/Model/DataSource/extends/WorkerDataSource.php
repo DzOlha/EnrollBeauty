@@ -9,6 +9,7 @@ use Src\Model\DTO\Write\WorkerWriteDTO;
 use Src\Model\Table\Affiliates;
 use Src\Model\Table\Departments;
 use Src\Model\Table\OrdersService;
+use Src\Model\Table\Positions;
 use Src\Model\Table\Services;
 use Src\Model\Table\Users;
 use Src\Model\Table\Workers;
@@ -1209,4 +1210,71 @@ class WorkerDataSource extends DataSource
         return false;
     }
 
+    public function selectWorkerByIdForEdit(int $id)
+    {
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email,
+                            Workers::$position_id, Workers::$role_id, Workers::$gender,
+                            Workers::$age, Workers::$years_of_experience, Workers::$salary])
+                    ->from(Workers::$table)
+                    ->whereEqual(Workers::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function selectWorkerByEmailAndNotId(int $id, string $email)
+    {
+        $this->builder->select([Workers::$id])
+                    ->from(Workers::$table)
+                    ->whereEqual(Workers::$email, ':email', $email)
+                    ->andNotEqual(Workers::$id, ':id', $id)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectWorkerRowById(int $id)
+    {
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email,
+                                Positions::$name, Workers::$salary, Workers::$years_of_experience],
+                        [
+                            Positions::$name => 'position',
+                            Workers::$years_of_experience => 'experience'
+                        ])
+                    ->from(Workers::$table)
+                    ->innerJoin(Positions::$table)
+                        ->on(Workers::$position_id, Positions::$id)
+                    ->whereEqual(Workers::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function updateWorkerById(
+        int $id, string $name, string $surname, string $email,
+        int $positionId, int $roleId, ?string $gender, int $age,
+        float $experience, ?float $salary
+    ) {
+        $this->builder->update(Workers::$table)
+                ->set(Workers::$name, ':name', $name)
+                ->andSet(Workers::$surname, ':surname', $surname)
+                ->andSet(Workers::$email, ':email', $email)
+                ->andSet(Workers::$position_id, ":position_id", $positionId)
+                ->andSet(Workers::$role_id, ':role_id', $roleId)
+                ->andSet(Workers::$gender, ':gender', $gender)
+                ->andSet(Workers::$age, ':age', $age)
+                ->andSet(Workers::$years_of_experience, ':years', $experience)
+                ->andSet(Workers::$salary, ':salary', $salary)
+            ->whereEqual(Workers::$id, ':id', $id)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 }

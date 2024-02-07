@@ -5,6 +5,7 @@ import FormBuilder from "../../../../common/pages/classes/builder/FormBuilder.js
 import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
 import AddWorkerForm from "../../../../common/pages/admin/forms/worker/AddWorkerForm.js";
+import EditWorkerForm from "../../../../common/pages/admin/forms/worker/EditWorkerForm.js";
 
 $(function () {
     let requester = new Requester();
@@ -13,9 +14,10 @@ $(function () {
 
     let formBuilder = new FormBuilder();
     let modalForm = new FormModal(formBuilder);
+    let optionBuilder =  new OptionBuilder();
 
     let addNewWorkerForm = new AddWorkerForm(
-        requester, modalForm, new OptionBuilder(), workersTable
+        requester, modalForm, optionBuilder, workersTable
     );
 
     /**
@@ -24,13 +26,24 @@ $(function () {
     admin.getUserInfo();
 
     /**
-     * Populate table of all workers
-     */
-    workersTable.POPULATE();
-
-    /**
      * Listen click on 'Add New Worker' button
      * to show the form in modal window
      */
     addNewWorkerForm.addListenerShowAddWorkerForm();
+
+    /**
+     * Manage the worker row
+     */
+    let editForm = new EditWorkerForm(
+        requester, modalForm, optionBuilder, workersTable
+    );
+
+    /**
+     * Populate table of all workers
+     */
+    workersTable.setManageCallback(
+        editForm.addListenerEdit, editForm
+    );
+    workersTable.POPULATE();
+
 });

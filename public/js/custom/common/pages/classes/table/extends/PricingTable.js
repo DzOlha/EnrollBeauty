@@ -11,9 +11,6 @@ class PricingTable extends Table {
         )
         this.tableId = 'table-body';
     }
-    setManageCallback(callback, context) {
-        this.manageCallback = callback.bind(context);
-    }
 
     populateRow(item) {
         let row = $(`<tr data-pricing-id = "${item.id}">`);

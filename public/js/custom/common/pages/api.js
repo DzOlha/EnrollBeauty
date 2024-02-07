@@ -158,7 +158,9 @@ const API = {
                 get: '/api/admin/profile/get'
             },
             WORKER: {
+                edit: '/api/admin/worker/edit',
                 get: {
+                    one: '/api/admin/worker/get/one',
                     all: '/api/admin/worker/get/all'
                 },
                 register: '/api/admin/worker/register'

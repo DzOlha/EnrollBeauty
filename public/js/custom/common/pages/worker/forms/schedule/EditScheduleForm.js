@@ -3,6 +3,7 @@ import API from "../../../api.js";
 import GifLoader from "../../../classes/loader/GifLoader.js";
 import Notifier from "../../../classes/notifier/Notifier.js";
 import DatePicker from "../../../classes/element/DatePicker.js";
+import Select2 from "../../../classes/element/Select2.js";
 
 class EditScheduleForm extends AddScheduleForm
 {
@@ -178,14 +179,7 @@ class EditScheduleForm extends AddScheduleForm
 
     _setSelect2(selectId, value, placeholder) {
         let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
-        $(`#${selectId}`).val(value).trigger('change');
-        this._initOneSelect2(selectId, placeholder, modalBody);
-    }
-    _initOneSelect2(selectId, placeholder, modalBody) {
-        $(`#${selectId}`).select2({
-            dropdownParent: modalBody,
-            placeholder: placeholder,
-        });
+        Select2._setSelect2(selectId, value, placeholder, modalBody);
     }
 
     listenerSubmitForm = (e) => {

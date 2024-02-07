@@ -9,9 +9,12 @@ use Src\Model\DataMapper\extends\AdminDataMapper;
 use Src\Model\DataMapper\extends\UserDataMapper;
 use Src\Model\DataSource\extends\AdminDataSource;
 use Src\Model\DataSource\extends\UserDataSource;
+use Src\Model\Entity\Gender;
 use Src\Service\Auth\Admin\AdminAuthService;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\User\UserAuthService;
+use Src\Service\Validator\impl\EmailValidator;
+use Src\Service\Validator\impl\NameValidator;
 
 class AdminApiController extends WorkerApiController
 {
@@ -70,6 +73,13 @@ class AdminApiController extends WorkerApiController
             if($this->url[3] === 'get') {
                 if(isset($this->url[4])) {
                     /**
+                     * /api/admin/worker/get/one
+                     */
+                    if($this->url[4] === 'one') {
+                        $this->_getWorkerById();
+                    }
+
+                    /**
                      * /api/admin/worker/get/all
                      */
                     if($this->url[4] === 'all') {
@@ -83,6 +93,13 @@ class AdminApiController extends WorkerApiController
              */
             if($this->url[3] === 'register') {
                 $this->_registerWorker();
+            }
+
+            /**
+             * url = /api/admin/worker/edit
+             */
+            if($this->url[3] === 'edit') {
+                $this->_editWorker();
             }
         }
     }
@@ -255,6 +272,35 @@ class AdminApiController extends WorkerApiController
     /**
      * @return void
      *
+     * url = /api/admin/worker/get/one
+     */
+    protected function _getWorkerById()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['id'])) {
+                $this->returnJson([
+                    'error' => 'Missing get fields!'
+                ]);
+            }
+            $id = htmlspecialchars(trim($_GET['id']));
+
+            $result = $this->dataMapper->selectWorkerByIdForEdit($id);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the worker!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
      * url = /api/admin/worker/get/all
      */
     protected function _getWorkers(): void
@@ -349,6 +395,198 @@ class AdminApiController extends WorkerApiController
         $this->returnJson(
             $this->authService->registerWorker()
         );
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/worker/edit
+     */
+    protected function _editWorker()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $items = [
+                'id' => htmlspecialchars(trim($_POST['id'])),
+                'name' => htmlspecialchars(trim($_POST['name'])),
+                'surname' => htmlspecialchars(trim($_POST['surname'])),
+                'email' => htmlspecialchars(trim($_POST['email'])),
+                'position_id' => htmlspecialchars(trim($_POST['position_id'])),
+                'role_id' => htmlspecialchars(trim($_POST['role_id'])),
+                'gender' => htmlspecialchars(trim($_POST['gender'])),
+                'age' => htmlspecialchars(trim($_POST['age'])),
+                'experience' => htmlspecialchars(trim($_POST['experience'])),
+                'salary' => htmlspecialchars(trim($_POST['salary'])),
+            ];
+
+            $valid = $this->_validateWorkerForm($items);
+            if($valid !== true) {
+                $this->returnJson($valid);
+            }
+
+            /**
+             * Check if there is already registered worker with such email (except the current id)
+             */
+            $existId = $this->dataMapper->selectWorkerByEmailAndNotId($items['id'], $items['email']);
+            if($existId) {
+                $this->returnJson([
+                    'error' => 'The worker with such email already exists!'
+                ]);
+            }
+
+            /**
+             * Update the worker's info
+             */
+            $updated = $this->dataMapper->updateWorkerById(
+                $items['id'], $items['name'], $items['surname'],
+                $items['email'], $items['position_id'], $items['role_id'],
+                $items['gender'], $items['age'], $items['experience'],
+                $items['salary']
+            );
+            if($updated === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while updating the worker!'
+                ]);
+            }
+
+            $updatedWorker = $this->dataMapper->selectWorkerRowById($items['id']);
+            if($updatedWorker === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the updated worker!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully updated the worker!',
+                'data' => $updatedWorker
+            ]);
+
+        }
+    }
+    private function _validateWorkerForm(array &$items)
+    {
+        $nameValidator = new NameValidator();
+        $emailValidator = new EmailValidator();
+        /**
+         * Name
+         */
+        $validName = $nameValidator->validate($items['name']);
+        if (!$validName) {
+            return [
+                'error' => 'Name must be at least 3 characters long and contain only letters'
+            ];
+        }
+
+        /**
+         * Surname
+         */
+        $validSurname = $nameValidator->validate($items['surname']);
+        if (!$validSurname) {
+            return [
+                'error' => 'Surname must be at least 3 characters long and contain only letters'
+            ];
+        }
+
+        /**
+         * Email
+         */
+        $validEmail = $emailValidator->validate($items['email']);
+        if (!$validEmail) {
+            return [
+                'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+            ];
+        }
+
+        /**
+         * Position id
+         */
+        if(!$items['position_id']) {
+            return [
+                'error' => 'Position is required field!'
+            ];
+        }
+        if(!is_int((int)$items['position_id'])) {
+            return [
+                'error' => 'Invalid position has been selected!'
+            ];
+        }
+
+        /**
+         * Role id
+         */
+        if(!$items['role_id']) {
+            return [
+                'error' => 'Role is required field!'
+            ];
+        }
+        if(!is_int((int)$items['role_id'])) {
+            return [
+                'error' => 'Invalid role has been selected!'
+            ];
+        }
+
+        /**
+         * Gender
+         */
+        if($items['gender']) {
+            if(
+                $items['gender'] !== Gender::$MALE
+                && $items['gender'] !== Gender::$FEMALE
+                && $items['gender'] !== Gender::$OTHER
+            ) {
+                return [
+                    'error' => 'Invalid gender selected! It should be Male, Female, or Other'
+                ];
+            }
+        } else {
+            $items['gender'] = null;
+        }
+
+        /**
+         * Age
+         */
+        if(!$items['age']) {
+            return [
+                'error' => 'Age is required field!'
+            ];
+        }
+        if($items['age'] < 14 || $items['age'] > 80) {
+            return [
+                'error' => "The worker's age should be from 14 to 80 years!"
+            ];
+        }
+
+        /**
+         * Years of experience
+         */
+        if(!$items['experience']) {
+            return [
+                'error' => "Years of worker's experience is required field!"
+            ];
+        }
+        if($items['experience'] < 0 || $items['experience'] > 66) {
+            return [
+                'error' => "The years of the worker's experience should be from 0 to 66 years!"
+            ];
+        }
+
+        /**
+         * Salary
+         */
+        if($items['salary']) {
+            if($items['salary'] < 0){
+                return [
+                    'error' => 'Salary can not be negative number!'
+                ];
+            }
+            if(!is_int((int)$items['salary']) && !is_double((double)$items['salary'])) {
+                return [
+                    'error' => 'Invalid salary number is provided!'
+                ];
+            }
+        } else {
+            $items['salary'] = null;
+        }
+        return true;
     }
 
     /**

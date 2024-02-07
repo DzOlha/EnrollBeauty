@@ -20,6 +20,10 @@ class Table {
         this.requester = requester;
     }
 
+    setManageCallback(callback, context) {
+        this.manageCallback = callback.bind(context);
+    }
+
     POPULATE() {
         let current = Cookie.get( this.currentPageCookie);
         if (!current || !Number.isInteger(current)) {

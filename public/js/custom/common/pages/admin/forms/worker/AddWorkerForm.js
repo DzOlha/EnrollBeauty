@@ -208,10 +208,7 @@ class AddWorkerForm extends Form {
         /**
          * Regenerate the table of workers to show the newly added worker there
          */
-        this.workersTable.sendApiRequest(
-            this.workersTable.getItemsPerPage(),
-            Cookie.get('currentPage')
-        );
+        this.workersTable.regenerate();
     }
     validateInputs() {
         let nameSurnameEmail = this.validateNameSurnameEmail();

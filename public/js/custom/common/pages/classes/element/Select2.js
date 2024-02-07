@@ -121,5 +121,16 @@ class Select2 {
             }
         }
     }
+
+    static _setSelect2(selectId, value, placeholder, modalBody) {
+        $(`#${selectId}`).val(value).trigger('change');
+        this._initOneSelect2(selectId, placeholder, modalBody);
+    }
+    static _initOneSelect2(selectId, placeholder, modalBody) {
+        $(`#${selectId}`).select2({
+            dropdownParent: modalBody,
+            placeholder: placeholder,
+        });
+    }
 }
 export default Select2;

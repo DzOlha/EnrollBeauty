@@ -410,4 +410,29 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->deleteWorkerScheduleItemById($id);
     }
+
+    public function selectWorkerByIdForEdit(int $id)
+    {
+        return $this->dataSource->selectWorkerByIdForEdit($id);
+    }
+    public function selectWorkerByEmailAndNotId(int $id, string $email)
+    {
+        return $this->dataSource->selectWorkerByEmailAndNotId($id, $email);
+    }
+
+    public function selectWorkerRowById(int $id)
+    {
+        return $this->dataSource->selectWorkerRowById($id);
+    }
+
+    public function updateWorkerById(
+        int $id, string $name, string $surname, string $email,
+        int $positionId, int $roleId, ?string $gender, int $age,
+        float $experience, ?float $salary
+    ) {
+        return $this->dataSource->updateWorkerById(
+            $id, $name, $surname, $email, $positionId, $roleId,
+            $gender, $age, $experience, $salary
+        );
+    }
 }

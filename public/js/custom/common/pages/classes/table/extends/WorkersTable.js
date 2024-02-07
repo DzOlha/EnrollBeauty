@@ -11,6 +11,50 @@ class WorkersTable extends Table {
         )
         this.tableId = 'table-body';
     }
+
+    populateRow(item) {
+        let row = $(`<tr data-worker-id = "${item.id}">`);
+
+        row.append(`<td>${item.id}</td>`);
+
+        row.append(`<td>
+                            ${item.name}
+                      </td>`);
+
+        row.append(`<td>
+                            ${item.surname}
+                      </td>`);
+
+        row.append(`<td>
+                            ${item.email}
+                      </td>`);
+
+        row.append(`<td>
+                            ${item.position}
+                      </td>`);
+
+        row.append(`<td>
+                            ${Number(item.salary).toFixed(1)}
+                      </td>`);
+
+        row.append(`<td>
+                            ${Number(item.experience).toFixed(2)} years
+                      </td>`);
+
+        row.append(`<td>
+                        <a class="btn ripple btn-manage manage-button"
+                           id="manage-${item.id}"
+                           data-worker-id = "${item.id}"
+                           href="">
+                            <i class="fe fe-eye me-2"></i>
+                            Manage
+                        </a>
+                    </td>`);
+
+        row.append('</tr>');
+
+        return row;
+    }
     /**
      *  response.data =
      *  0: {
@@ -39,50 +83,13 @@ class WorkersTable extends Table {
                 return true;
             }
             // Create a table row for each of workers
-            let row = $(`<tr data-worker-id = "${item.id}">`);
-
-            row.append(`<td>${item.id}</td>`);
-
-            row.append(`<td>
-                            ${item.name}
-                      </td>`);
-
-            row.append(`<td>
-                            ${item.surname}
-                      </td>`);
-
-            row.append(`<td>
-                            ${item.email}
-                      </td>`);
-
-            row.append(`<td>
-                            ${item.position}
-                      </td>`);
-
-            row.append(`<td>
-                            ${Number(item.salary).toFixed(1)}
-                      </td>`);
-
-            row.append(`<td>
-                            ${Number(item.experience).toFixed(2)} years
-                      </td>`);
-
-            row.append(`<td>
-                        <a class="btn ripple btn-manage manage-button"
-                           id="manage-${item.id}"
-                           data-worker-id = "${item.id}"
-                           href="">
-                            <i class="fe fe-eye me-2"></i>
-                            Manage
-                        </a>
-                    </td>`);
-
-            row.append('</tr>');
+           let row = this.populateRow(item);
 
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
+
+            this.manageCallback(item.id);
         });
-        // this.addListenerCancelAppointment();
     }
 }
 export default WorkersTable;

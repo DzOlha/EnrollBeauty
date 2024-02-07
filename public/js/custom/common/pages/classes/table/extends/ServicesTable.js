@@ -10,9 +10,6 @@ class ServicesTable extends Table {
         )
         this.tableId = 'table-body';
     }
-    setManageCallback(callback, context) {
-        this.manageCallback = callback.bind(context);
-    }
 
     populateRow(item){
         // Create a table row for each of service item
