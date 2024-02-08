@@ -6,6 +6,8 @@ import FormModal from "../../../../common/pages/classes/modal/FormModal.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
 import AddWorkerForm from "../../../../common/pages/admin/forms/worker/AddWorkerForm.js";
 import EditWorkerForm from "../../../../common/pages/admin/forms/worker/EditWorkerForm.js";
+import DeleteWorkerForm from "../../../../common/pages/admin/forms/worker/DeleteWorkerForm.js";
+import API from "../../../../common/pages/api.js";
 
 $(function () {
     let requester = new Requester();
@@ -46,4 +48,13 @@ $(function () {
     );
     workersTable.POPULATE();
 
+    /**
+     * Delete worker form
+     */
+    let deleteForm = new DeleteWorkerForm(
+        requester, API.ADMIN.API.WORKER.delete, formBuilder
+    );
+    editForm.setDeleteCallback(
+        deleteForm.addListenerDelete, deleteForm
+    );
 });

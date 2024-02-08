@@ -435,4 +435,9 @@ class WorkerDataMapper extends DataMapper
             $gender, $age, $experience, $salary
         );
     }
+
+    public function deleteWorkerById(int $id)
+    {
+        return $this->dataSource->deleteWorkerById($id);
+    }
 }

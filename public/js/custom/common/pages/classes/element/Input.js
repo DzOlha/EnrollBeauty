@@ -28,6 +28,7 @@ class Input {
         if (callback.error) {
             valid = false;
             input.classList.add(Input.borderDanger);
+            input.focus();
             error.innerHTML = callback.error;
         }
 

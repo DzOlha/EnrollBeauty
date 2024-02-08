@@ -101,6 +101,13 @@ class AdminApiController extends WorkerApiController
             if($this->url[3] === 'edit') {
                 $this->_editWorker();
             }
+
+            /**
+             * url = /api/admin/worker/delete
+             */
+            if($this->url[3] === 'delete') {
+                $this->_deleteWorker();
+            }
         }
     }
 
@@ -587,6 +594,38 @@ class AdminApiController extends WorkerApiController
             $items['salary'] = null;
         }
         return true;
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/worker/delete
+     */
+    public function _deleteWorker()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['id'])) {
+                $this->returnJson([
+                    'error' => 'Missing post fields!'
+                ]);
+            }
+
+            $id = htmlspecialchars(trim($_POST['id']));
+
+            $deleted = $this->dataMapper->deleteWorkerById($id);
+            if($deleted === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while deletion of the worker!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully deleted the worker!',
+                'data' => [
+                    'id' => $id
+                ]
+            ]);
+        }
     }
 
     /**

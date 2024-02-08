@@ -16,6 +16,10 @@ class EditWorkerForm extends AddWorkerForm
         this.apiGetWorker = API.ADMIN.API.WORKER.get.one;
     }
 
+    setDeleteCallback(callback, context) {
+        this.deleteCallback = callback.bind(context);
+    }
+
     addListenerEdit(id) {
         let btn = document.getElementById(
             `${this.manageBase}-${id}`
@@ -35,7 +39,7 @@ class EditWorkerForm extends AddWorkerForm
 
         this.modalForm.show(
             'Edit the Worker',
-            this.modalForm.formBuilder.createAddWorkerForm(),
+            this.modalForm.formBuilder.createEditWorkerForm(id),
             'Edit'
         );
 
@@ -51,6 +55,8 @@ class EditWorkerForm extends AddWorkerForm
 
         this.modalForm.close();
         this.addListenerSubmitForm();
+
+        this.deleteCallback(id);
     }
     _initForm()
     {

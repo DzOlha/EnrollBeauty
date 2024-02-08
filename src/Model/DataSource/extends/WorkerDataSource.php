@@ -1277,4 +1277,17 @@ class WorkerDataSource extends DataSource
         }
         return false;
     }
+
+    public function deleteWorkerById(int $id)
+    {
+        $this->builder->delete()
+                    ->from(Workers::$table)
+                    ->whereEqual(Workers::$id, ':id', $id)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 }

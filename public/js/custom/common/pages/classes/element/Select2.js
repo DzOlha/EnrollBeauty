@@ -4,7 +4,8 @@ class Select2 {
         parentId,
         selectTitle, selectPlaceholder, selectId,
         required, withSearch = false,
-        parentObject = null
+        parentObject = null,
+        multiple = false
     ) {
         this.parentId = parentId;
         this.selectId = selectId;
@@ -12,6 +13,7 @@ class Select2 {
         this.selectPlaceholder = selectPlaceholder;
         this.required = required;
         this.withSearch = withSearch;
+        this.multiple = multiple === true ? "multiple='multiple'" : '';
         this.selectParentClass = `${this.selectId}-select-parent`;
         this.selectErrorId = `${this.selectId}-error`;
 
@@ -55,7 +57,7 @@ class Select2 {
 
         return `<div class="form-group ${this.selectParentClass}">
                     <p class="mg-b-0"><span>${asterisk}</span>${this.selectTitleText}</p>
-                    <select class="form-control ${class_}"
+                    <select class="form-control ${class_}" ${this.multiple}
                             id="${this.selectId}">
                         <option label="Choose one">
                         </option>

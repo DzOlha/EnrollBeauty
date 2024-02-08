@@ -159,6 +159,7 @@ const API = {
             },
             WORKER: {
                 edit: '/api/admin/worker/edit',
+                delete: '/api/admin/worker/delete',
                 get: {
                     one: '/api/admin/worker/get/one',
                     all: '/api/admin/worker/get/all'

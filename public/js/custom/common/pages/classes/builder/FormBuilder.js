@@ -3,6 +3,28 @@ class FormBuilder {
     constructor() {
     }
 
+    _createDeleteIcon(dataAttribute, id, withDelete = true) {
+        let _delete = withDelete === true
+            ? `<i class="fe fe-trash-2 delete" id="delete-${id}" ${dataAttribute}="${id}"></i>`
+            : ``;
+
+        return `<div class="icons-wrapper-right" id="modal-icons-menu">
+                    ${_delete}
+                </div>`
+    }
+    _createRightSideMenu(dataAttribute, id, withDelete = true)
+    {
+        let _delete = withDelete === true
+            ? `<i class="fe fe-trash-2 delete" id="delete-${id}" ${dataAttribute}="${id}" title="Delete The Worker"></i>`
+            : ``;
+
+        let block = `<i class="fe fe-x-circle delete" id="block-${id}" ${dataAttribute}="${id}" title="Block the Worker"></i>`
+
+        return `<div class="icons-wrapper-right" id="modal-icons-menu">
+                    ${_delete}
+                    ${block}
+                </div>`
+    }
     createModalForm(modalId) {
         return `<div class="modal modal-form" id="${modalId}">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -129,6 +151,11 @@ class FormBuilder {
             `
     }
 
+    createEditWorkerForm(id) {
+        let rightSideMenu = this._createRightSideMenu('data-worker-id', id);
+        return rightSideMenu + this.createAddWorkerForm();
+    }
+
     createAddPricingForm() {
         return `<div class="form-group service-selector-parent">
                     <p class="mg-b-0"><span>*</span>Service</p>
@@ -158,34 +185,8 @@ class FormBuilder {
     }
 
     createEditPricingForm(id) {
-        return `<div class="icons-wrapper-right" id="modal-icons-menu">
-                    <i class="fe fe-trash-2 delete" id="delete-${id}" data-pricing-id="${id}"></i>
-                </div>
-                <div class="form-group service-selector-parent">
-                    <p class="mg-b-0"><span>*</span>Service</p>
-                    <select class="form-control select2-with-search"
-                            id="service-select">
-                        <option label="Choose one">
-                        </option>
-                    </select>
-                    <div class="error text-danger" id="service-select-error"></div>
-               </div>
-               <div class="form-group">
-                    <p class="mg-b-0"><span>*</span>Price</p>
-                    <div class="input-group mb-3">
-                        <div class="d-flex">
-                            <input aria-label="Price Amount" placeholder="Price"
-                                   class="form-control" type="number"
-                                   id="price-input"
-                            >
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bd-r">UAH</span>
-                            </div>
-                        </div>
-                        <div class="error text-danger" id="price-input-error"></div>
-                    </div>
-               </div>
-            `
+        let deleteIcon = this._createDeleteIcon('data-pricing-id', id);
+        return deleteIcon + this.createAddPricingForm();
     }
 
     createDeleteConfirmationBlock(id) {
@@ -384,22 +385,8 @@ class FormBuilder {
 
     createEditServiceForm(id, withDelete)
     {
-        let _delete = withDelete === true
-            ? `<i class="fe fe-trash-2 delete" id="delete-${id}" data-service-id="${id}"></i>`
-            : ``;
-
-        return `<div class="icons-wrapper-right" id="modal-icons-menu">
-                    ${_delete}
-                </div>
-                <div class="form-group">
-                    <p class="mg-b-0"><span>*</span>Service Name</p>
-                    <div class="input-group mb-3">
-                        <input name="name" type="text" placeholder="Service Name" autocomplete="off"
-                               required="required" class="form-control" id="service-name-input">
-                        <div class="error text-danger" id="service-name-input-error"></div>
-                    </div>
-                </div>
-            `
+        let deleteIcon = this._createDeleteIcon('data-service-id', id, withDelete);
+        return deleteIcon + this.createAddServiceForm();
     }
 }
 export default FormBuilder;
