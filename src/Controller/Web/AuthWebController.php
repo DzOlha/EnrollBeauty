@@ -42,7 +42,7 @@ class AuthWebController extends WebController
             /**
              * url = /web/auth/user/login
              */
-            if($this->url[3] === 'login') {
+            else if($this->url[3] === 'login') {
                 $data = [
                     'title' => 'Login'
                 ];
@@ -52,7 +52,7 @@ class AuthWebController extends WebController
             /**
              * url = /web/auth/user/logout
              */
-            if($this->url[3] === 'logout') {
+            else if($this->url[3] === 'logout') {
                 if(SessionHelper::removeUserSession()) {
                     $data = [
                         'title' => 'Homepage'
@@ -64,6 +64,9 @@ class AuthWebController extends WebController
                         'You can not log out from the <b>User</b> account because you are not logged in!'
                     );
                 }
+            }
+            else {
+                $this->error();
             }
         }
     }
@@ -88,7 +91,7 @@ class AuthWebController extends WebController
             /**
              * url = /web/auth/worker/recovery-password
              */
-            if ($this->url[3] === 'recovery-password') {
+            else if ($this->url[3] === 'recovery-password') {
                 $isValidRequest = $this->workerAuthService->recoveryWorkerPassword();
                 if(isset($isValidRequest['error'])) {
                     $this->error(
@@ -107,7 +110,7 @@ class AuthWebController extends WebController
             /**
              * url = /web/auth/worker/logout
              */
-            if ($this->url[3] === 'logout') {
+            else if ($this->url[3] === 'logout') {
                 if(SessionHelper::removeWorkerSession()) {
                     $data = [
                         'title' => 'Homepage'
@@ -119,6 +122,9 @@ class AuthWebController extends WebController
                         'You can not log out from the <b>Worker</b> account because you are not logged in!'
                     );
                 }
+            }
+            else {
+                $this->error();
             }
         }
     }
@@ -144,7 +150,7 @@ class AuthWebController extends WebController
             /**
              * url = /web/auth/admin/logout
              */
-            if ($this->url[3] === 'logout') {
+            else if ($this->url[3] === 'logout') {
                 if(SessionHelper::removeAdminSession()) {
                     $data = [
                         'title' => 'Homepage'
@@ -156,6 +162,9 @@ class AuthWebController extends WebController
                         'You can not log out from the <b>Admin</b> account because you are not logged in!'
                     );
                 }
+            }
+            else {
+                $this->error();
             }
         }
     }

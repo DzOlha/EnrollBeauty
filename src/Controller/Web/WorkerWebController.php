@@ -56,16 +56,19 @@ class WorkerWebController extends WebController
                 $this->_home();
             }
 
-            if ($menuItemName === 'schedule') {
+            else if ($menuItemName === 'schedule') {
                 $this->_schedule();
             }
 
-            if ($menuItemName === 'services') {
+            else if ($menuItemName === 'services') {
                 $this->_services();
             }
 
-            if($menuItemName === 'pricing') {
+            else if($menuItemName === 'pricing') {
                 $this->_pricing();
+            }
+            else {
+                $this->error();
             }
         }
     }

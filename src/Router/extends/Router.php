@@ -11,78 +11,29 @@ class Router extends AbstractRouter
     protected string $type = 'Web';
     protected string $currentMethod = 'index';
     protected array $params = [];
+
     public function getUrl(): array
     {
-        // explode the url-address by slash sign
         /**
-         * web/user/recovery?recovery_code=$code"
-         *
-         * $parts = [web, user, recovery?recovery_code=$code]
+         * Get the url after domain name, but without any queries
          */
-        //$urlParts = $this->_splitUrlBySlash();
-        $urlParts = explode('/', $_SERVER['REQUEST_URI']);
+        $urlAfterDomain = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         /**
-         * just remove the first element of the array (name of the website)
+         * Explode the url by slash
          */
-        array_shift($urlParts);
-        //var_dump($urlParts);
-        $size = count($urlParts);
-
-        // get the last item of the given array of url-address exploded by slash
-        // to tack if there is GET request or not
-        $lastPart = $urlParts[$size - 1];
+        $urlExploded = explode('/', $urlAfterDomain);
 
         /**
-         * web/user/recovery?recovery_code=$code"
-         *
-         * $lastPart = [recovery, recovery_code=$code]
+         * Remove the first empty element (because the url starts from /)
          */
-        $lastPartArray = explode('?', $lastPart);
+        unset($urlExploded[0]);
 
-        $lastPartSize = count($lastPartArray);
-        // $lastPart = [recovery] -> no GET request
-        if ($lastPartSize === 1) {
-            return $urlParts;
-        } else {
-            /**
-             * web/user/recovery?recovery_code=$code"
-             *
-             * $lastPart = [recovery, recovery_code=$code]
-             */
-            if ($lastPartSize === 2) {
-                /**
-                 * $urlPart = 'recovery'
-                 * $getString = 'recovery_code=$code'
-                 */
-                $urlPart = $lastPartArray[0];
-                $getString = $lastPartArray[1];
+        /**
+         * Reindex the array to start from index 0 not 1.
+         */
+        $urlReindex = array_values($urlExploded);
 
-                /**
-                 * $getStringExplodedByAnd = [recovery_code=$code]
-                 */
-                $getStringExplodedByAnd = explode('&', $getString);
-                $resultGet = [];
-                foreach ($getStringExplodedByAnd as $item) {
-                    /**
-                     * $getStringExplodedByEqualSign = [recovery_code, $code]
-                     */
-                    $getStringExplodedByEqualSign = explode('=', $item);
-                    if (count($getStringExplodedByEqualSign) === 2) {
-                        $urlParts[$size - 1] = $urlPart;
-                        $resultGet += [
-                            /**
-                             * recovery_code => $code
-                             */
-                            $getStringExplodedByEqualSign[0] => $getStringExplodedByEqualSign[1]
-                        ];
-                    }
-                }
-                $urlParts += [
-                    'get' => $resultGet
-                ];
-            }
-        }
-        return $urlParts;
+        return $urlReindex;
     }
 }

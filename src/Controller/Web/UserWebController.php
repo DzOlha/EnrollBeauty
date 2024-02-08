@@ -75,6 +75,9 @@ class UserWebController extends WebController
             if ($menuItemName === 'home') {
                 $this->_home();
             }
+            else {
+                $this->error();
+            }
         }
     }
 }

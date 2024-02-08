@@ -94,14 +94,17 @@ class AdminWebController extends WebController
             /**
              * url = /web/admin/profile/workers
              */
-            if ($menuItemName === 'workers') {
+            else if ($menuItemName === 'workers') {
                $this->_workers();
             }
             /**
              * url = /web/admin/profile/services
              */
-            if ($menuItemName === 'services') {
+            else if ($menuItemName === 'services') {
                 $this->_services();
+            }
+            else {
+                $this->error();
             }
         }
     }
