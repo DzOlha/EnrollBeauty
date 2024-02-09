@@ -1290,4 +1290,18 @@ class WorkerDataSource extends DataSource
         }
         return false;
     }
+
+    public function selectDepartmentByName(string $name)
+    {
+        $this->builder->select([Departments::$id])
+                ->from(Departments::$table)
+                ->whereEqual(Departments::$name, ':name', $name)
+        ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return true;
+        }
+        return false;
+    }
 }

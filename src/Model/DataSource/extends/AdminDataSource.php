@@ -8,8 +8,10 @@ use Src\Model\DataSource\DataSource;
 use Src\Model\DTO\Write\AdminWriteDTO;
 use Src\Model\Table\Admins;
 use Src\Model\Table\AdminsSetting;
+use Src\Model\Table\Departments;
 use Src\Model\Table\Positions;
 use Src\Model\Table\Roles;
+use Src\Model\Table\Services;
 use Src\Model\Table\Workers;
 
 class AdminDataSource extends WorkerDataSource
@@ -200,5 +202,74 @@ class AdminDataSource extends WorkerDataSource
             ->build();
 
         return $this->db->manyRows();
+    }
+
+    public function selectServicesAllByDepartmentId(int $departmentId)
+    {
+        $this->builder->select([Services::$id, Services::$name])
+                ->from(Services::$table)
+                ->whereEqual(Services::$department_id, ':department_id', $departmentId)
+            ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function selectDepartmentsAllForAdmin(
+        int $limit, int $offset,
+        string $orderByField = 'departments.id', string $orderDirection = 'asc'
+    ) {
+        $departments = Departments::$table;
+        $queryFrom = " $departments ";
+
+        $this->builder->select([Departments::$id, Departments::$name])
+                ->from(Departments::$table)
+                ->orderBy($orderByField, $orderDirection)
+                ->limit($limit)
+                ->offset($offset)
+        ->build();
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
+
+    public function insertDepartment(string $name)
+    {
+        $this->builder->insertInto(Departments::$table, [Departments::$name])
+                    ->values([':name'], [$name])
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return $this->db->lastInsertedId();
+        }
+        return false;
+    }
+
+    public function updateDepartmentName(int $id, string $name)
+    {
+        $this->builder->update(Departments::$table)
+                    ->set(Departments::$name, ':name', $name)
+                    ->whereEqual(Departments::$id, ':id', $id)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function deleteDepartmentById(int $id)
+    {
+        $this->builder->delete()
+                    ->from(Departments::$table)
+                    ->whereEqual(Departments::$id, ':id', $id)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
     }
 }

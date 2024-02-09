@@ -388,5 +388,22 @@ class FormBuilder {
         let deleteIcon = this._createDeleteIcon('data-service-id', id, withDelete);
         return deleteIcon + this.createAddServiceForm();
     }
+
+    createAddDepartmentForm() {
+        return `<div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Department Name</p>
+                    <div class="input-group mb-3">
+                        <input name="name" type="text" placeholder="Department Name" autocomplete="off"
+                               required="required" class="form-control" id="department-name-input">
+                        <div class="error text-danger" id="department-name-input-error"></div>
+                    </div>
+                </div>
+            `
+    }
+    createEditDepartmentForm(id)
+    {
+        return this._createDeleteIcon('data-department-id', id)
+             + this.createAddDepartmentForm()
+    }
 }
 export default FormBuilder;

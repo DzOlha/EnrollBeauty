@@ -5,6 +5,7 @@ class Table {
         this.apiUrl = apiUrl; // Store the API URL
         this.totalRowsCount = 1;
         this.itemsPerPage = this.getItemsPerPage();
+        this.defaultPaginationRows = 20;
         this.totalPages = Math.ceil(this.totalRowsCount / this.itemsPerPage);
 
         this.sortedBy = orderByField ?? 'id';
@@ -63,7 +64,11 @@ class Table {
     }
 
     getItemsPerPage() {
-        return Number(document.querySelector('span[title]').innerText);
+        let count = document.querySelector('span[title]');
+        if(count !== null) {
+            return Number(count.innerText);
+        }
+        return this.defaultPaginationRows;
         //return this.itemsPerPage;
     }
 

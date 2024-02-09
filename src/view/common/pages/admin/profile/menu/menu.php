@@ -57,6 +57,24 @@
         </a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="/web/admin/profile/departments">
+            <span class="shape1"></span>
+            <span class="shape2"></span>
+            <i class="ti-menu sidemenu-icon menu-icon"></i>
+            <span class="sidemenu-label">Departments</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/web/admin/profile/affiliates">
+            <span class="shape1"></span>
+            <span class="shape2"></span>
+            <i class="ti-package sidemenu-icon menu-icon"></i>
+            <span class="sidemenu-label">Affiliates</span>
+        </a>
+    </li>
+
 <!--    <li class="nav-item">-->
 <!--        <a class="nav-link" href="/web/admin/profile/services">-->
 <!--            <span class="shape1"></span>-->

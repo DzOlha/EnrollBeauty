@@ -187,8 +187,13 @@ const API = [
                 ],
             ],
             'DEPARTMENT' => [
+                'add' => '/api/admin/department/add',
+                'edit' => '/api/admin/department/edit',
+                'delete' => '/api/admin/department/delete',
                 'get' => [
-                    'all' => '/api/admin/department/get/all'
+                    'all' => '/api/admin/department/get/all',
+                    'all-limited' => '/api/admin/department/get/all-limited',
+                    'all-services' => '/api/admin/department/get/all-services',
                 ]
             ]
         ]

@@ -98,9 +98,9 @@
                                 <div class="button-wrapper mg-l-10">
                                     <button aria-label="Add Service"
                                             class="btn ripple pd-x-25"
-                                            id="add-service-trigger"
+                                            id="add-department-trigger"
                                             data-bs-dismiss="modal" type="button">
-                                        Add Service
+                                        Add Department
                                     </button>
                                 </div>
                             </div>
@@ -119,7 +119,7 @@
                                         <!--                                        --><?php //require_once "tmp/admin/panel/common/html/confirm_mass_action_button.html";?>
                                     </div>
 
-<!--                                    --><?php //require_once "src/view/common/pages/admin/profile/blocks/search_by.php";?>
+                                    <!--                                    --><?php //require_once "src/view/common/pages/admin/profile/blocks/search_by.php";?>
 
 
                                 </div>
@@ -129,7 +129,7 @@
                             <div class="col-lg-12 col-sm-12">
                                 <?php require_once VIEW_COMMON."pages/user/profile/blocks/data_loader_gif.php"?>
                             </div>
-                            <?php require_once VIEW_COMMON."pages/worker/profile/tables/services_table.php"?>
+                            <?php require_once VIEW_COMMON."pages/admin/profile/tables/departments_table.php"?>
                         </div>
                         <ul class="pagination mt-4 mb-0 float-end">
                         </ul>
@@ -159,7 +159,6 @@
 </div>
 <!-- End Main Content-->
 
-<?php //require_once VIEW_COMMON."pages/admin/profile/modals/modal-add-worker.php" ?>
 <!--</div>-->
 <!-- End Page -->
 
@@ -208,7 +207,7 @@
 
 <!--Mine scripts-->
 
-<script type="module" src="/public/js/custom/frontend/pages/admin/profile/services.js"></script>
+<script type="module" src="/public/js/custom/frontend/pages/admin/profile/departments.js"></script>
 
 </body>
 </html>

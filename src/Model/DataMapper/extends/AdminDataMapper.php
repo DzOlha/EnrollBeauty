@@ -67,4 +67,33 @@ class AdminDataMapper extends WorkerDataMapper
     {
         return $this->dataSource->selectAllRoles();
     }
+
+    public function selectServicesAllByDepartmentId(int $departmentId)
+    {
+        return $this->dataSource->selectServicesAllByDepartmentId($departmentId);
+    }
+
+    public function selectDepartmentsAllForAdmin(
+        int $limit, int $offset,
+        string $orderByField = 'departments.id', string $orderDirection = 'asc'
+    ) {
+        return $this->dataSource->selectDepartmentsAllForAdmin(
+            $limit, $offset, $orderByField, $orderDirection
+        );
+    }
+
+    public function insertDepartment(string $name)
+    {
+        return $this->dataSource->insertDepartment($name);
+    }
+
+    public function updateDepartmentName(int $id, string $name)
+    {
+        return $this->dataSource->updateDepartmentName($id, $name);
+    }
+
+    public function deleteDepartmentById(int $id)
+    {
+        return $this->dataSource->deleteDepartmentById($id);
+    }
 }

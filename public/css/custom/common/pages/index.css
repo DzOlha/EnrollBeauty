@@ -141,3 +141,7 @@ button[type="button"] {
 .main-content .second-footer {
     padding-left: 50px;
 }
+
+.table td {
+    vertical-align: middle !important;
+}

@@ -91,17 +91,26 @@ class AdminWebController extends WebController
             if ($menuItemName === 'home') {
                 $this->_home();
             }
+
             /**
              * url = /web/admin/profile/workers
              */
             else if ($menuItemName === 'workers') {
                $this->_workers();
             }
+
             /**
              * url = /web/admin/profile/services
              */
             else if ($menuItemName === 'services') {
                 $this->_services();
+            }
+
+            /**
+             * url = /web/admin/profile/departments
+             */
+            else if($menuItemName === 'departments') {
+                $this->_departments();
             }
             else {
                 $this->error();
@@ -147,5 +156,18 @@ class AdminWebController extends WebController
             'page_name' => 'Services'
         ];
         $this->view(VIEW_FRONTEND . 'pages/admin/profile/services', $data);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/admin/profile/departments
+     */
+    protected function _departments() {
+        $data = [
+            'title'     => 'Department Management',
+            'page_name' => 'Departments'
+        ];
+        $this->view(VIEW_FRONTEND . 'pages/admin/profile/departments', $data);
     }
 }

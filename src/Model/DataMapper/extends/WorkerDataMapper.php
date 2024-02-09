@@ -440,4 +440,9 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->deleteWorkerById($id);
     }
+
+    public function selectDepartmentByName(string $name)
+    {
+        return $this->dataSource->selectDepartmentByName($name);
+    }
 }

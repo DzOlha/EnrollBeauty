@@ -214,6 +214,27 @@ class AdminApiController extends WorkerApiController
     public function department() {
         if (isset($this->url[3])) {
             /**
+             * url = /api/admin/department/add
+             */
+            if ($this->url[3] === 'add') {
+                $this->_addDepartment();
+            }
+
+            /**
+             * url = /api/admin/department/edit
+             */
+            if ($this->url[3] === 'edit') {
+                $this->_editDepartment();
+            }
+
+            /**
+             * url = /api/admin/department/delete
+             */
+            if ($this->url[3] === 'delete') {
+                $this->_deleteDepartment();
+            }
+
+            /**
              * url = /api/admin/department/get
              */
             if ($this->url[3] === 'get') {
@@ -224,13 +245,23 @@ class AdminApiController extends WorkerApiController
                     if ($this->url[4] === 'all') {
                         $this->_getDepartmentsAll();
                     }
+
+                    /**
+                     * url = /api/admin/department/get/all-limited
+                     */
+                    if ($this->url[4] === 'all-limited') {
+                        $this->_getDepartmentsAllForTable();
+                    }
+
+                    /**
+                     * url = /api/admin/department/get/all-services
+                     */
+                    if ($this->url[4] === 'all-services') {
+                        $this->_getServicesAllByDepartment();
+                    }
                 }
             }
         }
-    }
-
-    protected function _getAllServicesWithDepartments() {
-
     }
 
     private function _getAdminId()
@@ -644,5 +675,226 @@ class AdminApiController extends WorkerApiController
      */
     protected function _addService() {
         parent::_addService();
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/department/add
+     */
+    public function _addDepartment()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['name'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $name = htmlspecialchars(trim($_POST['name']));
+
+            /**
+             * Validate name format
+             */
+            if(strlen($name) < 3) {
+                $this->returnJson([
+                    'error' => 'Department name should be longer than 3 characters!!'
+                ]);
+            }
+
+            /**
+             * Check if there is no department with the same name
+             */
+            $exists = $this->dataMapper->selectDepartmentByName($name);
+            if($exists === true) {
+                $this->returnJson([
+                    'error' => 'The department with such name already exists!'
+                ]);
+            }
+
+            /**
+             * Insert new department
+             */
+            $insertedId = $this->dataMapper->insertDepartment($name);
+            if($insertedId === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while inserting the department!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => "You successfully added the department with name <b>'$name'</b>",
+                'data' => [
+                    'id' => $insertedId
+                ]
+            ]);
+        }
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/department/edit
+     */
+    public function _editDepartment()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['id']) || empty($_POST['name'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $items = [
+                'id' => htmlspecialchars(trim($_POST['id'])),
+                'name' => htmlspecialchars(trim($_POST['name']))
+            ];
+
+            /**
+             * Validate name format
+             */
+            if(strlen($items['name']) < 3) {
+                $this->returnJson([
+                    'error' => 'Department name should be longer than 3 characters!!'
+                ]);
+            }
+
+            /**
+             * Check if there is no department with the same name
+             */
+            $exists = $this->dataMapper->selectDepartmentByName($items['name']);
+            if($exists === true) {
+                $this->returnJson([
+                    'error' => 'The department with such name already exists!'
+                ]);
+            }
+
+            /**
+             * Insert new department
+             */
+            $updated = $this->dataMapper->updateDepartmentName(
+                $items['id'], $items['name']
+            );
+            if($updated === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while updating the department name!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => "You successfully updated the department!",
+                'data' => [
+                    'id' => $items['id'],
+                    'name' => $items['name']
+                ]
+            ]);
+        }
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/department/delete
+     */
+    public function _deleteDepartment()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['id'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $id = htmlspecialchars(trim($_POST['id']));
+
+            $deleted = $this->dataMapper->deleteDepartmentById($id);
+            if($deleted === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while deleting the department!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully deleted the department!',
+                'data' => [
+                    'id' => $id
+                ]
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/department/get/all-limited
+     */
+    public function _getDepartmentsAllForTable()
+    {
+        $param = $this->_getLimitPageFieldOrderOffset();
+        /**
+         *  * [
+         *      0 => [
+         *          id =>
+         *          name =>
+         *      ]
+         *      ....................
+         * ]
+         */
+        $result = $this->dataMapper->selectDepartmentsAllForAdmin(
+            $param['limit'],
+            $param['offset'],
+            $param['order_field'],
+            $param['order_direction']
+        );
+        if($result === false) {
+            $this->returnJsonError(
+                "The error occurred while getting data about all departments!"
+            );
+        }
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/department/get/all-services
+     */
+    public function _getServicesAllByDepartment()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['department_id'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $id = htmlspecialchars(trim($_GET['department_id']));
+
+            /**
+             * services = {
+             *     0: {
+             *         id:
+             *         name:
+             *     }
+             * ...............
+             * }
+             */
+            $result = $this->dataMapper->selectServicesAllByDepartmentId($id);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting services for the department'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
     }
 }
