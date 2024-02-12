@@ -155,7 +155,7 @@ class EditServiceForm extends AddServiceForm
          * the changes of the service on the frontend
          */
         $(`tr[${this.dataAttributeServiceId}=${response.data.id}]`).replaceWith(
-            this.servicesTable.populateRow(response.data)
+            this.table.populateRow(response.data)
         );
         this.addListenerManage(response.data.id);
 
