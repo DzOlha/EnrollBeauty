@@ -101,4 +101,9 @@ class AdminDataMapper extends WorkerDataMapper
     {
         return $this->dataSource->selectFutureOrdersByDepartmentId($departmentId);
     }
+
+    public function selectFutureOrdersByWorkerId(int $workerId)
+    {
+        return $this->dataSource->selectFutureOrdersByWorkerId($workerId);
+    }
 }

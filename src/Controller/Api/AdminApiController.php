@@ -643,6 +643,22 @@ class AdminApiController extends WorkerApiController
 
             $id = htmlspecialchars(trim($_POST['id']));
 
+            /**
+             * Check if there is no uncompleted upcoming orders
+             * for the worker we would like to delete
+             */
+            $futureOrders = $this->dataMapper->selectFutureOrdersByWorkerId($id);
+            if($futureOrders === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting uncompleted upcoming orders for the worker!'
+                ]);
+            }
+            if($futureOrders) {
+                $this->returnJson([
+                    'error' => 'Tou can not delete the worker which has uncompleted upcoming orders!'
+                ]);
+            }
+
             $deleted = $this->dataMapper->deleteWorkerById($id);
             if($deleted === false) {
                 $this->returnJson([

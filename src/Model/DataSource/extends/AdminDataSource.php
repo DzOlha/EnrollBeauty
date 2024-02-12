@@ -289,7 +289,24 @@ class AdminDataSource extends WorkerDataSource
             ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
             ->andIsNull(OrdersService::$completed_datetime)
             ->andIsNull(OrdersService::$canceled_datetime)
-            ->build();
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function selectFutureOrdersByWorkerId(int $workerId)
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $this->builder->select([OrdersService::$id])
+            ->from(OrdersService::$table)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+            ->whereEqual(WorkersServicePricing::$worker_id, ':id', $workerId)
+            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
+            ->andIsNull(OrdersService::$completed_datetime)
+            ->andIsNull(OrdersService::$canceled_datetime)
+        ->build();
 
         return $this->db->manyRows();
     }
