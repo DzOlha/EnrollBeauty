@@ -20,9 +20,9 @@
                      data-order="">
             </span>
         </th>
-        <th class="wd-lg-40p">
+        <th class="wd-lg-10p ">
             <span class="arrow_column">
-                Services
+                Workers
             </span>
         </th>
 

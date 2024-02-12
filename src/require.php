@@ -26,6 +26,11 @@ require_once 'config/folder_constants.php';
 require_once SRC.'/config/url_constants.php';
 
 /**
+ * set constants for the file paths of the pages and their 'title'
+ */
+require_once SRC.'/config/page_constants.php';
+
+/**
  * api constants
  */
 require_once SRC.'/config/api/api.php';

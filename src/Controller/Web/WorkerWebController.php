@@ -80,11 +80,10 @@ class WorkerWebController extends WebController
      */
     public function _home()
     {
-        $data = [
-            'title' => 'Worker Account',
-            'page_name' => 'Homepage'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/worker/profile/home', $data);
+        $this->view(
+            WORKER_PAGES['home']['path'],
+            WORKER_PAGES['home']['data']
+        );
     }
 
     /**
@@ -93,11 +92,10 @@ class WorkerWebController extends WebController
      * url = /web/worker/profile/schedule
      */
     private function _schedule() {
-        $data = [
-            'title' => 'Schedule Management',
-            'page_name' => 'Schedule'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/worker/profile/schedule', $data);
+        $this->view(
+            WORKER_PAGES['schedule']['path'],
+            WORKER_PAGES['schedule']['data']
+        );
     }
 
     /**
@@ -106,11 +104,10 @@ class WorkerWebController extends WebController
      * url = /web/worker/profile/services
      */
     private function _services() {
-        $data = [
-            'title' => 'Service Management',
-            'page_name' => 'Services'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/worker/profile/services', $data);
+        $this->view(
+            WORKER_PAGES['services']['path'],
+            WORKER_PAGES['services']['data'],
+        );
     }
 
     /**
@@ -119,10 +116,9 @@ class WorkerWebController extends WebController
      * url = /web/worker/profile/pricing
      */
     private function _pricing() {
-        $data = [
-            'title' => 'Service Pricing',
-            'page_name' => 'Price-list'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/worker/profile/pricing', $data);
+        $this->view(
+            WORKER_PAGES['pricing']['path'],
+            WORKER_PAGES['pricing']['data']
+        );
     }
 }

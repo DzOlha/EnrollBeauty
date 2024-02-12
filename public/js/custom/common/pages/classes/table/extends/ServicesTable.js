@@ -9,11 +9,13 @@ class ServicesTable extends Table {
             apiUrl + '?'
         )
         this.tableId = 'table-body';
+        this.workersTrigger = 'show-workers';
+        this.dataIdAttribute = 'data-service-id';
     }
 
     populateRow(item){
         // Create a table row for each of service item
-        let row = $(`<tr data-service-id = "${item.id}">`);
+        let row = $(`<tr ${this.dataIdAttribute} = "${item.id}">`);
 
         row.append(`<td>${item.id}</td>`);
 
@@ -22,6 +24,10 @@ class ServicesTable extends Table {
         row.append(`<td data-department-id="${item.department_id}">
                             ${item.department_name}
                       </td>`);
+
+        row.append(`<td id="${this.workersTrigger}-${item.id}" ${this.dataIdAttribute}="${item.id}">
+                        <button class="btn bg-secondary" type="button">Show Workers</button>
+                    </td>`)
 
         row.append(`<td>
                         <a class="btn ripple btn-manage manage-button"

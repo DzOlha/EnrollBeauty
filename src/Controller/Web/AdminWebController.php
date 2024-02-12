@@ -58,10 +58,11 @@ class AdminWebController extends WebController
         if (isset($result['success']) ||
             (isset($result['default_already_registered']) && $result['default_already_registered'])
         ) {
-            $data = [
-                'title' => 'Change Admin Info'
-            ];
-            $this->view(VIEW_FRONTEND . 'pages/admin/forms/change_default', $data);
+
+            $this->view(
+                ADMIN_PAGES['change_default']['path'],
+                ADMIN_PAGES['change_default']['data']
+            );
         } else {
             $this->error('Error', $result['error']);
         }
@@ -125,11 +126,10 @@ class AdminWebController extends WebController
      */
     protected function _home()
     {
-        $data = [
-            'title'     => 'Admin Account',
-            'page_name' => 'Homepage'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/admin/profile/home', $data);
+        $this->view(
+            ADMIN_PAGES['home']['path'],
+            ADMIN_PAGES['home']['data']
+        );
     }
 
     /**
@@ -138,11 +138,10 @@ class AdminWebController extends WebController
      * url = /web/admin/profile/workers
      */
     protected function _workers() {
-        $data = [
-            'title'     => 'User Management',
-            'page_name' => 'Workers'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/admin/profile/workers', $data);
+        $this->view(
+            ADMIN_PAGES['workers']['path'],
+            ADMIN_PAGES['workers']['data']
+        );
     }
 
     /**
@@ -151,11 +150,10 @@ class AdminWebController extends WebController
      * url = /web/admin/profile/services
      */
     protected function _services() {
-        $data = [
-            'title'     => 'Service Management',
-            'page_name' => 'Services'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/admin/profile/services', $data);
+        $this->view(
+            ADMIN_PAGES['services']['path'],
+            ADMIN_PAGES['services']['data'],
+        );
     }
 
     /**
@@ -164,10 +162,9 @@ class AdminWebController extends WebController
      * url = /web/admin/profile/departments
      */
     protected function _departments() {
-        $data = [
-            'title'     => 'Department Management',
-            'page_name' => 'Departments'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/admin/profile/departments', $data);
+        $this->view(
+            ADMIN_PAGES['departments']['path'],
+            ADMIN_PAGES['departments']['data'],
+        );
     }
 }

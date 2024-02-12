@@ -29,6 +29,12 @@
             </span>
         </th>
 
+        <th class="wd-lg-10p ">
+            <span class="arrow_column">
+                Workers
+            </span>
+        </th>
+
         <th class="wd-lg-5p">
             <span class="arrow_column">
                 Action

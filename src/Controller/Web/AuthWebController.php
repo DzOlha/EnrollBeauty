@@ -33,20 +33,20 @@ class AuthWebController extends WebController
              * url = /web/auth/user/registration
              */
             if($this->url[3] === 'registration') {
-                $data = [
-                    'title' => 'Registration'
-                ];
-                $this->view(VIEW_FRONTEND . 'pages/user/forms/registration', $data);
+                $this->view(
+                    USER_PAGES['registration']['path'],
+                    USER_PAGES['registration']['data']
+                );
             }
 
             /**
              * url = /web/auth/user/login
              */
             else if($this->url[3] === 'login') {
-                $data = [
-                    'title' => 'Login'
-                ];
-                $this->view(VIEW_FRONTEND . 'pages/user/forms/login', $data);
+                $this->view(
+                    USER_PAGES['login']['path'],
+                    USER_PAGES['login']['data']
+                );
             }
 
             /**
@@ -54,10 +54,10 @@ class AuthWebController extends WebController
              */
             else if($this->url[3] === 'logout') {
                 if(SessionHelper::removeUserSession()) {
-                    $data = [
-                        'title' => 'Homepage'
-                    ];
-                    $this->view(VIEW_FRONTEND . 'index', $data);
+                    $this->view(
+                        COMMON_PAGES['index']['path'],
+                        COMMON_PAGES['index']['data']
+                    );
                 } else {
                     $this->error(
                         'Logout Error',
@@ -82,10 +82,10 @@ class AuthWebController extends WebController
              * url = /web/auth/worker/login
              */
             if ($this->url[3] === 'login') {
-                $data = [
-                    'title' => 'Login | Worker'
-                ];
-                $this->view(VIEW_FRONTEND . 'pages/worker/forms/login', $data);
+                $this->view(
+                    WORKER_PAGES['login']['path'],
+                    WORKER_PAGES['login']['data']
+                );
             }
 
             /**
@@ -99,11 +99,11 @@ class AuthWebController extends WebController
                         $isValidRequest['error']['message']
                     );
                 } else {
-                    $data = [
-                        'title' => 'Change Password'
-                    ];
                     SessionHelper::setRecoveryCodeSession($isValidRequest['recovery_code']);
-                    $this->view(VIEW_FRONTEND . 'pages/worker/forms/change_password', $data);
+                    $this->view(
+                        WORKER_PAGES['change_password']['path'],
+                        WORKER_PAGES['change_password']['data'],
+                    );
                 }
             }
 
@@ -112,10 +112,10 @@ class AuthWebController extends WebController
              */
             else if ($this->url[3] === 'logout') {
                 if(SessionHelper::removeWorkerSession()) {
-                    $data = [
-                        'title' => 'Homepage'
-                    ];
-                    $this->view(VIEW_FRONTEND . 'index', $data);
+                    $this->view(
+                        COMMON_PAGES['index']['path'],
+                        COMMON_PAGES['index']['data'],
+                    );
                 } else {
                     $this->error(
                         'Logout Error',
@@ -141,10 +141,10 @@ class AuthWebController extends WebController
              * url = /web/auth/admin/login
              */
             if ($this->url[3] === 'login') {
-                $data = [
-                    'title' => 'Login | Admin'
-                ];
-                $this->view(VIEW_FRONTEND . 'pages/admin/forms/login', $data);
+                $this->view(
+                    ADMIN_PAGES['login']['path'],
+                    ADMIN_PAGES['login']['data']
+                );
             }
 
             /**
@@ -152,10 +152,10 @@ class AuthWebController extends WebController
              */
             else if ($this->url[3] === 'logout') {
                 if(SessionHelper::removeAdminSession()) {
-                    $data = [
-                        'title' => 'Homepage'
-                    ];
-                    $this->view(VIEW_FRONTEND . 'index', $data);
+                    $this->view(
+                        COMMON_PAGES['index']['path'],
+                        COMMON_PAGES['index']['data'],
+                    );
                 } else {
                     $this->error(
                         'Logout Error',

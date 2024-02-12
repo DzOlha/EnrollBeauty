@@ -34,18 +34,24 @@ class WebController extends AbstractController
     }
 
     public function index() {
-        $data = [
-            'title' => 'Homepage'
-        ];
-        $this->view(VIEW_FRONTEND.'index', $data);
+        $this->view(
+            COMMON_PAGES['index']['path'],
+            COMMON_PAGES['index']['data']
+        );
     }
 
     public function error($title = null, $message = null) {
-        $data = [
-            'title' => $title ?? 'Page Not Found',
-            'message' => $message ?? 'The requested page not found!'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/system/error', $data);
+        $data = null;
+        if($title && $message) {
+            $data = [
+                'title' => $title,
+                'message' => $message
+            ];
+        }
+        $this->view(
+            COMMON_PAGES['error']['path'],
+            $data ?? COMMON_PAGES['error']['data'],
+        );
         exit();
     }
 }

@@ -34,11 +34,10 @@ class UserWebController extends WebController
      */
     protected function _home()
     {
-        $data = [
-            'title' => 'Account',
-            'page_name' => 'Homepage'
-        ];
-        $this->view(VIEW_FRONTEND . 'pages/user/profile/home', $data);
+        $this->view(
+            USER_PAGES['home']['path'],
+            USER_PAGES['home']['data']
+        );
     }
 
     private function _accessDenied() {

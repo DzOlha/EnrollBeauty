@@ -12,7 +12,7 @@ class DepartmentsTable extends Table
         this.tableId = 'table-body';
         this.dataIdAttribute = 'data-department-id';
         this.dataNameAttribute = 'data-department-name';
-        this.servicesTrigger = 'show-services';
+        this.workersTrigger = 'show-workers';
     }
     setShowServicesCallback(callback, context){
         this.showServicesCallback = callback.bind(context);
@@ -25,8 +25,8 @@ class DepartmentsTable extends Table
 
         row.append(`<td>${item.name}</td>`);
 
-        row.append(`<td id="${this.servicesTrigger}-${item.id}" ${this.dataIdAttribute}="${item.id}">
-                        <a href="#">Show Services</a>
+        row.append(`<td id="${this.workersTrigger}-${item.id}" ${this.dataIdAttribute}="${item.id}">
+                        <button class="btn bg-secondary" type="button">Show Workers</button>
                     </td>`)
 
         row.append(`<td>
