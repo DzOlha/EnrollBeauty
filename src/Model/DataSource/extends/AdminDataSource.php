@@ -9,10 +9,12 @@ use Src\Model\DTO\Write\AdminWriteDTO;
 use Src\Model\Table\Admins;
 use Src\Model\Table\AdminsSetting;
 use Src\Model\Table\Departments;
+use Src\Model\Table\OrdersService;
 use Src\Model\Table\Positions;
 use Src\Model\Table\Roles;
 use Src\Model\Table\Services;
 use Src\Model\Table\Workers;
+use Src\Model\Table\WorkersServicePricing;
 
 class AdminDataSource extends WorkerDataSource
 {
@@ -271,5 +273,24 @@ class AdminDataSource extends WorkerDataSource
             return true;
         }
         return false;
+    }
+
+    public function selectFutureOrdersByDepartmentId(int $departmentId)
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $this->builder->select([OrdersService::$id])
+            ->from(OrdersService::$table)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+            ->innerJoin(Services::$table)
+                ->on(WorkersServicePricing::$service_id, Services::$id)
+            ->whereEqual(Services::$department_id, ':id', $departmentId)
+            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
+            ->andIsNull(OrdersService::$completed_datetime)
+            ->andIsNull(OrdersService::$canceled_datetime)
+            ->build();
+
+        return $this->db->manyRows();
     }
 }

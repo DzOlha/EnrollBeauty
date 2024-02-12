@@ -80,7 +80,7 @@ CREATE TABLE positions (
    id INT AUTO_INCREMENT PRIMARY KEY,
    name VARCHAR(50) NOT NULL,
    department_id INT NOT NULL,
-   FOREIGN KEY (department_id) REFERENCES departments(id)
+   FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
 );
 
 CREATE TABLE workers (
@@ -96,8 +96,8 @@ CREATE TABLE workers (
      salary DECIMAL(10, 2),
      role_id INT NOT NULL,
      created_date DATETIME NOT NULL,
-     FOREIGN KEY (position_id) REFERENCES positions(id),
-     FOREIGN KEY (role_id) REFERENCES roles(id)
+     FOREIGN KEY (position_id) REFERENCES positions(id) ON DELETE CASCADE ,
+     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 CREATE TABLE workers_photo (
    id INT AUTO_INCREMENT PRIMARY KEY,
@@ -169,7 +169,7 @@ CREATE TABLE services (
       id INT AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
       department_id INT NOT NULL,
-      FOREIGN KEY (department_id) REFERENCES departments(id)
+      FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
 );
 CREATE TABLE workers_affiliate (
     id INT AUTO_INCREMENT PRIMARY KEY,

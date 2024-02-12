@@ -7,10 +7,17 @@ import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilde
 import API from "../../../../common/pages/api.js";
 import EditDepartmentForm from "../../../../common/pages/admin/forms/department/EditDepartmentForm.js";
 import DeleteDepartmentForm from "../../../../common/pages/admin/forms/department/DeleteDepartmentForm.js";
+import Admin from "../../../../common/pages/admin/profile/Admin.js";
 
 $(function () {
     let requester = new Requester();
     let departmentsTable = new DepartmentsTable(requester);
+
+    let admin = new Admin(requester);
+    /**
+     * Fill the admin info
+     */
+    admin.getUserInfo();
 
     let formBuilder = new FormBuilder();
     let modalForm = new FormModal(formBuilder);

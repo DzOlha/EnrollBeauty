@@ -809,6 +809,22 @@ class AdminApiController extends WorkerApiController
 
             $id = htmlspecialchars(trim($_POST['id']));
 
+            /**
+             * Check if there is no ordered schedules
+             * in the future for the services from this department
+             */
+            $futureOrders = $this->dataMapper->selectFutureOrdersByDepartmentId($id);
+            if($futureOrders === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting upcoming orders for the department!'
+                ]);
+            }
+            if($futureOrders) {
+                $this->returnJson([
+                    'error' => 'The department can not be deleted because there are left upcoming uncompleted orders for its services!'
+                ]);
+            }
+
             $deleted = $this->dataMapper->deleteDepartmentById($id);
             if($deleted === false) {
                 $this->returnJson([

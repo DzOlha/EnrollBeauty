@@ -96,4 +96,9 @@ class AdminDataMapper extends WorkerDataMapper
     {
         return $this->dataSource->deleteDepartmentById($id);
     }
+
+    public function selectFutureOrdersByDepartmentId(int $departmentId)
+    {
+        return $this->dataSource->selectFutureOrdersByDepartmentId($departmentId);
+    }
 }
