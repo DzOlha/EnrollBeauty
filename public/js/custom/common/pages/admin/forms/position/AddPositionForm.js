@@ -1,15 +1,14 @@
-import Input from "../../../classes/element/Input.js";
-import Notifier from "../../../classes/notifier/Notifier.js";
-import Cookie from "../../../classes/cookie/Cookie.js";
-import Select2 from "../../../classes/element/Select2.js";
 import Form from "../../../user/forms/Form.js";
+import Notifier from "../../../classes/notifier/Notifier.js";
+import Select2 from "../../../classes/element/Select2.js";
+import Input from "../../../classes/element/Input.js";
 import GifLoader from "../../../classes/loader/GifLoader.js";
-import API from "../../../../../common/pages/api.js";
 
-class AddServiceForm extends Form {
+class AddPositionForm extends Form
+{
     constructor(
-        requester, modalForm, optionBuilder, servicesTable,
-        addApiUrl, getDepartmentUrl
+        requester, modalForm, optionBuilder, table,
+        getDepartmentUrl, addApiUrl,
     ) {
         super(
             '',
@@ -19,10 +18,11 @@ class AddServiceForm extends Form {
         );
         this.modalForm = modalForm;
         this.optionBuilder = optionBuilder;
-        this.table = servicesTable;
-        this.addServiceTriggerId = 'add-service-trigger';
+        this.table = table;
 
-        this.serviceNameInputId = 'service-name-input';
+        this.addTriggerId = 'add-position-trigger';
+
+        this.positionNameInputId = 'position-name-input';
         this.departmentSelectId = 'department-select';
 
         this.departmentSelect2 = null;
@@ -34,16 +34,16 @@ class AddServiceForm extends Form {
     /**
      * Add listener to the 'Add Service' button
      */
-    addListenerShowAddServiceForm() {
-        let trigger = document.getElementById(this.addServiceTriggerId);
-        trigger.addEventListener('click', this.handleShowAddServiceForm);
+    addListenerShowAddForm() {
+        let trigger = document.getElementById(this.addTriggerId);
+        trigger.addEventListener('click', this.handleShowAddForm);
     }
-    handleShowAddServiceForm = () => {
-        this.modalForm.setSelectors('modalAddService');
+    handleShowAddForm = () => {
+        this.modalForm.setSelectors('modalAddPosition');
         this.submitButtonId = this.modalForm.modalSubmitId;
         this.modalForm.show(
-            'Add New Service',
-            this.modalForm.formBuilder.createAddServiceForm(),
+            'Add New Position',
+            this.modalForm.formBuilder.createAddPositionForm(),
             'Add'
         );
         this.getDepartments();
@@ -74,30 +74,28 @@ class AddServiceForm extends Form {
         );
         this.departmentSelect2.populate(response.data);
     }
-
-    serviceNameValidationCallback = (value) => {
+    positionNameValidationCallback = (value) => {
         let result = {};
         if(!value) {
-            result.error = "Service name is required field!";
+            result.error = "Position name is required field!";
             return result;
         }
 
         if(value.length < 3) {
-            result.error = "Service name should be longer than 3 characters!";
+            result.error = "Position name should be longer than 3 characters!";
             return result;
         }
 
         return result;
     }
-
     validateFormData() {
         let department = this.departmentSelect2.validate('department_id');
-        let serviceName = Input.validateInput(
-            this.serviceNameInputId, 'service_name', this.serviceNameValidationCallback
+        let positionName = Input.validateInput(
+            this.positionNameInputId, 'position_name', this.positionNameValidationCallback
         )
-        if(department && serviceName) {
+        if(department && positionName) {
             return {
-                ...department, ...serviceName
+                ...department, ...positionName
             }
         }
         return false;
@@ -105,11 +103,9 @@ class AddServiceForm extends Form {
 
     listenerSubmitForm = (e) => {
         /**
-         * @type {{[p: string]: *}|boolean}
-         *
          * {
-         *     service_id:
-         *     price:
+         *     position_name:
+         *     department_id:
          * }
          */
         let data = this.validateFormData();
@@ -142,10 +138,10 @@ class AddServiceForm extends Form {
         $(`#${this.modalForm.modalCloseId}`).click();
 
         /**
-         * Regenerate the table of services to show the newly added service there
+         * Regenerate the table of positions to show the newly added position there
          */
         this.table.regenerate();
     }
 
 }
-export default AddServiceForm;
+export default AddPositionForm;

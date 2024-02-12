@@ -1332,7 +1332,7 @@ class WorkerApiController extends ApiController
             }
             if (strlen($items['service_name']) < 3) {
                 $this->returnJson([
-                    'error' => 'Service name should be longer than 3 characters!'
+                    'error' => 'Service name should be equal to or longer than 3 characters!'
                 ]);
             }
             /**
@@ -1341,11 +1341,6 @@ class WorkerApiController extends ApiController
             $exists = $this->dataMapper->selectServiceIdByNameAndDepartmentId(
                 $items['service_name'], $items['department_id']
             );
-            if ($exists === false) {
-                $this->returnJson([
-                    'error' => 'An error occurred while getting service with provided name!'
-                ]);
-            }
             if ($exists) {
                 $this->returnJson([
                     'error' => 'The service with provided name already exists in the selected department!'

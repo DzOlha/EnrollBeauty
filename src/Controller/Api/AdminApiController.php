@@ -119,6 +119,13 @@ class AdminApiController extends WorkerApiController
     public function position() {
         if (isset($this->url[3])) {
             /**
+             * url = /api/admin/position/add
+             */
+            if($this->url[3] === 'add') {
+                $this->_addPosition();
+            }
+
+            /**
              * url = /api/admin/position/get
              */
             if($this->url[3] === 'get') {
@@ -128,6 +135,13 @@ class AdminApiController extends WorkerApiController
                      */
                     if($this->url[4] === 'all') {
                         $this->_getAllPositions();
+                    }
+
+                    /**
+                     * /api/admin/position/get/all-with-departments
+                     */
+                    if($this->url[4] === 'all-with-departments') {
+                        $this->_getAllPositionsWithDepartments();
                     }
                 }
             }
@@ -378,6 +392,66 @@ class AdminApiController extends WorkerApiController
     /**
      * @return void
      *
+     * url = /api/admin/position/add
+     *
+     * position_name
+     * department_id
+     */
+    protected function _addPosition()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['department_id']) || empty($_POST['position_name'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+            $items = [
+                'position_name' => htmlspecialchars(trim($_POST['position_name'])),
+                'department_id' => htmlspecialchars(trim($_POST['department_id']))
+            ];
+
+            /**
+             * Validate the name
+             */
+            if (strlen($items['position_name']) < 3) {
+                $this->returnJson([
+                    'error' => 'Position name should be equal to or longer than 3 characters!'
+                ]);
+            }
+
+            /**
+             * Check if there is such position already in the db
+             */
+            $exists = $this->dataMapper->selectPositionIdByNameAndDepartment(
+                $items['position_name'], $items['department_id']
+            );
+            if($exists) {
+                $this->returnJson([
+                    'error' => 'The position with provided name already exists in the selected department!'
+                ]);
+            }
+
+            $insertedId = $this->dataMapper->insertPosition(
+                $items['position_name'], $items['department_id']
+            );
+            if($insertedId === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while inserting the position!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => "You successfully added new position with name '{$items['position_name']}'",
+                'data' => [
+                    'id' => $insertedId
+                ]
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
      * url = /api/admin/position/get/all
      */
     protected function _getAllPositions(): void
@@ -396,6 +470,37 @@ class AdminApiController extends WorkerApiController
         $this->returnJson([
             'success' => true,
             'data' => $positions
+        ]);
+    }
+
+    protected function _getAllPositionsWithDepartments()
+    {
+        $param = $this->_getLimitPageFieldOrderOffset();
+        /**
+         *  * [
+         *      0 => [
+         *          id =>
+         *          name =>
+         *          department_id =>
+         *          department_name =>
+         *      ]
+         *      ....................
+         * ]
+         */
+        $result = $this->dataMapper->selectPositionsAllWithDepartments(
+            $param['limit'],
+            $param['offset'],
+            $param['order_field'],
+            $param['order_direction']
+        );
+        if($result === false) {
+            $this->returnJsonError(
+                "The error occurred while getting data about all positions!"
+            );
+        }
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
         ]);
     }
 

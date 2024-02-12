@@ -928,6 +928,7 @@ class WorkerDataSource extends DataSource
             // services.id -> id
             return $result[explode('.', Services::$id)[1]];
         }
+        return $result;
     }
 
     public function insertNewService(string $serviceName, int $departmentId)

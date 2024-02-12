@@ -153,6 +153,7 @@ const API = {
                 workers: '/web/admin/profile/workers',
                 services: '/web/worker/profile/services',
                 departments: '/web/worker/profile/departments',
+                positions: '/web/worker/profile/positions'
             }
         },
         API: {
@@ -169,8 +170,10 @@ const API = {
                 register: '/api/admin/worker/register'
             },
             POSITION: {
+                add: '/api/admin/position/add',
                 get: {
-                    all: '/api/admin/position/get/all'
+                    all: '/api/admin/position/get/all',
+                    'all-with-departments': '/api/admin/position/get/all-with-departments',
                 }
             },
             ROLE: {

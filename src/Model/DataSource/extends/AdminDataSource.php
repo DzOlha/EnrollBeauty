@@ -310,4 +310,58 @@ class AdminDataSource extends WorkerDataSource
 
         return $this->db->manyRows();
     }
+
+    public function selectPositionsAllWithDepartments(
+        int $limit, int $offset,
+        string $orderByField = 'positions.id', string $orderDirection = 'asc'
+    ){
+        $positions = Positions::$table;
+        $queryFrom = " $positions ";
+
+        $this->builder->select([Positions::$id, Positions::$name,
+                                Positions::$department_id, Departments::$name],
+                                [Departments::$name => 'department_name'])
+            ->from(Positions::$table)
+            ->innerJoin(Departments::$table)
+                ->on(Positions::$department_id, Departments::$id)
+            ->orderBy($orderByField, $orderDirection)
+            ->limit($limit)
+            ->offset($offset)
+            ->build();
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
+
+    public function insertPosition(string $name, int $departmentId)
+    {
+        $this->builder->insertInto(Positions::$table,
+                                  [Positions::$name, Positions::$department_id],)
+                         ->values([':name', ':department_id'], [$name, $departmentId])
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return $this->db->lastInsertedId();
+        }
+        return false;
+    }
+
+    public function selectPositionIdByNameAndDepartment(string $name, int $departmentId)
+    {
+        $this->builder->select([Positions::$id])
+                    ->from(Positions::$table)
+                    ->whereEqual(Positions::$name, ':name', $name)
+                    ->andEqual(Positions::$department_id, ':department_id', $departmentId)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            // positions.id -> id
+            return $result[explode('.', Positions::$id)[1]];
+        }
+        return $result;
+    }
 }

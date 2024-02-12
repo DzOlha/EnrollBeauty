@@ -2,21 +2,18 @@ import Table from "../Table.js";
 import API from "../../../api.js";
 import Notifier from "../../notifier/Notifier.js";
 
-class DepartmentsTable extends Table
+class PositionsTable extends Table
 {
     constructor(requester) {
         super(
             requester,
-            API.ADMIN.API.DEPARTMENT.get["all-limited"] + '?'
+            API.ADMIN.API.POSITION.get['all-with-departments'] + '?'
         )
         this.tableId = 'table-body';
-        this.dataIdAttribute = 'data-department-id';
-        this.dataNameAttribute = 'data-department-name';
-        this.workersTrigger = 'show-workers';
+        this.dataIdAttribute = 'data-position-id';
+        this.dataNameAttribute = 'data-position-name';
     }
-    setShowWorkersCallback(callback, context){
-        this.showWorkersCallback = callback.bind(context);
-    }
+
     populateRow(item){
         // Create a table row for each of service item
         let row = $(`<tr ${this.dataIdAttribute} = "${item.id}">`);
@@ -25,15 +22,14 @@ class DepartmentsTable extends Table
 
         row.append(`<td>${item.name}</td>`);
 
-        row.append(`<td id="${this.workersTrigger}-${item.id}" ${this.dataIdAttribute}="${item.id}">
-                        <button class="btn bg-secondary" type="button">Show Workers</button>
-                    </td>`)
+        row.append(`<td data-department-id="${item.department_id}">
+                            ${item.department_name}
+                      </td>`);
 
         row.append(`<td>
                         <a class="btn ripple btn-manage manage-button"
                            id="manage-${item.id}"
                            ${this.dataIdAttribute}="${item.id}"
-                           ${this.dataNameAttribute}="${item.name}"
                            href="">
                             <i class="fe fe-eye me-2"></i>
                             Manage
@@ -48,7 +44,9 @@ class DepartmentsTable extends Table
      *  response.data =
      *  0: {
      *      'id':
-     *      'name': it's department name
+     *      'name': it's position name
+     *      'department_id':
+     *      'department_name':
      * }
      * ....
      * 'totalRowsCount':
@@ -70,9 +68,8 @@ class DepartmentsTable extends Table
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
 
-            this.manageCallback(item.id);
-            //this.showServicesCallback(item.id);
+            //this.manageCallback(item.id);
         });
     }
 }
-export default DepartmentsTable;
+export default PositionsTable;

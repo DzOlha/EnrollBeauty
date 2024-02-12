@@ -151,7 +151,10 @@ const API = [
         'WEB' => [
             'PROFILE' => [
                 'home'    => '/web/admin/profile/home',
-                'workers' => '/web/admin/profile/workers'
+                'workers' => '/web/admin/profile/workers',
+                'services' => '/web/worker/profile/services',
+                'departments' => '/web/worker/profile/departments',
+                'positions' => '/web/worker/profile/positions'
             ]
         ],
         'API' => [
@@ -169,7 +172,8 @@ const API = [
             ],
             'POSITION'   => [
                 'get' => [
-                    'all' => '/api/admin/position/get/all'
+                    'all' => '/api/admin/position/get/all',
+                    'all-with-departments' => '/api/admin/position/get/all-with-departments',
                 ]
             ],
             'ROLE'       => [

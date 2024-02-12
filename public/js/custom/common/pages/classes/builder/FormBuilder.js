@@ -405,5 +405,17 @@ class FormBuilder {
         return this._createDeleteIcon('data-department-id', id)
              + this.createAddDepartmentForm()
     }
+
+    createAddPositionForm() {
+        return `<div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Position Name</p>
+                    <div class="input-group mb-3">
+                        <input name="name" type="text" placeholder="Position Name" autocomplete="off"
+                               required="required" class="form-control" id="position-name-input">
+                        <div class="error text-danger" id="position-name-input-error"></div>
+                    </div>
+                </div>
+            `
+    }
 }
 export default FormBuilder;

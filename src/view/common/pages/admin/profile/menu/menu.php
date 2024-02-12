@@ -25,7 +25,7 @@
         <a class="nav-link with-sub" href="javascript:void(0)">
             <span class="shape1"></span>
             <span class="shape2"></span>
-            <i class="ti-receipt sidemenu-icon menu-icon "></i>
+            <i class="ti-user sidemenu-icon menu-icon "></i>
             <span class="sidemenu-label">User Management</span>
             <i class="angle fe fe-chevron-right"></i>
         </a>
@@ -63,6 +63,15 @@
             <span class="shape2"></span>
             <i class="ti-menu sidemenu-icon menu-icon"></i>
             <span class="sidemenu-label">Departments</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/web/admin/profile/positions">
+            <span class="shape1"></span>
+            <span class="shape2"></span>
+            <i class="ti-receipt sidemenu-icon menu-icon"></i>
+            <span class="sidemenu-label">Positions</span>
         </a>
     </li>
 

@@ -57,6 +57,14 @@ const ADMIN_PAGES = [
         ]
     ],
 
+    'positions' => [
+        'path' => VIEW_FRONTEND . 'pages/admin/profile/positions',
+        'data' => [
+            'title'     => 'Position Management',
+            'page_name' => 'Positions'
+        ]
+    ],
+
     'login' => [
         'path' => VIEW_FRONTEND . 'pages/admin/forms/login',
         'data' => [

@@ -113,6 +113,13 @@ class AdminWebController extends WebController
             else if($menuItemName === 'departments') {
                 $this->_departments();
             }
+
+            /**
+             * url = /web/admin/profile/positions
+             */
+            else if($menuItemName === 'positions') {
+                $this->_positions();
+            }
             else {
                 $this->error();
             }
@@ -165,6 +172,18 @@ class AdminWebController extends WebController
         $this->view(
             ADMIN_PAGES['departments']['path'],
             ADMIN_PAGES['departments']['data'],
+        );
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/admin/profile/positions
+     */
+    public function _positions() {
+        $this->view(
+            ADMIN_PAGES['positions']['path'],
+            ADMIN_PAGES['positions']['data'],
         );
     }
 }

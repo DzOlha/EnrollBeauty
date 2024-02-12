@@ -106,4 +106,23 @@ class AdminDataMapper extends WorkerDataMapper
     {
         return $this->dataSource->selectFutureOrdersByWorkerId($workerId);
     }
+
+    public function selectPositionsAllWithDepartments(
+        int $limit, int $offset,
+        string $orderByField = 'positions.id', string $orderDirection = 'asc'
+    ){
+        return $this->dataSource->selectPositionsAllWithDepartments(
+            $limit, $offset, $orderByField, $orderDirection
+        );
+    }
+
+    public function insertPosition(string $name, int $departmentId)
+    {
+        return $this->dataSource->insertPosition($name, $departmentId);
+    }
+
+    public function selectPositionIdByNameAndDepartment(string $name, int $departmentId)
+    {
+        return $this->dataSource->selectPositionIdByNameAndDepartment($name, $departmentId);
+    }
 }
