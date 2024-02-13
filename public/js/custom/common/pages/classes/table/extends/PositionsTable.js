@@ -30,6 +30,7 @@ class PositionsTable extends Table
                         <a class="btn ripple btn-manage manage-button"
                            id="manage-${item.id}"
                            ${this.dataIdAttribute}="${item.id}"
+                           ${this.dataNameAttribute}="${item.name}"
                            href="">
                             <i class="fe fe-eye me-2"></i>
                             Manage
@@ -68,7 +69,7 @@ class PositionsTable extends Table
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
 
-            //this.manageCallback(item.id);
+            this.manageCallback(item.id);
         });
     }
 }

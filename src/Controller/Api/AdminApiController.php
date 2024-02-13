@@ -126,10 +126,31 @@ class AdminApiController extends WorkerApiController
             }
 
             /**
+             * url = /api/admin/position/edit
+             */
+            if($this->url[3] === 'edit') {
+                $this->_editPosition();
+            }
+
+            /**
+             * url = /api/admin/position/delete
+             */
+            if($this->url[3] === 'delete') {
+                $this->_deletePosition();
+            }
+
+            /**
              * url = /api/admin/position/get
              */
             if($this->url[3] === 'get') {
                 if(isset($this->url[4])) {
+                    /**
+                     * /api/admin/position/get/one
+                     */
+                    if($this->url[4] === 'one') {
+                        $this->_getPositionById();
+                    }
+
                     /**
                      * /api/admin/position/get/all
                      */
@@ -452,6 +473,155 @@ class AdminApiController extends WorkerApiController
     /**
      * @return void
      *
+     * url = /api/admin/position/edit
+     *
+     * id
+     * position_name
+     * department_id
+     */
+    protected function _editPosition()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['department_id'])
+                || empty($_POST['position_name'])
+                || empty($_POST['id'])
+            ) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+            $items = [
+                'id' => htmlspecialchars(trim($_POST['id'])),
+                'position_name' => htmlspecialchars(trim($_POST['position_name'])),
+                'department_id' => htmlspecialchars(trim($_POST['department_id']))
+            ];
+
+            /**
+             * Validate the name
+             */
+            if (strlen($items['position_name']) < 3) {
+                $this->returnJson([
+                    'error' => 'Position name should be equal to or longer than 3 characters!'
+                ]);
+            }
+
+            /**
+             * Check if there is such position already in the db
+             */
+            $exists = $this->dataMapper->selectPositionIdByNameAndDepartment(
+                $items['position_name'], $items['department_id']
+            );
+            if($exists) {
+                $this->returnJson([
+                    'error' => 'The position with provided name already exists in the selected department!'
+                ]);
+            }
+
+            $updated = $this->dataMapper->updatePositionById(
+                $items['id'], $items['position_name'], $items['department_id']
+            );
+            if($updated === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while updating the position!'
+                ]);
+            }
+
+            $updatedPositionRow = $this->dataMapper->selectPositionWithDepartmentById($items['id']);
+            if($updatedPositionRow === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the updated position!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => "You successfully updated the position!",
+                'data' => $updatedPositionRow
+            ]);
+        }
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/position/edit
+     *
+     * id
+     */
+    protected function _deletePosition()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['id'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $id = htmlspecialchars(trim($_POST['id']));
+
+            /**
+             * Check if there is no incomplete upcoming orders
+             * for the worker with the position we would like to delete
+             */
+            $futureOrders = $this->dataMapper->selectFutureOrdersByPositionId($id);
+            if($futureOrders === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the upcoming orders for workers with the position you would like to delete!'
+                ]);
+            }
+            if($futureOrders) {
+                $this->returnJson([
+                    'error' => 'You can not delete the position, of workers with incomplete upcoming orders!'
+                ]);
+            }
+
+            $deleted = $this->dataMapper->deletePositionById($id);
+            if($deleted === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while deleting the position!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully deleted the position!',
+                'data' => [
+                    'id' => $id
+                ]
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/position/get/one
+     */
+    protected function _getPositionById(): void
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['id'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+            $id = htmlspecialchars(trim($_GET['id']));
+            $result = $this->dataMapper->selectPositionById($id);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the position!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
      * url = /api/admin/position/get/all
      */
     protected function _getAllPositions(): void
@@ -749,18 +919,18 @@ class AdminApiController extends WorkerApiController
             $id = htmlspecialchars(trim($_POST['id']));
 
             /**
-             * Check if there is no uncompleted upcoming orders
+             * Check if there is no incomplete upcoming orders
              * for the worker we would like to delete
              */
             $futureOrders = $this->dataMapper->selectFutureOrdersByWorkerId($id);
             if($futureOrders === false) {
                 $this->returnJson([
-                    'error' => 'An error occurred while getting uncompleted upcoming orders for the worker!'
+                    'error' => 'An error occurred while getting incomplete upcoming orders for the worker!'
                 ]);
             }
             if($futureOrders) {
                 $this->returnJson([
-                    'error' => 'Tou can not delete the worker which has uncompleted upcoming orders!'
+                    'error' => 'Tou can not delete the worker which has incomplete upcoming orders!'
                 ]);
             }
 
@@ -942,7 +1112,7 @@ class AdminApiController extends WorkerApiController
             }
             if($futureOrders) {
                 $this->returnJson([
-                    'error' => 'The department can not be deleted because there are left upcoming uncompleted orders for its services!'
+                    'error' => 'The department can not be deleted because there are left upcoming incomplete orders for its services!'
                 ]);
             }
 

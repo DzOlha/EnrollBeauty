@@ -364,4 +364,74 @@ class AdminDataSource extends WorkerDataSource
         }
         return $result;
     }
+
+    public function selectPositionById(int $id)
+    {
+        $this->builder->select([Positions::$id, Positions::$name, Positions::$department_id])
+                    ->from(Positions::$table)
+                    ->whereEqual(Positions::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function updatePositionById(int $id, string $name, int $departmentId)
+    {
+        $this->builder->update(Positions::$table)
+                    ->set(Positions::$name, ':name', $name)
+                    ->andSet(Positions::$department_id, ':department_id', $departmentId)
+                    ->whereEqual(Positions::$id, ':id', $id)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectPositionWithDepartmentById(int $id)
+    {
+        $this->builder->select([Positions::$id, Positions::$name, Positions::$department_id,
+                                Departments::$name],
+                            [Departments::$name => 'department_name'])
+                    ->from(Positions::$table)
+                    ->innerJoin(Departments::$table)
+                        ->on(Positions::$department_id, Departments::$id)
+                    ->whereEqual(Positions::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function selectFutureOrdersByPositionId(int $positionId)
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $this->builder->select([OrdersService::$id])
+            ->from(OrdersService::$table)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+            ->innerJoin(Workers::$table)
+                ->on(WorkersServicePricing::$worker_id, Workers::$id)
+            ->whereEqual(Workers::$position_id, ':position_id', $positionId)
+            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
+            ->andIsNull(OrdersService::$completed_datetime)
+            ->andIsNull(OrdersService::$canceled_datetime)
+            ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function deletePositionById(int $id)
+    {
+        $this->builder->delete()
+                    ->from(Positions::$table)
+                    ->whereEqual(Positions::$id, ':id', $id)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 }

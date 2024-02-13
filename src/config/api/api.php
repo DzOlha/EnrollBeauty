@@ -171,7 +171,11 @@ const API = [
                 'register' => '/api/admin/worker/register'
             ],
             'POSITION'   => [
+                'add' => '/api/admin/position/add',
+                'edit' => '/api/admin/position/edit',
+                'delete' => '/api/admin/position/delete',
                 'get' => [
+                    'one' => '/api/admin/position/get/one',
                     'all' => '/api/admin/position/get/all',
                     'all-with-departments' => '/api/admin/position/get/all-with-departments',
                 ]

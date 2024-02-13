@@ -7,7 +7,7 @@ import GifLoader from "../../../classes/loader/GifLoader.js";
 class AddPositionForm extends Form
 {
     constructor(
-        requester, modalForm, optionBuilder, table,
+        requester, modalForm, table,
         getDepartmentUrl, addApiUrl,
     ) {
         super(
@@ -17,7 +17,6 @@ class AddPositionForm extends Form
             requester
         );
         this.modalForm = modalForm;
-        this.optionBuilder = optionBuilder;
         this.table = table;
 
         this.addTriggerId = 'add-position-trigger';
@@ -30,6 +29,9 @@ class AddPositionForm extends Form
         this.modalBodyClass = 'modal-body';
 
         this.apiGetDepartments = getDepartmentUrl;
+    }
+    init() {
+        this.addListenerShowAddForm();
     }
     /**
      * Add listener to the 'Add Service' button

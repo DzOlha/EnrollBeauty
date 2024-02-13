@@ -418,5 +418,10 @@ class FormBuilder {
                 </div>
             `
     }
+
+    createEditPositionForm(id, withDelete) {
+        return this._createDeleteIcon('data-position-id', id, withDelete)
+            + this.createAddPositionForm()
+    }
 }
 export default FormBuilder;

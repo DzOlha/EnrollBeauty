@@ -125,4 +125,29 @@ class AdminDataMapper extends WorkerDataMapper
     {
         return $this->dataSource->selectPositionIdByNameAndDepartment($name, $departmentId);
     }
+
+    public function selectPositionById(int $id)
+    {
+        return $this->dataSource->selectPositionById($id);
+    }
+
+    public function updatePositionById(int $id, string $name, int $departmentId)
+    {
+        return $this->dataSource->updatePositionById($id, $name, $departmentId);
+    }
+
+    public function selectPositionWithDepartmentById(int $id)
+    {
+        return $this->dataSource->selectPositionWithDepartmentById($id);
+    }
+
+    public function selectFutureOrdersByPositionId(int $positionId)
+    {
+        return $this->dataSource->selectFutureOrdersByPositionId($positionId);
+    }
+
+    public function deletePositionById(int $id)
+    {
+        return $this->dataSource->deletePositionById($id);
+    }
 }
