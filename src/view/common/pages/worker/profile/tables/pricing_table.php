@@ -5,7 +5,7 @@
         <th class="wd-lg-2p">
             <span class="arrow_column active">
                 ID
-                <img src="/public/images/custom/system/icons/arrows_down.svg"
+                <img src="<?=ARROW_DOWN?>"
                      id="id_arrow"
                      class="sort_arrow"
                      data-column="<?=\Src\Model\Table\WorkersServicePricing::$id?>"

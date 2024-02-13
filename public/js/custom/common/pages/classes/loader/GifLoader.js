@@ -1,3 +1,4 @@
+import CONST from "../../../../constants.js";
 
 class GifLoader {
 
@@ -13,7 +14,7 @@ class GifLoader {
         return setTimeout(() => {
             parent.insertAdjacentHTML(
                 'beforebegin',
-                `<img src="/public/images/mockup/pre-loader-1.gif" id="${GifLoader.loaderId}">`
+                `<img src="${CONST.gifLoader}" id="${GifLoader.loaderId}">`
             );
         }, timeout);
     }

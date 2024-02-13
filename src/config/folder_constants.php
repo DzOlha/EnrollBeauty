@@ -31,4 +31,6 @@ const EMAIL_WITH_LINK = SRC.'/Service/Sender/impl/email/templates/email_with_lin
 const COMPANY_NAME = 'Enroll Beauty';
 const COMPANY_EMAIL = 'enroll@beauty.com';
 
+const ARROW_DOWN = '/public/images/custom/system/icons/arrows_down.svg';
+
 

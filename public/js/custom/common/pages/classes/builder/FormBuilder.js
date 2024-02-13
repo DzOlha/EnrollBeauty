@@ -1,3 +1,4 @@
+import CONST from "../../../../constants.js";
 
 class FormBuilder {
     constructor() {
@@ -32,7 +33,7 @@ class FormBuilder {
                             <div class="modal-body tx-center pd-y-20 pd-x-20">
                                 <button class="close-modal float-end" id="${modalId}-close"
                                         type="button">
-                                    <img src="/public/images/custom/system/icons/close.svg"/>
+                                    <img src="${CONST.closeIcon}"/>
                                 </button>
                 
                                 <h4 class="tx-semibold mg-b-20"
@@ -198,7 +199,7 @@ class FormBuilder {
                             Confirm Deletion
                     </button>
                     <button class="close-modal float-end" id="delete-confirm-close-${id}" type="button">
-                        <img src="/public/images/custom/system/icons/close.svg">
+                        <img src="${CONST.closeIcon}">
                     </button>
                 </div>`
     }

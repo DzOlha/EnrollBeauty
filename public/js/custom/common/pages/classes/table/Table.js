@@ -1,5 +1,7 @@
 import Cookie from "../cookie/Cookie.js";
 import TableLoader from "../loader/TableLoader.js";
+import CONST from "../../../../constants.js";
+
 class Table {
     constructor(requester, apiUrl, orderByField = null, orderDirection = null) {
         this.apiUrl = apiUrl; // Store the API URL
@@ -15,8 +17,8 @@ class Table {
         this.currentPageCookie =  'currentPage';
         this.totalRowsCountCookie = 'totalRowsCount';
 
-        this.arrowDown = '/public/images/custom/system/icons/arrows_down.svg';
-        this.arrowUp = '/public/images/custom/system/icons/arrows_up.svg';
+        this.arrowDown = CONST.arrowDown;
+        this.arrowUp = CONST.arrowUp;
 
         this.requester = requester;
     }

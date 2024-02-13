@@ -1,3 +1,5 @@
+import CONST from "../../../../constants.js";
+
 class OptionBuilder {
     createOptionLabel(text = 'Choose one') {
         return `<option label="${text}"></option>`
@@ -9,7 +11,7 @@ class OptionBuilder {
                  </option>`
     }
     static createGifLoader(loaderId = 'gif-loader') {
-        return `<img src="/public/images/mockup/pre-loader-1.gif" id="${loaderId}">`
+        return `<img src="${CONST.gifLoader}" id="${loaderId}">`
     }
 }
 export default OptionBuilder;
