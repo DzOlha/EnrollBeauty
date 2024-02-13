@@ -150,4 +150,13 @@ class AdminDataMapper extends WorkerDataMapper
     {
         return $this->dataSource->deletePositionById($id);
     }
+
+    public function selectAllAffiliatesForAdminTable(
+        int $limit, int $offset,
+        string $orderByField = 'affiliates.id', string $orderDirection = 'asc'
+    ){
+        return $this->dataSource->selectAllAffiliatesForAdminTable(
+            $limit, $offset, $orderByField, $orderDirection
+        );
+    }
 }

@@ -65,6 +65,14 @@ const ADMIN_PAGES = [
         ]
     ],
 
+    'affiliates' => [
+        'path' => VIEW_FRONTEND . 'pages/admin/profile/affiliates',
+        'data' => [
+            'title'     => 'Affiliate Management',
+            'page_name' => 'Affiliates'
+        ]
+    ],
+
     'login' => [
         'path' => VIEW_FRONTEND . 'pages/admin/forms/login',
         'data' => [

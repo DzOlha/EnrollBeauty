@@ -2,6 +2,7 @@
 import Table from "../Table.js";
 import Notifier from "../../notifier/Notifier.js";
 import API from "../../../../../common/pages/api.js";
+import DateRenderer from "../../renderer/extends/DateRenderer.js";
 
 class PricingTable extends Table {
     constructor(requester) {
@@ -9,6 +10,7 @@ class PricingTable extends Table {
             requester,
             API.WORKER.API.PROFILE["service-pricing"].get.all + "?"
         )
+        this.dateRenderer = new DateRenderer();
         this.tableId = 'table-body';
     }
 
@@ -22,7 +24,7 @@ class PricingTable extends Table {
         let price = item.price + ' ' + item.currency;
         row.append(`<td>${price}</td>`);
 
-        row.append(`<td>${item.updated_datetime}</td>`);
+        row.append(`<td>${this.dateRenderer.renderDatetime(item.updated_datetime)}</td>`);
 
         row.append(`<td>
                         <a class="btn ripple btn-manage manage-button manage-pricing"

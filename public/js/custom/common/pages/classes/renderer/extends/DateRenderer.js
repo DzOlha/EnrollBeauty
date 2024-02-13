@@ -29,6 +29,42 @@ class DateRenderer extends Renderer {
     }
 
     /**
+     * @param dateString in yyyy-mm-dd hh:mm:ss format
+     * @param locale
+     * @param timezone
+     * return - 2 Month, 12:20
+     */
+    renderDatetime(dateString, locale = 'en-US', timezone = 'Europe/Kiev') {
+        let sqlDateTime = new Date(dateString);
+
+        let dateOptions = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timezone: timezone,
+            locale: locale
+        };
+
+        let timeOptions = {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: false, // set 24-hours format
+            // timeZoneName: 'short',
+            timezone: timezone,
+            locale: locale
+        };
+
+        let dateFormatter = new Intl.DateTimeFormat(locale, dateOptions);
+        let timeFormatter = new Intl.DateTimeFormat(locale, timeOptions);
+
+        let formattedDate = dateFormatter.format(sqlDateTime);
+        let formattedTime = timeFormatter.format(sqlDateTime);
+
+        return `${formattedDate}, ${formattedTime}`;
+    }
+
+
+    /**
      *
      * @param dateString
      * @param timezone

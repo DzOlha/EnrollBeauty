@@ -299,6 +299,29 @@ class AdminApiController extends WorkerApiController
         }
     }
 
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/affiliate/
+     */
+    public function affiliate()
+    {
+        if(!empty($this->url[3]))
+        {
+            if($this->url[3] === 'get')
+            {
+                if(!empty($this->url[4]))
+                {
+                    if($this->url[4] === 'all-limited') {
+                        $this->_getAllAffiliatesForAdminTable();
+                    }
+                }
+            }
+        }
+    }
+
+
     private function _getAdminId()
     {
         $userId = 0;
@@ -1203,5 +1226,43 @@ class AdminApiController extends WorkerApiController
                 'data' => $result
             ]);
         }
+    }
+
+    protected function _getAllAffiliatesForAdminTable()
+    {
+        $param = $this->_getLimitPageFieldOrderOffset();
+
+        /**
+         *  * [
+         *      0 => [
+         *          id =>
+         *          name =>
+         *          country =>
+         *          city =>
+         *          address =>
+         *          manager_id =>
+         *          manager_name =>
+         *          manager_surname =>
+         *          created_date =>
+         *      ]
+         *      ....................
+         * ]
+         */
+        $result = $this->dataMapper->selectAllAffiliatesForAdminTable(
+            $param['limit'],
+            $param['offset'],
+            $param['order_field'],
+            $param['order_direction']
+        );
+        if($result === false) {
+            $this->returnJsonError(
+                "The error occurred while getting data about all affiliates!"
+            );
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
     }
 }

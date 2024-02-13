@@ -120,6 +120,11 @@ class AdminWebController extends WebController
             else if($menuItemName === 'positions') {
                 $this->_positions();
             }
+
+            else if($menuItemName === 'affiliates') {
+                $this->_affiliates();
+            }
+
             else {
                 $this->error();
             }
@@ -186,4 +191,17 @@ class AdminWebController extends WebController
             ADMIN_PAGES['positions']['data'],
         );
     }
+
+    /**
+     * @return void
+     *
+     * url = /web/admin/profile/affiliates
+     */
+    public function _affiliates() {
+        $this->view(
+            ADMIN_PAGES['affiliates']['path'],
+            ADMIN_PAGES['affiliates']['data']
+        );
+    }
+
 }

@@ -145,3 +145,7 @@ button[type="button"] {
 .table td {
     vertical-align: middle !important;
 }
+
+.button-in-cell {
+    width: 100%;
+}

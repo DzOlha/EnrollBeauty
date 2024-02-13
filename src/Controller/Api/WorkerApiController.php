@@ -992,15 +992,6 @@ class WorkerApiController extends ApiController
             );
         }
 
-        foreach ($result as $key => &$value) {
-            if ($key === 'totalRowsCount') continue;
-            $datetime = new \DateTime($value['updated_datetime']);
-            /**
-             * Format the updated datetime as November 24, 15:00
-             */
-            $value['updated_datetime'] = $datetime->format('F j, H:i');
-        }
-
         $this->returnJson([
             'success' => true,
             'data'    => $result

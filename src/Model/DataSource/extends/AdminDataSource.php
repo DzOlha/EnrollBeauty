@@ -8,6 +8,7 @@ use Src\Model\DataSource\DataSource;
 use Src\Model\DTO\Write\AdminWriteDTO;
 use Src\Model\Table\Admins;
 use Src\Model\Table\AdminsSetting;
+use Src\Model\Table\Affiliates;
 use Src\Model\Table\Departments;
 use Src\Model\Table\OrdersService;
 use Src\Model\Table\Positions;
@@ -433,5 +434,33 @@ class AdminDataSource extends WorkerDataSource
             return true;
         }
         return false;
+    }
+
+    public function selectAllAffiliatesForAdminTable(
+        int $limit, int $offset,
+        string $orderByField = 'affiliates.id', string $orderDirection = 'asc'
+    ){
+        $affiliates = Affiliates::$table;
+        $queryFrom = " $affiliates ";
+
+        $this->builder->select([Affiliates::$id, Affiliates::$name, Affiliates::$country,
+                                Affiliates::$city, Affiliates::$address, Affiliates::$created_date,
+                                Workers::$id, Workers::$name, Workers::$surname],
+                        [Workers::$id => 'manager_id',
+                         Workers::$name => 'manager_name',
+                         Workers::$surname => 'manager_surname'])
+            ->from(Affiliates::$table)
+            ->leftJoin(Workers::$table)
+                ->on(Affiliates::$worker_manager_id, Workers::$id)
+            ->orderBy($orderByField, $orderDirection)
+            ->limit($limit)
+            ->offset($offset)
+        ->build();
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
     }
 }

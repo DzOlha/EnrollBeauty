@@ -153,7 +153,8 @@ const API = {
                 workers: '/web/admin/profile/workers',
                 services: '/web/worker/profile/services',
                 departments: '/web/worker/profile/departments',
-                positions: '/web/worker/profile/positions'
+                positions: '/web/worker/profile/positions',
+                affiliates: '/web/worker/profile/affiliates'
             }
         },
         API: {
@@ -198,9 +199,14 @@ const API = {
                 edit: '/api/admin/department/edit',
                 delete: '/api/admin/department/delete',
                 get: {
-                    all: ' /api/admin/department/get/all',
+                    all: '/api/admin/department/get/all',
                     'all-limited': '/api/admin/department/get/all-limited',
                     'all-services': '/api/admin/department/get/all-services',
+                }
+            },
+            AFFILIATE: {
+                get: {
+                    'all-limited': '/api/admin/affiliate/get/all-limited'
                 }
             }
         }
