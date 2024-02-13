@@ -168,6 +168,7 @@ const API = [
                 'get'      => [
                     'one' => '/api/admin/worker/get/one',
                     'all' => '/api/admin/worker/get/all',
+                    'all-limited' => '/api/admin/worker/get/all-limited',
                 ],
                 'register' => '/api/admin/worker/register'
             ],
@@ -206,6 +207,7 @@ const API = [
                 ]
             ],
             'AFFILIATES' => [
+                'add' => '/api/admin/affiliate/add',
                 'get' => [
                     'all-limited' => '/api/admin/affiliate/get/all-limited'
                 ]

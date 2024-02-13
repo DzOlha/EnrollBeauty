@@ -15,6 +15,7 @@ use Src\Service\Auth\AuthService;
 use Src\Service\Auth\User\UserAuthService;
 use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
+use Src\Service\Validator\impl\StreetAddressValidator;
 
 class AdminApiController extends WorkerApiController
 {
@@ -80,10 +81,17 @@ class AdminApiController extends WorkerApiController
                     }
 
                     /**
+                     * /api/admin/worker/get/all-limited
+                     */
+                    if($this->url[4] === 'all-limited') {
+                        $this->_getWorkers();
+                    }
+
+                    /**
                      * /api/admin/worker/get/all
                      */
                     if($this->url[4] === 'all') {
-                        $this->_getWorkers();
+                        $this->_getWorkersAll();
                     }
                 }
             }
@@ -309,10 +317,23 @@ class AdminApiController extends WorkerApiController
     {
         if(!empty($this->url[3]))
         {
+            /**
+             * url = /api/admin/affiliate/add/
+             */
+            if($this->url[3] === 'add') {
+                $this->_addAffiliate();
+            }
+
+            /**
+             * url = /api/admin/affiliate/get/
+             */
             if($this->url[3] === 'get')
             {
                 if(!empty($this->url[4]))
                 {
+                    /**
+                     * url = /api/admin/affiliate/get/all-limited
+                     */
                     if($this->url[4] === 'all-limited') {
                         $this->_getAllAffiliatesForAdminTable();
                     }
@@ -397,7 +418,7 @@ class AdminApiController extends WorkerApiController
     /**
      * @return void
      *
-     * url = /api/admin/worker/get/all
+     * url = /api/admin/worker/get/all-limited
      */
     protected function _getWorkers(): void
     {
@@ -1228,6 +1249,98 @@ class AdminApiController extends WorkerApiController
         }
     }
 
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/affiliate/add
+     */
+    protected function _addAffiliate()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['name']) || empty($_POST['country'])
+            || empty($_POST['city']) || empty($_POST['address']))
+            {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $items = [
+                'name' => htmlspecialchars(trim($_POST['name'])),
+                'manager_id' => $_POST['manager_id']
+                                ? htmlspecialchars(trim($_POST['manager_id']))
+                                : null,
+                'country' => htmlspecialchars(trim($_POST['country'])),
+                'city' => htmlspecialchars(trim($_POST['city'])),
+                'address' => htmlspecialchars(trim($_POST['address'])),
+            ];
+
+            /**
+             * Validate name
+             */
+            if(strlen($items['name']) < 3) {
+                $this->returnJson([
+                    'error' => 'Affiliate name should be equal to or longer than 3 characters!'
+                ]);
+            }
+
+            /**
+             * Validate country
+             */
+            $validator = new NameValidator();
+            if(!$validator->validate($items['country'])) {
+                $this->returnJson([
+                    'error' => 'Invalid country name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
+                ]);
+            }
+
+            /**
+             * Validate city
+             */
+            if(!$validator->validate($items['city'])) {
+                $this->returnJson([
+                    'error' => 'Invalid city name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
+                ]);
+            }
+
+            /**
+             * Validate street address
+             */
+            $streetValidator = new StreetAddressValidator();
+            if(!$streetValidator->validate($items['address'])) {
+                $this->returnJson([
+                    'error' => "Invalid format for the street address! Please, follow the example like 'str. Street, 3' or 'вул. Назва Вулиці, 1'"
+                ]);
+            }
+
+            /**
+             * Insert affiliate
+             */
+            $insertedId = $this->dataMapper->insertAffiliate(
+                $items['name'], $items['country'], $items['city'],
+                $items['address'], $items['manager_id']
+            );
+            if($insertedId === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while inserting the affiliate!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => "You successfully added the affiliate with name '{$items['name']}'",
+                'data' => [
+                    'id' => $insertedId
+                ]
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/affiliate/get/all-limited
+     */
     protected function _getAllAffiliatesForAdminTable()
     {
         $param = $this->_getLimitPageFieldOrderOffset();

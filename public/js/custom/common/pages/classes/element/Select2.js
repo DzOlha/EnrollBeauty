@@ -134,5 +134,11 @@ class Select2 {
             placeholder: placeholder,
         });
     }
+
+    addCallbackAfterSelectValue(callback) {
+        $(`#${this.selectId}`).on('select2:select', () => {
+            callback($(`#${this.selectId}`).val());
+        })
+    }
 }
 export default Select2;

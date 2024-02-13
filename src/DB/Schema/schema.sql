@@ -162,7 +162,7 @@ CREATE TABLE affiliates (
     country VARCHAR(50) NOT NULL,
     address VARCHAR(255) NOT NULL,
     worker_manager_id INT,
-    created_date DATETIME NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (worker_manager_id) REFERENCES workers(id) ON DELETE SET NULL
 );
 CREATE TABLE services (

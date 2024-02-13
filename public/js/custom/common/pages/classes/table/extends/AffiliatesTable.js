@@ -1,6 +1,5 @@
 import Table from "../Table.js";
 import Notifier from "../../notifier/Notifier.js";
-import DateRenderer from "../../renderer/extends/DateRenderer.js";
 
 class AffiliatesTable extends Table
 {

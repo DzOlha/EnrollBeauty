@@ -423,5 +423,30 @@ class FormBuilder {
         return this._createDeleteIcon('data-position-id', id, withDelete)
             + this.createAddPositionForm()
     }
+
+    createAffiliateNameInput() {
+        return `<div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Name</p>
+                    <div class="input-group mb-3">
+                        <input name="name" type="text" placeholder="Name" autocomplete="off"
+                               data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                               data-title="Name must be at least 3 characters long and contain only letters"
+                               required="required" class="form-control" id="name-input">
+                        <div class="error text-danger" id="name-input-error"></div>
+                    </div>
+                </div> 
+                `
+    }
+    createStreetAddressInput() {
+        return `<div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Street Address</p>
+                    <div class="input-group mb-3">
+                        <input name="name" type="text" placeholder="Example: str. Street Name, 7-B" autocomplete="off"
+                               data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                               required="required" class="form-control" id="address-input">
+                        <div class="error text-danger" id="address-input-error"></div>
+                    </div>
+                </div>`
+    }
 }
 export default FormBuilder;

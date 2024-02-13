@@ -159,4 +159,12 @@ class AdminDataMapper extends WorkerDataMapper
             $limit, $offset, $orderByField, $orderDirection
         );
     }
+
+    public function insertAffiliate(
+        string $name, string $country, string $city, string $address, ?int $managerId = null
+    ) {
+        return $this->dataSource->insertAffiliate(
+            $name, $country, $city, $address, $managerId
+        );
+    }
 }

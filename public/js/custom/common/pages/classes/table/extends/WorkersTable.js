@@ -7,7 +7,7 @@ class WorkersTable extends Table {
     constructor(requester) {
         super(
             requester,
-            API.ADMIN.API.WORKER.get.all + '?'
+            API.ADMIN.API.WORKER.get["all-limited"] + '?'
         )
         this.tableId = 'table-body';
     }

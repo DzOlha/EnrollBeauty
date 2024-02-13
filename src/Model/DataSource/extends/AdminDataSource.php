@@ -463,4 +463,21 @@ class AdminDataSource extends WorkerDataSource
         }
         return $this->_appendTotalRowsCount($queryFrom, $result);
     }
+
+    public function insertAffiliate(
+        string $name, string $country, string $city, string $address, ?int $managerId = null
+    ) {
+        $this->builder->insertInto(Affiliates::$table,
+                        [Affiliates::$name, Affiliates::$country,
+                         Affiliates::$city, Affiliates::$worker_manager_id,
+                         Affiliates::$address])
+                    ->values([':name', ':country', ':city', ':manager_id', ':address'],
+                            [$name, $country, $city, $managerId, $address])
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return $this->db->lastInsertedId();
+        }
+        return false;
+    }
 }
