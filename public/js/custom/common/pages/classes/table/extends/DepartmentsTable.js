@@ -26,7 +26,9 @@ class DepartmentsTable extends Table
         row.append(`<td>${item.name}</td>`);
 
         row.append(`<td id="${this.workersTrigger}-${item.id}" ${this.dataIdAttribute}="${item.id}">
-                        <button class="btn bg-secondary" type="button">Show Workers</button>
+                        <button class="btn bg-secondary button-in-cell" type="button">
+                            Show Workers
+                        </button>
                     </td>`)
 
         row.append(`<td>

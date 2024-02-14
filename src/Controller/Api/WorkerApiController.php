@@ -1387,11 +1387,6 @@ class WorkerApiController extends ApiController
             $exists = $this->dataMapper->selectServiceIdByNameAndDepartmentId(
                 $items['service_name'], $items['department_id']
             );
-            if ($exists === false) {
-                $this->returnJson([
-                    'error' => 'An error occurred while getting service with provided name!'
-                ]);
-            }
             if ($exists) {
                 $this->returnJson([
                     'error' => 'The service with provided name already exists in the selected department!'
