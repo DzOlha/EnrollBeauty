@@ -208,6 +208,7 @@ const API = {
             AFFILIATE: {
                 add: '/api/admin/affiliate/add',
                 edit: '/api/admin/affiliate/edit',
+                delete: '/api/admin/affiliate/delete',
                 get: {
                     one: '/api/admin/affiliate/get/one',
                     'all-limited': '/api/admin/affiliate/get/all-limited'

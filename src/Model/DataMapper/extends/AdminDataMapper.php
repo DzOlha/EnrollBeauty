@@ -194,4 +194,14 @@ class AdminDataMapper extends WorkerDataMapper
             $id, $name, $country, $city, $address, $managerId
         );
     }
+
+    public function selectFutureOrdersByAffiliateId(int $affiliateId)
+    {
+        return $this->dataSource->selectFutureOrdersByAffiliateId($affiliateId);
+    }
+
+    public function deleteAffiliateById(int $id)
+    {
+        return $this->dataSource->deleteAffiliateById($id);
+    }
 }

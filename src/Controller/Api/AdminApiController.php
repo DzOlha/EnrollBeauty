@@ -332,6 +332,13 @@ class AdminApiController extends WorkerApiController
             }
 
             /**
+             * url = /api/admin/affiliate/delete/
+             */
+            if($this->url[3] === 'delete') {
+                $this->_deleteAffiliate();
+            }
+
+            /**
              * url = /api/admin/affiliate/get/
              */
             if($this->url[3] === 'get')
@@ -1362,6 +1369,11 @@ class AdminApiController extends WorkerApiController
         }
     }
 
+    /**
+     * @return void
+     *
+     * url = /api/admin/affiliate/edit
+     */
     protected function _editAffiliate()
     {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -1462,6 +1474,55 @@ class AdminApiController extends WorkerApiController
         }
     }
 
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/affiliate/delete
+     */
+    protected function _deleteAffiliate()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['id'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $id = htmlspecialchars(trim($_POST['id']));
+
+            /**
+             * Check if there is no upcoming incomplete orders
+             * for the affiliate we would like to delete
+             */
+            $futureOrders = $this->dataMapper->selectFutureOrdersByAffiliateId($id);
+            if($futureOrders) {
+                $this->returnJson([
+                    'error' => 'You can not delete the affiliate which has incomplete upcoming orders!'
+                ]);
+            }
+
+            $deleted = $this->dataMapper->deleteAffiliateById($id);
+            if($deleted === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while deleting the affiliate!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully deleted the affiliate!',
+                'data' => [
+                    'id' => $id
+                ]
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/admin/affiliate/get/one
+     */
     protected function _getAffiliateById()
     {
         if($_SERVER['REQUEST_METHOD'] === 'GET') {

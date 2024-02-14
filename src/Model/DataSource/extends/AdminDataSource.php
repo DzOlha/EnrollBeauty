@@ -16,6 +16,7 @@ use Src\Model\Table\Roles;
 use Src\Model\Table\Services;
 use Src\Model\Table\Workers;
 use Src\Model\Table\WorkersServicePricing;
+use Src\Model\Table\WorkersServiceSchedule;
 
 class AdminDataSource extends WorkerDataSource
 {
@@ -539,6 +540,34 @@ class AdminDataSource extends WorkerDataSource
                     ->andSet(Affiliates::$worker_manager_id, ':manager_id', $managerId)
                 ->whereEqual(Affiliates::$id, ':id', $id)
         ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectFutureOrdersByAffiliateId(int $affiliateId)
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $this->builder->select([OrdersService::$id])
+                ->from(OrdersService::$table)
+                ->whereEqual(OrdersService::$affiliate_id, ':affiliate_id', $affiliateId)
+                ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
+                ->andIsNull(OrdersService::$completed_datetime)
+                ->andIsNull(OrdersService::$canceled_datetime)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function deleteAffiliateById(int $id)
+    {
+        $this->builder->delete()
+                    ->from(Affiliates::$table)
+                    ->whereEqual(Affiliates::$id, ':id', $id)
+            ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;

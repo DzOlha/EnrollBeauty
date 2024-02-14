@@ -56,7 +56,7 @@ class EditAffiliateForm extends AddAffiliateForm
         this.addListenerSubmitForm();
 
         if(this.withDelete) {
-            //this.deleteCallback(id);
+            this.deleteCallback(id);
         }
     }
 
