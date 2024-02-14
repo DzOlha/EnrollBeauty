@@ -149,3 +149,13 @@ button[type="button"] {
 .button-in-cell {
     width: 100%;
 }
+
+/*
+Style for the first li item in select option
+for resetting the select2 value
+
+.select2-results__options */
+#select2-manager-select-results > li:first-child {
+    border-bottom: 1px solid darkgrey;
+    border-top: 1px solid darkgrey;
+}

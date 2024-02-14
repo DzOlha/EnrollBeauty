@@ -116,9 +116,7 @@ class AffiliatesTable extends Table
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
 
-
-            //this.manageCallback(item.id);
-
+            this.manageCallback(item.id);
         });
     }
 }

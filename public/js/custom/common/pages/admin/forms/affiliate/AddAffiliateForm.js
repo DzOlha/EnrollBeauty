@@ -8,7 +8,7 @@ class AddAffiliateForm extends Form
 {
     constructor(
         requester, modalForm, table,
-        getWorkersUrl, addApiUrl,
+        apiGetWorkers, addApiUrl
     ) {
         super(
             '',
@@ -54,7 +54,7 @@ class AddAffiliateForm extends Form
 
         this.modalBodyClass = 'modal-body';
 
-        this.apiGetWorkers = getWorkersUrl;
+        this.apiGetWorkers = apiGetWorkers;
     }
     init() {
         this.addListenerShowAddForm();
@@ -113,6 +113,7 @@ class AddAffiliateForm extends Form
             this.errorCallbackSubmit.bind(this)
         )
     }
+
     successCallbackGetWorkers(response) {
         this.populateManagerSelect2(response.data);
 
@@ -187,9 +188,11 @@ class AddAffiliateForm extends Form
         }
 
         let pattern = /^str\. ([A-Za-z\s]+,)? \d+[A-Za-z]?\b/;
+        //let pattern2 = /^(вул\.)\. ([\u0400-\u04FFіїІЇ\s]+,)? \d+[\u0400-\u04FFіїІЇ]?\b/;
+
 
         if(!pattern.test(value)) {
-            result.error = "Invalid format for the street address! Please, follow the example like 'str. Street, 3' or 'вул. Назва Вулиці, 1'";
+            result.error = "Invalid format for the street address! Please, follow the example like 'str. Street, 3'";
             return result;
         }
 

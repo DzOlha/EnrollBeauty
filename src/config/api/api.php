@@ -208,7 +208,9 @@ const API = [
             ],
             'AFFILIATES' => [
                 'add' => '/api/admin/affiliate/add',
+                'edit' => '/api/admin/affiliate/edit',
                 'get' => [
+                    'one' => '/api/admin/affiliate/get/one',
                     'all-limited' => '/api/admin/affiliate/get/all-limited'
                 ]
             ]

@@ -167,4 +167,31 @@ class AdminDataMapper extends WorkerDataMapper
             $name, $country, $city, $address, $managerId
         );
     }
+
+    public function selectAffiliateById(int $id)
+    {
+        return $this->dataSource->selectAffiliateById($id);
+    }
+
+    public function selectAffiliateByIdForTable(int $id)
+    {
+        return $this->dataSource->selectAffiliateByIdForTable($id);
+    }
+
+    public function selectAffiliateByAddressAndNotId(
+        int $id, string $country, string $city, string $address
+    ) {
+        return $this->dataSource->selectAffiliateByAddressAndNotId(
+            $id, $country, $city, $address
+        );
+    }
+
+    public function updateAffiliateById(
+        int $id, string $name, string $country,
+        string $city, string $address, ?int $managerId = null
+    ) {
+        return $this->dataSource->updateAffiliateById(
+            $id, $name, $country, $city, $address, $managerId
+        );
+    }
 }

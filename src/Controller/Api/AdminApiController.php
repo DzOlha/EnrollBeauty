@@ -325,12 +325,26 @@ class AdminApiController extends WorkerApiController
             }
 
             /**
+             * url = /api/admin/affiliate/edit/
+             */
+            if($this->url[3] === 'edit') {
+                $this->_editAffiliate();
+            }
+
+            /**
              * url = /api/admin/affiliate/get/
              */
             if($this->url[3] === 'get')
             {
                 if(!empty($this->url[4]))
                 {
+                    /**
+                     * url = /api/admin/affiliate/get/one
+                     */
+                    if($this->url[4] === 'one') {
+                        $this->_getAffiliateById();
+                    }
+
                     /**
                      * url = /api/admin/affiliate/get/all-limited
                      */
@@ -1315,6 +1329,18 @@ class AdminApiController extends WorkerApiController
             }
 
             /**
+             * Check if there is no affiliate with the same address
+             */
+            $existsByAddress = $this->dataMapper->selectAffiliateByCountryCityAndAddress(
+                $items['country'], $items['city'], $items['address']
+            );
+            if($existsByAddress) {
+                $this->returnJson([
+                    'error' => 'The affiliate with the same address already exists!'
+                ]);
+            }
+
+            /**
              * Insert affiliate
              */
             $insertedId = $this->dataMapper->insertAffiliate(
@@ -1332,6 +1358,140 @@ class AdminApiController extends WorkerApiController
                 'data' => [
                     'id' => $insertedId
                 ]
+            ]);
+        }
+    }
+
+    protected function _editAffiliate()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['name']) || empty($_POST['country'])
+                || empty($_POST['city']) || empty($_POST['address'])
+                || empty($_POST['id']))
+            {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $items = [
+                'id' => htmlspecialchars(trim($_POST['id'])),
+                'name' => htmlspecialchars(trim($_POST['name'])),
+                'manager_id' => $_POST['manager_id']
+                    ? htmlspecialchars(trim($_POST['manager_id']))
+                    : null,
+                'country' => htmlspecialchars(trim($_POST['country'])),
+                'city' => htmlspecialchars(trim($_POST['city'])),
+                'address' => htmlspecialchars(trim($_POST['address'])),
+            ];
+
+            /**
+             * Validate name
+             */
+            if(strlen($items['name']) < 3) {
+                $this->returnJson([
+                    'error' => 'Affiliate name should be equal to or longer than 3 characters!'
+                ]);
+            }
+
+            /**
+             * Validate country
+             */
+            $validator = new NameValidator();
+            if(!$validator->validate($items['country'])) {
+                $this->returnJson([
+                    'error' => 'Invalid country name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
+                ]);
+            }
+
+            /**
+             * Validate city
+             */
+            if(!$validator->validate($items['city'])) {
+                $this->returnJson([
+                    'error' => 'Invalid city name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
+                ]);
+            }
+
+            /**
+             * Validate street address
+             */
+            $streetValidator = new StreetAddressValidator();
+            if(!$streetValidator->validate($items['address'])) {
+                $this->returnJson([
+                    'error' => "Invalid format for the street address! Please, follow the example like 'str. Street, 3' or 'вул. Назва Вулиці, 1'"
+                ]);
+            }
+
+            /**
+             * Check if there is no affiliate with the same address
+             */
+            $existsByAddress = $this->dataMapper->selectAffiliateByAddressAndNotId(
+                $items['id'], $items['country'], $items['city'], $items['address']
+            );
+            if($existsByAddress) {
+                $this->returnJson([
+                    'error' => 'The affiliate with the same address already exists!'
+                ]);
+            }
+
+            /**
+             * Insert affiliate
+             */
+            $insertedId = $this->dataMapper->updateAffiliateById(
+                $items['id'], $items['name'], $items['country'],
+                $items['city'], $items['address'], $items['manager_id']
+            );
+            if($insertedId === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while updating the affiliate!'
+                ]);
+            }
+
+            $updatedAffiliate = $this->dataMapper->selectAffiliateByIdForTable($items['id']);
+            if($updatedAffiliate === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting updated affiliate!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => "You successfully updated the affiliate!",
+                'data' => $updatedAffiliate
+            ]);
+        }
+    }
+
+    protected function _getAffiliateById()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['id'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $id = htmlspecialchars(trim($_GET['id']));
+
+            /**
+             * 'id':
+             * 'name':
+             * 'country':
+             * 'city':
+             * 'address':
+             * 'manager_id':
+             * 'created_date':
+             */
+            $result = $this->dataMapper->selectAffiliateById($id);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the affiliate!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
             ]);
         }
     }

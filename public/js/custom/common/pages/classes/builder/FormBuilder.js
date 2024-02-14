@@ -448,5 +448,10 @@ class FormBuilder {
                     </div>
                 </div>`
     }
+
+    createAffiliateNameInputEdit(id, withDelete) {
+        return this._createDeleteIcon('data-affiliate-id', id, withDelete)
+            + this.createAffiliateNameInput()
+    }
 }
 export default FormBuilder;

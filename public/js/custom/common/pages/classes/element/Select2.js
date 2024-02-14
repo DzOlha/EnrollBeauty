@@ -5,7 +5,7 @@ class Select2 {
         selectTitle, selectPlaceholder, selectId,
         required, withSearch = false,
         parentObject = null,
-        multiple = false
+        multiple = false,
     ) {
         this.parentId = parentId;
         this.selectId = selectId;
@@ -50,6 +50,9 @@ class Select2 {
         $(`#${this.selectId}`).val(value).trigger('change');
         this._initSelect2();
     }
+    get() {
+        return $(`#${this.selectId}`).val();
+    }
     html()
     {
         let asterisk = this.required === true ? '*' : '';
@@ -74,6 +77,10 @@ class Select2 {
                  </option>`
     }
 
+    emptyOption() {
+        return `<option value="clear">Clear Choice</option>`
+    }
+
     /**
      * @param data
      * @private
@@ -89,12 +96,31 @@ class Select2 {
                 item.id, item.name
             ));
         })
+        if(!this.required) {
+            select.prepend(this.emptyOption());
+        }
         select.select2('destroy').select2();
     }
 
     populate(data) {
         this._populateSelectOptions(data);
         this._initSelect2();
+
+        /**
+         * Clear button
+         */
+        if(!this.required) {
+           this.addListenerResetValue();
+        }
+    }
+
+    addListenerResetValue() {
+        $(`#${this.selectId}`).on('select2:select', () => {
+            let value = $(`#${this.selectId}`).val();
+            if(value === 'clear') {
+                this.reset();
+            }
+        })
     }
 
     validate(key, validationCallback = null, errorId = null)

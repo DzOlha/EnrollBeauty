@@ -480,4 +480,69 @@ class AdminDataSource extends WorkerDataSource
         }
         return false;
     }
+
+    public function selectAffiliateById(int $id)
+    {
+        $this->builder->select([Affiliates::$id, Affiliates::$name, Affiliates::$country,
+                                Affiliates::$city, Affiliates::$address,
+                                Affiliates::$worker_manager_id],
+                        [Affiliates::$worker_manager_id => 'manager_id'])
+                        ->from(Affiliates::$table)
+                        ->whereEqual(Affiliates::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function selectAffiliateByIdForTable(int $id)
+    {
+        $this->builder->select([Affiliates::$id, Affiliates::$name, Affiliates::$country,
+                                Affiliates::$city, Affiliates::$address, Affiliates::$created_date,
+                                Workers::$id, Workers::$name, Workers::$surname],
+            [
+                Workers::$id => 'manager_id',
+                Workers::$name => 'manager_name',
+                Workers::$surname => 'manager_surname'
+            ])
+            ->from(Affiliates::$table)
+            ->leftJoin(Workers::$table)
+                ->on(Affiliates::$worker_manager_id, Workers::$id)
+            ->whereEqual(Affiliates::$id, ':id', $id)
+        ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function selectAffiliateByAddressAndNotId(
+        int $id, string $country, string $city, string $address
+    ) {
+        $this->builder->select([Affiliates::$id])
+                    ->from(Affiliates::$table)
+                    ->whereEqual(Affiliates::$country, ':country', $country)
+                    ->andEqual(Affiliates::$city, ':city', $city)
+                    ->andEqual(Affiliates::$address, ':address', $address)
+                    ->andNotEqual(Affiliates::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function updateAffiliateById(
+        int $id, string $name, string $country,
+        string $city, string $address, ?int $managerId = null
+    ) {
+        $this->builder->update(Affiliates::$table)
+                    ->set(Affiliates::$name, ':name', $name)
+                    ->andSet(Affiliates::$country, ':country', $country)
+                    ->andSet(Affiliates::$city, ':city', $city)
+                    ->andSet(Affiliates::$address, ':address', $address)
+                    ->andSet(Affiliates::$worker_manager_id, ':manager_id', $managerId)
+                ->whereEqual(Affiliates::$id, ':id', $id)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 }
