@@ -204,4 +204,16 @@ class AdminDataMapper extends WorkerDataMapper
     {
         return $this->dataSource->deleteAffiliateById($id);
     }
+
+    public function selectWorkersByDepartmentId(
+        int $departmentId, int $limit, int $offset
+    ) {
+        return $this->dataSource->selectWorkersByDepartmentId($departmentId, $limit, $offset);
+    }
+
+    public function selectWorkersByServiceId(
+        int $serviceId, int $limit, int $offset
+    ){
+        return $this->dataSource->selectWorkersByServiceId($serviceId, $limit, $offset);
+    }
 }

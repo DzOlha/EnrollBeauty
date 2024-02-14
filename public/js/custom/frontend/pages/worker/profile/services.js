@@ -12,7 +12,7 @@ $(function () {
     let requester = new Requester();
     let worker = new Worker(requester);
     let servicesTable = new ServicesTable(
-        requester, API.WORKER.API.SERVICE.get["all-with-departments"]
+        requester, API.WORKER.API.SERVICE.get["all-with-departments"], true
     );
 
     let formBuilder = new FormBuilder();

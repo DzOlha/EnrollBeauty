@@ -88,6 +88,20 @@ class AdminApiController extends WorkerApiController
                     }
 
                     /**
+                     * /api/admin/worker/get/all-by-department
+                     */
+                    if($this->url[4] === 'all-by-department') {
+                        $this->_getWorkersByDepartment();
+                    }
+
+                    /**
+                     * /api/admin/worker/get/all-by-service
+                     */
+                    if($this->url[4] === 'all-by-service') {
+                        $this->_getWorkersByService();
+                    }
+
+                    /**
                      * /api/admin/worker/get/all
                      */
                     if($this->url[4] === 'all') {
@@ -473,6 +487,90 @@ class AdminApiController extends WorkerApiController
             'success' => true,
             'data' => $result
         ]);
+    }
+
+    /**
+     * @return void
+     *
+     *  url = /api/admin/worker/get/all-by-department
+     */
+    protected function _getWorkersByDepartment()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['department_id'])
+            || empty($_GET['limit'])
+            || empty($_GET['page'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $items = [
+                'department_id' => htmlspecialchars(trim($_GET['department_id'])),
+                'limit' => htmlspecialchars(trim($_GET['limit'])),
+                'page' => htmlspecialchars(trim($_GET['page'])),
+            ];
+            $offset = ($items['page'] - 1) * $items['limit'];
+
+            $result = $this->dataMapper->selectWorkersByDepartmentId(
+                $items['department_id'], $items['limit'], $offset
+            );
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting workers for the department!'
+                ]);
+            }
+
+            $result += [
+                'department_id' => $items['department_id']
+            ];
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     *  url = /api/admin/worker/get/all-by-service
+     */
+    protected function _getWorkersByService()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['service_id'])
+                || empty($_GET['limit'])
+                || empty($_GET['page'])) {
+                $this->returnJson([
+                    'error' => 'Missing request fields!'
+                ]);
+            }
+
+            $items = [
+                'service_id' => htmlspecialchars(trim($_GET['service_id'])),
+                'limit' => htmlspecialchars(trim($_GET['limit'])),
+                'page' => htmlspecialchars(trim($_GET['page'])),
+            ];
+            $offset = ($items['page'] - 1) * $items['limit'];
+
+            $result = $this->dataMapper->selectWorkersByServiceId(
+                $items['service_id'], $items['limit'], $offset
+            );
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting workers for the service!'
+                ]);
+            }
+
+            $result += [
+                'service_id' => $items['service_id']
+            ];
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ use Src\Model\Table\Positions;
 use Src\Model\Table\Services;
 use Src\Model\Table\Users;
 use Src\Model\Table\Workers;
+use Src\Model\Table\WorkersPhoto;
 use Src\Model\Table\WorkersServicePricing;
 use Src\Model\Table\WorkersServiceSchedule;
 use Src\Model\Table\WorkersSetting;
@@ -205,10 +206,16 @@ class WorkerDataSource extends DataSource
 
     public function selectWorkerInfoById(int $workerId)
     {
-        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email])
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
+                                Workers::$email, WorkersPhoto::$filename, Positions::$name],
+                                [Positions::$name => 'position'])
             ->from(Workers::$table)
+            ->leftJoin(WorkersPhoto::$table)
+                ->on(Workers::$id, WorkersPhoto::$worker_id)
+            ->innerJoin(Positions::$table)
+                ->on(Workers::$position_id, Positions::$id)
             ->whereEqual(Workers::$id, ':id', $workerId)
-            ->build();
+        ->build();
 
         return $this->db->singleRow();
     }

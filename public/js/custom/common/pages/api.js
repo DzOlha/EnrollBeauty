@@ -167,7 +167,9 @@ const API = {
                 get: {
                     one: '/api/admin/worker/get/one',
                     all: '/api/admin/worker/get/all',
-                    'all-limited': '/api/admin/worker/get/all-limited'
+                    'all-limited': '/api/admin/worker/get/all-limited',
+                    'all-by-department': '/api/admin/worker/get/all-by-department',
+                    'all-by-service': '/api/admin/worker/get/all-by-service'
                 },
                 register: '/api/admin/worker/register'
             },

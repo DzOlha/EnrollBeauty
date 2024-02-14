@@ -11,6 +11,7 @@
 <link href="/public/css/custom/common/pages/admin/table-button-search.css" rel="stylesheet" />
 <link href="/public/css/custom/common/pages/admin/modal-form.css" rel="stylesheet" />
 <link href="/public/css/custom/common/pages/worker/right-modal-toolbar.css" rel="stylesheet" />
+<link href="/public/css/custom/common/pages/admin/modal-with-workers.css" rel="stylesheet" />
 
 <!-- Select2 css -->
 <link href="/public/assets/plugins/select2/css/select2.min.css" rel="stylesheet">

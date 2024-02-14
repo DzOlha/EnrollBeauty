@@ -15,6 +15,7 @@ use Src\Model\Table\Positions;
 use Src\Model\Table\Roles;
 use Src\Model\Table\Services;
 use Src\Model\Table\Workers;
+use Src\Model\Table\WorkersPhoto;
 use Src\Model\Table\WorkersServicePricing;
 use Src\Model\Table\WorkersServiceSchedule;
 
@@ -573,5 +574,73 @@ class AdminDataSource extends WorkerDataSource
             return true;
         }
         return false;
+    }
+
+    public function selectWorkersByDepartmentId(
+        int $departmentId, int $limit, int $offset
+    ) {
+        $workers = Workers::$table;
+        $workersPositionId = Workers::$position_id;
+
+        $positions = Positions::$table;
+        $positionsId = Positions::$id;
+        $positionsDepartmentId = Positions::$department_id;
+
+        $queryFrom = " $workers INNER JOIN $positions ON $workersPositionId = $positionsId 
+                        WHERE $positionsDepartmentId = $departmentId ";
+
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
+                                Workers::$email, WorkersPhoto::$filename, Positions::$name],
+                [Positions::$name => 'position'])
+                ->from(Workers::$table)
+                ->innerJoin(Positions::$table)
+                    ->on(Workers::$position_id, Positions::$id)
+                ->leftJoin(WorkersPhoto::$table)
+                    ->on(Workers::$id, WorkersPhoto::$worker_id)
+                ->whereEqual(Positions::$department_id, ':department_id', $departmentId)
+                ->limit($limit)
+                ->offset($offset)
+        ->build();
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
+
+    public function selectWorkersByServiceId(
+        int $serviceId, int $limit, int $offset
+    ){
+        $workers = Workers::$table;
+        $workersId = Workers::$id;
+
+        $pricing = WorkersServicePricing::$table;
+        $pricingServiceId = WorkersServicePricing::$service_id;
+        $pricingWorkerId = WorkersServicePricing::$worker_id;
+
+        $queryFrom = " $workers LEFT JOIN $pricing ON $workersId = $pricingWorkerId 
+                        WHERE $pricingServiceId = $serviceId ";
+
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
+                                Workers::$email, WorkersPhoto::$filename, Positions::$name],
+            [Positions::$name => 'position'])
+            ->from(Workers::$table)
+            ->innerJoin(Positions::$table)
+                ->on(Workers::$position_id, Positions::$id)
+            ->leftJoin(WorkersPhoto::$table)
+                ->on(Workers::$id, WorkersPhoto::$worker_id)
+            ->leftJoin(WorkersServicePricing::$table)
+                ->on(Workers::$id, WorkersServicePricing::$worker_id)
+            ->whereEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+            ->limit($limit)
+            ->offset($offset)
+        ->build();
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
     }
 }

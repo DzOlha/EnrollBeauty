@@ -14,6 +14,11 @@ class EditDepartmentForm extends AddDepartmentForm
     setDeleteCallback(callback, context) {
         this.deleteCallback = callback.bind(context);
     }
+
+    setShowWorkersCallback(callback, context){
+        this.showWorkersCallback = callback.bind(context);
+    }
+
     addListenerManage(id) {
         let selector = `${this.manageBase}-${id}`;
         let btn = document.getElementById(
@@ -113,6 +118,7 @@ class EditDepartmentForm extends AddDepartmentForm
             this.departmentsTable.populateRow(data)
         );
         this.addListenerManage(data.id);
+        this.showWorkersCallback(data.id);
     }
 }
 export default EditDepartmentForm;

@@ -27,6 +27,11 @@ class EditServiceForm extends AddServiceForm
     setDeleteCallback(callback, context) {
         this.deleteCallback = callback.bind(context);
     }
+
+    setShowWorkersCallback(callback, context){
+        this.showWorkersCallback = callback.bind(context);
+    }
+
     addListenerManage(id) {
         let selector = `${this.manageBase}-${id}`;
         let btn = document.getElementById(
@@ -158,6 +163,10 @@ class EditServiceForm extends AddServiceForm
             this.table.populateRow(response.data)
         );
         this.addListenerManage(response.data.id);
+
+        if(this.withDelete) {
+            this.showWorkersCallback(response.data.id);
+        }
 
         this.departmentId = null;
     }

@@ -3,14 +3,20 @@ import Notifier from "../../notifier/Notifier.js";
 import API from "../../../../../common/pages/api.js";
 
 class ServicesTable extends Table {
-    constructor(requester, apiUrl) {
+    constructor(requester, apiUrl, disabledWorkersBtn = false) {
         super(
             requester,
             apiUrl + '?'
         )
         this.tableId = 'table-body';
-        this.workersTrigger = 'show-workers';
+        this.extraModalTrigger = 'show-extra-modal';
         this.dataIdAttribute = 'data-service-id';
+
+        this.disabledWorkersBtn = disabledWorkersBtn;
+    }
+
+    setShowWorkersCallback(callback, context){
+        this.showWorkersCallback = callback.bind(context);
     }
 
     populateRow(item){
@@ -25,9 +31,12 @@ class ServicesTable extends Table {
                             ${item.department_name}
                       </td>`);
 
-        row.append(`<td id="${this.workersTrigger}-${item.id}" ${this.dataIdAttribute}="${item.id}">
-                        <button class="btn bg-secondary button-in-cell" type="button">
-                            Show Workers
+        let disabled = this.disabledWorkersBtn ? 'disabled' : '';
+        row.append(`<td>
+                        <button class="btn bg-secondary button-in-cell ${disabled}" type="button"
+                                id="${this.extraModalTrigger}-${item.id}" 
+                                ${this.dataIdAttribute}="${item.id}">
+                            View Workers
                         </button>
                     </td>`)
 
@@ -74,6 +83,10 @@ class ServicesTable extends Table {
             $(`#${this.tableId}`).append(row);
 
             this.manageCallback(item.id);
+
+            if(!this.disabledWorkersBtn) {
+                this.showWorkersCallback(item.id);
+            }
         });
         // this.addListenerCancelAppointment();
     }

@@ -8,6 +8,8 @@ import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilde
 import API from "../../../../common/pages/api.js";
 import EditServiceForm from "../../../../common/pages/worker/forms/service/EditServiceForm.js";
 import DeleteServiceForm from "../../../../common/pages/worker/forms/service/DeleteServiceForm.js";
+import ModalBuilder from "../../../../common/pages/admin/forms/department/view_workers/ModalBuilder.js";
+import ViewWorkersModal from "../../../../common/pages/admin/forms/department/view_workers/ViewWorkersModal.js";
 
 $(function () {
     let requester = new Requester();
@@ -53,11 +55,28 @@ $(function () {
     servicesTable.setManageCallback(
         editForm.addListenerManage, editForm
     );
-    servicesTable.POPULATE();
 
     /**
      * Listen click on 'Add Pricing Item' button
      * to show the form in modal window
      */
     addNewServiceForm.addListenerShowAddServiceForm();
+
+
+    /**
+     * Modals with Workers
+     */
+    let extraModalBuilder = new ModalBuilder();
+    let viewWorkers = new ViewWorkersModal(
+        requester, extraModalBuilder, API.ADMIN.API.WORKER.get["all-by-service"],
+        'data-service-id', 'service_id'
+    );
+    servicesTable.setShowWorkersCallback(
+        viewWorkers.addListenerShow, viewWorkers
+    );
+    servicesTable.POPULATE();
+
+    editForm.setShowWorkersCallback(
+        viewWorkers.addListenerShow, viewWorkers
+    );
 });

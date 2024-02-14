@@ -102,7 +102,7 @@ CREATE TABLE workers (
 CREATE TABLE workers_photo (
    id INT AUTO_INCREMENT PRIMARY KEY,
    worker_id INT NOT NULL,
-   name VARCHAR(255),
+   filename VARCHAR(255),
    FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE
 );
 

@@ -159,3 +159,7 @@ for resetting the select2 value
     border-bottom: 1px solid darkgrey;
     border-top: 1px solid darkgrey;
 }
+
+.worker-card-name {
+    text-transform: none !important;
+}

@@ -1,5 +1,0 @@
-
-class InformationalModal
-{
-    constructor() {}
-}

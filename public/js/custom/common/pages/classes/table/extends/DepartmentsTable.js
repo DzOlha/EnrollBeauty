@@ -12,11 +12,13 @@ class DepartmentsTable extends Table
         this.tableId = 'table-body';
         this.dataIdAttribute = 'data-department-id';
         this.dataNameAttribute = 'data-department-name';
-        this.workersTrigger = 'show-workers';
+        this.extraModalTrigger = 'show-extra-modal';
     }
+
     setShowWorkersCallback(callback, context){
         this.showWorkersCallback = callback.bind(context);
     }
+
     populateRow(item){
         // Create a table row for each of service item
         let row = $(`<tr ${this.dataIdAttribute} = "${item.id}">`);
@@ -25,9 +27,11 @@ class DepartmentsTable extends Table
 
         row.append(`<td>${item.name}</td>`);
 
-        row.append(`<td id="${this.workersTrigger}-${item.id}" ${this.dataIdAttribute}="${item.id}">
-                        <button class="btn bg-secondary button-in-cell" type="button">
-                            Show Workers
+        row.append(`<td>
+                        <button class="btn bg-secondary button-in-cell" type="button"
+                                id="${this.extraModalTrigger}-${item.id}"
+                                ${this.dataIdAttribute}="${item.id}">
+                            View Workers
                         </button>
                     </td>`)
 
@@ -73,7 +77,7 @@ class DepartmentsTable extends Table
             $(`#${this.tableId}`).append(row);
 
             this.manageCallback(item.id);
-            //this.showServicesCallback(item.id);
+            this.showWorkersCallback(item.id);
         });
     }
 }

@@ -89,12 +89,12 @@
                         <div class="col-sm-12 col-md-12 user-info-wrapper">
                             <div class="user-img-wrapper">
                                 <img id="user-img-large" class="user-img"
-                                     src="/public/images/custom/system/nophoto.jpg" alt="user-photo"/>
+                                     src="<?=NO_PHOTO?>" alt="user-photo"/>
                             </div>
                             <!--                            <input type="file" class="dropify upload-img" id="user-photo-input"-->
                             <!--                                   accept=".jpg"-->
                             <!--                                   name="user-photo" data-height="150"-->
-                            <!--                                   data-default-file="/public/images/custom/system/nophoto.jpg"-->
+                            <!--                                   data-default-file="<?=NO_PHOTO?>"-->
                             <!--                                   disabled="disabled"-->
                             <!--                            />-->
                             <div class="user-name-surname-wrapper">

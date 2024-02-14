@@ -1,0 +1,54 @@
+
+#modalMentions .worker-card-name {
+    font-size: 18px;
+}
+#modalMentions .text-muted {
+    font-size: 13px !important;
+}
+#modalMentions.modal-form .upload-more {
+    width: auto !important;
+}
+#modalMentions .worker-card {
+    padding: 0 !important;
+    margin: 8px;
+    width: calc((100% - 42px)/2);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+#modalMentions.modal-form .card {
+    margin: 0 !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#modalMentions.modal-form .card-body {
+    padding: 10px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#modalMentions.modal-form .card .img-wrapper {
+    width: 75px;
+    height: 100%;
+    border-radius: 50%;
+    margin: 8px;
+}
+#modalMentions.modal-form .card .img-fluid {
+    border-radius: 50%;
+}
+#modalMentions .lang-code {
+    /*color: black;*/
+}
+#modalMentions .mentions-wrapper-cards {
+    display: flex;
+    column-gap: 10px;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
+#modalMentions .modal-body {
+    margin: 0 0 !important;
+    width: 100%;
+}

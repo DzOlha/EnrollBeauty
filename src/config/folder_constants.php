@@ -32,5 +32,6 @@ const COMPANY_NAME = 'Enroll Beauty';
 const COMPANY_EMAIL = 'enroll@beauty.com';
 
 const ARROW_DOWN = '/public/images/custom/system/icons/arrows_down.svg';
+const NO_PHOTO = '/public/images/custom/system/nophoto.jpg';
 
 

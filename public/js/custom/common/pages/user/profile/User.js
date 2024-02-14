@@ -1,6 +1,7 @@
 
 import Notifier from "../../classes/notifier/Notifier.js";
 import API from "../../../../common/pages/api.js";
+import CONST from "../../../../constants.js";
 class User {
     constructor(requester) {
         this.requestor = requester;
@@ -16,7 +17,7 @@ class User {
         this.smallUserImgId = 'user-img-small';
         this.largeUserImgId = 'user-img-large';
 
-        this.imgPath = '/public/images/custom/pages/user/';
+        this.imgPath = CONST.userImgFolder;
 
         this.roleName = '[User]';
     }
@@ -46,14 +47,16 @@ class User {
      */
     successCallbackUserInfo(response) {
         this.populateSmallUserInfo(
-            response.data.name, response.data.surname + "\n" + this.roleName, response.data?.filename
+            response.data.name, response.data.surname + "\n" + this.roleName,
+            response.data?.filename, response.data.id
         );
         this.populateLargeUserInfo(
-            this.roleName + " " + response.data.name, response.data.surname, response.data?.filename
+            this.roleName + " " + response.data.name, response.data.surname,
+            response.data?.filename, response.data.id
         );
     }
 
-    populateSmallUserInfo(name, surname, filename) {
+    populateSmallUserInfo(name, surname, filename, id) {
         let smallName = document.getElementById(this.smallNameId);
         if (smallName === null) return;
         smallName.innerText = name;
@@ -64,10 +67,10 @@ class User {
 
         let smallUserImg = document.getElementById(this.smallUserImgId);
         if (smallUserImg === null || !filename) return;
-        smallUserImg.setAttribute('src', this.imgPath + filename);
+        smallUserImg.setAttribute('src', this.imgPath + `${id}/` + filename);
     }
 
-    populateLargeUserInfo(name, surname, filename) {
+    populateLargeUserInfo(name, surname, filename, id) {
         let largeName = document.getElementById(this.largeNameId);
         if (largeName === null) return;
         largeName.innerText = name;
@@ -78,7 +81,7 @@ class User {
 
         let largeUserImg = document.getElementById(this.largeUserImgId);
         if (largeUserImg === null || !filename) return;
-        largeUserImg.setAttribute('src', this.imgPath + filename);
+        largeUserImg.setAttribute('src', this.imgPath + `${id}/` + filename);
     }
 
     errorCallbackUserInfo(response) {

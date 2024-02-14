@@ -8,6 +8,8 @@ import API from "../../../../common/pages/api.js";
 import EditDepartmentForm from "../../../../common/pages/admin/forms/department/EditDepartmentForm.js";
 import DeleteDepartmentForm from "../../../../common/pages/admin/forms/department/DeleteDepartmentForm.js";
 import Admin from "../../../../common/pages/admin/profile/Admin.js";
+import ViewWorkersModal from "../../../../common/pages/admin/forms/department/view_workers/ViewWorkersModal.js";
+import ModalBuilder from "../../../../common/pages/admin/forms/department/view_workers/ModalBuilder.js";
 
 $(function () {
     let requester = new Requester();
@@ -42,7 +44,6 @@ $(function () {
     departmentsTable.setManageCallback(
         editForm.addListenerManage, editForm
     );
-    departmentsTable.POPULATE();
 
     /**
      * Delete form
@@ -52,5 +53,22 @@ $(function () {
     );
     editForm.setDeleteCallback(
         deleteForm.addListenerDelete, deleteForm
+    );
+
+    /**
+     * Modals with Workers
+     */
+    let extraModalBuilder = new ModalBuilder();
+    let viewWorkers = new ViewWorkersModal(
+        requester, extraModalBuilder, API.ADMIN.API.WORKER.get["all-by-department"],
+        'data-department-id', 'department_id'
+    );
+    departmentsTable.setShowWorkersCallback(
+        viewWorkers.addListenerShow, viewWorkers
+    );
+    departmentsTable.POPULATE();
+
+    editForm.setShowWorkersCallback(
+        viewWorkers.addListenerShow, viewWorkers
     );
 })
