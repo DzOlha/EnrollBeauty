@@ -17,7 +17,7 @@ class Topics
     public static function getAllTopics(): array {
         return static::$topics;
     }
-    public static function getTopicByName(string $topicName) {
+    public static function getTopicByName(string $topicName, $lang = null) {
         if(key_exists($topicName, static::$topics)) {
             return static::$topics[$topicName];
         } else {

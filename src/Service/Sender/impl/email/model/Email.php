@@ -9,18 +9,21 @@ class Email
     private string $topic;
     private string $messageTemplate;
     private array $attachments;
+    private array $inlineImages;
 
     public function __construct(
         string $fromEmail, string $fromName, array $recipients,
-        string $topic, string $templateFilePath, array $attachments = []
-    )
-    {
+        string $topic, string $templateFilePath, array $attachments = [],
+        string $lang = null, array $inlineImages = []
+    ) {
         $this->messageTemplate = $this->setTemplate($templateFilePath);
         $this->attachments = $attachments ? $this->setAttachments($attachments) : $attachments;
 
+        $this->setInlineImages($inlineImages);
+
         $this->author = new EmailAuthor($fromEmail, $fromName);
         $this->recipients = $recipients;
-        $this->topic = Topics::getTopicByName($topic);
+        $this->topic = Topics::getTopicByName($topic, $lang);
 
         //$this->addArguments($_POST); // replace argument names with values
     }
@@ -32,6 +35,31 @@ class Email
         } else {
             exit("There is no such file at location: $templateFilePath");
         }
+    }
+
+    /**
+     * @param array $images
+     * @return void
+     *
+     * $images = [
+     *      0 => [
+     *          'filePath' => path_to_the_image_inside_the_temporary_upload_folder
+     *      ]
+     * ]
+     *
+     * $contentId is just a name of the file that can be found by 'filePath'
+     *
+     * in html of the email all images
+     * should be represented like <img src="cid:{filename}">
+     */
+    private function setInlineImages(array $images)
+    {
+        $this->inlineImages = $images;
+    }
+
+    public function getInlineImages(): array
+    {
+        return $this->inlineImages;
     }
 
     private function setAttachments(array $attachments)

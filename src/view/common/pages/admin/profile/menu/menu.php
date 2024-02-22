@@ -3,7 +3,7 @@
     <?php require_once VIEW_COMMON."pages/user/profile/blocks/user_info.php"?>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/admin/profile/home">
+        <a class="nav-link" href="<?=API['ADMIN']['WEB']['PROFILE']['home']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-home sidemenu-icon menu-icon "></i>
@@ -36,7 +36,7 @@
 <!--                </a>-->
 <!--            </li>-->
             <li class="nav-sub-item">
-                <a class="nav-sub-link" href="/web/admin/profile/workers">
+                <a class="nav-sub-link" href="<?=API['ADMIN']['WEB']['PROFILE']['workers']?>">
                     Workers
                 </a>
             </li>
@@ -49,7 +49,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/admin/profile/services">
+        <a class="nav-link" href="<?=API['ADMIN']['WEB']['PROFILE']['services']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-palette sidemenu-icon menu-icon"></i>
@@ -58,7 +58,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/admin/profile/departments">
+        <a class="nav-link" href="<?=API['ADMIN']['WEB']['PROFILE']['departments']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-menu sidemenu-icon menu-icon"></i>
@@ -67,7 +67,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/admin/profile/positions">
+        <a class="nav-link" href="<?=API['ADMIN']['WEB']['PROFILE']['positions']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-receipt sidemenu-icon menu-icon"></i>
@@ -76,7 +76,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/admin/profile/affiliates">
+        <a class="nav-link" href="<?=API['ADMIN']['WEB']['PROFILE']['affiliates']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-package sidemenu-icon menu-icon"></i>

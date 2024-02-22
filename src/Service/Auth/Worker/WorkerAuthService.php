@@ -266,7 +266,7 @@ class WorkerAuthService extends AuthService
     }
 
     protected function _createRecoveryLink(string $recoveryCode) {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT."web/worker/auth/recovery-password?recovery_code=$recoveryCode";
+        return ENROLL_BEAUTY_URL_HTTP_ROOT.API['AUTH']['WEB']['WORKER']['recovery-password']."?recovery_code=$recoveryCode";
     }
 
     protected function _sendLetterToWelcomeWorker(

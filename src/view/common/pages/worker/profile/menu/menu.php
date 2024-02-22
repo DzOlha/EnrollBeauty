@@ -3,16 +3,13 @@
     <?php require_once VIEW_COMMON."pages/user/profile/blocks/user_info.php"?>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/worker/profile/home">
+        <a class="nav-link" href="<?=API['WORKER']['WEB']['PROFILE']['home']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-home sidemenu-icon menu-icon "></i>
             <span class="sidemenu-label">Home</span>
         </a>
     </li>
-
-
-
 
     <!--    <li class="nav-item">-->
     <!--        <a class="nav-link" href="/web/worker/profile/settings">-->
@@ -24,7 +21,7 @@
     <!--    </li>-->
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/worker/profile/schedule">
+        <a class="nav-link" href="<?=API['WORKER']['WEB']['PROFILE']['schedule']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-receipt sidemenu-icon menu-icon "></i>
@@ -33,7 +30,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/worker/profile/services">
+        <a class="nav-link" href="<?=API['WORKER']['WEB']['PROFILE']['services']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-palette sidemenu-icon menu-icon"></i>
@@ -42,7 +39,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/worker/profile/pricing">
+        <a class="nav-link" href="<?=API['WORKER']['WEB']['PROFILE']['pricing']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-wallet sidemenu-icon menu-icon "></i>

@@ -151,10 +151,10 @@ const API = {
             PROFILE: {
                 home: '/web/admin/profile/home',
                 workers: '/web/admin/profile/workers',
-                services: '/web/worker/profile/services',
-                departments: '/web/worker/profile/departments',
-                positions: '/web/worker/profile/positions',
-                affiliates: '/web/worker/profile/affiliates'
+                services: '/web/admin/profile/services',
+                departments: '/web/admin/profile/departments',
+                positions: '/web/admin/profile/positions',
+                affiliates: '/web/admin/profile/affiliates'
             }
         },
         API: {

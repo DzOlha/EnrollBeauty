@@ -3,7 +3,7 @@
     <?php require_once VIEW_COMMON."pages/user/profile/blocks/user_info.php"?>
 
     <li class="nav-item">
-        <a class="nav-link" href="/web/user/profile/home">
+        <a class="nav-link" href="<?=API['USER']['WEB']['PROFILE']['home']?>">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-home sidemenu-icon menu-icon "></i>

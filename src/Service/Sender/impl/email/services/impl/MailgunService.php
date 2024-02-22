@@ -2,10 +2,12 @@
 
 namespace Src\Service\Sender\impl\email\services\impl;
 
+use Mailgun\Exception\HttpClientException;
 use Mailgun\Mailgun;
+use Src\Helper\Credentials\API\MailgunApiCredentials;
 use Src\Helper\Logger\ILogger;
 use Src\Helper\Logger\impl\MyLogger;
-use Src\Helper\Mailgun\MailgunApiCredentials;
+use Src\Helper\Uploader\impl\FileUploader;
 use Src\Service\Sender\impl\email\model\Email;
 use Src\Service\Sender\impl\email\services\MailingService;
 
@@ -16,31 +18,67 @@ class MailgunService implements MailingService
     private Mailgun $mailgun;
     private ILogger $logger;
 
+    public MailingService $alternateMailer;
+
     /**
      * @param string $api_key
      * @param string $domain
      */
-    public function __construct($apiKey = null, $domain = null, ILogger $logger = null)
+    public function __construct($apiKey = null, $domain = null)
     {
         $this->apiKey = $apiKey ?? MailgunApiCredentials::$apiKey;
         $this->domain = $domain ?? MailgunApiCredentials::$domain;
-        $this->logger = $logger ?? MyLogger::getInstance();
 
         // Initialize the Mailgun client
         $this->mailgun = Mailgun::create($this->apiKey);
+        $this->logger = MyLogger::getInstance();
+    }
+
+    public function setAlternateMailer(MailingService $service = null)
+    {
+        $this->alternateMailer = $service ?? new BrevoService();
+    }
+
+    public function getAlternateMailer(): MailingService
+    {
+        return $this->alternateMailer;
     }
 
     private function createMessage(Email $email, bool $debug = false): array
     {
         $message = [
-            'from' => "{$email->getFromName()} <{$email->getFromEmail()}>",
-            'to' => $email->getRecipients(),
+            'from'    => "{$email->getFromName()} <{$email->getFromEmail()}>",
+            'to'      => $email->getRecipients(),
             'subject' => $email->getTopic(),
-            'html' => $email->getMessageTemplate(),
+            'html'    => $email->getMessageTemplate(),
         ];
         $this->addAttachment($email, $message);
+        $this->addInlineImages($email, $message);
 
         return $message;
+    }
+
+    /**
+     * @param Email $email - contains array of [
+     *      0 => [
+     *          'filePath' => path to the image, which has been uploaded into the appropriate
+     *                        temporary folder before creating the email object
+     *      ]
+     *      ....................................................
+     * ]
+     *
+     * and its $email->messageTemplate should contain in its html the image
+     * represented like <img src="cid:filename"> to be properly rendered then
+     *
+     * @param array $message
+     * @return void
+     */
+    private function addInlineImages(Email $email, array &$message)
+    {
+        $images = $email->getInlineImages();
+        if (count($images) > 0) {
+            $message['inline'] = $images;
+        }
     }
 
     private function addAttachment(Email $email, array &$message)
@@ -56,48 +94,38 @@ class MailgunService implements MailingService
         }
     }
 
-    public function _sendEmail(Email $email, bool $debug = false)
+    private function _errorSendingEmail(string $message = 'Email sending failed'): string
     {
-        $message = $this->createMessage($email, $debug);
+        FileUploader::deleteFolder(TEMP_EMAIL_IMAGES_UPLOAD_FOLDER);
+        return $message;
+    }
 
-        // Send the email using the Mailgun client
-        $response = $this->mailgun->messages()->send($this->domain, $message);
+    private function _successSendingEmail(): bool
+    {
+        FileUploader::deleteFolder(TEMP_EMAIL_IMAGES_UPLOAD_FOLDER);
+        return true;
+    }
 
-        $messageId = $response->getId();
-        if ($response->getId()) {
-            return true;
-        } else {
-            return "Email sending failed. Response content: " . $response->getMessage();
-        }
+    private function _recordErrorIntoLogs(string $message)
+    {
+        $this->logger->error($message);
     }
 
     public function sendEmail(Email $email, bool $debug = false)
     {
+        $message = $this->createMessage($email, $debug);
+
         try {
-            $message = $this->createMessage($email, $debug);
-
-            // Send the email using the Mailgun client
             $response = $this->mailgun->messages()->send($this->domain, $message);
-
-            /**
-             * Email has been successfully delivered
-             */
-            if (str_contains($response->getMessage(), 'Queued')) {
-                return true;
-            } else {
-                $errorMessage = "Email sending failed. Response content: " . $response->getMessage();
-                $this->logger->error($errorMessage);
-                return 'Email sending failed';
-            }
-        } catch (\Mailgun\Exception\HttpClientException $e) {
-            $errorMessage = "Mailgun HTTP client exception: " . $e->getMessage();
-            $this->logger->error($errorMessage);
-            return 'Email sending failed';
-        } catch (\Exception $e) {
-            $errorMessage = "An unexpected error occurred: " . $e->getMessage();
-            $this->logger->error($errorMessage);
-            return 'Email sending failed';
+            return $this->_successSendingEmail();
+        }
+        catch (HttpClientException $e) {
+            $this->_recordErrorIntoLogs("Mailgun HTTP client exception: " . $e->getMessage());
+            return $this->_errorSendingEmail();
+        }
+        catch (\Exception $e) {
+            $this->_recordErrorIntoLogs("An unexpected error occurred: " . $e->getMessage());
+            return $this->_errorSendingEmail();
         }
     }
-
 }

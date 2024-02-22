@@ -659,7 +659,7 @@ class WorkerApiController extends ApiController
 
     protected function _createLinkToLogin()
     {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT . 'web/user/auth/login';
+        return ENROLL_BEAUTY_URL_HTTP_ROOT . API['AUTH']['WEB']['USER']['login'];
     }
 
     protected function _sendLetterToInformUserAboutCancellation(
