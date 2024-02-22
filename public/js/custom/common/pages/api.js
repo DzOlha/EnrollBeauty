@@ -85,6 +85,7 @@ const API = {
         WEB: {
             PROFILE: {
                 home: '/web/worker/profile/home',
+                settings: '/web/worker/profile/settings',
                 schedule: '/web/worker/profile/schedule',
                 services: '/web/worker/profile/services',
                 pricing: '/web/worker/profile/pricing'

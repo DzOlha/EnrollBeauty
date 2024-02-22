@@ -1253,7 +1253,7 @@ class WorkerApiController extends ApiController
             );
             if ($updated === false) {
                 $this->returnJson([
-                    'error' => 'An error occurred while inserting new schedule item!'
+                    'error' => 'An error occurred while updating the schedule item!'
                 ]);
             }
 

@@ -11,6 +11,15 @@
         </a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="<?=API['WORKER']['WEB']['PROFILE']['settings']?>">
+            <span class="shape1"></span>
+            <span class="shape2"></span>
+            <i class="ti-lock sidemenu-icon menu-icon "></i>
+            <span class="sidemenu-label">Settings</span>
+        </a>
+    </li>
+
     <!--    <li class="nav-item">-->
     <!--        <a class="nav-link" href="/web/worker/profile/settings">-->
     <!--            <span class="shape1"></span>-->

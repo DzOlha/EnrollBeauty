@@ -104,6 +104,14 @@ const WORKER_PAGES = [
         ]
     ],
 
+    'settings' => [
+        'path' => VIEW_FRONTEND . 'pages/worker/profile/settings',
+        'data' => [
+            'title' => 'Worker Account',
+            'page_name' => 'Profile Settings'
+        ]
+    ],
+
     'schedule' => [
         'path' => VIEW_FRONTEND . 'pages/worker/profile/schedule',
         'data' => [

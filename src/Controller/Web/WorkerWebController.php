@@ -67,6 +67,10 @@ class WorkerWebController extends WebController
             else if($menuItemName === 'pricing') {
                 $this->_pricing();
             }
+
+            else if($menuItemName === 'settings') {
+                $this->_settings();
+            }
             else {
                 $this->error();
             }
@@ -119,6 +123,18 @@ class WorkerWebController extends WebController
         $this->view(
             WORKER_PAGES['pricing']['path'],
             WORKER_PAGES['pricing']['data']
+        );
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/worker/profile/settings
+     */
+    private function _settings() {
+        $this->view(
+            WORKER_PAGES['settings']['path'],
+            WORKER_PAGES['settings']['data']
         );
     }
 }
