@@ -10,6 +10,7 @@ use Src\Model\Table\Affiliates;
 use Src\Model\Table\Departments;
 use Src\Model\Table\OrdersService;
 use Src\Model\Table\Positions;
+use Src\Model\Table\Roles;
 use Src\Model\Table\Services;
 use Src\Model\Table\Users;
 use Src\Model\Table\Workers;
@@ -1311,5 +1312,44 @@ class WorkerDataSource extends DataSource
             return true;
         }
         return false;
+    }
+
+    public function selectWorkerPersonalInformationById(int $workerId)
+    {
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email,
+                                Workers::$position_id, Workers::$role_id, Workers::$gender,
+                                Workers::$age, Workers::$years_of_experience, Workers::$salary,
+                                Workers::$description, WorkersPhoto::$filename])
+            ->from(Workers::$table)
+            ->innerJoin(WorkersPhoto::$table)
+                ->on(Workers::$id, WorkersPhoto::$worker_id)
+            ->whereEqual(Workers::$id, ':id', $workerId)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function selectPositionIdNameByWorkerId(int $workerId)
+    {
+        $this->builder->select([Positions::$id, Positions::$name])
+            ->from(Positions::$table)
+            ->innerJoin(Workers::$table)
+                ->on(Positions::$id, Workers::$position_id)
+            ->whereEqual(Workers::$id, ':id', $workerId)
+        ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function selectRoleIdNameByWorkerId(int $workerId)
+    {
+        $this->builder->select([Roles::$id, Roles::$name])
+            ->from(Roles::$table)
+            ->innerJoin(Workers::$table)
+                ->on(Roles::$id, Workers::$role_id)
+            ->whereEqual(Workers::$id, ':id', $workerId)
+        ->build();
+
+        return $this->db->singleRow();
     }
 }

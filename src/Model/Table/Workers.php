@@ -13,6 +13,7 @@ class Workers
     public static string $gender = 'workers.gender';
     public static string $age = 'workers.age';
     public static string $years_of_experience = 'workers.years_of_experience';
+    public static string $description = 'workers.description';
     public static string $position_id = 'workers.position_id';
     public static string $salary = 'workers.salary';
     public static string $role_id = 'workers.role_id';

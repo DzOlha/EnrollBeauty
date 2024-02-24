@@ -445,4 +445,19 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->selectDepartmentByName($name);
     }
+
+    public function selectWorkerPersonalInformationById(int $workerId)
+    {
+        return $this->dataSource->selectWorkerPersonalInformationById($workerId);
+    }
+
+    public function selectPositionIdNameByWorkerId(int $workerId)
+    {
+        return $this->dataSource->selectPositionIdNameByWorkerId($workerId);
+    }
+
+    public function selectRoleIdNameByWorkerId(int $workerId)
+    {
+        return $this->dataSource->selectRoleIdNameByWorkerId($workerId);
+    }
 }

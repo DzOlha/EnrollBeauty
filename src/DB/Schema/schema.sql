@@ -92,6 +92,7 @@ CREATE TABLE workers (
      gender ENUM('Male', 'Female', 'Other'),
      age INT NOT NULL,
      years_of_experience DECIMAL(10, 2) NOT NULL,
+     description TEXT,
      position_id INT NOT NULL,
      salary DECIMAL(10, 2),
      role_id INT NOT NULL,

@@ -99,10 +99,10 @@
                                             <div class="form-group">
                                                 <p class="mg-b-0"><span>*</span>Main photo</p>
                                                 <div class="input-group mb-3">
-                                                    <input type="file" class="dropify" id="photo-input"
+                                                    <input type="file" class="dropify" id="main-photo-input"
                                                            accept=".svg, .jpg, .jpeg, .png" data-height="150"
-                                                           name="photo"/>
-                                                    <div class="error text-danger" id="photo-input-error"></div>
+                                                           name="photo" data-default-file=""/>
+                                                    <div class="error text-danger" id="main-photo-input-error"></div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -123,6 +123,18 @@
                                                            data-title="Surname must be at least 3 characters long and contain only letters"
                                                            required="required" class="form-control" id="surname-input">
                                                     <div class="error text-danger" id="surname-input-error"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p class="mg-b-0"><span>*</span>Self Description</p>
+                                                <div class="input-group mb-3">
+                                                    <textarea class="form-control"
+                                                              type="text"
+                                                              id="description-textarea"
+                                                              name="text"
+                                                              rows="3"
+                                                              placeholder="Description"></textarea>
+                                                    <div class="error text-danger" id="description-textarea-error"></div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -199,6 +211,12 @@
                                                     <div class="error text-danger" id="salary-input-error"></div>
                                                 </div>
                                             </div>
+                                            <button aria-label="Submit"
+                                                    class="btn ripple pd-x-25"
+                                                    id="edit-worker-details-submit"
+                                                    data-bs-dismiss="modal" type="button">
+                                                Update
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="tab-pane" id="socialNetworks">

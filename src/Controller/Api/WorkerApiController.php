@@ -275,6 +275,33 @@ class WorkerApiController extends ApiController
                     }
                 }
             }
+
+            /**
+             * url = /api/worker/profile/id
+             */
+            if($this->url[3] === 'id') {
+                $this->_getCurrentWorkerId();
+            }
+
+            /**
+             * url = /api/worker/profile/personal-info/
+             */
+            if($this->url[3] === 'personal-info')
+            {
+                /**
+                 * url = /api/worker/profile/personal-info/get
+                 */
+                if($this->url[4] === 'get') {
+                    $this->_getWorkerPersonalInformation();
+                }
+
+                /**
+                 * url = /api/worker/profile/personal-info/edit
+                 */
+                if($this->url[4] === 'edit') {
+                    $this->_editWorkerPersonalInformation();
+                }
+            }
         }
 
     }
@@ -328,6 +355,56 @@ class WorkerApiController extends ApiController
                      */
                     if ($this->url[4] === 'all') {
                         $this->_getDepartmentsAll();
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/position/
+     */
+    public function position()
+    {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/worker/position/get
+             */
+            if ($this->url[3] === 'get') {
+                if (isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/position/get/one
+                     */
+                    if ($this->url[4] === 'one') {
+                        $this->_getPositionForCurrentWorker();
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/role/
+     */
+    public function role()
+    {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/worker/role/get
+             */
+            if ($this->url[3] === 'get') {
+                if (isset($this->url[4])) {
+                    /**
+                     * url = /api/worker/role/get/one
+                     */
+                    if ($this->url[4] === 'one') {
+                        $this->_getRoleForCurrentWorker();
                     }
                 }
             }
@@ -1040,9 +1117,7 @@ class WorkerApiController extends ApiController
     protected function _getEditBusyTimeIntervals()
     {
         if (empty($_GET['day']) || empty($_GET['schedule_id'])) {
-            $this->returnJson([
-                'error' => 'Missing get fields!'
-            ]);
+            $this->_missingRequestFields();
         }
         $day = htmlspecialchars(trim($_GET['day']));
         $scheduleId = htmlspecialchars(trim($_GET['schedule_id']));
@@ -1076,9 +1151,7 @@ class WorkerApiController extends ApiController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (empty($_GET['schedule_id'])) {
-                $this->returnJson([
-                    'error' => 'Missing schedule ID!'
-                ]);
+                $this->_missingRequestFields();
             }
             $id = htmlspecialchars(trim($_GET['schedule_id']));
 
@@ -1278,9 +1351,7 @@ class WorkerApiController extends ApiController
     {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             if(empty($_POST['schedule_id'])) {
-                $this->returnJson([
-                    'error' => 'Missing post fields!'
-                ]);
+                $this->_missingRequestFields();
             }
 
             $id = htmlspecialchars(trim($_POST['schedule_id']));
@@ -1467,6 +1538,137 @@ class WorkerApiController extends ApiController
                     'id' => $serviceId
                 ]
             ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/get/id
+     */
+    protected function _getCurrentWorkerId()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $id = SessionHelper::getWorkerSession();
+            if(!$id) {
+                $this->returnJson([
+                    'error' => 'Not authorized worker!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => [
+                    'id' => $id
+                ]
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/personal-info/get
+     */
+    protected function _getWorkerPersonalInformation()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['id'])) {
+                $this->_missingRequestFields();
+            }
+            $workerId = htmlspecialchars(trim($_GET['id']));
+
+            $result = $this->dataMapper->selectWorkerPersonalInformationById($workerId);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the user personal information!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/personal-info/edit
+     */
+    protected function _editWorkerPersonalInformation()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        } else {
+            $this->_methodNotAllowed(['POST']);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/position/get/one
+     */
+    protected function _getPositionForCurrentWorker()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $workerId = SessionHelper::getWorkerSession();
+            if(!$workerId) {
+                $this->returnJson([
+                    'error' => 'Not authorized worker'
+                ]);
+            }
+
+            $result = $this->dataMapper->selectPositionIdNameByWorkerId($workerId);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting position for the current worker!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => [
+                    0 => $result
+                ]
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/role/get/one
+     */
+    protected function _getRoleForCurrentWorker()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $workerId = SessionHelper::getWorkerSession();
+            if(!$workerId) {
+                $this->returnJson([
+                    'error' => 'Not authorized worker'
+                ]);
+            }
+
+            $result = $this->dataMapper->selectRoleIdNameByWorkerId($workerId);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting role for the current worker!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => [
+                    0 => $result
+                ]
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 }

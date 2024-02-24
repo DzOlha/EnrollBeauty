@@ -7,7 +7,7 @@
     overflow-y: visible !important;
 }
 
-#photo-input {
+#main-photo-input {
     height: 100%;
 }
 .dropify-filename-inner {
@@ -50,4 +50,8 @@
 #settings-menu a.active {
     background-color: #bf9456;
     color: white !important;
+}
+
+#description-textarea {
+    width: 100%;
 }

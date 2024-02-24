@@ -88,7 +88,7 @@ class EditWorkerForm extends AddWorkerForm
      *     years_of_experience:
      *     salary:
      * }
-     * @private
+     * @protected
      */
     _populateForm(data) {
         /**

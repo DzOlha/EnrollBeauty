@@ -52,6 +52,22 @@ class ApiController extends AbstractController
             'error' => $message
         ]);
     }
+
+    protected function _methodNotAllowed(array $allowedMethods)
+    {
+        $methods = implode(', ', $allowedMethods);
+        $this->returnJson([
+            'error' => "Method not allowed! Allowed ones: $methods"
+        ]);
+    }
+
+    protected function _missingRequestFields()
+    {
+        $this->returnJson([
+            'error' => "Missing request fields!"
+        ]);
+    }
+
     protected function _getLimitPageFieldOrderOffset(): array
     {
         /**

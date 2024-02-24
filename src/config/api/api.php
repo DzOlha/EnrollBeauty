@@ -133,6 +133,11 @@ const API = [
                     'get' => [
                         'all' => '/api/worker/profile/service/get/all'
                     ]
+                ],
+                'id' => '/api/worker/profile/get/id',
+                'personal-info' => [
+                    'get' => '/api/worker/profile/personal-info/get',
+                    'edit' => '/api/worker/profile/personal-info/edit',
                 ]
             ],
             'ORDER'      => [
@@ -145,7 +150,17 @@ const API = [
                 'get' => [
                     'all' => ' /api/worker/department/get/all'
                 ]
-            ]
+            ],
+            'POSITION' => [
+                'get' => [
+                    'one' => '/api/worker/position/get/one'
+                ]
+            ],
+            'ROLE' => [
+                'get' => [
+                    'one' => '/api/worker/role/get/one'
+                ]
+            ],
         ]
     ],
     'ADMIN'  => [
