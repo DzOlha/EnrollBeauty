@@ -33,9 +33,9 @@ class WorkerDataMapper extends DataMapper
         return $this->dataSource->insertWorkerSocial($workerId);
     }
 
-    public function insertWorkerPhoto(int $workerId)
+    public function insertWorkerPhoto(int $workerId, int $isMain = 0)
     {
-        return $this->dataSource->insertWorkerPhoto($workerId);
+        return $this->dataSource->insertWorkerPhoto($workerId, $isMain);
     }
 
     public function updateWorkerSettingDateOfSendingRecoveryCode(

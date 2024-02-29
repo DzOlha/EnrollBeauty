@@ -249,7 +249,8 @@ class WorkerAuthService extends AuthService
             /**
              * Insert worker main photo
              */
-            $workerPhoto = $this->dataMapper->insertWorkerPhoto($workerId);
+            $isMain = 1;
+            $workerPhoto = $this->dataMapper->insertWorkerPhoto($workerId, $isMain);
             if($workerPhoto === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [

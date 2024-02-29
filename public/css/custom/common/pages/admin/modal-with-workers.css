@@ -20,6 +20,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    height: 100%;
 }
 
 #modalMentions.modal-form .card-body {
@@ -30,13 +31,15 @@
 }
 
 #modalMentions.modal-form .card .img-wrapper {
-    width: 75px;
+    width: 25%;
     height: 100%;
     border-radius: 50%;
     margin: 8px;
+    display: flex;
+    align-items: center;
 }
 #modalMentions.modal-form .card .img-fluid {
-    border-radius: 50%;
+    border-radius: 15px;
 }
 #modalMentions .lang-code {
     /*color: black;*/

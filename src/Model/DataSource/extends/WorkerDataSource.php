@@ -105,10 +105,11 @@ class WorkerDataSource extends DataSource
         return false;
     }
 
-    public function insertWorkerPhoto(int $workerId)
+    public function insertWorkerPhoto(int $workerId, int $isMain = 0)
     {
-        $this->builder->insertInto(WorkersPhoto::$table, [WorkersPhoto::$worker_id])
-            ->values([':worker_id'], [$workerId])
+        $this->builder->insertInto(WorkersPhoto::$table,
+            [WorkersPhoto::$worker_id, WorkersPhoto::$is_main])
+            ->values([':worker_id', ':is_main'], [$workerId, $isMain])
             ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
@@ -1388,9 +1389,11 @@ class WorkerDataSource extends DataSource
 
     public function updateWorkerMainPhotoByWorkerId(int $workerId, string $filename)
     {
+        $isMain = 1;
         $this->builder->update(WorkersPhoto::$table)
                     ->set(WorkersPhoto::$filename, ':filename', $filename)
                     ->whereEqual(WorkersPhoto::$worker_id, ':id', $workerId)
+                    ->andEqual(WorkersPhoto::$is_main, ':is_main', $isMain)
                     ->limit(1)
             ->build();
 
@@ -1402,10 +1405,11 @@ class WorkerDataSource extends DataSource
 
     public function selectWorkerMainPhotoByWorkerId(int $workerId)
     {
+        $isMain = 1;
         $this->builder->select([WorkersPhoto::$filename])
                     ->from(WorkersPhoto::$table)
                     ->whereEqual(WorkersPhoto::$worker_id, ':worker_id', $workerId)
-                    ->limit(1)
+                    ->andEqual(WorkersPhoto::$is_main, ':is_main', $isMain)
                 ->build();
 
         $result = $this->db->singleRow();

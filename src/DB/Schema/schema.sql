@@ -104,6 +104,7 @@ CREATE TABLE workers_photo (
    id INT AUTO_INCREMENT PRIMARY KEY,
    worker_id INT NOT NULL,
    filename VARCHAR(255),
+   is_main INT DEFAULT 0,
    FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE
 );
 

@@ -589,6 +589,7 @@ class AdminDataSource extends WorkerDataSource
         $queryFrom = " $workers INNER JOIN $positions ON $workersPositionId = $positionsId 
                         WHERE $positionsDepartmentId = $departmentId ";
 
+        $isMain = 1;
         $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
                                 Workers::$email, WorkersPhoto::$filename, Positions::$name],
                 [Positions::$name => 'position'])
@@ -598,6 +599,7 @@ class AdminDataSource extends WorkerDataSource
                 ->leftJoin(WorkersPhoto::$table)
                     ->on(Workers::$id, WorkersPhoto::$worker_id)
                 ->whereEqual(Positions::$department_id, ':department_id', $departmentId)
+                ->andEqual(WorkersPhoto::$is_main, ':is_main', $isMain)
                 ->limit($limit)
                 ->offset($offset)
         ->build();
@@ -622,6 +624,7 @@ class AdminDataSource extends WorkerDataSource
         $queryFrom = " $workers LEFT JOIN $pricing ON $workersId = $pricingWorkerId 
                         WHERE $pricingServiceId = $serviceId ";
 
+        $isMain = 1;
         $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
                                 Workers::$email, WorkersPhoto::$filename, Positions::$name],
             [Positions::$name => 'position'])
@@ -633,6 +636,7 @@ class AdminDataSource extends WorkerDataSource
             ->leftJoin(WorkersServicePricing::$table)
                 ->on(Workers::$id, WorkersServicePricing::$worker_id)
             ->whereEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+            ->andEqual(WorkersPhoto::$is_main, ':is_main', $isMain)
             ->limit($limit)
             ->offset($offset)
         ->build();
