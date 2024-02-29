@@ -4,6 +4,7 @@ namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
 use Src\Helper\Session\SessionHelper;
+use Src\Helper\Uploader\impl\FileUploader;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\AdminDataMapper;
 use Src\Model\DataMapper\extends\UserDataMapper;
@@ -1103,6 +1104,12 @@ class AdminApiController extends WorkerApiController
                     'error' => 'An error occurred while deletion of the worker!'
                 ]);
             }
+
+            /**
+             * Delete the folder with worker's images
+             */
+            $folderPath = WORKERS_PHOTO_FOLDER . "worker_$id/";
+            FileUploader::deleteFolder($folderPath);
 
             $this->returnJson([
                 'success' => 'You successfully deleted the worker!',
