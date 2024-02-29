@@ -4,16 +4,24 @@ namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
 use Src\Helper\Builder\impl\UrlBuilder;
+use Src\Helper\Uploader\impl\FileUploader;
+use Src\Service\Generator\impl\ImageNameGenerator;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\WorkerDataMapper;
 use Src\Model\DataSource\extends\WorkerDataSource;
 use Src\Model\DTO\Read\UserReadDto;
+use Src\Model\Entity\Gender;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\Worker\WorkerAuthService;
 use Src\Service\Sender\impl\email\EmailSender;
 use Src\Service\Sender\impl\email\model\Email;
 use Src\Service\Sender\impl\email\services\impl\MailgunService;
+use Src\Service\Validator\impl\EmailValidator;
+use Src\Service\Validator\impl\FileSizeValidator;
+use Src\Service\Validator\impl\FileTypeValidator;
+use Src\Service\Validator\impl\NameValidator;
+use Src\Service\Validator\impl\PhotoValidator;
 
 class WorkerApiController extends ApiController
 {
@@ -279,26 +287,25 @@ class WorkerApiController extends ApiController
             /**
              * url = /api/worker/profile/id
              */
-            if($this->url[3] === 'id') {
+            if ($this->url[3] === 'id') {
                 $this->_getCurrentWorkerId();
             }
 
             /**
              * url = /api/worker/profile/personal-info/
              */
-            if($this->url[3] === 'personal-info')
-            {
+            if ($this->url[3] === 'personal-info') {
                 /**
                  * url = /api/worker/profile/personal-info/get
                  */
-                if($this->url[4] === 'get') {
+                if ($this->url[4] === 'get') {
                     $this->_getWorkerPersonalInformation();
                 }
 
                 /**
                  * url = /api/worker/profile/personal-info/edit
                  */
-                if($this->url[4] === 'edit') {
+                if ($this->url[4] === 'edit') {
                     $this->_editWorkerPersonalInformation();
                 }
             }
@@ -1349,15 +1356,15 @@ class WorkerApiController extends ApiController
 
     protected function _deleteSchedule()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['schedule_id'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (empty($_POST['schedule_id'])) {
                 $this->_missingRequestFields();
             }
 
             $id = htmlspecialchars(trim($_POST['schedule_id']));
 
             $deleted = $this->dataMapper->deleteWorkerScheduleItemById($id);
-            if($deleted === false) {
+            if ($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deletion of the schedule item!'
                 ]);
@@ -1365,7 +1372,7 @@ class WorkerApiController extends ApiController
 
             $this->returnJson([
                 'success' => 'You successfully deleted the schedule item!',
-                'data' => [
+                'data'    => [
                     'schedule_id' => $id
                 ]
             ]);
@@ -1548,16 +1555,16 @@ class WorkerApiController extends ApiController
      */
     protected function _getCurrentWorkerId()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $id = SessionHelper::getWorkerSession();
-            if(!$id) {
+            if (!$id) {
                 $this->returnJson([
                     'error' => 'Not authorized worker!'
                 ]);
             }
             $this->returnJson([
                 'success' => true,
-                'data' => [
+                'data'    => [
                     'id' => $id
                 ]
             ]);
@@ -1573,21 +1580,21 @@ class WorkerApiController extends ApiController
      */
     protected function _getWorkerPersonalInformation()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if (empty($_GET['id'])) {
                 $this->_missingRequestFields();
             }
             $workerId = htmlspecialchars(trim($_GET['id']));
 
             $result = $this->dataMapper->selectWorkerPersonalInformationById($workerId);
-            if($result === false) {
+            if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the user personal information!'
                 ]);
             }
             $this->returnJson([
                 'success' => true,
-                'data' => $result
+                'data'    => $result
             ]);
         } else {
             $this->_methodNotAllowed(['GET']);
@@ -1601,11 +1608,237 @@ class WorkerApiController extends ApiController
      */
     protected function _editWorkerPersonalInformation()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (empty($_POST['id']) || empty($_POST['name'])
+                || empty($_POST['surname']) || empty($_POST['email'])
+                || empty($_POST['gender']) || empty($_POST['age'])
+                || !isset($_POST['experience']) || !isset($_POST['description']))
+            {
+                $this->_missingRequestFields();
+            }
 
+            $items = [
+                'id' => htmlspecialchars(trim($_POST['id'])),
+                'name' => htmlspecialchars(trim($_POST['name'])),
+                'surname' => htmlspecialchars(trim($_POST['surname'])),
+                'email' => htmlspecialchars(trim($_POST['email'])),
+                'gender' => htmlspecialchars(trim($_POST['gender'])),
+                'age' => htmlspecialchars(trim($_POST['age'])),
+                'experience' => htmlspecialchars(trim($_POST['experience'])),
+                'description' => htmlspecialchars(trim($_POST['description'])),
+            ];
+
+            /**
+             * Validate text fields
+             */
+            $valid = $this->validateEditWorkerPersonalInfoForm($items);
+            if($valid !== true) {
+                $this->returnJson($valid);
+            }
+
+            /**
+             * Validate the photo and set 'random_name'
+             */
+            $photoChanged = true;
+            if(empty($_FILES['photo'])) {
+                $photoChanged = false;
+            } else {
+                $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
+                if($validPhoto !== true) {
+                    $this->returnJson($validPhoto);
+                }
+            }
+
+            /**
+             * Update the worker personal information in the database
+             */
+            $this->dataMapper->beginTransaction();
+
+            $newImage = $photoChanged === true
+                        ? $_FILES['photo']['random_name']
+                        : null;
+
+            /**
+             * Update textual info
+             */
+            $updatedText = $this->dataMapper->updateWorkerPersonalInfoById(
+                $items['id'], $items['name'], $items['surname'], $items['email'],
+                $items['gender'], $items['age'], $items['experience'], $items['description']
+            );
+
+            /**
+             * Update photo
+             */
+            $updatedPhoto = true;
+            if($newImage) {
+                /**
+                 * Check the old main photo
+                 */
+                $oldPhotoFilename = $this->dataMapper->selectWorkerMainPhotoByWorkerId($items['id']);
+                if($oldPhotoFilename === false) {
+                    $this->dataMapper->rollBackTransaction();
+                    $this->returnJson([
+                        'error' => "An error occurred while getting the current worker's photo"
+                    ]);
+                }
+
+                /**
+                 * Check if new photo differ from the old one
+                 */
+                if(!$oldPhotoFilename || $newImage !== $oldPhotoFilename) {
+                    /**
+                     * If yes -> update photo in db to the new one
+                     */
+                    $updatedPhoto = $this->dataMapper->updateWorkerMainPhotoByWorkerId(
+                        $items['id'], $newImage
+                    );
+                    if($updatedPhoto === false) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => 'An error occurred while updating your main photo!'
+                        ]);
+                    }
+
+                    /**
+                     * Upload the new image into the folder
+                     */
+                    $uploader = new FileUploader();
+                    $folderPath = WORKERS_PHOTO_FOLDER . "worker_{$items['id']}/";
+
+                    $uploaded = $uploader->upload(
+                        $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
+                    );
+                    if(!$uploaded) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => 'An error occurred while uploading your main photo into appropriate folder!'
+                        ]);
+                    }
+
+                    /**
+                     * Remove the old photo from the folder
+                     */
+                    $deleted = FileUploader::deleteFileFromFolder($folderPath, $oldPhotoFilename);
+                    if($deleted === false) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => "An error occurred while deleting the old worker's main photo "
+                        ]);
+                    }
+                }
+            }
+
+            if($updatedText === false && $updatedPhoto === false) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'An error occurred while updating your personal info!'
+                ]);
+            }
+
+            $this->dataMapper->commitTransaction();
+            $this->returnJson([
+                'success' => 'You successfully update your personal information!',
+                'data' => [
+                    'id' => $items['id']
+                ]
+            ]);
         } else {
             $this->_methodNotAllowed(['POST']);
         }
+    }
+
+    private function validateEditWorkerPersonalInfoForm($items)
+    {
+        $nameValidator = new NameValidator();
+        $emailValidator = new EmailValidator();
+        /**
+         * Name
+         */
+        $validName = $nameValidator->validate($items['name']);
+        if (!$validName) {
+            return [
+                'error' => 'Name must be at least 3 characters long and contain only letters'
+            ];
+        }
+
+        /**
+         * Surname
+         */
+        $validSurname = $nameValidator->validate($items['surname']);
+        if (!$validSurname) {
+            return [
+                'error' => 'Surname must be at least 3 characters long and contain only letters'
+            ];
+        }
+
+        /**
+         * Email
+         */
+        $validEmail = $emailValidator->validate($items['email']);
+        if (!$validEmail) {
+            return [
+                'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+            ];
+        }
+
+
+        /**
+         * Gender
+         */
+        if($items['gender']) {
+            if(
+                $items['gender'] !== Gender::$MALE
+                && $items['gender'] !== Gender::$FEMALE
+                && $items['gender'] !== Gender::$OTHER
+            ) {
+                return [
+                    'error' => 'Invalid gender selected! It should be Male, Female, or Other'
+                ];
+            }
+        } else {
+            $items['gender'] = null;
+        }
+
+        /**
+         * Age
+         */
+        if(!$items['age']) {
+            return [
+                'error' => 'Age is required field!'
+            ];
+        }
+        if($items['age'] < 14 || $items['age'] > 80) {
+            return [
+                'error' => "The worker's age should be from 14 to 80 years!"
+            ];
+        }
+
+        /**
+         * Years of experience
+         */
+        if(!$items['experience']) {
+            return [
+                'error' => "Years of worker's experience is required field!"
+            ];
+        }
+        if($items['experience'] < 0 || $items['experience'] > 66) {
+            return [
+                'error' => "The years of the worker's experience should be from 0 to 66 years!"
+            ];
+        }
+
+        /**
+         * Description
+         */
+        if($items['description']) {
+            if(strlen($items['description']) <= 10) {
+                return [
+                    'error' => 'The description field should be longer than 10 characters!'
+                ];
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -1615,23 +1848,23 @@ class WorkerApiController extends ApiController
      */
     protected function _getPositionForCurrentWorker()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $workerId = SessionHelper::getWorkerSession();
-            if(!$workerId) {
+            if (!$workerId) {
                 $this->returnJson([
                     'error' => 'Not authorized worker'
                 ]);
             }
 
             $result = $this->dataMapper->selectPositionIdNameByWorkerId($workerId);
-            if($result === false) {
+            if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting position for the current worker!'
                 ]);
             }
             $this->returnJson([
                 'success' => true,
-                'data' => [
+                'data'    => [
                     0 => $result
                 ]
             ]);
@@ -1647,23 +1880,23 @@ class WorkerApiController extends ApiController
      */
     protected function _getRoleForCurrentWorker()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $workerId = SessionHelper::getWorkerSession();
-            if(!$workerId) {
+            if (!$workerId) {
                 $this->returnJson([
                     'error' => 'Not authorized worker'
                 ]);
             }
 
             $result = $this->dataMapper->selectRoleIdNameByWorkerId($workerId);
-            if($result === false) {
+            if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting role for the current worker!'
                 ]);
             }
             $this->returnJson([
                 'success' => true,
-                'data' => [
+                'data'    => [
                     0 => $result
                 ]
             ]);

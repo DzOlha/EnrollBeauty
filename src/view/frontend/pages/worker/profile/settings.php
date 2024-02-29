@@ -100,8 +100,8 @@
                                                 <p class="mg-b-0"><span>*</span>Main photo</p>
                                                 <div class="input-group mb-3">
                                                     <input type="file" class="dropify" id="main-photo-input"
-                                                           accept=".svg, .jpg, .jpeg, .png" data-height="150"
-                                                           name="photo" data-default-file=""/>
+                                                           accept=".svg, .jpg, .jpeg, .png" data-height="200"
+                                                           name="main-photo"/>
                                                     <div class="error text-danger" id="main-photo-input-error"></div>
                                                 </div>
                                             </div>
@@ -268,25 +268,25 @@
                     <div class="col-lg-3 widget-area">
                         <aside class="widget widget-nav-menu box-shadow ttm-bgcolor-grey">
                             <ul class="widget-menu nav" id="settings-menu">
-                                <li><a href="#personalInformation" class="active" data-bs-toggle="tab">
+                                <li><a href="#personalInformation" id="personalInformation-trigger" class="active" data-bs-toggle="tab">
                                         Personal Information
                                     </a></li>
-                                <li><a href="#socialNetworks" data-bs-toggle="tab">
+                                <li><a href="#socialNetworks" id="socialNetworks-trigger" data-bs-toggle="tab">
                                         Social Networks
                                     </a></li>
-                                <li><a href="#galleryOfWorks" data-bs-toggle="tab">
+                                <li><a href="#galleryOfWorks" id="galleryOfWorks-trigger" data-bs-toggle="tab">
                                         Gallery Of Works
                                     </a></li>
-                                <li><a href="#documents" data-bs-toggle="tab">
+                                <li><a href="#documents" id="documents-trigger" data-bs-toggle="tab">
                                         Documents
                                     </a></li>
-                                <li><a href="#publicProfile" data-bs-toggle="tab">
+                                <li><a href="#publicProfile" id="publicProfile-trigger" data-bs-toggle="tab">
                                         Public Profile
                                     </a></li>
-                                <li><a href="#reviews" data-bs-toggle="tab">
+                                <li><a href="#reviews" id="reviews-trigger" data-bs-toggle="tab">
                                         Reviews
                                     </a></li>
-                                <li><a href="#security" data-bs-toggle="tab">
+                                <li><a href="#security" id="security-trigger" data-bs-toggle="tab">
                                         Security
                                     </a></li>
                             </ul>

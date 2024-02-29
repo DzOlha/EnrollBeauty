@@ -36,4 +36,9 @@ const NO_PHOTO = '/public/images/custom/system/nophoto.jpg';
 
 const TEMP_EMAIL_IMAGES_UPLOAD_FOLDER = '/public/images/custom/uploads/tmp_email_images/';
 
+const UPLOADS_FOLDER = '/public/images/custom/uploads/';
+const WORKERS_PHOTO_FOLDER = UPLOADS_FOLDER . 'workers/';
+const ADMINS_PHOTO_FOLDER = UPLOADS_FOLDER . 'admins/';
+const USERS_PHOTO_FOLDER = UPLOADS_FOLDER . 'users/';
+
 

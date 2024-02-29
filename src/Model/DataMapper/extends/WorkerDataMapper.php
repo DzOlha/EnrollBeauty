@@ -33,6 +33,11 @@ class WorkerDataMapper extends DataMapper
         return $this->dataSource->insertWorkerSocial($workerId);
     }
 
+    public function insertWorkerPhoto(int $workerId)
+    {
+        return $this->dataSource->insertWorkerPhoto($workerId);
+    }
+
     public function updateWorkerSettingDateOfSendingRecoveryCode(
         int $id, string $recoveryCode
     )
@@ -459,5 +464,24 @@ class WorkerDataMapper extends DataMapper
     public function selectRoleIdNameByWorkerId(int $workerId)
     {
         return $this->dataSource->selectRoleIdNameByWorkerId($workerId);
+    }
+
+    public function updateWorkerPersonalInfoById(
+        int $id, string $name, string $surname, string $email, string $gender,
+        int $age, $experience, string $description
+    ) {
+        return $this->dataSource->updateWorkerPersonalInfoById(
+            $id, $name, $surname, $email, $gender, $age, $experience, $description
+        );
+    }
+
+    public function updateWorkerMainPhotoByWorkerId(int $workerId, string $filename)
+    {
+        return $this->dataSource->updateWorkerMainPhotoByWorkerId($workerId, $filename);
+    }
+
+    public function selectWorkerMainPhotoByWorkerId(int $workerId)
+    {
+        return $this->dataSource->selectWorkerMainPhotoByWorkerId($workerId);
     }
 }

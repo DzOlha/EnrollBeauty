@@ -105,6 +105,18 @@ class WorkerDataSource extends DataSource
         return false;
     }
 
+    public function insertWorkerPhoto(int $workerId)
+    {
+        $this->builder->insertInto(WorkersPhoto::$table, [WorkersPhoto::$worker_id])
+            ->values([':worker_id'], [$workerId])
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
     public function updateWorkerSettingDateOfSendingRecoveryCode(
         int $id, string $recoveryCode
     )
@@ -1321,7 +1333,7 @@ class WorkerDataSource extends DataSource
                                 Workers::$age, Workers::$years_of_experience, Workers::$salary,
                                 Workers::$description, WorkersPhoto::$filename])
             ->from(Workers::$table)
-            ->innerJoin(WorkersPhoto::$table)
+            ->leftJoin(WorkersPhoto::$table)
                 ->on(Workers::$id, WorkersPhoto::$worker_id)
             ->whereEqual(Workers::$id, ':id', $workerId)
             ->build();
@@ -1351,5 +1363,56 @@ class WorkerDataSource extends DataSource
         ->build();
 
         return $this->db->singleRow();
+    }
+
+    public function updateWorkerPersonalInfoById(
+        int $id, string $name, string $surname, string $email, string $gender,
+        int $age, $experience, string $description
+    ) {
+        $this->builder->update(Workers::$table)
+                ->set(Workers::$name, ':name', $name)
+                ->andSet(Workers::$surname, ':surname', $surname)
+                ->andSet(Workers::$email, ':email', $email)
+                ->andSet(Workers::$gender, ':gender', $gender)
+                ->andSet(Workers::$age, ':age', $age)
+                ->andSet(Workers::$years_of_experience, ":experience", $experience)
+                ->andSet(Workers::$description, ':description', $description)
+            ->whereEqual(Workers::$id, ':id', $id)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateWorkerMainPhotoByWorkerId(int $workerId, string $filename)
+    {
+        $this->builder->update(WorkersPhoto::$table)
+                    ->set(WorkersPhoto::$filename, ':filename', $filename)
+                    ->whereEqual(WorkersPhoto::$worker_id, ':id', $workerId)
+                    ->limit(1)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectWorkerMainPhotoByWorkerId(int $workerId)
+    {
+        $this->builder->select([WorkersPhoto::$filename])
+                    ->from(WorkersPhoto::$table)
+                    ->whereEqual(WorkersPhoto::$worker_id, ':worker_id', $workerId)
+                    ->limit(1)
+                ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            // workers_photo.filename -> filename
+            return $result[explode('.', WorkersPhoto::$filename)[1]];
+        }
+        return $result;
     }
 }

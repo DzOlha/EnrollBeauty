@@ -247,6 +247,17 @@ class WorkerAuthService extends AuthService
             }
 
             /**
+             * Insert worker main photo
+             */
+            $workerPhoto = $this->dataMapper->insertWorkerPhoto($workerId);
+            if($workerPhoto === false) {
+                $this->dataMapper->rollBackTransaction();
+                return [
+                    'error' => 'An error occurred while inserting the worker photo into database!'
+                ];
+            }
+
+            /**
              * Send email with url for changing password
              */
             $emailSent = $this->_sendLetterToWelcomeWorker(

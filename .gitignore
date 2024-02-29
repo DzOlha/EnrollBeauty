@@ -5,3 +5,4 @@
 /src/DB/Config/admin.php
 /src/Helper/Credentials/API/MailgunApiCredentials.php
 /src/Helper/Credentials/API/BrevoApiCredentials.php
+/public/images/custom/uploads/

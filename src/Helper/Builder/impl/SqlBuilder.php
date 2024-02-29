@@ -61,6 +61,17 @@ class SqlBuilder implements IBuilder
         return $this;
     }
 
+    public function leftJoinLateral() {
+        $this->query .= "LEFT JOIN LATERAL ";
+        return $this;
+    }
+
+    public function tableAlias(string $alias)
+    {
+        $this->query .= " as $alias ";
+        return $this;
+    }
+
     public function rightJoin(
         string $table,
     ) {
