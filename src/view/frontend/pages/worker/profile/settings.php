@@ -97,7 +97,7 @@
 
                                         <div class="tab-content modal-form">
                                             <div class="form-group">
-                                                <p class="mg-b-0"><span>*</span>Main photo</p>
+                                                <p class="mg-b-0">Main photo</p>
                                                 <div class="input-group mb-3">
                                                     <input type="file" class="dropify" id="main-photo-input"
                                                            accept=".svg, .jpg, .jpeg, .png" data-height="200"
@@ -126,7 +126,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <p class="mg-b-0"><span>*</span>Self Description</p>
+                                                <p class="mg-b-0">Self Description</p>
                                                 <div class="input-group mb-3">
                                                     <textarea class="form-control"
                                                               type="text"
@@ -222,8 +222,111 @@
                                     <div class="tab-pane" id="socialNetworks">
                                         <h2 class="text-center"><b>Social Networks</b></h2>
 
-                                        <div class="tab-content">
-
+                                        <div class="tab-content modal-form">
+                                            <div class="form-group">
+                                                <p class="mg-b-0">Instagram</p>
+                                                <div class="input-group mb-3">
+                                                    <div class="social-input-wrapper">
+                                                        <a href="#" target="_blank" class="icon tooltip-top" id="icon-instagram-input">
+                                                            <i class="fa fa-instagram"></i>
+                                                        </a>
+                                                        <input name="Instagram" type="text" placeholder="Link to your Instagram profile" autocomplete="off"
+                                                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                                                           class="form-control" id="instagram-input">
+                                                    </div>
+                                                    <div class="error text-danger" id="instagram-input-error"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p class="mg-b-0">TikTok</p>
+                                                <div class="input-group mb-3">
+                                                    <div class="social-input-wrapper">
+                                                        <a href="#" target="_blank" class="icon tooltip-top" id="icon-tikTok-input">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="tiktok-icon" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z"/></svg>
+                                                        </a>
+                                                        <input name="TikTok" type="text" placeholder="Link to your TikTok channel" autocomplete="off"
+                                                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                                                           class="form-control" id="tikTok-input">
+                                                    </div>
+                                                    <div class="error text-danger" id="tikTok-input-error"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p class="mg-b-0">LinkedIn</p>
+                                                <div class="input-group mb-3">
+                                                    <div class="social-input-wrapper">
+                                                        <a href="#" target="_blank" class="icon tooltip-top" id="icon-linkedIn-input">
+                                                            <i class="fa fa-linkedin"></i>
+                                                        </a>
+                                                        <input name="LinkedIn" type="text" placeholder="Link to your LinkedIn profile" autocomplete="off"
+                                                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                                                           class="form-control" id="linkedIn-input">
+                                                    </div>
+                                                    <div class="error text-danger" id="linkedIn-input-error"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p class="mg-b-0">Facebook</p>
+                                                <div class="input-group mb-3">
+                                                    <div class="social-input-wrapper">
+                                                        <a href="#" target="_blank" class="icon tooltip-top" id="icon-facebook-input">
+                                                            <i class="fa fa-facebook"></i>
+                                                        </a>
+                                                        <input name="Facebook" type="text" placeholder="Link to your Facebook profile/group" autocomplete="off"
+                                                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                                                           class="form-control" id="facebook-input">
+                                                    </div>
+                                                    <div class="error text-danger" id="facebook-input-error"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p class="mg-b-0">Github</p>
+                                                <div class="input-group mb-3">
+                                                    <div class="social-input-wrapper">
+                                                        <a href="#" target="_blank" class="icon tooltip-top" id="icon-github-input">
+                                                            <i class="fa fa-github"></i>
+                                                        </a>
+                                                        <input name="Github" type="text" placeholder="Link to your Github profile" autocomplete="off"
+                                                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                                                           class="form-control" id="github-input">
+                                                    </div>
+                                                    <div class="error text-danger" id="github-input-error"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p class="mg-b-0">Telegram</p>
+                                                <div class="input-group mb-3">
+                                                    <div class="social-input-wrapper">
+                                                        <a href="#" target="_blank" class="icon tooltip-top" id="icon-telegram-input">
+                                                            <i class="fa fa-telegram"></i>
+                                                        </a>
+                                                        <input name="Telegram" type="text" placeholder="Link to your Telegram profile/group" autocomplete="off"
+                                                           data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                                                           class="form-control" id="telegram-input">
+                                                    </div>
+                                                    <div class="error text-danger" id="telegram-input-error"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p class="mg-b-0">YouTube</p>
+                                                <div class="input-group mb-3">
+                                                    <div class="social-input-wrapper">
+                                                        <a href="#" target="_blank" class="icon tooltip-top" id="icon-youTube-input">
+                                                            <i class="fa fa-youtube-play"></i>
+                                                        </a>
+                                                        <input name="YouTube" type="text" placeholder="Link to your YouTube channel" autocomplete="off"
+                                                               data-toggle="tooltip" data-trigger="focus" data-placement="left"
+                                                               class="form-control" id="youTube-input">
+                                                    </div>
+                                                    <div class="error text-danger" id="youTube-input-error"></div>
+                                                </div>
+                                            </div>
+                                            <button aria-label="Submit"
+                                                    class="btn ripple pd-x-25"
+                                                    id="edit-worker-social-submit"
+                                                    data-bs-dismiss="modal" type="button">
+                                                Update
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="tab-pane" id="galleryOfWorks">
@@ -311,7 +414,6 @@
 </div>
 <!-- End Main Content-->
 
-<?php //require_once VIEW_COMMON."pages/user/profile/modals/modal_confirmation.php" ?>
 </div>
 <!-- End Page -->
 

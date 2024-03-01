@@ -41,4 +41,15 @@ const WORKERS_PHOTO_FOLDER = UPLOADS_FOLDER . 'workers/';
 const ADMINS_PHOTO_FOLDER = UPLOADS_FOLDER . 'admins/';
 const USERS_PHOTO_FOLDER = UPLOADS_FOLDER . 'users/';
 
+const WORKER_SOCIAL_NETWORKS_ROOT_URLS = [
+    'Instagram' => 'https://www.instagram.com/',
+    'Facebook' => 'https://www.facebook.com/',
+    'TikTok' => 'https://www.tiktok.com/',
+    'YouTube' => 'https://youtube.com/',
+    'LinkedIn' => 'https://www.linkedin.com/',
+    'Github' => 'https://github.com/',
+    'Telegram' => 'https://t.me/'
+];
+
+
 

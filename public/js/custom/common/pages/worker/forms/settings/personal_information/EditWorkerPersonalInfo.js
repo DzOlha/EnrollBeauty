@@ -7,6 +7,7 @@ import FormBuilder from "../../../../classes/builder/FormBuilder.js";
 import FormModal from "../../../../classes/modal/FormModal.js";
 import Input from "../../../../classes/element/Input.js";
 import Worker from "../../../profile/Worker.js";
+import Select2 from "../../../../classes/element/Select2.js";
 
 class EditWorkerPersonalInfo extends EditWorkerForm
 {
@@ -123,6 +124,10 @@ class EditWorkerPersonalInfo extends EditWorkerForm
         $(`#${this.descriptionTextareaId}`).val(data.description);
     }
 
+    _setSelect2(selectId, value, placeholder) {
+        Select2._setSelect2(selectId, value, placeholder);
+    }
+
 
     /**
      *
@@ -183,7 +188,7 @@ class EditWorkerPersonalInfo extends EditWorkerForm
              */
             data.append('id', e.currentTarget.getAttribute(this.dataIdAttribute));
 
-            console.log(data);
+            //console.log(data);
             //this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
             this.requester.postFiles(
                 this.submitActionUrl,
@@ -204,7 +209,7 @@ class EditWorkerPersonalInfo extends EditWorkerForm
             return result;
         }
 
-        if(value.length) {
+        if(value.length <= 10) {
             result.error = 'The description field should be longer than 10 characters!';
             return result;
         }
@@ -268,7 +273,7 @@ class EditWorkerPersonalInfo extends EditWorkerForm
         /**
          * If any errors occurred -> return false
          */
-        if(!data || !description || !mainPhoto) {
+        if(!data || description === false || mainPhoto === false) {
             return false;
         }
 

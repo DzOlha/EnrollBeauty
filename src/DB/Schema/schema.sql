@@ -111,13 +111,13 @@ CREATE TABLE workers_photo (
 CREATE TABLE workers_social (
     id INT AUTO_INCREMENT PRIMARY KEY,
     worker_id INT NOT NULL,
-    Instagram VARCHAR(100),
-    LinkedIn VARCHAR(100),
-    Facebook VARCHAR(100),
-    Github VARCHAR(100),
-    Telegram VARCHAR(100),
-    YouTube VARCHAR(100),
-    TikTok VARCHAR(100),
+    Instagram VARCHAR(255),
+    LinkedIn VARCHAR(255),
+    Facebook VARCHAR(255),
+    Github VARCHAR(255),
+    Telegram VARCHAR(255),
+    YouTube VARCHAR(255),
+    TikTok VARCHAR(255),
     FOREIGN KEY (worker_id) REFERENCES workers(id) ON DELETE CASCADE
 );
 CREATE TABLE workers_setting (

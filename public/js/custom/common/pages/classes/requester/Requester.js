@@ -1,6 +1,6 @@
 class Requester {
     constructor() {
-        this.defaultErrorMessage = 'Error getting info! Please, try again later!';
+        this.defaultErrorMessage = 'Error getting info! <br>Please, try again later!';
     }
 
     get(apiUrl, successCallback, errorCallback) {

@@ -1419,4 +1419,35 @@ class WorkerDataSource extends DataSource
         }
         return $result;
     }
+
+    public function selectWorkerSocialNetworksByWorkerId(int $workerId)
+    {
+        $this->builder->select([WorkersSocial::$id, WorkersSocial::$Instagram,
+                WorkersSocial::$TikTok, WorkersSocial::$Facebook, WorkersSocial::$LinkedIn,
+                WorkersSocial::$Github, WorkersSocial::$YouTube, WorkersSocial::$Telegram])
+            ->from(WorkersSocial::$table)
+            ->whereEqual(WorkersSocial::$worker_id, ':worker_id', $workerId)
+        ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function updateWorkerSocialById(int $id, array $data)
+    {
+        $this->builder->update(WorkersSocial::$table)
+                ->set(WorkersSocial::$Instagram, ':instagram', $data['Instagram'])
+                ->andSet(WorkersSocial::$Facebook, ':facebook', $data['Facebook'])
+                ->andSet(WorkersSocial::$TikTok, ':tiktok', $data['TikTok'])
+                ->andSet(WorkersSocial::$Telegram, ':telegram', $data['Telegram'])
+                ->andSet(WorkersSocial::$YouTube, ':youtube', $data['YouTube'])
+                ->andSet(WorkersSocial::$LinkedIn, ':linkedin', $data['LinkedIn'])
+                ->andSet(WorkersSocial::$Github, ':github', $data['Github'])
+            ->whereEqual(WorkersSocial::$id, ':id', $id)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 }

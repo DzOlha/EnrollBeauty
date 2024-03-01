@@ -134,10 +134,18 @@ const API = [
                         'all' => '/api/worker/profile/service/get/all'
                     ]
                 ],
-                'id' => '/api/worker/profile/get/id',
+                'id' => '/api/worker/profile/id',
                 'personal-info' => [
                     'get' => '/api/worker/profile/personal-info/get',
                     'edit' => '/api/worker/profile/personal-info/edit',
+                ],
+                'social' => [
+                    'get' => [
+                        'all' => '/api/worker/profile/social/get/all',
+                    ],
+                    'edit' => [
+                        'all' => '/api/worker/profile/social/edit/all',
+                    ],
                 ]
             ],
             'ORDER'      => [

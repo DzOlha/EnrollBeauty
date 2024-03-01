@@ -22,6 +22,7 @@ use Src\Service\Validator\impl\FileSizeValidator;
 use Src\Service\Validator\impl\FileTypeValidator;
 use Src\Service\Validator\impl\NameValidator;
 use Src\Service\Validator\impl\PhotoValidator;
+use Src\Service\Validator\impl\SocialNetworksUrlValidator;
 
 class WorkerApiController extends ApiController
 {
@@ -307,6 +308,39 @@ class WorkerApiController extends ApiController
                  */
                 if ($this->url[4] === 'edit') {
                     $this->_editWorkerPersonalInformation();
+                }
+            }
+
+            /**
+             * url = /api/worker/profile/social/
+             */
+            if ($this->url[3] === 'social') {
+                /**
+                 * url = /api/worker/profile/social/get
+                 */
+                if ($this->url[4] === 'get') {
+                    if(isset($this->url[5])) {
+                        /**
+                         * url = /api/worker/profile/social/get/all
+                         */
+                        if($this->url[5] === 'all') {
+                            $this->_getWorkerSocialNetworksAll();
+                        }
+                    }
+                }
+
+                /**
+                 * url = /api/worker/profile/social/edit
+                 */
+                if ($this->url[4] === 'edit') {
+                    if(isset($this->url[5])) {
+                        /**
+                         * url = /api/worker/profile/social/edit/all
+                         */
+                        if($this->url[5] === 'all') {
+                            $this->_editWorkerSocialNetworksAll();
+                        }
+                    }
                 }
             }
         }
@@ -1728,7 +1762,12 @@ class WorkerApiController extends ApiController
                 }
             }
 
-            if($updatedText === false && $updatedPhoto === false) {
+            if($updatedText === false
+                && (
+                    ($updatedPhoto === false && $newImage)
+                    || ($updatedPhoto && !$newImage)
+                )
+            ) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while updating your personal info!'
@@ -1902,6 +1941,108 @@ class WorkerApiController extends ApiController
             ]);
         } else {
             $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/social/get/all
+     */
+    protected function _getWorkerSocialNetworksAll()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['id'])) {
+                $this->_missingRequestFields();
+            }
+            $id = htmlspecialchars(trim($_GET['id']));
+            $result = $this->dataMapper->selectWorkerSocialNetworksByWorkerId($id);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting your social networks!'
+                ]);
+            }
+
+            /**
+             * Decode all html entity of the url
+             */
+            foreach ($result as &$link) {
+                if(!$link) continue;
+                $link = html_entity_decode($link);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/profile/social/edit/all
+     */
+    protected function _editWorkerSocialNetworksAll()
+    {
+        /**
+         * {
+         *      Instagram
+         *      Facebook
+         *      TikTok
+         *      YouTube
+         *      LinkedIn
+         *      Github
+         *      Telegram
+         * }
+         */
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['id'])) {
+                $this->_missingRequestFields();
+            }
+            $rowId = htmlspecialchars(trim($_POST['id']));
+
+            $items = [
+                'Instagram' => htmlspecialchars(trim($_POST['Instagram'])),
+                'Facebook' => htmlspecialchars(trim($_POST['Facebook'])),
+                'TikTok' => htmlspecialchars(trim($_POST['TikTok'])),
+                'YouTube' => htmlspecialchars(trim($_POST['YouTube'])),
+                'LinkedIn' => htmlspecialchars(trim($_POST['LinkedIn'])),
+                'Github' => htmlspecialchars(trim($_POST['Github'])),
+                'Telegram' => htmlspecialchars(trim($_POST['Telegram'])),
+            ];
+
+            /**
+             * Validate all urls
+             */
+            $validator = new SocialNetworksUrlValidator();
+            $valid = $validator->validateAll($items);
+            if($valid !== true) {
+                $this->returnJson([
+                    'error' => $valid
+                ]);
+            }
+
+            /**
+             * Update the social networks of the worker in database
+             */
+            $updated = $this->dataMapper->updateWorkerSocialById(
+                $rowId, $items
+            );
+            if($updated === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while updating your social networks!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully updated your social networks!',
+                'data' => $items
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 }

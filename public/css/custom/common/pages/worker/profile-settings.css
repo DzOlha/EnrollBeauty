@@ -55,3 +55,35 @@
 #description-textarea {
     width: 100%;
 }
+
+.social-input-wrapper {
+    display: flex;
+}
+.social-input-wrapper .icon {
+    width: 45px;
+    font-size: 18px;
+    line-height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--grey-around-form);
+    border: 1px solid lightgrey;
+    border-right: none;
+}
+
+.social-input-wrapper .icon.active {
+    background-color: var(--dark-color);
+    color: white;
+    border: 1px solid var(--dark-color);
+}
+.social-input-wrapper .icon.active svg {
+    fill: white;
+}
+#socialNetworks input.active {
+    border: 1px solid var(--dark-color);
+}
+
+.tiktok-icon {
+    width: 15px;
+}
