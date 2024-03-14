@@ -15,7 +15,7 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
 
         let userLink = userId !== null ? `<span>
                                                     <a href="/web/user/profile?user_id=${userId}" 
-                                                         class="worker text-default" target="_blank">
+                                                         class="profile-url text-default" target="_blank">
                                                         ${userEmail}
                                                     </a>
                                                   </span>`

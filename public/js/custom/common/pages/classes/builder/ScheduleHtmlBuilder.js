@@ -1,3 +1,4 @@
+import API from "../../api.js";
 
 class ScheduleHtmlBuilder {
     constructor() {
@@ -5,9 +6,13 @@ class ScheduleHtmlBuilder {
     createScheduleCard(
         scheduleId, workerId, serviceId, affiliateId,
         serviceName, price, currency,
-        worker, date, startTime, endTime, address
+        workerName, workerSurname, date, startTime, endTime, address
         )
     {
+        let profileUrlRoot = API.OPEN.WEB.WORKER.profile;
+        let workerProfileUrl =
+            `${profileUrlRoot}/${workerName.toLowerCase()}-${workerSurname.toLowerCase()}-${workerId}`
+
         //console.log('createScheduleCard');
         return `<div class="card" id="schedule-card-${scheduleId}" 
                         data-schedule-id="${scheduleId}"
@@ -39,8 +44,10 @@ class ScheduleHtmlBuilder {
                             <div>
                                 <span>Master: </span>
                                 <span>
-                                    <a href="/web/worker/profile?worker_id=${workerId}" 
-                                    class="worker text-default" target="_blank">${worker}</a>
+                                    <a href="${workerProfileUrl}" target="_blank"
+                                    class="profile-url text-default text-decoration-underline">
+                                        ${workerName + ' ' + workerSurname}
+                                    </a>
                                 </span>
                             </div>
                         </div>

@@ -329,6 +329,16 @@
                                             </button>
                                         </div>
                                     </div>
+                                    <div class="tab-pane" id="publicProfile">
+                                        <h2 class="text-center"><b>Public Profile</b></h2>
+
+                                        <div class="tab-content modal-form">
+                                            <button aria-label="Submit" class="btn ripple pd-x-25"
+                                                    id="show-public-profile-button" type="button">
+                                                View My Public Profile
+                                            </button>
+                                        </div>
+                                    </div>
                                     <div class="tab-pane" id="galleryOfWorks">
                                         <h2 class="text-center"><b>Gallery Of Works</b></h2>
 
@@ -338,13 +348,6 @@
                                     </div>
                                     <div class="tab-pane" id="documents">
                                         <h2 class="text-center"><b>Documents</b></h2>
-
-                                        <div class="tab-content">
-
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane" id="publicProfile">
-                                        <h2 class="text-center"><b>Public Profile</b></h2>
 
                                         <div class="tab-content">
 
@@ -377,14 +380,14 @@
                                 <li><a href="#socialNetworks" id="socialNetworks-trigger" data-bs-toggle="tab">
                                         Social Networks
                                     </a></li>
+                                <li><a href="#publicProfile" id="publicProfile-trigger" data-bs-toggle="tab">
+                                        Public Profile
+                                    </a></li>
                                 <li><a href="#galleryOfWorks" id="galleryOfWorks-trigger" data-bs-toggle="tab">
                                         Gallery Of Works
                                     </a></li>
                                 <li><a href="#documents" id="documents-trigger" data-bs-toggle="tab">
                                         Documents
-                                    </a></li>
-                                <li><a href="#publicProfile" id="publicProfile-trigger" data-bs-toggle="tab">
-                                        Public Profile
                                     </a></li>
                                 <li><a href="#reviews" id="reviews-trigger" data-bs-toggle="tab">
                                         Reviews

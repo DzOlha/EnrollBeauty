@@ -241,6 +241,25 @@ const API = {
                 }
             }
         }
+    },
+    OPEN: {
+        WEB: {
+            WORKER: {
+                profile: '/web/open/worker/profile'
+            },
+            USER: {
+                profile: '/web/open/user/profile'
+            }
+        },
+        API: {
+            WORKER: {
+                PROFILE: {
+                    get: {
+                        one: '/api/open/worker/profile/get/one'
+                    }
+                }
+            }
+        }
     }
 };
 

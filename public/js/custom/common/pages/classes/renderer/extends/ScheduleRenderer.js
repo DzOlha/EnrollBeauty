@@ -527,7 +527,7 @@ class ScheduleRenderer extends Renderer{
                 schedule.schedule_id, schedule.worker_id, schedule.service_id,
                 schedule.affiliate_id, schedule.service_name,
                 schedule.price, schedule.currency,
-                `${schedule.worker_name} ${schedule.worker_surname}`,
+                schedule.worker_name, schedule.worker_surname,
                 date,
                 this.timeRenderer.renderShortTime(schedule.start_time),
                 this.timeRenderer.renderShortTime(schedule.end_time),

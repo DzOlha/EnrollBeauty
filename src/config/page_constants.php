@@ -134,6 +134,14 @@ const WORKER_PAGES = [
             'title' => 'Service Pricing',
             'page_name' => 'Price-list'
         ]
+    ],
+
+    'public_profile' => [
+        'path' => VIEW_FRONTEND . 'pages/worker/profile/public_profile',
+        'data' => [
+            'title' => 'Worker Profile',
+            'page_num' => ''
+        ]
     ]
 ];
 

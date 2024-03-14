@@ -242,5 +242,24 @@ const API = [
                 ]
             ]
         ]
+    ],
+    'OPEN' => [
+        'WEB' => [
+            'WORKER' => [
+                'profile' => '/web/open/worker/profile/{name-surname-id}'
+            ],
+            'USER' => [
+                'profile' => '/web/open/user/profile'
+            ]
+        ],
+        'API' => [
+            'WORKER' => [
+                'profile' => [
+                    'get' => [
+                        'one' => '/api/open/worker/profile/get/one'
+                    ]
+                ]
+            ]
+        ]
     ]
 ];

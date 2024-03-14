@@ -6,6 +6,7 @@ import EditWorkerPersonalInfo
     from "../../../../common/pages/worker/forms/settings/personal_information/EditWorkerPersonalInfo.js";
 import EditWorkerSocialNetworks
     from "../../../../common/pages/worker/forms/settings/social_networks/EditWorkerSocialNetworks.js";
+import SettingsPublicProfile from "../../../../common/pages/worker/forms/settings/public_profile/SettingsPublicProfile.js";
 
 $(function () {
     let requester = new Requester();
@@ -35,4 +36,9 @@ $(function () {
     editSocial.init();
 
 
+    /**
+     * ---------------------------- Public Profile ----------------------------------------
+     */
+    let publicProfile = new SettingsPublicProfile(requester);
+    publicProfile.init();
 })
