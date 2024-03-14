@@ -4,7 +4,6 @@ class MakeOrderUser extends OrderConfirmationModal
 {
     constructor(requester, confirmationModal, apiUrl, table) {
         super(requester, confirmationModal, apiUrl);
-        this.cardBaseId = '';
         this.dataAttributeId = 'data-schedule-id';
         this.table = table;
 
@@ -12,7 +11,7 @@ class MakeOrderUser extends OrderConfirmationModal
     }
     getTriggerIcon(id) {
         return document.querySelector(
-            `#schedule-card-${id} .fe-shopping-cart`
+            `#${this.scheduleCardBase}-${id} .fe-shopping-cart`
         );
     }
     getDataAttributes(triggerIcon) {
