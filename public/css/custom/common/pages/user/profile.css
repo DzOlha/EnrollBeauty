@@ -271,7 +271,7 @@ th, td {
 .ttm-btn-bgcolor-skincolor {
     background-color: var(--light-brown-color) !important;
 }
-.worker-profile-url {
+.profile-url {
     text-decoration: underline;
     color: #2964aa;
 }
