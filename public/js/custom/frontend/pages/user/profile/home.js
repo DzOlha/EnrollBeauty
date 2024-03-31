@@ -6,7 +6,7 @@ import ConfirmationModal from "../../../../common/pages/classes/modal/Confirmati
 import AppointmentsTable from "../../../../common/pages/classes/table/extends/AppointmentsTable.js";
 import ScheduleRenderer from "../../../../common/pages/classes/renderer/extends/ScheduleRenderer.js";
 import ScheduleHtmlBuilder from "../../../../common/pages/classes/builder/ScheduleHtmlBuilder.js";
-import SearchScheduleForm from "../../../../common/pages/user/forms/SearchScheduleForm.js";
+import SearchScheduleForm from "../../../../common/pages/user/forms/schedule/SearchScheduleForm.js";
 import OptionBuilder from "../../../../common/pages/classes/builder/OptionBuilder.js";
 import CancelOrderUser from "../../../../common/pages/user/forms/order/CancelOrderUser.js";
 import API from "../../../../common/pages/api.js";

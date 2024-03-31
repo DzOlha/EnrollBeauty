@@ -10,7 +10,6 @@ class UserSocialReadDto
     public ?string $TikTok;
     public ?string $Facebook;
     public ?string $YouTube;
-    public ?string $Google;
 
     public function __construct($array)
     {
@@ -20,6 +19,5 @@ class UserSocialReadDto
         $this->TikTok = $array['TikTok'];
         $this->Facebook = $array['Facebook'];
         $this->YouTube = $array['YouTube'];
-        $this->Google = $array['Google'];
     }
 }

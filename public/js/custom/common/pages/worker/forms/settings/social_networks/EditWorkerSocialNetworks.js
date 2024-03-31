@@ -158,7 +158,7 @@ class EditWorkerSocialNetworks
     addListenerInputEnd(inputId)
     {
         let input = document.getElementById(inputId);
-        //if(!input) return;
+        if(!input) return;
         this.setSocialIconLink(inputId, input);
 
         let listener = input.getAttribute(this.listenerDataAttribute);
@@ -172,7 +172,7 @@ class EditWorkerSocialNetworks
 
     setSocialIconLink(inputId, input) {
         let icon = document.getElementById(`icon-${inputId}`);
-        //if(!icon) return;
+        if(!icon) return;
         //console.log(input.value);
 
         let validLink = this.validateSocialNetworkLink(inputId);

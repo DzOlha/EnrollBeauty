@@ -1,0 +1,6 @@
+
+class EditUserPersonalInfo
+{
+    constructor() {
+    }
+}

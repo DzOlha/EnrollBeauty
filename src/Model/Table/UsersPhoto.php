@@ -8,4 +8,5 @@ class UsersPhoto
     public static string $id = "users_photo.id";
     public static string $user_id = 'users_photo.user_id';
     public static string $name = 'users_photo.filename';
+    public static string $is_main = 'users_photo.is_main';
 }

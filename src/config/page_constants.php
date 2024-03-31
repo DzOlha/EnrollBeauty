@@ -166,5 +166,13 @@ const USER_PAGES = [
             'title' => 'Account',
             'page_name' => 'Homepage'
         ]
+    ],
+
+    'settings' => [
+        'path' => VIEW_FRONTEND . 'pages/user/profile/settings',
+        'data' => [
+            'title' => 'Account Settings',
+            'page_name' => 'Settings'
+        ]
     ]
 ];

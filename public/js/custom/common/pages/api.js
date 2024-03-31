@@ -34,15 +34,18 @@ const API = {
     USER: {
         WEB: {
             PROFILE: {
-                home: '/web/user/profile/home'
+                home: '/web/user/profile/home',
+                settings: '/web/user/profile/settings',
             }
         },
         API: {
             PROFILE: {
                 get: '/api/user/profile/get',
                 'social-networks': {
-                    get: '/api/user/profile/social-networks/get'
-                }
+                    get: '/api/user/profile/social-networks/get',
+                    edit: '/api/user/profile/social-networks/edit'
+                },
+                id: '/api/user/profile/id',
             },
             ORDER: {
                 service: {

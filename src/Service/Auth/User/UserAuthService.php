@@ -128,7 +128,8 @@ class UserAuthService extends AuthService
             /**
              * Insert into 'user_photo'
              */
-            $inserted = $this->dataMapper->insertNewUserPhoto($userId);
+            $mainPhoto = 1;
+            $inserted = $this->dataMapper->insertNewUserPhoto($userId, $mainPhoto);
             if ($inserted === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [

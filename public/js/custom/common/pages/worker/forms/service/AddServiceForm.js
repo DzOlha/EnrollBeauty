@@ -1,10 +1,8 @@
 import Input from "../../../classes/element/Input.js";
 import Notifier from "../../../classes/notifier/Notifier.js";
-import Cookie from "../../../classes/cookie/Cookie.js";
 import Select2 from "../../../classes/element/Select2.js";
 import Form from "../../../user/forms/Form.js";
 import GifLoader from "../../../classes/loader/GifLoader.js";
-import API from "../../../../../common/pages/api.js";
 
 class AddServiceForm extends Form {
     constructor(

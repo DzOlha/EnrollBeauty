@@ -52,7 +52,6 @@ CREATE TABLE users_social (
       TikTok VARCHAR(100),
       Facebook VARCHAR(100),
       YouTube VARCHAR(100),
-      Google VARCHAR(100),
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -69,6 +68,7 @@ CREATE TABLE users_photo (
      id INT AUTO_INCREMENT PRIMARY KEY,
      user_id INT NOT NULL,
      filename VARCHAR(255),
+     is_main INT DEFAULT 0,
      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

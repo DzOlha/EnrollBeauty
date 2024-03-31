@@ -58,6 +58,13 @@ class UserApiController extends ApiController
                 $this->_getUserInfo();
             }
 
+            /**
+             * url = /api/user/profile/id
+             */
+            if($this->url[3] === 'id') {
+                $this->_getCurrentUserId();
+            }
+
             if($this->url[3] === 'social-networks') {
                 if(isset($this->url[4])) {
                     /**
@@ -68,6 +75,31 @@ class UserApiController extends ApiController
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/profile/id
+     */
+    protected function _getCurrentUserId()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $id = SessionHelper::getUserSession();
+            if (!$id) {
+                $this->returnJson([
+                    'error' => 'Not authorized user!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data'    => [
+                    'id' => $id
+                ]
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 

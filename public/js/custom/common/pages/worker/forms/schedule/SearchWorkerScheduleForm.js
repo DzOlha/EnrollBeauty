@@ -1,4 +1,4 @@
-import SearchScheduleForm from "../../../user/forms/SearchScheduleForm.js";
+import SearchScheduleForm from "../../../user/forms/schedule/SearchScheduleForm.js";
 import API from "../../../../../common/pages/api.js";
 class SearchWorkerScheduleForm extends SearchScheduleForm {
     constructor(

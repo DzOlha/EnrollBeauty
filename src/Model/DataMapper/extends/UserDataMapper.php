@@ -29,9 +29,9 @@ class UserDataMapper extends DataMapper
         return $this->dataSource->insertNewUserSocial($userId);
     }
 
-    public function insertNewUserPhoto(int $userId)
+    public function insertNewUserPhoto(int $userId, int $isMain = 0)
     {
-        return $this->dataSource->insertNewUserPhoto($userId);
+        return $this->dataSource->insertNewUserPhoto($userId, $isMain);
     }
 
     /**

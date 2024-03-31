@@ -8,6 +8,7 @@ import FormModal from "../../../../classes/modal/FormModal.js";
 import Input from "../../../../classes/element/Input.js";
 import Worker from "../../../profile/Worker.js";
 import Select2 from "../../../../classes/element/Select2.js";
+import AjaxImageFiller from "../../../../classes/helper/AjaxImageFiller.js";
 
 class EditWorkerPersonalInfo extends EditWorkerForm
 {
@@ -300,28 +301,9 @@ class EditWorkerPersonalInfo extends EditWorkerForm
         let toReturn =  {
             ...data, ...description, ...mainPhoto
         }
-        console.log(toReturn);
-        return this._populateFormDataObject(toReturn);
+
+        return AjaxImageFiller._populateFormDataObject(toReturn);
     }
-
-    _populateFormDataObject(data) {
-        /**
-         * Populate form data object to send to the server
-         * @type {FormData}
-         */
-
-        let formData = new FormData();
-        for (let key in data) {
-            if (typeof data[key] === 'object' && data[key] !== null && key !== 'photo') {
-                formData.append(key, JSON.stringify(data[key]));
-            } else {
-                formData.append(key, data[key]);
-            }
-        }
-
-        return formData;
-    }
-
 
     successCallbackSubmit(response) {
         Notifier.showSuccessMessage(response.success);

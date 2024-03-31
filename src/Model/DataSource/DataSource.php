@@ -120,16 +120,15 @@ abstract class DataSource
      */
     public function selectUserInfoById(int $userId)
     {
-//        $builder = new SqlBuilder($this->db);
         $this->builder->select(
-            [Users::$id, Users::$name, Users::$surname,
-            Users::$email, UsersPhoto::$name]
-        )
+                [Users::$id, Users::$name, Users::$surname,
+                Users::$email, UsersPhoto::$name]
+            )
             ->from(Users::$table)
-            ->innerJoin(UsersPhoto::$table)
-            ->on(Users::$id, UsersPhoto::$user_id)
+            ->leftJoin(UsersPhoto::$table)
+                ->on(Users::$id, UsersPhoto::$user_id)
             ->whereEqual(Users::$id, ':id', $userId)
-            ->build();
+        ->build();
 
         $result = $this->db->singleRow();
         if ($result) {

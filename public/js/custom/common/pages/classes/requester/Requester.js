@@ -12,7 +12,6 @@ class Requester {
             successCallback(response);
         })
             .fail((jqXHR, textStatus, errorThrown) => {
-                console.log(apiUrl);
                 errorCallback({'error': this.defaultErrorMessage});
             });
     }

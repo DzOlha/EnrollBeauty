@@ -81,10 +81,10 @@ class UserDataSource extends DataSource
         return false;
     }
 
-    public function insertNewUserPhoto(int $userId)
+    public function insertNewUserPhoto(int $userId, int $isMain = 0)
     {
-        $this->builder->insertInto(UsersPhoto::$table, [UsersPhoto::$user_id])
-                ->values([':user_id'], [$userId])
+        $this->builder->insertInto(UsersPhoto::$table, [UsersPhoto::$user_id, UsersPhoto::$is_main])
+                ->values([':user_id', ':is_main'], [$userId, $isMain])
             ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
@@ -104,7 +104,6 @@ class UserDataSource extends DataSource
      *      'TikTok' =>
      *      'Facebook' =>
      *      'YouTube' =>
-     *      'Google' =>
      * ]
      */
     public function selectUserSocialById(int $userId)

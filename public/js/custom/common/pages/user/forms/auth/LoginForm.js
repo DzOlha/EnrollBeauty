@@ -1,6 +1,6 @@
-import Requester from "../../classes/requester/Requester.js";
-import Form from "./Form.js";
-import API from "../../../../common/pages/api.js";
+import Requester from "../../../classes/requester/Requester.js";
+import Form from "./../Form.js";
+import API from "../../../../../common/pages/api.js";
 
 class LoginForm extends Form {
     constructor() {

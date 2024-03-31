@@ -1,6 +1,6 @@
-import Form from "./Form.js";
-import Notifier from "../../classes/notifier/Notifier.js";
-import API from "../../../../common/pages/api.js";
+import Form from "./../Form.js";
+import Notifier from "../../../classes/notifier/Notifier.js";
+import API from "../../../../../common/pages/api.js";
 class SearchScheduleForm extends Form {
     constructor(
         requester, scheduleRenderer,
