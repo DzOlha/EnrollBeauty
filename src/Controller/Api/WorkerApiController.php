@@ -1626,6 +1626,9 @@ class WorkerApiController extends ApiController
                     'error' => 'An error occurred while getting the user personal information!'
                 ]);
             }
+            $result['description'] = $result['description'] !== null
+                                    ? html_entity_decode($result['description'])
+                                    : '';
             $this->returnJson([
                 'success' => true,
                 'data'    => $result

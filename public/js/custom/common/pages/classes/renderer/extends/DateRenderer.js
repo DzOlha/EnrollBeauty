@@ -103,6 +103,13 @@ class DateRenderer extends Renderer {
         }
     }
 
+    _formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     /**
      *
      * @param startDate YYYY-MM-DD
@@ -113,11 +120,10 @@ class DateRenderer extends Renderer {
         const dateArray = [];
         let currentDate = new Date(startDate);
         let _endDate = new Date(endDate);
-        //console.log('currentDate = ' + currentDate);
 
         // Iterate over the dates and push them to the array
-        while (currentDate <= _endDate) {
-            dateArray.push(new Date(currentDate).toISOString().split('T')[0]);
+        while (currentDate.getTime() <= _endDate.getTime()) {
+            dateArray.push(this._formatDate(currentDate));
             currentDate.setDate(currentDate.getDate() + 1);
         }
 

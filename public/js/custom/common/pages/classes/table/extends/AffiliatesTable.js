@@ -1,5 +1,6 @@
 import Table from "../Table.js";
 import Notifier from "../../notifier/Notifier.js";
+import UrlRenderer from "../../renderer/extends/UrlRenderer.js";
 
 class AffiliatesTable extends Table
 {
@@ -56,10 +57,18 @@ class AffiliatesTable extends Table
 
         let class_ = item?.manager_name ? 'bg-success' : 'bg-secondary';
 
+        let profileUrl = managerName !== 'No Manager'
+                                ? UrlRenderer.renderWorkerPublicProfileUrl(
+                                        item.manager_name, item.manager_surname, item.manager_id
+                                )
+                                : '#';
+
         row.append(`<td ${this.dataManagerId}="${item?.manager_id}">
-                            <span class="btn ${class_} button-in-cell" id="${this.profileManager}-${item.id}">
-                                ${managerName}
-                            </span>
+                            <a href="${profileUrl}" target="_blank">
+                                <span class="btn ${class_} button-in-cell" id="${this.profileManager}-${item.id}">
+                                    ${managerName}
+                                </span>
+                            </a>
                       </td>`);
 
         let date = this.dateRenderer.renderDatetime(item.created_date);

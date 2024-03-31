@@ -1,4 +1,5 @@
 import CONST from "../../../../../../constants.js";
+import UrlRenderer from "../../../../classes/renderer/extends/UrlRenderer.js";
 
 class ModalBuilder {
     createModalForm(modalId) {
@@ -74,15 +75,19 @@ class ModalBuilder {
         let image = item.filename ? `${CONST.workerImgFolder}${item.id}/${item.filename}`
                            : CONST.noPhoto;
 
+        let workerProfileUrl = UrlRenderer.renderWorkerPublicProfileUrl(
+            item.name, item.surname, item.id
+        );
+
         return `<div class="worker-card" id="worker-card-${item.id}">
                         <div class="card overflow-hidden custom-card ">
-                            <a href="${CONST.workerSystemProfile}?id=${item.id}" 
+                            <a href="${workerProfileUrl}" 
                                 class="img-wrapper" target="_blank">
                                 <img alt="Image" class="img-fluid b-img" src="${image}">
                             </a>
                             <div class="card-body">
                                 <h5 class="main-content-label tx-dark tx-medium mg-b-10">
-                                    <a href="${CONST.workerSystemProfile}?id=${item.id}" target="_blank">
+                                    <a href="${workerProfileUrl}" target="_blank">
                                             <div class="worker-card-name">${item.name} ${item.surname}</div>
                                     </a>
                                 </h5>

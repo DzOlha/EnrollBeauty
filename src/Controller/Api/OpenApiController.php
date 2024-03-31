@@ -64,6 +64,9 @@ class OpenApiController extends ApiController
                 ]);
             }
 
+            $result['description'] = $result['description'] !== null
+                                    ? html_entity_decode($result['description'])
+                                    : '';
             $this->returnJson([
                 'success' => true,
                 'data' => $result

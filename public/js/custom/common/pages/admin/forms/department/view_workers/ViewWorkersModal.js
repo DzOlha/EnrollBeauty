@@ -9,7 +9,7 @@ class ViewWorkersModal extends FormModal {
         super(formBuilder);
         this.requester = requester;
         this.btnTriggerId = 'show-extra-modal';
-        this.limit = 2;
+        this.limit = 4;
         this.pageWorker = 1;
 
         this.tabId = 'workers';

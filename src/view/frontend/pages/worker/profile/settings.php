@@ -383,18 +383,18 @@
                                 <li><a href="#publicProfile" id="publicProfile-trigger" data-bs-toggle="tab">
                                         Public Profile
                                     </a></li>
-                                <li><a href="#galleryOfWorks" id="galleryOfWorks-trigger" data-bs-toggle="tab">
-                                        Gallery Of Works
-                                    </a></li>
-                                <li><a href="#documents" id="documents-trigger" data-bs-toggle="tab">
-                                        Documents
-                                    </a></li>
-                                <li><a href="#reviews" id="reviews-trigger" data-bs-toggle="tab">
-                                        Reviews
-                                    </a></li>
-                                <li><a href="#security" id="security-trigger" data-bs-toggle="tab">
-                                        Security
-                                    </a></li>
+<!--                                <li><a href="#galleryOfWorks" id="galleryOfWorks-trigger" data-bs-toggle="tab">-->
+<!--                                        Gallery Of Works-->
+<!--                                    </a></li>-->
+<!--                                <li><a href="#documents" id="documents-trigger" data-bs-toggle="tab">-->
+<!--                                        Documents-->
+<!--                                    </a></li>-->
+<!--                                <li><a href="#reviews" id="reviews-trigger" data-bs-toggle="tab">-->
+<!--                                        Reviews-->
+<!--                                    </a></li>-->
+<!--                                <li><a href="#security" id="security-trigger" data-bs-toggle="tab">-->
+<!--                                        Security-->
+<!--                                    </a></li>-->
                             </ul>
                         </aside>
                     </div>
