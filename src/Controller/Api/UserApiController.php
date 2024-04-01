@@ -98,7 +98,7 @@ class UserApiController extends ApiController
             if (!$id) {
                 $this->returnJson([
                     'error' => 'Not authorized user!'
-                ]);
+                ], 401);
             }
             $this->returnJson([
                 'success' => true,
@@ -317,7 +317,7 @@ class UserApiController extends ApiController
         } else {
             $this->returnJson([
                 'error' => "The error occurred while getting user's info"
-            ]);
+            ], 404);
         }
     }
 
@@ -341,7 +341,7 @@ class UserApiController extends ApiController
         } else {
             $this->returnJson([
                 'error' => "The error occurred while getting user's social info"
-            ]);
+            ], 404);
         }
     }
 
@@ -382,7 +382,7 @@ class UserApiController extends ApiController
             if($valid !== true) {
                 $this->returnJson([
                     'error' => $valid
-                ]);
+                ], 422);
             }
 
             /**
@@ -394,7 +394,7 @@ class UserApiController extends ApiController
             if($updated === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating your social networks!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -432,7 +432,7 @@ class UserApiController extends ApiController
         } else {
             $this->returnJson([
                 'error' => "The error occurred while getting user's coming appointments"
-            ]);
+            ], 404);
         }
     }
 
@@ -451,7 +451,7 @@ class UserApiController extends ApiController
         if ($result === false) {
             $this->returnJson([
                 'error' => 'The error occurred while getting workers for the selected service'
-            ]);
+            ], 404);
         }
 
         foreach ($result as &$worker) {
@@ -479,7 +479,7 @@ class UserApiController extends ApiController
         if ($result === false) {
             $this->returnJson([
                 'error' => 'The error occurred while getting services for the selected worker'
-            ]);
+            ], 404);
         }
         $this->returnJson([
             'success' => true,
@@ -520,52 +520,6 @@ class UserApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/user/schedule/get/initial
-     */
-//    protected function _getInitialSchedule()
-//    {
-//        /**
-//         * Select all departments for the tab menu
-//         */
-//        $departments = $this->dataMapper->selectAllDepartments();
-//        if ($departments === false) {
-//            $this->returnJson([
-//                'error' => 'There is error occurred while getting all departments'
-//            ]);
-//        }
-//
-//        if (!$departments) {
-//            $this->returnJson([
-//                'error' => 'There is no any departments yet!'
-//            ]);
-//        }
-//
-//        $defaultDepartment = $departments[0];
-//
-//        $scheduleForDepartment = $this->dataMapper->selectSchedule(
-//            $defaultDepartment['id']
-//        );
-//        if ($scheduleForDepartment === false) {
-//            $this->returnJson([
-//                'error' => "The error occurred while getting schedule
-//                            for {$defaultDepartment['name']} department"
-//
-//            ]);
-//        }
-//
-//        $this->returnJson([
-//            'success' => true,
-//            'data' => [
-//                'schedule' => $scheduleForDepartment,
-//                'departments' => $departments,
-//                'active_department' => $defaultDepartment
-//            ]
-//        ]);
-//    }
-
-    /**
-     * @return void
-     *
      * url = /api/user/schedule/search
      */
     protected function _searchSchedule()
@@ -601,13 +555,13 @@ class UserApiController extends ApiController
             if ($departments === false) {
                 $this->returnJson([
                     'error' => 'There is error occurred while getting all departments'
-                ]);
+                ], 404);
             }
 
             if (!$departments) {
                 $this->returnJson([
                     'error' => 'There is no any departments yet!'
-                ]);
+                ], 204);
             }
 
             $activeDepartment = null;
@@ -620,7 +574,7 @@ class UserApiController extends ApiController
                 if($activeDepartment === false) {
                     $this->returnJson([
                         'error' => 'The error occurred while getting the department for the service'
-                    ]);
+                    ], 404);
                 }
             }
 
@@ -633,7 +587,7 @@ class UserApiController extends ApiController
             if($schedule === false) {
                 $this->returnJson([
                     'error' => 'The error occurred while getting schedule'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -665,7 +619,7 @@ class UserApiController extends ApiController
                 if(!isset($_POST['email'])) {
                     $this->returnJson([
                         'error' => 'No user specified!'
-                    ]);
+                    ], 400);
                 } else {
                     $userId = null;
                     $email = htmlspecialchars(trim($_POST['email']));
@@ -681,12 +635,12 @@ class UserApiController extends ApiController
             if($scheduleDetails === false) {
                 $this->returnJson([
                     'error' => 'There is error occurred while getting schedule details'
-                ]);
+                ], 404);
             }
             if($scheduleDetails === null) {
                 $this->returnJson([
                     'error' => 'There is no schedule with such id'
-                ]);
+                ], 404);
             }
 
             /**
@@ -697,12 +651,12 @@ class UserApiController extends ApiController
                 if($email === false) {
                     $this->returnJson([
                         'error' => 'The error occurred while getting user email'
-                    ]);
+                    ], 404);
                 }
                 if($email === null) {
                     $this->returnJson([
                         'error' => 'There is no user email for the given id'
-                    ]);
+                    ], 404);
                 }
             }
 
@@ -713,7 +667,7 @@ class UserApiController extends ApiController
             if($exists) {
                 $this->returnJson([
                     'error' => 'The order for selected schedule item already exists'
-                ]);
+                ], 403);
             }
 
             /**
@@ -750,12 +704,12 @@ class UserApiController extends ApiController
             if($isOverlapped === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting your current schedule!'
-                ]);
+                ], 404);
             }
             if($isOverlapped) {
                 $this->returnJson([
                     'error' => 'There is an overlapping with another of your appointments! Please, review your schedule for the selected day to choose available time intervals for one more appointment!'
-                ]);
+                ], 404);
             }
 
             $this->dataMapper->beginTransaction();
@@ -768,7 +722,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'There is error occurred while inserting order into database'
-                ]);
+                ], 404);
             }
 
             /**
@@ -782,7 +736,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating schedule availability'
-                ]);
+                ], 404);
             }
 
             $this->dataMapper->commitTransaction();
@@ -791,7 +745,7 @@ class UserApiController extends ApiController
                 'data' => [
                     'schedule_id' => $scheduleId
                 ]
-            ]);
+            ], 201);
         }
     }
 
@@ -814,7 +768,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating cancellation datetime of the order!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -826,7 +780,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while getting schedule id'
-                ]);
+                ], 404);
             }
 
             if($scheduleId === null) {
@@ -849,7 +803,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating order id!'
-                ]);
+                ], 404);
             }
 
             /**

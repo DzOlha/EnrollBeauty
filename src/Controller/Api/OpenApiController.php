@@ -61,7 +61,7 @@ class OpenApiController extends ApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting worker public profile'
-                ]);
+                ], 404);
             }
 
             $result['description'] = $result['description'] !== null

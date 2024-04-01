@@ -495,7 +495,7 @@ class WorkerApiController extends ApiController
         } else {
             $this->returnJson([
                 'error' => "The error occurred while getting worker's info"
-            ]);
+            ], 404);
         }
     }
 
@@ -533,7 +533,7 @@ class WorkerApiController extends ApiController
         if ($services === false) {
             $this->returnJson([
                 'error' => 'The error occurred while getting all services'
-            ]);
+            ], 404);
         }
 
         $this->returnJson([
@@ -581,7 +581,7 @@ class WorkerApiController extends ApiController
             if ($departments === false) {
                 $this->returnJson([
                     'error' => 'There is error occurred while getting all departments'
-                ]);
+                ], 404);
             }
 
             if (!$departments) {
@@ -603,7 +603,7 @@ class WorkerApiController extends ApiController
                 if ($activeDepartment === false) {
                     $this->returnJson([
                         'error' => 'The error occurred while getting the department for the service'
-                    ]);
+                    ], 404);
                 }
             }
 
@@ -618,7 +618,7 @@ class WorkerApiController extends ApiController
                 if ($scheduleOrdered === false) {
                     $this->returnJson([
                         'error' => 'An error occurred while getting ordered schedules!'
-                    ]);
+                    ], 404);
                 }
             }
             $scheduleFree = [];
@@ -632,7 +632,7 @@ class WorkerApiController extends ApiController
                 if ($scheduleFree === false) {
                     $this->returnJson([
                         'error' => 'An error occurred while getting free schedules!'
-                    ]);
+                    ], 404);
                 }
             }
 
@@ -678,7 +678,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while getting info about the user placed the order!'
-                ]);
+                ], 404);
             }
 
             $userNameSurname = [
@@ -694,7 +694,7 @@ class WorkerApiController extends ApiController
                     $this->dataMapper->rollBackTransaction();
                     $this->returnJson([
                         'error' => 'The error occurred while getting name/surname of the user placed the order!'
-                    ]);
+                    ], 404);
                 }
             }
 
@@ -709,7 +709,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while getting order details!'
-                ]);
+                ], 404);
             }
             // Create a DateTime object from the datetime string
             $datetime = new \DateTime($order['start_datetime']);
@@ -726,7 +726,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating cancellation datetime of the order!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -739,7 +739,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating order id!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -753,7 +753,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while sending informational letter to the user who placed the canceled order!'
-                ]);
+                ], 404);
             }
 
             $updatedScheduleItem = $this->dataMapper->selectWorkerScheduleById($scheduleId);
@@ -761,7 +761,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while getting schedule item!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -824,7 +824,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating completed datetime of the order!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -862,7 +862,7 @@ class WorkerApiController extends ApiController
         if ($result === false) {
             $this->returnJson([
                 'error' => 'An error occurred while getting service details!'
-            ]);
+            ], 404);
         }
 
         $this->returnJson([
@@ -889,7 +889,7 @@ class WorkerApiController extends ApiController
         if ($services === false) {
             $this->returnJson([
                 'error' => 'The error occurred while getting all services'
-            ]);
+            ], 404);
         }
         $this->returnJson([
             'success' => true,
@@ -916,17 +916,17 @@ class WorkerApiController extends ApiController
             if (!$items['price']) {
                 $this->returnJson([
                     'error' => 'Price is the required field!'
-                ]);
+                ], 422);
             }
             if ($items['price'] < 0) {
                 $this->returnJson([
                     'error' => 'Price can not be negative number!'
-                ]);
+                ], 422);
             }
             if (!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
                 $this->returnJson([
                     'error' => 'Invalid price number was provided!'
-                ]);
+                ], 422);
             }
 
             /**
@@ -938,7 +938,7 @@ class WorkerApiController extends ApiController
             if ($pricingId) {
                 $this->returnJson([
                     'error' => 'The pricing for the selected service has already been added before!'
-                ]);
+                ], 403);
             }
 
             /**
@@ -950,7 +950,7 @@ class WorkerApiController extends ApiController
             if ($insertedId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new pricing into database!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -958,7 +958,7 @@ class WorkerApiController extends ApiController
                 'data'    => [
                     'id' => $insertedId
                 ]
-            ]);
+            ], 201);
         }
     }
 
@@ -980,17 +980,17 @@ class WorkerApiController extends ApiController
         if (!$items['price']) {
             $this->returnJson([
                 'error' => 'Price is the required field!'
-            ]);
+            ], 422);
         }
         if ($items['price'] < 0) {
             $this->returnJson([
                 'error' => 'Price can not be negative number!'
-            ]);
+            ], 422);
         }
         if (!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
             $this->returnJson([
                 'error' => 'Invalid price number was provided!'
-            ]);
+            ], 422);
         }
 
         /**
@@ -1002,7 +1002,7 @@ class WorkerApiController extends ApiController
         if ($updated === false) {
             $this->returnJson([
                 'error' => 'An error occurred while updating pricing details!'
-            ]);
+            ], 404);
         }
 
         $updatedPricing = $this->dataMapper->selectWorkerServicePricing(
@@ -1011,7 +1011,7 @@ class WorkerApiController extends ApiController
         if ($updatedPricing === false) {
             $this->returnJson([
                 'error' => 'An error occurred while getting updated service pricing!'
-            ]);
+            ], 404);
         }
 
         $this->returnJson([
@@ -1041,7 +1041,7 @@ class WorkerApiController extends ApiController
             if ($existingOrders === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting information about active orders'
-                ]);
+                ], 404);
             }
 
             /**
@@ -1053,7 +1053,7 @@ class WorkerApiController extends ApiController
             if ($existingOrders) {
                 $this->returnJson([
                     'error' => 'You can not remove this pricing because there are left some upcoming orders with it'
-                ]);
+                ], 404);
             }
 
             /**
@@ -1063,7 +1063,7 @@ class WorkerApiController extends ApiController
             if ($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deleting the pricing item!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -1105,9 +1105,9 @@ class WorkerApiController extends ApiController
             $param['order_direction']
         );
         if ($result === false) {
-            $this->returnJsonError(
-                "The error occurred while getting data about pricing!"
-            );
+            $this->returnJson([
+                'error' => "The error occurred while getting data about pricing!"
+            ], 404);
         }
 
         $this->returnJson([
@@ -1146,7 +1146,7 @@ class WorkerApiController extends ApiController
         if ($filledIntervals === false) {
             $this->returnJson([
                 'error' => 'An error occurred while getting filled time intervals for the selected day!'
-            ]);
+            ], 404);
         }
         $this->returnJson([
             'success' => true,
@@ -1180,7 +1180,7 @@ class WorkerApiController extends ApiController
         if ($filledIntervals === false) {
             $this->returnJson([
                 'error' => 'An error occurred while getting edit filled time intervals for the selected day!'
-            ]);
+            ], 404);
         }
         $this->returnJson([
             'success' => true,
@@ -1200,7 +1200,7 @@ class WorkerApiController extends ApiController
             if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the schedule item!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -1243,7 +1243,7 @@ class WorkerApiController extends ApiController
             if ($startTime >= $endTime) {
                 $this->returnJson([
                     'error' => 'Start time should be less than end time!'
-                ]);
+                ], 422);
             }
 
             /**
@@ -1256,7 +1256,7 @@ class WorkerApiController extends ApiController
             if ($scheduleExists) {
                 $this->returnJson([
                     'error' => 'There is an overlapping with another of your schedule items! Please, review your schedule for the selected day to choose available time intervals!'
-                ]);
+                ], 422);
             }
 
             /**
@@ -1268,7 +1268,7 @@ class WorkerApiController extends ApiController
             if ($priceId === false) {
                 $this->returnJson([
                     'error' => 'There is no pricing for the selected worker and service!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -1281,7 +1281,7 @@ class WorkerApiController extends ApiController
             if ($inserted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new schedule item!'
-                ]);
+                ], 404);
             }
             $this->returnJson([
                 'success' => 'You successfully added new schedule item!',
@@ -1289,7 +1289,7 @@ class WorkerApiController extends ApiController
                     'service_id' => $items['service_id'],
                     'day'        => $items['day']
                 ]
-            ]);
+            ], 201);
         }
     }
 
@@ -1329,7 +1329,7 @@ class WorkerApiController extends ApiController
             if ($startTime >= $endTime) {
                 $this->returnJson([
                     'error' => 'Start time should be less than end time!'
-                ]);
+                ], 422);
             }
 
             /**
@@ -1343,7 +1343,7 @@ class WorkerApiController extends ApiController
             if ($scheduleExists) {
                 $this->returnJson([
                     'error' => 'There is an overlapping with another of your schedule items! Please, review your schedule for the selected day to choose available time intervals!'
-                ]);
+                ], 422);
             }
 
             /**
@@ -1355,7 +1355,7 @@ class WorkerApiController extends ApiController
             if ($priceId === false) {
                 $this->returnJson([
                     'error' => 'There is no pricing for the selected worker and service!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -1368,7 +1368,7 @@ class WorkerApiController extends ApiController
             if ($updated === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating the schedule item!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -1378,7 +1378,7 @@ class WorkerApiController extends ApiController
             if ($updatedSchedule === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the updated schedule item!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -1401,7 +1401,7 @@ class WorkerApiController extends ApiController
             if ($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deletion of the schedule item!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -1431,12 +1431,12 @@ class WorkerApiController extends ApiController
             if (!$items['service_name']) {
                 $this->returnJson([
                     'error' => 'Service name can not be empty!'
-                ]);
+                ], 422);
             }
             if (strlen($items['service_name']) < 3) {
                 $this->returnJson([
                     'error' => 'Service name should be equal to or longer than 3 characters!'
-                ]);
+                ], 422);
             }
             /**
              * Check if there is no service with such name in the selected department
@@ -1447,7 +1447,7 @@ class WorkerApiController extends ApiController
             if ($exists) {
                 $this->returnJson([
                     'error' => 'The service with provided name already exists in the selected department!'
-                ]);
+                ], 403);
             }
 
             /**
@@ -1459,11 +1459,11 @@ class WorkerApiController extends ApiController
             if ($serviceId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new service into database!'
-                ]);
+                ], 404);
             }
             $this->returnJson([
                 'success' => "You successfully added new service '{$items['service_name']}'"
-            ]);
+            ], 201);
         }
     }
 
@@ -1486,12 +1486,12 @@ class WorkerApiController extends ApiController
             if (!$items['service_name']) {
                 $this->returnJson([
                     'error' => 'Service name can not be empty!'
-                ]);
+                ], 422);
             }
             if (strlen($items['service_name']) < 3) {
                 $this->returnJson([
                     'error' => 'Service name should be longer than 3 characters!'
-                ]);
+                ], 422);
             }
             /**
              * Check if there is no service with such name in the selected department
@@ -1502,7 +1502,7 @@ class WorkerApiController extends ApiController
             if ($exists) {
                 $this->returnJson([
                     'error' => 'The service with provided name already exists in the selected department!'
-                ]);
+                ], 403);
             }
 
             /**
@@ -1514,14 +1514,14 @@ class WorkerApiController extends ApiController
             if ($serviceId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating information about the service in the database!'
-                ]);
+                ], 404);
             }
 
             $updatedService = $this->dataMapper->selectServiceWithDepartmentById($items['service_id']);
             if ($updatedService === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting updated service!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -1543,7 +1543,7 @@ class WorkerApiController extends ApiController
                 //http_response_code(422);
                 $this->returnJson([
                     'error' => 'Empty post request!'
-                ]);
+                ], 400);
             }
             $serviceId = htmlspecialchars(trim($_POST['id']));
 
@@ -1555,12 +1555,12 @@ class WorkerApiController extends ApiController
             if ($activeOrders === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting information about active orders for the provided service!'
-                ]);
+                ], 404);
             }
             if ($activeOrders) {
                 $this->returnJson([
                     'error' => 'You can not remove this service because there are left some upcoming orders with it'
-                ]);
+                ], 404);
             }
 
             /**
@@ -1570,7 +1570,7 @@ class WorkerApiController extends ApiController
             if ($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deletion of the service!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([
@@ -1594,7 +1594,7 @@ class WorkerApiController extends ApiController
             if (!$id) {
                 $this->returnJson([
                     'error' => 'Not authorized worker!'
-                ]);
+                ], 401);
             }
             $this->returnJson([
                 'success' => true,
@@ -1624,7 +1624,7 @@ class WorkerApiController extends ApiController
             if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the user personal information!'
-                ]);
+                ], 404);
             }
             $result['description'] = $result['description'] !== null
                                     ? html_entity_decode($result['description'])
@@ -1670,7 +1670,7 @@ class WorkerApiController extends ApiController
              */
             $valid = $this->validateEditWorkerPersonalInfoForm($items);
             if($valid !== true) {
-                $this->returnJson($valid);
+                $this->returnJson($valid, 422);
             }
 
             /**
@@ -1682,7 +1682,7 @@ class WorkerApiController extends ApiController
             } else {
                 $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
                 if($validPhoto !== true) {
-                    $this->returnJson($validPhoto);
+                    $this->returnJson($validPhoto, 422);
                 }
             }
 
@@ -1716,7 +1716,7 @@ class WorkerApiController extends ApiController
                     $this->dataMapper->rollBackTransaction();
                     $this->returnJson([
                         'error' => "An error occurred while getting the current worker's photo"
-                    ]);
+                    ], 404);
                 }
 
                 /**
@@ -1733,7 +1733,7 @@ class WorkerApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => 'An error occurred while updating your main photo!'
-                        ]);
+                        ], 404);
                     }
 
                     /**
@@ -1749,7 +1749,7 @@ class WorkerApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => 'An error occurred while uploading your main photo into appropriate folder!'
-                        ]);
+                        ], 404);
                     }
 
                     /**
@@ -1760,7 +1760,7 @@ class WorkerApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => "An error occurred while deleting the old worker's main photo "
-                        ]);
+                        ], 404);
                     }
                 }
             }
@@ -1774,7 +1774,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while updating your personal info!'
-                ]);
+                ], 404);
             }
 
             $this->dataMapper->commitTransaction();
@@ -1895,14 +1895,14 @@ class WorkerApiController extends ApiController
             if (!$workerId) {
                 $this->returnJson([
                     'error' => 'Not authorized worker'
-                ]);
+                ], 401);
             }
 
             $result = $this->dataMapper->selectPositionIdNameByWorkerId($workerId);
             if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting position for the current worker!'
-                ]);
+                ], 404);
             }
             $this->returnJson([
                 'success' => true,
@@ -1927,14 +1927,14 @@ class WorkerApiController extends ApiController
             if (!$workerId) {
                 $this->returnJson([
                     'error' => 'Not authorized worker'
-                ]);
+                ], 401);
             }
 
             $result = $this->dataMapper->selectRoleIdNameByWorkerId($workerId);
             if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting role for the current worker!'
-                ]);
+                ], 404);
             }
             $this->returnJson([
                 'success' => true,
@@ -1963,7 +1963,7 @@ class WorkerApiController extends ApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting your social networks!'
-                ]);
+                ], 404);
             }
 
             /**
@@ -2024,7 +2024,7 @@ class WorkerApiController extends ApiController
             if($valid !== true) {
                 $this->returnJson([
                     'error' => $valid
-                ]);
+                ], 422);
             }
 
             /**
@@ -2036,7 +2036,7 @@ class WorkerApiController extends ApiController
             if($updated === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating your social networks!'
-                ]);
+                ], 404);
             }
 
             $this->returnJson([

@@ -21,36 +21,22 @@ class ApiController extends AbstractController
         return new MainDataMapper(new MainDataSource(MySql::getInstance()));
     }
 
-    #[NoReturn] public function returnJson(array $array): void
+    #[NoReturn] public function returnJson(array $array, int $code = 200): void
     {
+        http_response_code($code);
+        $array += [
+            'code' => $code
+        ];
         echo json_encode($array);
         exit();
     }
-    protected function returnJsonError(string $message, int $code = null): void
-    {
-        if($code) {
-            $this->returnJson([
-                'error' => $message,
-                'error_code' => $code
-            ]);
-        } else {
-            $this->returnJson([
-                'error' => $message
-            ]);
-        }
-    }
-    protected function returnJsonSuccess(string|bool $message, array $data = []) {
-        $this->returnJson([
-            'success' => $message,
-            'data' => $data
-        ]);
-    }
+
     protected function _accessDenied(
         string $message = 'Access is denied to the requested resource!'
     ) {
         $this->returnJson([
             'error' => $message
-        ]);
+        ], 403);
     }
 
     protected function _methodNotAllowed(array $allowedMethods)
@@ -58,14 +44,14 @@ class ApiController extends AbstractController
         $methods = implode(', ', $allowedMethods);
         $this->returnJson([
             'error' => "Method not allowed! Allowed ones: $methods"
-        ]);
+        ], 405);
     }
 
     protected function _missingRequestFields()
     {
         $this->returnJson([
             'error' => "Missing request fields!"
-        ]);
+        ], 400);
     }
 
     protected function _getLimitPageFieldOrderOffset(): array
