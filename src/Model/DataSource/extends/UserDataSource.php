@@ -359,4 +359,20 @@ class UserDataSource extends DataSource
 
         return $this->db->manyRows();
     }
+
+    public function updateUserSocialNetworksById(int $id, array $socials)
+    {
+        $this->builder->update(UsersSocial::$table)
+                ->set(UsersSocial::$Instagram, ':Instagram', $socials['Instagram'])
+                ->andSet(UsersSocial::$TikTok, ':TikTok', $socials['TikTok'])
+                ->andSet(UsersSocial::$Facebook, ':Facebook', $socials['Facebook'])
+                ->andSet(UsersSocial::$YouTube, ':YouTube', $socials['YouTube'])
+            ->whereEqual(UsersSocial::$id, ':id', $id)
+        ->build();
+
+        if($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 }

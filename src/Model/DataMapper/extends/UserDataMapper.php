@@ -99,4 +99,9 @@ class UserDataMapper extends DataMapper
             $email, $startDatetime, $endDatetime
         );
     }
+
+    public function updateUserSocialNetworksById(int $id, array $socials)
+    {
+        return $this->dataSource->updateUserSocialNetworksById($id, $socials);
+    }
 }

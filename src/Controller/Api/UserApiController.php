@@ -18,6 +18,7 @@ use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
 use Src\Service\Validator\impl\PasswordHashValidator;
 use Src\Service\Validator\impl\PasswordValidator;
+use Src\Service\Validator\impl\SocialNetworksUrlValidator;
 
 class UserApiController extends ApiController
 {
@@ -72,6 +73,13 @@ class UserApiController extends ApiController
                      */
                     if($this->url[4] === 'get') {
                         $this->_getUserSocialNetworks();
+                    }
+
+                    /**
+                     * url = /api/user/profile/social-networks/edit
+                     */
+                    if($this->url[4] === 'edit') {
+                        $this->_editUserSocialNetworks();
                     }
                 }
             }
@@ -336,6 +344,69 @@ class UserApiController extends ApiController
             ]);
         }
     }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/user/profile/social-networks/edit
+     */
+    protected function _editUserSocialNetworks()
+    {
+        /**
+         * {
+         *      Instagram
+         *      Facebook
+         *      TikTok
+         *      YouTube
+         * }
+         */
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(empty($_POST['id'])) {
+                $this->_missingRequestFields();
+            }
+            $rowId = htmlspecialchars(trim($_POST['id']));
+
+            $items = [
+                'Instagram' => htmlspecialchars(trim($_POST['Instagram'])),
+                'Facebook' => htmlspecialchars(trim($_POST['Facebook'])),
+                'TikTok' => htmlspecialchars(trim($_POST['TikTok'])),
+                'YouTube' => htmlspecialchars(trim($_POST['YouTube']))
+            ];
+
+            /**
+             * Validate all urls
+             */
+            $validator = new SocialNetworksUrlValidator();
+            $valid = $validator->validateAll($items);
+            if($valid !== true) {
+                $this->returnJson([
+                    'error' => $valid
+                ]);
+            }
+
+            /**
+             * Update the social networks of the user in database
+             */
+            $updated = $this->dataMapper->updateUserSocialNetworksById(
+                $rowId, $items
+            );
+            if($updated === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while updating your social networks!'
+                ]);
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully updated your social networks!',
+                'data' => $items
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
+    }
+
 
     /**
      * @return void

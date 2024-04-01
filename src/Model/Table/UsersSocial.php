@@ -11,5 +11,4 @@ class UsersSocial
     public static string $TikTok = 'users_social.TikTok';
     public static string $Facebook = 'users_social.Facebook';
     public static string $YouTube = 'users_social.YouTube';
-    public static string $Google = 'users_social.Google';
 }
