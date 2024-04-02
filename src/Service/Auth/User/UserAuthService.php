@@ -2,6 +2,7 @@
 
 namespace Src\Service\Auth\User;
 
+use Src\Helper\Email\UserEmailHelper;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\UserWriteDto;
@@ -145,6 +146,18 @@ class UserAuthService extends AuthService
                 $this->dataMapper->rollBackTransaction();
                 return [
                     'error' => "The error occurred while inserting user social!"
+                ];
+            }
+
+            /**
+             * Sent email with welcoming message
+             */
+            $emailSent = UserEmailHelper::sendLetterToWelcomeUser(
+                $items['email'], $items['name'], $items['surname']
+            );
+            if($emailSent === false) {
+                return [
+                    'error' => 'An error occurred while sending welcome email to the user!'
                 ];
             }
 

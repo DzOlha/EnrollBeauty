@@ -438,4 +438,58 @@ class UserDataSource extends DataSource
         }
         return false;
     }
+
+    /**
+     * @param int $id
+     * @return array|false =
+     * {
+     *      id:
+     *      email:
+     *      start_datetime:
+     *      price:
+     *      currency:
+     *      city:
+     *      address:
+     *      user_name:
+     *      user_surname:
+     *      worker_id:
+     *      worker_name:
+     *      worker_surname:
+     *      service_name:
+     * }
+     */
+    public function selectOrderDetailsById(int $id)
+    {
+        $this->builder->select([
+            OrdersService::$id, OrdersService::$email, OrdersService::$start_datetime,
+            Affiliates::$city, Affiliates::$address,
+            Users::$name, Users::$surname,
+            WorkersServicePricing::$price, WorkersServicePricing::$currency,
+            Workers::$id, Workers::$name, Workers::$surname, Services::$name
+        ], [
+            Workers::$id => 'worker_id',
+            Workers::$name => 'worker_name',
+            Workers::$surname => 'worker_surname',
+            Services::$name => 'service_name',
+            Users::$name => 'user_name',
+            Users::$surname => 'user_surname'
+        ])
+            ->from(OrdersService::$table)
+            ->innerJoin(WorkersServiceSchedule::$table)
+                ->on(OrdersService::$id, WorkersServiceSchedule::$order_id)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(WorkersServiceSchedule::$price_id, WorkersServicePricing::$id)
+            ->innerJoin(Workers::$table)
+                ->on(WorkersServicePricing::$worker_id, Workers::$id)
+            ->leftJoin(Users::$table)
+                ->on(OrdersService::$user_id, Users::$id)
+            ->innerJoin(Affiliates::$table)
+                ->on(OrdersService::$affiliate_id, Affiliates::$id)
+            ->innerJoin(Services::$table)
+                ->on(WorkersServicePricing::$service_id, Services::$id)
+            ->whereEqual(OrdersService::$id, ':order_id', $id)
+        ->build();
+
+        return $this->db->singleRow();
+    }
 }

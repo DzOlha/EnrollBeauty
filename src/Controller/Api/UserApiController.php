@@ -3,6 +3,7 @@
 namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Email\UserEmailHelper;
 use Src\Helper\Session\SessionHelper;
 use Src\Helper\Uploader\impl\FileUploader;
 use Src\Model\DataMapper\DataMapper;
@@ -978,7 +979,47 @@ class UserApiController extends ApiController
                 ], 404);
             }
 
+            /**
+             * Get the order details for email letter
+             *
+             *  {
+             *       id:
+             *       email:
+             *       start_datetime:
+             *       price:
+             *       currency:
+             *       city:
+             *       address:
+             *       user_name:
+             *       user_surname:
+             *       worker_id:
+             *       worker_name:
+             *       worker_surname:
+             *       service_name:
+             *  }
+             */
+
             $this->dataMapper->commitTransaction();
+
+            $orderDetails = $this->dataMapper->selectOrderDetailsById($orderID);
+            if($orderDetails === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the order details.'
+                ], 404);
+            }
+
+            /**
+             * Send the letter to user with order details
+             */
+            $emailSent = UserEmailHelper::sendLetterToInformUserAboutServiceOrder(
+                $email, $orderDetails
+            );
+            if($emailSent === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while sending email with order details!'
+                ], 502);
+            }
+
             $this->returnJson([
                 'success' => "You successfully created the order for the service",
                 'data' => [

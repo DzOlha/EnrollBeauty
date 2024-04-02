@@ -4,6 +4,8 @@ namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
 use Src\Helper\Builder\impl\UrlBuilder;
+use Src\Helper\Email\UserEmailHelper;
+use Src\Helper\Email\WorkerEmailHelper;
 use Src\Helper\Uploader\impl\FileUploader;
 use Src\Service\Generator\impl\ImageNameGenerator;
 use Src\Helper\Session\SessionHelper;
@@ -746,14 +748,14 @@ class WorkerApiController extends ApiController
              * Send the email to the user with the information about
              * the cancellation of their appointment
              */
-            $emailSent = $this->_sendLetterToInformUserAboutCancellation(
+            $emailSent = UserEmailHelper::sendLetterToInformUserAboutCancellation(
                 $user['email'], $userNameSurname->name, $userNameSurname->surname, $order
             );
             if ($emailSent !== true) {
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while sending informational letter to the user who placed the canceled order!'
-                ], 404);
+                ], 502);
             }
 
             $updatedScheduleItem = $this->dataMapper->selectWorkerScheduleById($scheduleId);
@@ -773,36 +775,6 @@ class WorkerApiController extends ApiController
                 'data'    => $updatedScheduleItem
             ]);
         }
-    }
-
-    protected function _createLinkToLogin()
-    {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT . API['AUTH']['WEB']['USER']['login'];
-    }
-
-    protected function _sendLetterToInformUserAboutCancellation(
-        $email, $name, $surname, $order
-    )
-    {
-        $email = new Email(
-            COMPANY_EMAIL,
-            COMPANY_NAME,
-            [$email],
-            'order_canceled',
-            EMAIL_WITH_LINK,
-        );
-
-        $loginUrl = $this->_createLinkToLogin();
-        $email->populateWorkerWelcomeLetter(
-            $loginUrl, $name, $surname, 'Enroll Beauty', 'Order Cancellation',
-            "Your order '{$order['name']}' on {$order['start_datetime']} has been cancelled by the master. Please, log in to check your orders and schedule new appointments!",
-            'Visit my account!'
-        );
-
-        $sender = new EmailSender($email, new MailgunService());
-        $emailSent = $sender->send();
-
-        return $emailSent;
     }
 
     /**

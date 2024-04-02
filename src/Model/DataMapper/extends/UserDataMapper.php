@@ -127,4 +127,9 @@ class UserDataMapper extends DataMapper
     {
         return $this->dataSource->updateUserMainPhotoByUserId($userId, $filename);
     }
+
+    public function selectOrderDetailsById(int $id)
+    {
+        return $this->dataSource->selectOrderDetailsById($id);
+    }
 }

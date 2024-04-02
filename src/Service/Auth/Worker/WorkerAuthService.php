@@ -3,6 +3,8 @@
 namespace Src\Service\Auth\Worker;
 
 use Src\Helper\Builder\impl\UrlBuilder;
+use Src\Helper\Email\AdminEmailHelper;
+use Src\Helper\Email\WorkerEmailHelper;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\WorkerWriteDTO;
@@ -277,27 +279,13 @@ class WorkerAuthService extends AuthService
         return [];
     }
 
-    protected function _createRecoveryLink(string $recoveryCode) {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT.API['AUTH']['WEB']['WORKER']['recovery-password']."?recovery_code=$recoveryCode";
-    }
-
     protected function _sendLetterToWelcomeWorker(
         $email, $workerSettingId, $recoveryCode, $name, $surname
     ) {
-        $email = new Email(
-            COMPANY_EMAIL,
-            COMPANY_NAME,
-            [$email],
-            'welcome',
-            EMAIL_WITH_LINK,
+        $emailSent = WorkerEmailHelper::sendLetterToWelcomeWorker(
+            $email, $recoveryCode, $name, $surname
         );
 
-        $recoveryUrl = $this->_createRecoveryLink($recoveryCode);
-        $email->populateWorkerWelcomeLetter($recoveryUrl, $name, $surname);
-
-        $sender = new EmailSender($email, new MailgunService());
-        $emailSent = $sender->send();
-        //var_dump($emailSent);
         if ($emailSent === true) {
             $success = $this->dataMapper->updateWorkerSettingDateOfSendingRecoveryCode(
                 $workerSettingId, $recoveryCode

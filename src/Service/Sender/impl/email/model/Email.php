@@ -116,6 +116,27 @@ class Email
         $this->replaceArgumentWithValue('/%URL_ON_BUTTON%/', $urlOnButton);
 
     }
+    public function populateUserWelcomeLetter(
+        string $urlOnButton,
+        string $name,
+        string $surname,
+        string $headline = 'Enroll Beauty',
+        string $title = 'Access to the account!',
+        string $text = 'You have registered on the Enroll Beauty Platform. We appreciate your interest in our services and hope you will enjoy using them in your account, which can be opened by the link below!',
+        string $buttonText = 'Visit My Account',
+    )
+    {
+        $this->replaceArgumentWithValue('/%HEADLINE%/', $headline);
+
+        $this->replaceArgumentWithValue('/%TITLE%/', "Dear, $name $surname");
+
+        $this->replaceArgumentWithValue('/%TEXT%/', $text);
+
+        $this->replaceArgumentWithValue('/%BUTTON_TEXT%/',$buttonText);
+
+        $this->replaceArgumentWithValue('/%URL_ON_BUTTON%/', $urlOnButton);
+
+    }
     public function populateEmailActivationLetter(string $activationLink) {
         $this->replaceArgumentWithValue('/%ARG1%/', $activationLink);
 
