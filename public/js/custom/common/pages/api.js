@@ -46,6 +46,10 @@ const API = {
                     edit: '/api/user/profile/social-networks/edit'
                 },
                 id: '/api/user/profile/id',
+                'personal-info': {
+                    get: '/api/user/profile/personal-info/get',
+                    edit: '/api/user/profile/personal-info/edit',
+                }
             },
             ORDER: {
                 service: {

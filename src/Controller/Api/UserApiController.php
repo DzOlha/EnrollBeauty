@@ -4,6 +4,7 @@ namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
 use Src\Helper\Session\SessionHelper;
+use Src\Helper\Uploader\impl\FileUploader;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\UserDataMapper;
 use Src\Model\DataSource\extends\UserDataSource;
@@ -18,6 +19,7 @@ use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
 use Src\Service\Validator\impl\PasswordHashValidator;
 use Src\Service\Validator\impl\PasswordValidator;
+use Src\Service\Validator\impl\PhotoValidator;
 use Src\Service\Validator\impl\SocialNetworksUrlValidator;
 
 class UserApiController extends ApiController
@@ -66,6 +68,9 @@ class UserApiController extends ApiController
                 $this->_getCurrentUserId();
             }
 
+            /**
+             * url = /api/user/profile/social-networks/
+             */
             if($this->url[3] === 'social-networks') {
                 if(isset($this->url[4])) {
                     /**
@@ -80,6 +85,27 @@ class UserApiController extends ApiController
                      */
                     if($this->url[4] === 'edit') {
                         $this->_editUserSocialNetworks();
+                    }
+                }
+            }
+
+            /**
+             * url = /api/user/profile/personal-info/
+             */
+            if($this->url[3] === 'personal-info') {
+                if(isset($this->url[4])) {
+                    /**
+                     * url = /api/user/profile/personal-info/get
+                     */
+                    if($this->url[4] === 'get') {
+                        $this->_getUserPersonalInfo();
+                    }
+
+                    /**
+                     * url = /api/user/profile/personal-info/edit
+                     */
+                    if($this->url[4] === 'edit') {
+                        $this->_editUserPersonalInfo();
                     }
                 }
             }
@@ -328,20 +354,27 @@ class UserApiController extends ApiController
      */
     protected function _getUserSocialNetworks()
     {
-        $userId = $this->_getUserId();
-        /**
-         * @var UserSocialReadDto|false $result
-         */
-        $result = $this->dataMapper->selectUserSocialById($userId);
-        if ($result) {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['id'])) {
+                $this->_missingRequestFields();
+            }
+            $userId = htmlspecialchars(trim($_GET['id']));
+
+            /**
+             * @var UserSocialReadDto|false $result
+             */
+            $result = $this->dataMapper->selectUserSocialById($userId);
+            if ($result === false) {
+                $this->returnJson([
+                    'error' => "The error occurred while getting user's social info"
+                ], 404);
+            }
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
         } else {
-            $this->returnJson([
-                'error' => "The error occurred while getting user's social info"
-            ], 404);
+            $this->_methodNotAllowed(['GET']);
         }
     }
 
@@ -407,6 +440,212 @@ class UserApiController extends ApiController
         }
     }
 
+
+    /**
+     * @return void
+     *
+     * url = /api/user/profile/personal-info/get
+     */
+    protected function _getUserPersonalInfo()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['id'])) {
+                $this->_missingRequestFields();
+            }
+            $userId = htmlspecialchars(trim($_GET['id']));
+
+            $result = $this->dataMapper->selectUserPersonalInfoById($userId);
+            if ($result === false) {
+                $this->returnJson([
+                    'error' => "The error occurred while getting user's personal info"
+                ], 404);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/user/profile/personal-info/edit
+     */
+    protected function _editUserPersonalInfo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (empty($_POST['id']) || empty($_POST['name'])
+                || empty($_POST['surname']) || empty($_POST['email'])) {
+                $this->_missingRequestFields();
+            }
+            $items = [
+                'id' => htmlspecialchars(trim($_POST['id'])),
+                'name' => htmlspecialchars(trim($_POST['name'])),
+                'surname' => htmlspecialchars(trim($_POST['surname'])),
+                'email' => htmlspecialchars(trim($_POST['email'])),
+            ];
+
+            /**
+             * Data Validation
+             */
+            $valid = $this->_validateEditPersonalInfo($items);
+            if(isset($valid['error'])) {
+                $this->returnJson($valid, 404);
+            }
+
+            /**
+             * Validate the photo and set 'random_name'
+             */
+            $photoChanged = true;
+            if(empty($_FILES['photo'])) {
+                $photoChanged = false;
+            } else {
+                $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
+                if($validPhoto !== true) {
+                    $this->returnJson($validPhoto, 422);
+                }
+            }
+
+            /**
+             * Update the user personal information in the database
+             */
+            $this->dataMapper->beginTransaction();
+
+            $newImage = $photoChanged === true
+                ? $_FILES['photo']['random_name']
+                : null;
+
+            /**
+             * Update textual info
+             */
+            $updatedText = $this->dataMapper->updateUserPersonalInfoById(
+                $items['id'], $items['name'], $items['surname'], $items['email']
+            );
+
+            /**
+             * Update photo
+             */
+            $updatedPhoto = true;
+            if($newImage) {
+                /**
+                 * Check the old main photo
+                 */
+                $oldPhotoFilename = $this->dataMapper->selectUserMainPhotoByUserId($items['id']);
+                if($oldPhotoFilename === false) {
+                    $this->dataMapper->rollBackTransaction();
+                    $this->returnJson([
+                        'error' => "An error occurred while getting the current user's photo"
+                    ], 404);
+                }
+
+                /**
+                 * Check if new photo differ from the old one
+                 */
+                if(!$oldPhotoFilename || $newImage !== $oldPhotoFilename) {
+                    /**
+                     * If yes -> update photo in db to the new one
+                     */
+                    $updatedPhoto = $this->dataMapper->updateUserMainPhotoByUserId(
+                        $items['id'], $newImage
+                    );
+                    if($updatedPhoto === false) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => 'An error occurred while updating your main photo!'
+                        ], 404);
+                    }
+
+                    /**
+                     * Upload the new image into the folder
+                     */
+                    $uploader = new FileUploader();
+                    $folderPath = USERS_PHOTO_FOLDER . "user_{$items['id']}/";
+
+                    $uploaded = $uploader->upload(
+                        $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
+                    );
+                    if(!$uploaded) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => 'An error occurred while uploading your main photo into appropriate folder!'
+                        ], 404);
+                    }
+
+                    /**
+                     * Remove the old photo from the folder
+                     */
+                    $deleted = FileUploader::deleteFileFromFolder($folderPath, $oldPhotoFilename);
+                    if($deleted === false) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => "An error occurred while deleting the old user's main photo "
+                        ], 404);
+                    }
+                }
+            }
+            if($updatedText === false
+                && (
+                    ($updatedPhoto === false && $newImage)
+                    || ($updatedPhoto && !$newImage)
+                )
+            ) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'An error occurred while updating your personal info!'
+                ], 404);
+            }
+
+            $this->dataMapper->commitTransaction();
+            $this->returnJson([
+                'success' => 'You successfully update your personal information!',
+                'data' => [
+                    'id' => $items['id']
+                ]
+            ]);
+        } else {
+            $this->_methodNotAllowed(['POST']);
+        }
+    }
+    private function _validateEditPersonalInfo($items)
+    {
+        $nameValidator = new NameValidator();
+        $emailValidator = new EmailValidator();
+        /**
+         * Name
+         */
+        $validName = $nameValidator->validate($items['name']);
+        if (!$validName) {
+            return [
+                'error' => 'Name must be at least 3 characters long and contain only letters'
+            ];
+        }
+
+        /**
+         * Surname
+         */
+        $validSurname = $nameValidator->validate($items['surname']);
+        if (!$validSurname) {
+            return [
+                'error' => 'Surname must be at least 3 characters long and contain only letters'
+            ];
+        }
+
+        /**
+         * Email
+         */
+        $validEmail = $emailValidator->validate($items['email']);
+        if (!$validEmail) {
+            return [
+                'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+            ];
+        }
+
+        return true;
+    }
 
     /**
      * @return void

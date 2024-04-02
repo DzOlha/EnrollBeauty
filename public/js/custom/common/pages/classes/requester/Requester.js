@@ -4,16 +4,26 @@ class Requester {
     }
 
     get(apiUrl, successCallback, errorCallback) {
-        $.getJSON(apiUrl, (response) => {
-            if (response.error) {
-                errorCallback(response);
-                return;
+        // Send the GET request using jQuery's AJAX function
+        $.ajax({
+            url: apiUrl,
+            method: 'GET',
+            dataType: 'json',
+            success: (response) => {
+                if (response.error) {
+                    errorCallback(response);
+                } else {
+                    successCallback(response);
+                }
+            },
+            error: (xhr) => {
+                if(xhr.responseJSON.error) {
+                    errorCallback(xhr.responseJSON)
+                } else {
+                    errorCallback({ 'error': `${this.defaultErrorMessage}` });
+                }
             }
-            successCallback(response);
-        })
-            .fail((jqXHR, textStatus, errorThrown) => {
-                errorCallback({'error': this.defaultErrorMessage});
-            });
+        });
     }
 
     post(apiUrl, dataToSend, successCallback, errorCallback) {
@@ -30,8 +40,12 @@ class Requester {
                     successCallback(response);
                 }
             },
-            error: (error) => {
-                errorCallback({'error': `${this.defaultErrorMessage}`});
+            error: (xhr) => {
+                if(xhr.responseJSON.error) {
+                    errorCallback(xhr.responseJSON)
+                } else {
+                    errorCallback({ 'error': `${this.defaultErrorMessage}` });
+                }
             }
         });
     }
@@ -52,8 +66,12 @@ class Requester {
                     successCallback(response);
                 }
             },
-            error: (error) => {
-                errorCallback(`${this.defaultErrorMessage}`);
+            error: (xhr) => {
+                if(xhr.responseJSON.error) {
+                    errorCallback(xhr.responseJSON)
+                } else {
+                    errorCallback({ 'error': `${this.defaultErrorMessage}` });
+                }
             }
         });
     }

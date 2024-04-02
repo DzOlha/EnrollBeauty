@@ -9,6 +9,7 @@ import Input from "../../../../classes/element/Input.js";
 import Worker from "../../../profile/Worker.js";
 import Select2 from "../../../../classes/element/Select2.js";
 import AjaxImageFiller from "../../../../classes/helper/AjaxImageFiller.js";
+import ImageDropify from "../../../../classes/element/ImageDropify.js";
 
 class EditWorkerPersonalInfo extends EditWorkerForm
 {
@@ -113,11 +114,14 @@ class EditWorkerPersonalInfo extends EditWorkerForm
         /**
          * Populate main photo
          */
-        let path = data.filename ?
-                          `${this.imgPath}${data.id}/${data.filename}`
-                          : CONST.noPhoto;
+        let image = new ImageDropify(
+            this.inputFileWrapperSelector, this.mainPhotoInputId, 'main'
+        );
+        let path = data.filename
+                            ? `${this.imgPath}${data.id}/${data.filename}`
+                            : CONST.noPhoto;
 
-        this._setDefaultImage(this.mainPhotoInputId, path);
+        image.set(this.mainPhotoInputId, path);
 
         /**
          * Populate description
@@ -127,28 +131,6 @@ class EditWorkerPersonalInfo extends EditWorkerForm
 
     _setSelect2(selectId, value, placeholder) {
         Select2._setSelect2(selectId, value, placeholder);
-    }
-
-
-    /**
-     *
-     * @param imageInputId
-     * @param imagePath
-     * @private
-     *
-     * set preview of the image, but not the value of input (type file)
-     */
-    _setDefaultImage(imageInputId, imagePath) {
-        let imageInputDropify = $(`#${imageInputId}`).dropify(
-            {
-                defaultFile: imagePath
-            });
-        imageInputDropify = imageInputDropify.data('dropify');
-        imageInputDropify.resetPreview();
-        imageInputDropify.clearElement();
-        imageInputDropify.settings.defaultFile = imagePath;
-        imageInputDropify.destroy();
-        imageInputDropify.init();
     }
 
     addListenerSubmitForm() {
@@ -313,6 +295,11 @@ class EditWorkerPersonalInfo extends EditWorkerForm
          */
         let worker = new Worker(this.requester);
         worker.getUserInfo();
+
+        /**
+         * Updated info in the current form
+         */
+        this.getObjectData(response.data.id);
     }
 }
 export default EditWorkerPersonalInfo;

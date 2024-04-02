@@ -18,6 +18,7 @@ use Src\Model\Table\UsersPhoto;
 use Src\Model\Table\UsersSetting;
 use Src\Model\Table\UsersSocial;
 use Src\Model\Table\Workers;
+use Src\Model\Table\WorkersPhoto;
 use Src\Model\Table\WorkersServicePricing;
 use Src\Model\Table\WorkersServiceSchedule;
 
@@ -369,6 +370,68 @@ class UserDataSource extends DataSource
                 ->andSet(UsersSocial::$YouTube, ':YouTube', $socials['YouTube'])
             ->whereEqual(UsersSocial::$id, ':id', $id)
         ->build();
+
+        if($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectUserPersonalInfoById(int $id)
+    {
+        $this->builder->select([
+                    Users::$id, Users::$email,
+                    Users::$name, Users::$surname, UsersPhoto::$name
+                ])
+                    ->from(Users::$table)
+                    ->leftJoin(UsersPhoto::$table)
+                        ->on(Users::$id, UsersPhoto::$user_id)
+                    ->whereEqual(Users::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
+    }
+
+    public function updateUserPersonalInfoById(
+        int $id, string $name, string $surname, string $email
+    ) {
+        $this->builder->update(Users::$table)
+                    ->set(Users::$name, ':name', $name)
+                    ->andSet(Users::$surname, ':surname', $surname)
+                    ->andSet(Users::$email, ':email', $email)
+            ->whereEqual(Users::$id, ':id', $id)
+        ->build();
+
+        if($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectUserMainPhotoByUserId(int $userId)
+    {
+        $this->builder->select([UsersPhoto::$name])
+                    ->from(UsersPhoto::$table)
+                    ->whereEqual(UsersPhoto::$user_id, ':user_id', $userId)
+                    ->andEqual(UsersPhoto::$is_main, ':is_main', 1)
+            ->build();
+
+        $result = $this->db->singleRow();
+
+        if($result) {
+            // users_photo.filename -> filename
+            return $result[explode('.', UsersPhoto::$name)[1]];
+        }
+        return $result;
+    }
+
+    public function updateUserMainPhotoByUserId(int $userId, string $filename)
+    {
+        $this->builder->update(UsersPhoto::$table)
+                ->set(UsersPhoto::$name, ':filename', $filename)
+                ->whereEqual(UsersPhoto::$user_id, ':user_id', $userId)
+                ->andEqual(UsersPhoto::$is_main, ':is_main', 1)
+            ->build();
 
         if($this->db->affectedRowsCount() > 0) {
             return true;

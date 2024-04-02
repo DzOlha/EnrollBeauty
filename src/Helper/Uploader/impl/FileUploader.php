@@ -115,6 +115,9 @@ class FileUploader implements IUploader
 
     public static function deleteFileFromFolder($folderPath, $fileName)
     {
+        if(!$fileName) {
+            return true;
+        }
         $folderPath = str_replace("\\", "/", ENROLL_BEAUTY_ROOT) . $folderPath;
         $fileToDelete = $folderPath . $fileName;
 

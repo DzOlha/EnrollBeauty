@@ -104,4 +104,27 @@ class UserDataMapper extends DataMapper
     {
         return $this->dataSource->updateUserSocialNetworksById($id, $socials);
     }
+
+    public function selectUserPersonalInfoById(int $id)
+    {
+        return $this->dataSource->selectUserPersonalInfoById($id);
+    }
+
+    public function updateUserPersonalInfoById(
+        int $id, string $name, string $surname, string $email
+    ) {
+        return $this->dataSource->updateUserPersonalInfoById(
+            $id, $name, $surname, $email
+        );
+    }
+
+    public function selectUserMainPhotoByUserId(int $userId)
+    {
+        return $this->dataSource->selectUserMainPhotoByUserId($userId);
+    }
+
+    public function updateUserMainPhotoByUserId(int $userId, string $filename)
+    {
+        return $this->dataSource->updateUserMainPhotoByUserId($userId, $filename);
+    }
 }
