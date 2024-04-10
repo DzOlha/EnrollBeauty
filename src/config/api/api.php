@@ -266,6 +266,13 @@ const API = [
                         'one' => '/api/open/worker/profile/get/one'
                     ]
                 ]
+            ],
+            'SERVICE' => [
+                'PRICING' => [
+                    'get' => [
+                        'all' => '/api/open/service/pricing/get/all'
+                    ]
+                ]
             ]
         ]
     ]

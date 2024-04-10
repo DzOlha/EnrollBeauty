@@ -195,14 +195,14 @@ th, td {
 }
 #main-schedule-wrapper .tabs-style-3 {
     border: none;
-    padding: 0;
+    padding: 0 !important;
 }
 #main-schedule-wrapper .tabs-style-3 .nav.panel-tabs li a.active {
-    background-color: var(--light-brown-color);
+    background-color: var(--light-brown-color) !important;
 }
 #main-schedule-wrapper .card-body {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
 }
 
 .time-interval {
@@ -276,3 +276,18 @@ th, td {
     color: #2964aa;
 }
 
+/**
+Search Schedule Form
+ */
+.mg-b-0 {
+    margin-bottom: 0;
+}
+
+.price-d-flex {
+    display: flex;
+    width: 100%;
+}
+.search-btn-schedule {
+    align-self: start;
+    margin-top: 5px;
+}

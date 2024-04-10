@@ -9,7 +9,7 @@ class ScheduleRenderer extends Renderer{
     ) {
         super();
         this.requester = requester;
-        this.ordersTable = appointmentsTable;
+        //this.ordersTable = appointmentsTable;
         this.confirmationModal = confirmationModal;
         this.htmlBuilder = htmlBuilder;
         this.dateRenderer = dateRenderer;

@@ -17,7 +17,7 @@ class Requester {
                 }
             },
             error: (xhr) => {
-                if(xhr.responseJSON.error) {
+                if(xhr.responseJSON) {
                     errorCallback(xhr.responseJSON)
                 } else {
                     errorCallback({ 'error': `${this.defaultErrorMessage}` });
@@ -41,7 +41,7 @@ class Requester {
                 }
             },
             error: (xhr) => {
-                if(xhr.responseJSON.error) {
+                if(xhr.responseJSON) {
                     errorCallback(xhr.responseJSON)
                 } else {
                     errorCallback({ 'error': `${this.defaultErrorMessage}` });
@@ -67,7 +67,7 @@ class Requester {
                 }
             },
             error: (xhr) => {
-                if(xhr.responseJSON.error) {
+                if(xhr.responseJSON) {
                     errorCallback(xhr.responseJSON)
                 } else {
                     errorCallback({ 'error': `${this.defaultErrorMessage}` });

@@ -7,8 +7,7 @@ class SearchWorkerScheduleForm extends SearchScheduleForm {
     ) {
         super(
             requester, scheduleRenderer,
-            optionBuilder, dateRenderer,
-            API.WORKER.API.SCHEDULE.search
+            optionBuilder, dateRenderer
         );
         this.apiUrlGetAllWorkerServices = API.WORKER.API.PROFILE.service.get.all;
         this.apiUrlGetAllAffiliates = API.WORKER.API.AFFILIATE.get.all;

@@ -18,7 +18,7 @@
                             </div>
                             <div class="featured-content box-shadow">
                                 <div class="featured-title"><!-- featured-title -->
-                                    <h5><a href="team-details.html">Len Rosy Jacbos</a></h5>
+                                    <h5><a href="#">Len Rosy Jacbos</a></h5>
                                 </div>
                                 <p class="category">Party Make-up</p><!-- category -->
                             </div>
@@ -37,7 +37,7 @@
                             </div>
                             <div class="featured-content box-shadow mb-0">
                                 <div class="featured-title"><!-- featured-title -->
-                                    <h5><a href="team-details.html">Lisa Anderson</a></h5>
+                                    <h5><a href="#">Lisa Anderson</a></h5>
                                 </div>
                                 <p class="category">Hair Stylist</p><!-- category -->
                             </div>
@@ -58,7 +58,7 @@
                             </div>
                             <div class="featured-content box-shadow">
                                 <div class="featured-title"><!-- featured-title -->
-                                    <h5><a href="team-details.html">Tommy Atkins</a></h5>
+                                    <h5><a href="#">Tommy Atkins</a></h5>
                                 </div>
                                 <p class="category">Barber Stylist</p><!-- category -->
                             </div>
@@ -108,7 +108,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="mt-40 ttm-btn ttm-btn-style-border ttm-btn-color-darkgrey">read more!</a>
+<!--                    <a href="#" class="mt-40 ttm-btn ttm-btn-style-border ttm-btn-color-darkgrey">read more!</a>-->
                 </div>
             </div>
         </div>

@@ -72,7 +72,7 @@
                 <a
                     id="slider-2-slide-3-layer-7"
                     class="rs-layer ttm-btn ttm-btn-style-border ttm-btn-color-skincolor"
-                    href="#" target="_self" rel="nofollow"
+                    href="#search-appointment-form" rel="nofollow"
                     data-type="text"
                     data-rsp_ch="on"
                     data-xy="x:l,l,c,c;xo:50px,50px,0,0;y:m;yo:209px,209px,81px,48px;"
@@ -83,10 +83,10 @@
                     data-frame_1="e:Power4.easeOut;st:1330;sp:600;sR:1330;"
                     data-frame_999="o:0;st:w;sR:7070;"
                     data-frame_hover="c:#fff;bgc:#bf9456;boc:#bf9456;bos:solid;bow:1px,1px,1px,1px;"
-                    style="z-index:13;font-family:Poppins;"
-                >Get An Appointment!
+                    style="color:white !important;z-index:13;font-family:Poppins;"
+                ><span style="color: white !important;">Get An Appointment!</span>
                 </a>
-                <a
+                <span
                     id="slider-2-slide-3-layer-16"
                     class="rs-layer btn-res ttm_prettyphoto"
                     href="https://youtu.be/7e90gBu4pas" target="_self" rel="nofollow"
@@ -102,8 +102,8 @@
                     data-frame_hover="bgc:#b38646;bor:50%,50%,50%,50%;"
                     style="z-index:14;background-color:#bf9456;font-family:Roboto;"
                 ><i class="fa fa-play"></i>
-                </a>
-                <a
+                </span>
+                <span
                     id="slider-2-slide-3-layer-17"
                     class="rs-layer"
                     href="#" target="_self" rel="nofollow"
@@ -118,7 +118,7 @@
                     data-frame_hover="c:#bf9456;"
                     style="z-index:15;font-family:Poppins;"
                 >Watch Video
-                </a>
+                </span>
             </rs-slide>
             <!-- rs-slide -->
             <!-- rs-slide -->
@@ -218,7 +218,7 @@
                     style="z-index:14;background-color:#ffffff;font-family:Roboto;"
                 >
                 </rs-layer>
-                <a
+                <span
                     id="slider-2-slide-4-layer-7"
                     class="rs-layer ttm-btn ttm-btn-style-border ttm-btn-color-skincolor"
                     href="#" target="_self" rel="nofollow"
@@ -235,7 +235,7 @@
                     data-frame_hover="c:#fff;bgc:#bf9456;boc:#bf9456;bos:solid;bow:1px,1px,1px,1px;"
                     style="z-index:15;font-family:Poppins;"
                 >Our Great Services
-                </a>
+                </span>
             </rs-slide>
             <!-- rs-slide -->
         </rs-slides>

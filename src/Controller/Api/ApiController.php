@@ -169,4 +169,145 @@ class ApiController extends AbstractController
             'data' => $services
         ]);
     }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/schedule/search
+     * url = /api/open/schedule/search
+     */
+    protected function _searchSchedule()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $items = [
+                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
+                'worker_id' => htmlspecialchars(trim($_POST['worker_id'])),
+                'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
+                'start_date' => htmlspecialchars(trim($_POST['start_date'])),
+                'end_date' => htmlspecialchars(trim($_POST['end_date'])),
+                'start_time' => htmlspecialchars(trim($_POST['start_time'])),
+                'end_time' => htmlspecialchars(trim($_POST['end_time'])),
+                'price_bottom' => htmlspecialchars(trim($_POST['price_bottom'])),
+                'price_top' => htmlspecialchars(trim($_POST['price_top']))
+            ];
+
+            $items['start_date'] = date("Y-m-d", $items['start_date']);
+            $items['end_date'] = date("Y-m-d", $items['end_date']);
+
+            $startTime = \DateTime::createFromFormat('H:i', $items['start_time']);
+            $endTime = \DateTime::createFromFormat('H:i', $items['end_time']);
+
+            $items['start_time'] = $startTime ? $startTime->format('H:i:s') : '';
+            $items['end_time'] = $endTime ? $endTime->format('H:i:s') : '';
+
+            //var_dump($items);
+
+            /**
+             * Select all departments
+             */
+            $departments = $this->dataMapper->selectAllDepartments();
+            if ($departments === false) {
+                $this->returnJson([
+                    'error' => 'There is error occurred while getting all departments'
+                ], 404);
+            }
+
+            if (!$departments) {
+                $this->returnJson([
+                    'error' => 'There is no any departments yet!'
+                ], 204);
+            }
+
+            $activeDepartment = null;
+            if(!$items['service_id']) {
+                $activeDepartment = $departments[0];
+            } else {
+                $activeDepartment = $this->dataMapper->selectDepartmentByServiceId(
+                    $items['service_id']
+                );
+                if($activeDepartment === false) {
+                    $this->returnJson([
+                        'error' => 'The error occurred while getting the department for the service'
+                    ], 404);
+                }
+            }
+
+            $schedule = $this->dataMapper->selectSchedule(
+                null, $items['service_id'], $items['worker_id'],
+                $items['affiliate_id'], $items['start_date'], $items['end_date'],
+                $items['start_time'], $items['end_time'],
+                $items['price_bottom'], $items['price_top']
+            );
+            if($schedule === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting schedule'
+                ], 404);
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data' => [
+                    'schedule' => $schedule,
+                    'departments' => $departments,
+                    'active_department' => $activeDepartment,
+                    'active_day' => $items['start_date'],
+                    'end_day' => $items['end_date'],
+                ]
+            ]);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/user/service/get/workers/all
+     * url = /api/open/service/get/workers/all
+     */
+    protected function _getWorkersForService()
+    {
+        $serviceId = 0;
+        if (isset($_GET['service_id']) && $_GET['service_id'] !== '') {
+            $serviceId = htmlspecialchars(trim($_GET['service_id']));
+        }
+        $result = $this->dataMapper->selectWorkersForService($serviceId);
+        if ($result === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting workers for the selected service'
+            ], 404);
+        }
+
+        foreach ($result as &$worker) {
+            $worker['name'] = $worker['name'] . " " . $worker['surname'];
+        }
+
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
+
+
+    /**
+     * @return void
+     *
+     * url = /api/user/worker/get/services/all
+     * url = /api/open/worker/get/services/all
+     */
+    protected function _getServicesForWorker()
+    {
+        $workerId = 0;
+        if (isset($_GET['worker_id']) && $_GET['worker_id'] !== '') {
+            $workerId = htmlspecialchars(trim($_GET['worker_id']));
+        }
+        $result = $this->dataMapper->selectServicesForWorker($workerId);
+        if ($result === false) {
+            $this->returnJson([
+                'error' => 'The error occurred while getting services for the selected worker'
+            ], 404);
+        }
+        $this->returnJson([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
 }

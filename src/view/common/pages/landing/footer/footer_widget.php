@@ -6,14 +6,16 @@
                     <div class="footer-logo">
                         <img id="footer-logo-img" class="img-center" src="/public/images/mockup/footer-logo.png" alt="">
                     </div>
-                    <h4 class="textwidget widget-text ttm-textcolor-white">Sign Up To Get Latest Updates</h4>
-                    <form id="subscribe-form" class="newsletter-form" method="post" action="#" data-mailchimp="true">
-                        <div class="mailchimp-inputbox clearfix" id="subscribe-content">
-                            <p><input type="email" name="email" placeholder="Your Email Address..." required=""></p>
-                            <p><button class="submit ttm-btn ttm-btn-size-md ttm-btn-shape-rounded ttm-btn-bgcolor-skincolor ttm-textcolor-white" type="submit">Subscribe Now!</button></p>
-                        </div>
-                        <div id="subscribe-msg"></div>
-                    </form>
+                    <h4 class="textwidget widget-text ttm-textcolor-white">
+<!--                        Sign Up To Get Latest Updates-->
+                    </h4>
+<!--                    <form id="subscribe-form" class="newsletter-form" method="post" action="#" data-mailchimp="true">-->
+<!--                        <div class="mailchimp-inputbox clearfix" id="subscribe-content">-->
+<!--                            <p><input type="email" name="email" placeholder="Your Email Address..." required=""></p>-->
+<!--                            <p><button class="submit ttm-btn ttm-btn-size-md ttm-btn-shape-rounded ttm-btn-bgcolor-skincolor ttm-textcolor-white" type="submit">Subscribe Now!</button></p>-->
+<!--                        </div>-->
+<!--                        <div id="subscribe-msg"></div>-->
+<!--                    </form>-->
                 </div>
             </div>
         </div>
@@ -21,34 +23,18 @@
     <div class="second-footer ttm-textcolor-white">
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 widget-area">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 widget-area">
                     <div class="widget widget_text clearfix">
                         <h3 class="widget-title">About Us</h3>
                         <div class="textwidget widget-text">
-                            <p class="pb-10 res-767-p-0">We consistently showed year on year growth and is now a chain of 118+ branches in Delhi NCR & Northern & Central and worldwide</p>
-                            <p class="pb-10 res-767-p-0">The most innovative products tested & approvby the greatest names in hairdressing.</p>
-                            <a class="ttm-color-skincolor" href="">- More About Hair Salone</a>
+                            <p class="pb-10 res-767-p-0">We consistently showed year on year growth and is now a chain of 118+ branches worldwide</p>
+                            <p class="pb-10 res-767-p-0">The most innovative products tested & approvby the greatest names in beauty industry.</p>
+                            <a class="ttm-color-skincolor" href="">- More About Salone</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 widget-area">
-                    <div class="widget widget_text clearfix">
-                        <h3 class="widget-title">Resent News</h3>
-                        <ul class="widget-post ttm-recent-post-list">
-                            <li>
-                                <a href="blog-single.html"><img src="/public/images/mockup/blog/01.jpg" class="lazyload" alt="post-img"></a>
-                                <span class="post-date">January 22, 2020</span>
-                                <a href="blog-single.html">Essential barbering tips need to know start</a>
-                            </li>
-                            <li>
-                                <a href="blog-single.html"><img src="/public/images/mockup/blog/02.jpg" class="lazyload" alt="post-img"></a>
-                                <span class="post-date">January 18, 2020</span>
-                                <a href="blog-single.html">Winter Dreams– Capturing The Snow</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 widget-area">
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 widget-area">
                     <div class="widget flicker_widget clearfix">
                         <h3 class="widget-title">Get In  Touch</h3>
                         <div class="textwidget widget-text">
@@ -60,7 +46,7 @@
                                 </div>
                                 <div class="featured-content">
                                     <div class="featured-desc">
-                                        <p>4789 Melmorn Street,Zakila Ton<br>Mashintron Town </p>
+                                        <p>123, Independence Street<br>Kyiv City </p>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +58,9 @@
                                 </div>
                                 <div class="featured-content">
                                     <div class="featured-desc">
-                                        <p><a href="mailto:info@example.com.com">info@example.com</a></p>
+                                        <p><a href="mailto:info@example.com.com" style="color: white !important;">
+                                                support@enrollbeauty.com
+                                            </a></p>
                                     </div>
                                 </div>
                             </div>
@@ -84,7 +72,7 @@
                                 </div>
                                 <div class="featured-content">
                                     <div class="featured-desc">
-                                        <p>(+01) 123 456 7890</p>
+                                        <p>(+380) 123 456 789</p>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +87,7 @@
             <div class="row copyright">
                 <div class="col-md-9">
                     <div class="ttm-textcolor-white">
-                        <span>Copyright &copy; 2023&nbsp;<a class="ttm-textcolor-skincolor" href="#">Sylin Theme</a></span>
+                        <span>Copyright &copy; 2024&nbsp;<a class="ttm-textcolor-skincolor" href="#">Enroll Beauty</a></span>
                     </div>
                 </div>
                 <div class="col-md-3">

@@ -4,7 +4,7 @@ import API from "../../../../../common/pages/api.js";
 class SearchScheduleForm extends Form {
     constructor(
         requester, scheduleRenderer,
-        optionBuilder, dateRenderer
+        optionBuilder, dateRenderer, api = false
     ) {
         super(
             '',
@@ -43,14 +43,25 @@ class SearchScheduleForm extends Form {
         this.priceToInputId = 'price-to';
         this.priceToErrorId = 'price-to-input-error';
 
-        this.apiUrlGetWorkers = API.USER.API.SERVICE.get.workers.all;
-        this.apiUrlGetServices = API.USER.API.WORKER.get.services.all;
+        if(api !== false) {
+            this.apiUrlGetWorkers = api.API.SERVICE.get.workers.all;
+            this.apiUrlGetServices = api.API.WORKER.get.services.all;
 
-        this.apiUrlGetAffiliatesAll = API.USER.API.AFFILIATE.get.all;
-        this.apiUrlGetWorkersAll = API.USER.API.WORKER.get.all;
-        this.apiUrlGetServicesAll = API.USER.API.SERVICE.get.all;
+            this.apiUrlGetAffiliatesAll = api.API.AFFILIATE.get.all;
+            this.apiUrlGetWorkersAll = api.API.WORKER.get.all;
+            this.apiUrlGetServicesAll = api.API.SERVICE.get.all;
 
-        this.submitActionUrl = API.USER.API.SCHEDULE.search;
+            this.submitActionUrl = api.API.SCHEDULE.search;
+        } else {
+            this.apiUrlGetWorkers = API.USER.API.SERVICE.get.workers.all;
+            this.apiUrlGetServices = API.USER.API.WORKER.get.services.all;
+
+            this.apiUrlGetAffiliatesAll = API.USER.API.AFFILIATE.get.all;
+            this.apiUrlGetWorkersAll = API.USER.API.WORKER.get.all;
+            this.apiUrlGetServicesAll = API.USER.API.SERVICE.get.all;
+
+            this.submitActionUrl = API.USER.API.SCHEDULE.search;
+        }
     }
 
     init() {

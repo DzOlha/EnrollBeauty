@@ -1,5 +1,6 @@
-import LoginForm from "../../user/forms/LoginForm.js";
+
 import API from "../../../../common/pages/api.js";
+import LoginForm from "../../user/forms/auth/LoginForm.js";
 
 class AdminLoginForm extends LoginForm {
     constructor() {

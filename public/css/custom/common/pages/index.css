@@ -2,6 +2,10 @@
 .register-button {
     border-left: 1px solid white;
 }
+.login-button a,
+.register-button a {
+    color: white !important;
+}
 .login-button {
     padding-right: 15px;
     border-right: 1px solid white;
@@ -162,4 +166,19 @@ for resetting the select2 value
 
 .worker-card-name {
     text-transform: none !important;
+}
+
+.sub-menu a {
+    color: #333 !important;
+}
+
+.media-block .social-icons a,
+.topbar-right .social-icons a,
+#totop,
+.top-contact a {
+    color: #fff !important;
+}
+
+i.fa-heart {
+    display: none;
 }

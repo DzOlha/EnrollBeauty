@@ -4,8 +4,11 @@
             <div class="col-12">
                 <div class="ttm-topbar-content">
                     <ul class="top-contact text-left">
-                        <li><i class="fa fa-map-marker ttm-textcolor-skincolor"></i>24 Tech Roqad st Ny 10023</li>
-                        <li><i class="fa fa-envelope-o ttm-textcolor-skincolor"></i><a href="mailto:info@example.com.com">info@example.com</a></li>
+                        <li><i class="fa fa-map-marker ttm-textcolor-skincolor"></i>
+                           123, Independence Street, Kyiv City, Ukraine</li>
+                        <li><i class="fa fa-envelope-o ttm-textcolor-skincolor"></i><a href="mailto:support@enrollbeauty.com">
+                                support@enrollbeauty.com
+                            </a></li>
                     </ul>
                     <div class="topbar-right text-right">
                         <div class="ttm-social-links-wrapper list-inline">

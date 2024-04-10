@@ -4,9 +4,12 @@ namespace Src\Model\DataSource\extends;
 
 use Src\DB\IDatabase;
 use Src\Model\DataSource\DataSource;
+use Src\Model\Table\Departments;
 use Src\Model\Table\Positions;
+use Src\Model\Table\Services;
 use Src\Model\Table\Workers;
 use Src\Model\Table\WorkersPhoto;
+use Src\Model\Table\WorkersServicePricing;
 use Src\Model\Table\WorkersSocial;
 
 class OpenDataSource extends DataSource
@@ -38,5 +41,46 @@ class OpenDataSource extends DataSource
         ->build();
 
         return $this->db->singleRow();
+    }
+
+    public function selectServicePricingAll()
+    {
+        $workers_service_pricing = WorkersServicePricing::$table;
+        $services = Services::$table;
+        $departments = Departments::$table;
+
+        $this->db->query("
+            SELECT 
+                d.id,
+                d.name,
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'id', s.id,
+                        'name', s.name,
+                        'min_price', min_price.min_price,
+                        'currency', min_price.currency
+                    )
+                ) AS services
+            FROM 
+                $departments d
+            INNER JOIN 
+                $services s ON d.id = s.department_id
+            INNER JOIN 
+            (
+                SELECT
+                    service_id,
+                    MIN(price) AS min_price,
+                    currency
+                FROM 
+                    $workers_service_pricing
+                GROUP BY 
+                    service_id, currency
+            ) min_price ON s.id = min_price.service_id
+            GROUP BY 
+                d.id
+
+        ");
+
+        return $this->db->manyRows();
     }
 }

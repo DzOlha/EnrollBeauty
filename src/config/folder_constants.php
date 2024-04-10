@@ -51,5 +51,7 @@ const WORKER_SOCIAL_NETWORKS_ROOT_URLS = [
     'Telegram' => 'https://t.me/'
 ];
 
+const PUBLIC_JS_FOLDER = 'public/js';
+
 
 

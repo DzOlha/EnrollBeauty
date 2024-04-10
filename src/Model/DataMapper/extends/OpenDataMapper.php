@@ -16,4 +16,9 @@ class OpenDataMapper extends DataMapper
     {
         return $this->dataSource->selectWorkerPublicProfileById($id);
     }
+
+    public function selectServicePricingAll()
+    {
+        return $this->dataSource->selectServicePricingAll();
+    }
 }

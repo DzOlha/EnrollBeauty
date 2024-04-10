@@ -284,9 +284,9 @@
                                 <li><a href="#socialNetworks" id="socialNetworks-trigger" data-bs-toggle="tab">
                                         Social Networks
                                     </a></li>
-                                <li><a href="#publicProfile" id="publicProfile-trigger" data-bs-toggle="tab">
-                                        Public Profile
-                                    </a></li>
+<!--                                <li><a href="#publicProfile" id="publicProfile-trigger" data-bs-toggle="tab">-->
+<!--                                        Public Profile-->
+<!--                                    </a></li>-->
                                 <!--                                <li><a href="#galleryOfWorks" id="galleryOfWorks-trigger" data-bs-toggle="tab">-->
                                 <!--                                        Gallery Of Works-->
                                 <!--                                    </a></li>-->

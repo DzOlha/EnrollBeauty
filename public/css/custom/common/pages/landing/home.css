@@ -1,0 +1,88 @@
+body {
+    background: white !important;
+    color: #333 !important;
+}
+.select2-selection
+{
+    height: 38px;
+    display: block;
+    border: 1px solid #a6a6bf;
+    opacity: 1;
+}
+.mg-b-0 {
+    margin-bottom: 0;
+}
+
+.price-d-flex {
+    display: flex;
+    width: 100%;
+}
+.search-btn-schedule {
+    align-self: start;
+    margin-bottom: 5px;
+}
+#submit-search-button {
+    background-color: #333;
+}
+.tabs-style-2 .main-nav-line .nav-link.active,
+.tabs-style-3 .nav.panel-tabs li a.active,
+.tabs-style-4 .nav.panel-tabs li a.active {
+    background: #333 !important;
+    color: #ffffff !important;
+}
+
+.available-schedules .input-group.dates
+{
+    height: 38px !important;
+}
+.available-schedules input.date-range {
+    padding-top: 7px !important;
+}
+
+a {
+    color: #333 !important;
+}
+.pricelist-section a {
+    color: white !important;
+}
+.search-schedule-title {
+    font-size: 40px;
+    font-weight: normal;
+}
+#search-appointment-form
+{
+    padding-top: 4rem;
+    max-width: 2000px;
+    margin: auto;
+}
+
+.services-section-wrapper {
+    padding-bottom: 5rem !important;
+}
+.time-interval .card-header,
+.modal-body .time-interval .card-header,
+.card-header {
+    padding: 1rem 1.25rem !important;
+    background-color: #eaeaea !important;
+}
+.main-content-label,
+.card-table-two .card-title,
+.card-dashboard-eight .card-title,
+.modal-body .time-interval .card-header {
+    color: #333 !important;
+}
+
+.modal-content {
+    border-radius: 5px !important;
+}
+#modalAlertConfirmation-submit {
+    background-color: #333 !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected]
+{
+    color: #333 !important;
+}
+.alertify-notifier {
+    z-index: 10000;
+}
