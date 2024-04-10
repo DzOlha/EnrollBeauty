@@ -265,6 +265,12 @@ const API = [
                     'get' => [
                         'one' => '/api/open/worker/profile/get/one'
                     ]
+                ],
+                'get' => [
+                    'services' => [
+                        'all' => '/api/open/worker/get/services/all'
+                    ],
+                    'all' => '/api/open/worker/get/all'
                 ]
             ],
             'SERVICE' => [
@@ -272,6 +278,25 @@ const API = [
                     'get' => [
                         'all' => '/api/open/service/pricing/get/all'
                     ]
+                ],
+                'get' => [
+                    'workers' => [
+                        'all' => '/api/open/service/get/workers/all'
+                    ],
+                    'all' => '/api/open/service/get/all'
+                ]
+            ],
+            'AFFILIATE' => [
+                'get' => [
+                    'all' => '/api/open/affiliate/get/all'
+                ]
+            ],
+            'SCHEDULE' => [
+                'search' => '/api/open/schedule/search'
+            ],
+            'ORDER' => [
+                'service' => [
+                    'add' => '/api/user/order/service/add' // just use the UserApiController here
                 ]
             ]
         ]

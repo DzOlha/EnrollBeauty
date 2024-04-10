@@ -295,7 +295,7 @@ const API = {
             },
             ORDER: {
                 service: {
-                    add: '/api/user/order/service/add'
+                    add: '/api/user/order/service/add' // just use the UserApiController here
                 }
             }
 
