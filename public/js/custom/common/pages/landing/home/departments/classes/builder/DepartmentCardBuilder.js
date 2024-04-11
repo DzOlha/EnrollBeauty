@@ -12,7 +12,7 @@ class DepartmentCardBuilder
 
     createDepartmentCard(department, num = 4)
     {
-        let photo = `${CONST.adminImgFolder}/department_${department.id}/${department.photo_filename}`;
+        let photo = `${CONST.adminImgFolder}/departments/department_${department.id}/${department.photo_filename}`;
         return ` <div class="col-md-${num} department-card" data-department-id="${department?.id}" 
                       id="department-card-${department?.id}">
                     <div class="featured-imagebox featured-imagebox-post style1 res-767-mb-15">

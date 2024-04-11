@@ -63,11 +63,11 @@ class WorkerPublicProfileBuilder
                 </div>`
     }
 
-    static populateSocialMedia(worker)
+    static populateSocialMedia(worker, tooltipPlace = 'tooltip-top', dataTooltip = 'data-tooltip')
     {
         let instagram = worker.Instagram !== null
                                 ? `<li>
-                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Instagram}${worker.Instagram}" target="_blank" class=" tooltip-top" data-tooltip="Instagram">
+                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Instagram}${worker.Instagram}" target="_blank" class="${tooltipPlace}" ${dataTooltip}="Instagram">
                                             <i class="fa fa-instagram"></i>
                                         </a>
                                    </li>`
@@ -75,7 +75,7 @@ class WorkerPublicProfileBuilder
 
         let tiktok = worker.TikTok !== null
                                 ? `<li>
-                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.TikTok}${worker.TikTok}" target="_blank" class=" tooltip-top" data-tooltip="TikTok">
+                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.TikTok}${worker.TikTok}" target="_blank" class="${tooltipPlace}" ${dataTooltip}="TikTok">
                                            <svg xmlns="http://www.w3.org/2000/svg" class="tiktok-icon" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z"/></svg>      
                                         </a>
                                    </li>`
@@ -83,7 +83,7 @@ class WorkerPublicProfileBuilder
 
         let linkedin = worker.LinkedIn !== null
                                 ? `<li>
-                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.LinkedIn}${worker.LinkedIn}" target="_blank" class=" tooltip-top" data-tooltip="LinkedIn">
+                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.LinkedIn}${worker.LinkedIn}" target="_blank" class="${tooltipPlace}" ${dataTooltip}="LinkedIn">
                                             <i class="fa fa-linkedin"></i>
                                         </a>
                                    </li>`
@@ -91,7 +91,7 @@ class WorkerPublicProfileBuilder
 
         let facebook = worker.Facebook !== null
                                 ? `<li>
-                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Facebook}${worker.Facebook}" target="_blank" class=" tooltip-top" data-tooltip="Facebook">
+                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Facebook}${worker.Facebook}" target="_blank" class="${tooltipPlace}" ${dataTooltip}="Facebook">
                                             <i class="fa fa-facebook"></i>
                                         </a>
                                    </li>`
@@ -99,7 +99,7 @@ class WorkerPublicProfileBuilder
 
         let github = worker.Github !== null
                                 ? `<li>
-                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Github}${worker.Github}" target="_blank" class=" tooltip-top" data-tooltip="Github">
+                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Github}${worker.Github}" target="_blank" class="${tooltipPlace}" ${dataTooltip}="Github">
                                             <i class="fa fa-github"></i>
                                         </a>
                                    </li>`
@@ -107,7 +107,7 @@ class WorkerPublicProfileBuilder
 
         let telegram = worker.Telegram !== null
                                 ? `<li>
-                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Telegram}${worker.Telegram}" target="_blank" class=" tooltip-top" data-tooltip="Telegram">
+                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Telegram}${worker.Telegram}" target="_blank" class="${tooltipPlace}" ${dataTooltip}="Telegram">
                                             <i class="fa fa-telegram"></i>
                                         </a>
                                    </li>`
@@ -115,7 +115,7 @@ class WorkerPublicProfileBuilder
 
         let youtube = worker.YouTube !== null
                                 ? `<li>
-                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.YouTube}${worker.YouTube}" target="_blank" class=" tooltip-top" data-tooltip="YouTube">
+                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.YouTube}${worker.YouTube}" target="_blank" class="${tooltipPlace}" ${dataTooltip}="YouTube">
                                             <i class="fa fa-youtube"></i>
                                         </a>
                                    </li>`

@@ -1,4 +1,4 @@
-import API from "../../api.js";
+import UrlRenderer from "../renderer/extends/UrlRenderer.js";
 
 class ScheduleHtmlBuilder {
     constructor() {
@@ -9,9 +9,9 @@ class ScheduleHtmlBuilder {
         workerName, workerSurname, date, startTime, endTime, address
         )
     {
-        let profileUrlRoot = API.OPEN.WEB.WORKER.profile;
-        let workerProfileUrl =
-            `${profileUrlRoot}/${workerName.toLowerCase()}-${workerSurname.toLowerCase()}-${workerId}`
+        let workerProfileUrl = UrlRenderer.renderWorkerPublicProfileUrl(
+            workerName, workerSurname, workerId
+        );
 
         //console.log('createScheduleCard');
         return `<div class="card" id="schedule-card-${scheduleId}" 

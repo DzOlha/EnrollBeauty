@@ -3,66 +3,11 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                        <div class="featured-imagebox featured-imagebox-team style1">
-                            <div class="featured-thumbnail"><!-- featured-thumbnail -->
-                                <img class="img-fluid" src="/public/images/mockup/team-member/team-img01.jpg" alt="image">
-                                <div class="media-block">
-                                    <ul class="social-icons list-inline"><!-- social-icons -->
-                                        <li class="social-facebook"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                        <li class="social-googleplus"><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                                        <li class="social-linkedin"><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                                        <li class="social-pinterest"><a href=""><i class="fa fa-pinterest-p" aria-hidden="true"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="featured-content box-shadow">
-                                <div class="featured-title"><!-- featured-title -->
-                                    <h5><a href="#">Len Rosy Jacbos</a></h5>
-                                </div>
-                                <p class="category">Party Make-up</p><!-- category -->
-                            </div>
+                    <div class="col-md-6 col-sm-6" id="workers-two-wrapper">
                         </div>
-                        <div class="mt-30 featured-imagebox featured-imagebox-team style1 res-575-mt-15">
-                            <div class="featured-thumbnail"><!-- featured-thumbnail -->
-                                <img class="img-fluid" src="/public/images/mockup/team-member/team-img02.jpg" alt="image">
-                                <div class="media-block">
-                                    <ul class="social-icons list-inline"><!-- social-icons -->
-                                        <li class="social-facebook"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                        <li class="social-googleplus"><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                                        <li class="social-linkedin"><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                                        <li class="social-pinterest"><a href=""><i class="fa fa-pinterest-p" aria-hidden="true"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="featured-content box-shadow mb-0">
-                                <div class="featured-title"><!-- featured-title -->
-                                    <h5><a href="#">Lisa Anderson</a></h5>
-                                </div>
-                                <p class="category">Hair Stylist</p><!-- category -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 mt-200 res-991-mt-100 res-575-mt-0">
-                        <div class="featured-imagebox featured-imagebox-team style1">
-                            <div class="featured-thumbnail"><!-- featured-thumbnail -->
-                                <img class="img-fluid" src="/public/images/mockup/team-member/team-img03.jpg" alt="image">
-                                <div class="media-block">
-                                    <ul class="social-icons list-inline"><!-- social-icons -->
-                                        <li class="social-facebook"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                        <li class="social-googleplus"><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                                        <li class="social-linkedin"><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                                        <li class="social-pinterest"><a href=""><i class="fa fa-pinterest-p" aria-hidden="true"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="featured-content box-shadow">
-                                <div class="featured-title"><!-- featured-title -->
-                                    <h5><a href="#">Tommy Atkins</a></h5>
-                                </div>
-                                <p class="category">Barber Stylist</p><!-- category -->
-                            </div>
-                        </div>
+                    <div class="col-md-6 col-sm-6 mt-200 res-991-mt-100 res-575-mt-0"
+                         id="workers-one-wrapper">
+
                     </div>
                 </div>
             </div>

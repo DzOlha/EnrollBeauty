@@ -61,6 +61,13 @@ class OpenApiController extends ApiController
                 }
 
                 /**
+                 *  url = /api/open/worker/get/all-limited
+                 */
+                if($this->url[4] === 'all-limited') {
+                    $this->_getWorkersAllLimited();
+                }
+
+                /**
                  * url = /api/open/worker/get/services/
                  */
                 if($this->url[4] === 'services') {
@@ -227,7 +234,7 @@ class OpenApiController extends ApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting service pricing'
-                ], 400);
+                ], 404);
             }
 
             foreach ($result as &$department) {
@@ -258,7 +265,32 @@ class OpenApiController extends ApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting departments!'
-                ]);
+                ], 404);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * url = /api/open/worker/get/all-limited
+     */
+    protected function _getWorkersAllLimited()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['limit'])) {
+                $this->_missingRequestFields();
+            }
+            $limit = htmlspecialchars(trim($_GET['limit']));
+            $result = $this->dataMapper->selectWorkersForHomepage($limit);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting workers!'
+                ], 404);
             }
             $this->returnJson([
                 'success' => true,

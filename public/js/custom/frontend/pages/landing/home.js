@@ -13,6 +13,8 @@ import MakeOrderUser from "../../../common/pages/user/forms/order/MakeOrderUser.
 import DepartmentCardFiller from "../../../common/pages/landing/home/departments/classes/filler/DepartmentCardFiller.js";
 import departmentCardBuilder
     from "../../../common/pages/landing/home/departments/classes/builder/DepartmentCardBuilder.js";
+import WorkerCardFiller from "../../../common/pages/landing/home/workers/classes/filler/WorkerCardFiller.js";
+import WorkerCardBuilder from "../../../common/pages/landing/home/workers/classes/builder/WorkerCardBuilder.js";
 
 $(function () {
     let requester = new Requester();
@@ -71,5 +73,15 @@ $(function () {
         API.OPEN.API.DEPARTMENT.get["all-limited"]
     );
     depFiller.init();
+
+
+    /**
+     * Workers Card
+     */
+    let workersFiller = new WorkerCardFiller(
+        requester, new WorkerCardBuilder(),
+        API.OPEN.API.WORKER.get["all-limited"]
+    );
+    workersFiller.init();
 
 })

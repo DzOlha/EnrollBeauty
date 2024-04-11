@@ -1228,7 +1228,7 @@ class AdminApiController extends WorkerApiController
              * Upload photo into department_{id} folder
              */
             $uploader = new FileUploader();
-            $folderPath = ADMINS_PHOTO_FOLDER . "department_$insertedId/";
+            $folderPath = ADMINS_PHOTO_FOLDER . "departments/department_$insertedId/";
 
             $uploaded = $uploader->upload(
                 $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
@@ -1363,7 +1363,7 @@ class AdminApiController extends WorkerApiController
                      * Upload the new image into the folder
                      */
                     $uploader = new FileUploader();
-                    $folderPath = ADMINS_PHOTO_FOLDER . "department_{$items['id']}/";
+                    $folderPath = ADMINS_PHOTO_FOLDER . "departments/department_{$items['id']}/";
 
                     $uploaded = $uploader->upload(
                         $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
@@ -1453,7 +1453,7 @@ class AdminApiController extends WorkerApiController
             /**
              * Delete the department folder
              */
-            $folderPath = ADMINS_PHOTO_FOLDER . "department_$id/";
+            $folderPath = ADMINS_PHOTO_FOLDER . "departments/department_$id/";
             FileUploader::deleteFolder($folderPath);
 
             $this->returnJson([

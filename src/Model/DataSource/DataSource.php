@@ -221,7 +221,6 @@ abstract class DataSource
      * ]
      */
     public function selectAllWorkers() {
-        //$builder = new SqlBuilder($this->db);
         $this->builder->select([Workers::$id, Workers::$name, Workers::$surname])
                 ->from(Workers::$table)
             ->build();
