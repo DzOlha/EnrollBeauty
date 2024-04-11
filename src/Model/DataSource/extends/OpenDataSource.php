@@ -83,4 +83,17 @@ class OpenDataSource extends DataSource
 
         return $this->db->manyRows();
     }
+
+    public function selectDepartmentsFull(int $limit)
+    {
+        $this->builder->select([Departments::$id, Departments::$name,
+                            Departments::$description, Departments::$photo_filename])
+                    ->from(Departments::$table)
+                    ->whereNotNull(Departments::$photo_filename)
+                    ->andNotEmpty(Departments::$photo_filename)
+                    ->limit($limit)
+            ->build();
+
+        return $this->db->manyRows();
+    }
 }

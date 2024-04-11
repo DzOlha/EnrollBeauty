@@ -298,6 +298,11 @@ const API = {
                 service: {
                     add: '/api/user/order/service/add' // just use the UserApiController here
                 }
+            },
+            DEPARTMENT: {
+                get: {
+                    'all-limited': '/api/open/department/get/all-limited'
+                }
             }
 
         }

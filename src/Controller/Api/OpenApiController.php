@@ -196,6 +196,27 @@ class OpenApiController extends ApiController
 
     /**
      * @return void
+     * url = /api/open/department/
+     */
+    public function department()
+    {
+        if (isset($this->url[3])) {
+            /**
+             * url = /api/open/department/get/
+             */
+            if($this->url[3] === 'get') {
+                /**
+                 *  url = /api/open/department/get/all-limited
+                 */
+                if($this->url[4] === 'all-limited') {
+                    $this->_getDepartmentsCards();
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
      *
      *  url = /api/open/service/pricing/get/all
      */
@@ -217,6 +238,31 @@ class OpenApiController extends ApiController
                 'data' => [
                     'departments' => $result
                 ]
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * url = /api/open/department/get/all-limited
+     */
+    protected function _getDepartmentsCards()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['limit'])) {
+                $this->_missingRequestFields();
+            }
+            $limit = htmlspecialchars(trim($_GET['limit']));
+            $result = $this->dataMapper->selectDepartmentsFull($limit);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting departments!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
             ]);
         } else {
             $this->_methodNotAllowed(['GET']);

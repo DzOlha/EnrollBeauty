@@ -21,4 +21,9 @@ class OpenDataMapper extends DataMapper
     {
         return $this->dataSource->selectServicePricingAll();
     }
+
+    public function selectDepartmentsFull(int $limit)
+    {
+        return $this->dataSource->selectDepartmentsFull($limit);
+    }
 }

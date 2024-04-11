@@ -86,3 +86,12 @@ a {
 .alertify-notifier {
     z-index: 10000;
 }
+
+#department-cards-wrapper {
+    column-gap: 10px !important;
+    row-gap: 10px !important;
+}
+#department-cards-wrapper .department-card {
+    max-width: 31%;
+}
+

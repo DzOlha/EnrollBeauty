@@ -92,6 +92,16 @@ class SqlBuilder implements IBuilder
         return $this;
     }
 
+    public function andNotEmpty(string $column) {
+        $this->query .= " AND $column != '' ";
+        return $this;
+    }
+
+    public function whereNotNull(string $column) {
+        $this->query .= "WHERE $column IS NOT NULL ";
+        return $this;
+    }
+
     public function whereLess(string $column, string $placeholder, string $value, bool $andE) {
         $this->placeholders += [
             $placeholder => $value

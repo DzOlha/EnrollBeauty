@@ -10,6 +10,9 @@ import ScheduleHtmlBuilder from "../../../common/pages/classes/builder/ScheduleH
 import SearchScheduleForm from "../../../common/pages/user/forms/schedule/SearchScheduleForm.js";
 import OptionBuilder from "../../../common/pages/classes/builder/OptionBuilder.js";
 import MakeOrderUser from "../../../common/pages/user/forms/order/MakeOrderUser.js";
+import DepartmentCardFiller from "../../../common/pages/landing/home/departments/classes/filler/DepartmentCardFiller.js";
+import departmentCardBuilder
+    from "../../../common/pages/landing/home/departments/classes/builder/DepartmentCardBuilder.js";
 
 $(function () {
     let requester = new Requester();
@@ -58,5 +61,15 @@ $(function () {
     scheduleRenderer.setMakeOrderCallback(
         makeOrderUser.addListener, makeOrderUser
     );
+
+
+    /**
+     * Department Cards
+     */
+    let depFiller = new DepartmentCardFiller(
+        requester, new departmentCardBuilder(),
+        API.OPEN.API.DEPARTMENT.get["all-limited"]
+    );
+    depFiller.init();
 
 })
