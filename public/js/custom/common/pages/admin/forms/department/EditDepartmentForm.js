@@ -1,12 +1,18 @@
 import AddDepartmentForm from "./AddDepartmentForm.js";
 import GifLoader from "../../../classes/loader/GifLoader.js";
 import Notifier from "../../../classes/notifier/Notifier.js";
+import ImageDropify from "../../../classes/element/ImageDropify.js";
+import CONST from "../../../../../constants.js";
+import Input from "../../../classes/element/Input.js";
+import AjaxImageFiller from "../../../classes/helper/AjaxImageFiller.js";
 
 class EditDepartmentForm extends AddDepartmentForm
 {
-    constructor(requester, modalForm, optionBuilder, table, addApiUrl) {
+    constructor(requester, modalForm, optionBuilder, table, addApiUrl, getObjectUrl) {
         super(requester, modalForm, optionBuilder, table, addApiUrl);
 
+        this.inputFileWrapperSelector = `#modalEditDepartment .dropify-wrapper`;
+        this.getObjectUrl = getObjectUrl;
         this.manageBase = 'manage';
         this.dataNameAttribute = 'data-department-name';
         this.dataIdAttribute = 'data-department-id';
@@ -41,12 +47,40 @@ class EditDepartmentForm extends AddDepartmentForm
             'Update'
         );
 
-        this._populateForm(name);
+        this._initTheForm(id);
         this.modalForm.close();
         this.addListenerSubmitForm();
 
 
         this.deleteCallback(id);
+    }
+    _initTheForm(id) {
+        this.requester.get(
+            `${this.getObjectUrl}?id=${id}`,
+            (response) => {
+                this._populateForm(response.data)
+            },
+            (response) => {
+                Notifier.showErrorMessage(response.error);
+            }
+        )
+    }
+    _populateForm(data)
+    {
+        $(`#${this.departmentNameInputId}`).val(data.name);
+        $(`#${this.departmentDescriptionInputId}`).val(data.description);
+
+        /**
+         * Populate main photo
+         */
+        let image = new ImageDropify(
+            this.inputFileWrapperSelector, this.departmentPhotoInputId, 'Department'
+        );
+        let path = data.photo_filename
+            ? `${CONST.adminImgFolder}/department_${data.id}/${data.photo_filename}`
+            : '';
+
+        image.set(this.departmentPhotoInputId, path);
 
         /**
          * Set the service id on the update button to be able
@@ -54,11 +88,27 @@ class EditDepartmentForm extends AddDepartmentForm
          * @type {HTMLElement}
          */
         let submitBtn = document.getElementById(this.submitButtonId);
-        submitBtn.setAttribute(this.dataIdAttribute, id);
+        submitBtn.setAttribute(this.dataIdAttribute, data.id);
     }
-    _populateForm(name)
-    {
-        $(`#${this.departmentNameInputId}`).val(name);
+
+    validateFormData() {
+        let name = Input.validateInput(
+            this.departmentNameInputId, 'name', this.departmentNameValidationCallback
+        );
+        let description = Input.validateInput(
+            this.departmentDescriptionInputId, 'description', this.departmentDescriptionValidationCallback
+        );
+        let photo = Input.validateInput(
+            this.departmentPhotoInputId, 'photo', this.mainPhotoValidationCallback, true
+        );
+
+        if(name && description) {
+            let data = {
+                ...name, ...description, ...photo
+            }
+            return AjaxImageFiller._populateFormDataObject(data, 'photo');
+        }
+        return false;
     }
 
     listenerSubmitForm = (e) => {
@@ -70,11 +120,11 @@ class EditDepartmentForm extends AddDepartmentForm
          * }
          */
         let data = this.validateFormData();
-        data.id = e.currentTarget.getAttribute(this.dataIdAttribute);
+        data.append('id', e.currentTarget.getAttribute(this.dataIdAttribute));
 
         if(data) {
             this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
-            this.requester.post(
+            this.requester.postFiles(
                 this.submitActionUrl,
                 data,
                 this.successCallbackSubmit.bind(this),

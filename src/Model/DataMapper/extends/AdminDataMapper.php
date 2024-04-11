@@ -82,14 +82,27 @@ class AdminDataMapper extends WorkerDataMapper
         );
     }
 
-    public function insertDepartment(string $name)
-    {
-        return $this->dataSource->insertDepartment($name);
+    public function insertDepartment(
+        string $name, string $description, string $photoFilename
+    ){
+        return $this->dataSource->insertDepartment(
+            $name, $description, $photoFilename
+        );
     }
 
-    public function updateDepartmentName(int $id, string $name)
+    public function updateDepartment(int $id, string $name, string $description)
     {
-        return $this->dataSource->updateDepartmentName($id, $name);
+        return $this->dataSource->updateDepartment($id, $name, $description);
+    }
+
+    public function selectDepartmentPhotoById(int $id)
+    {
+        return $this->dataSource->selectDepartmentPhotoById($id);
+    }
+
+    public function updateDepartmentPhotoById(int $id, string $photoFilename)
+    {
+        return $this->dataSource->updateDepartmentPhotoById($id, $photoFilename);
     }
 
     public function deleteDepartmentById(int $id)
@@ -215,5 +228,10 @@ class AdminDataMapper extends WorkerDataMapper
         int $serviceId, int $limit, int $offset
     ){
         return $this->dataSource->selectWorkersByServiceId($serviceId, $limit, $offset);
+    }
+
+    public function selectDepartmentFullById(int $id)
+    {
+        return $this->dataSource->selectDepartmentFullById($id);
     }
 }

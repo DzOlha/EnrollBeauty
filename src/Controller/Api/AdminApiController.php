@@ -16,6 +16,7 @@ use Src\Service\Auth\AuthService;
 use Src\Service\Auth\User\UserAuthService;
 use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
+use Src\Service\Validator\impl\PhotoValidator;
 use Src\Service\Validator\impl\StreetAddressValidator;
 
 class AdminApiController extends WorkerApiController
@@ -302,6 +303,13 @@ class AdminApiController extends WorkerApiController
                      */
                     if ($this->url[4] === 'all') {
                         $this->_getDepartmentsAll();
+                    }
+
+                    /**
+                     * url = /api/admin/department/get/one
+                     */
+                    if ($this->url[4] === 'one') {
+                        $this->_getDepartmentById();
                     }
 
                     /**
@@ -1154,18 +1162,20 @@ class AdminApiController extends WorkerApiController
     public function _addDepartment()
     {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['name'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+            if(empty($_POST['name']) || empty($_POST['description'])
+            || empty($_FILES['photo'])) {
+                $this->_missingRequestFields();
             }
 
-            $name = htmlspecialchars(trim($_POST['name']));
+            $items = [
+                'name' => htmlspecialchars(trim($_POST['name'])),
+                'description' => htmlspecialchars(trim($_POST['description']))
+            ];
 
             /**
              * Validate name format
              */
-            if(strlen($name) < 3) {
+            if(strlen($items['name']) < 3) {
                 $this->returnJson([
                     'error' => 'Department name should be longer than 3 characters!!'
                 ], 422);
@@ -1174,25 +1184,66 @@ class AdminApiController extends WorkerApiController
             /**
              * Check if there is no department with the same name
              */
-            $exists = $this->dataMapper->selectDepartmentByName($name);
-            if($exists === true) {
+            $exists = $this->dataMapper->selectDepartmentByName($items['name']);
+            if($exists !== false) {
                 $this->returnJson([
                     'error' => 'The department with such name already exists!'
                 ], 403);
             }
 
             /**
+             * Validate description format
+             */
+            if(strlen($items['description']) < 10) {
+                $this->returnJson([
+                    'error' => 'Department description should be longer than 10 characters!!'
+                ], 422);
+            }
+
+            /**
+             * Validate the photo and set 'random_name'
+             */
+            $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
+            if($validPhoto !== true) {
+                $this->returnJson($validPhoto, 422);
+            }
+
+
+            /**
              * Insert new department
              */
-            $insertedId = $this->dataMapper->insertDepartment($name);
+            $this->dataMapper->beginTransaction();
+
+            $insertedId = $this->dataMapper->insertDepartment(
+                $items['name'], $items['description'], $_FILES['photo']['random_name']
+            );
             if($insertedId === false) {
+                $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while inserting the department!'
                 ], 404);
             }
 
+            /**
+             * Upload photo into department_{id} folder
+             */
+            $uploader = new FileUploader();
+            $folderPath = ADMINS_PHOTO_FOLDER . "department_$insertedId/";
+
+            $uploaded = $uploader->upload(
+                $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
+            );
+            if(!$uploaded) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'An error occurred while uploading department photo into appropriate folder!'
+                ], 404);
+            }
+
+
+            $this->dataMapper->commitTransaction();
             $this->returnJson([
-                'success' => "You successfully added the department with name <b>'$name'</b>",
+                'success' => "You successfully added the department with name <b>'{$items['name']}'</b>",
                 'data' => [
                     'id' => $insertedId
                 ]
@@ -1209,15 +1260,16 @@ class AdminApiController extends WorkerApiController
     public function _editDepartment()
     {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['id']) || empty($_POST['name'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+            if(empty($_POST['id']) || empty($_POST['name'])
+                || empty($_POST['description']))
+            {
+                $this->_missingRequestFields();
             }
 
             $items = [
                 'id' => htmlspecialchars(trim($_POST['id'])),
-                'name' => htmlspecialchars(trim($_POST['name']))
+                'name' => htmlspecialchars(trim($_POST['name'])),
+                'description' => htmlspecialchars(trim($_POST['description']))
             ];
 
             /**
@@ -1232,25 +1284,122 @@ class AdminApiController extends WorkerApiController
             /**
              * Check if there is no department with the same name
              */
-            $exists = $this->dataMapper->selectDepartmentByName($items['name']);
-            if($exists === true) {
+            $existsId = $this->dataMapper->selectDepartmentByName($items['name']);
+            if($existsId !== false && $existsId != $items['id']) {
                 $this->returnJson([
                     'error' => 'The department with such name already exists!'
                 ], 403);
             }
 
             /**
-             * Insert new department
+             * Validate description format
              */
-            $updated = $this->dataMapper->updateDepartmentName(
-                $items['id'], $items['name']
-            );
-            if($updated === false) {
+            if(strlen($items['description']) < 10) {
                 $this->returnJson([
-                    'error' => 'An error occurred while updating the department name!'
+                    'error' => 'Department description should be longer than 10 characters!!'
+                ], 422);
+            }
+
+            /**
+             * Validate the photo and set 'random_name'
+             */
+            $photoChanged = true;
+            if(empty($_FILES['photo'])) {
+                $photoChanged = false;
+            } else {
+                $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
+                if($validPhoto !== true) {
+                    $this->returnJson($validPhoto, 422);
+                }
+            }
+
+            $this->dataMapper->beginTransaction();
+
+            /**
+             * Update text data
+             */
+            $updated = $this->dataMapper->updateDepartment(
+                $items['id'], $items['name'], $items['description']
+            );
+
+            /**
+             * Update photo
+             */
+            $updatedPhoto = true;
+            $newImage = $photoChanged === true
+                ? $_FILES['photo']['random_name']
+                : null;
+
+            if($newImage) {
+                /**
+                 * Check the old main photo
+                 */
+                $oldPhotoFilename = $this->dataMapper->selectDepartmentPhotoById($items['id']);
+                if($oldPhotoFilename === false) {
+                    $this->dataMapper->rollBackTransaction();
+                    $this->returnJson([
+                        'error' => "An error occurred while getting the current photo of the department"
+                    ], 404);
+                }
+
+                /**
+                 * Check if new photo differ from the old one
+                 */
+                if(!$oldPhotoFilename || $newImage !== $oldPhotoFilename) {
+                    /**
+                     * If yes -> update photo in db to the new one
+                     */
+                    $updatedPhoto = $this->dataMapper->updateDepartmentPhotoById(
+                        $items['id'], $newImage
+                    );
+                    if($updatedPhoto === false) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => 'An error occurred while updating department photo!'
+                        ], 404);
+                    }
+
+                    /**
+                     * Upload the new image into the folder
+                     */
+                    $uploader = new FileUploader();
+                    $folderPath = ADMINS_PHOTO_FOLDER . "department_{$items['id']}/";
+
+                    $uploaded = $uploader->upload(
+                        $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
+                    );
+                    if(!$uploaded) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => 'An error occurred while uploading department photo into appropriate folder!'
+                        ], 404);
+                    }
+
+                    /**
+                     * Remove the old photo from the folder
+                     */
+                    $deleted = FileUploader::deleteFileFromFolder($folderPath, $oldPhotoFilename);
+                    if($deleted === false) {
+                        $this->dataMapper->rollBackTransaction();
+                        $this->returnJson([
+                            'error' => "An error occurred while deleting the old department photo "
+                        ], 404);
+                    }
+                }
+            }
+            if($updated === false
+                && (
+                    ($updatedPhoto === false && $newImage)
+                    || ($updatedPhoto && !$newImage)
+                )
+            ) {
+                $this->dataMapper->rollBackTransaction();
+                $this->returnJson([
+                    'error' => 'An error occurred while updating department info!'
                 ], 404);
             }
 
+            $this->dataMapper->commitTransaction();
             $this->returnJson([
                 'success' => "You successfully updated the department!",
                 'data' => [
@@ -1301,12 +1450,43 @@ class AdminApiController extends WorkerApiController
                 ], 404);
             }
 
+            /**
+             * Delete the department folder
+             */
+            $folderPath = ADMINS_PHOTO_FOLDER . "department_$id/";
+            FileUploader::deleteFolder($folderPath);
+
             $this->returnJson([
                 'success' => 'You successfully deleted the department!',
                 'data' => [
                     'id' => $id
                 ]
             ]);
+        }
+    }
+
+    /**
+     * url = /api/admin/department/get/one
+     */
+    protected function _getDepartmentById()
+    {
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(empty($_GET['id'])) {
+                $this->_missingRequestFields();
+            }
+            $id = htmlspecialchars(trim($_GET['id']));
+            $result = $this->dataMapper->selectDepartmentFullById($id);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting the department info!'
+                ]);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 

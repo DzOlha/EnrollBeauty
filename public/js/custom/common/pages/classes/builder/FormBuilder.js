@@ -392,11 +392,31 @@ class FormBuilder {
 
     createAddDepartmentForm() {
         return `<div class="form-group">
+                    <p class="mg-b-0">Main Photo</p>
+                    <div class="input-group mb-3">
+                        <input type="file" class="dropify" 
+                               id="department-photo-input"
+                               accept=".svg, .jpg, .jpeg, .png" data-height="200"
+                               name="department-photo"/>
+                        <div class="error text-danger" id="department-photo-input-error"></div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <p class="mg-b-0"><span>*</span>Department Name</p>
                     <div class="input-group mb-3">
                         <input name="name" type="text" placeholder="Department Name" autocomplete="off"
                                required="required" class="form-control" id="department-name-input">
                         <div class="error text-danger" id="department-name-input-error"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p class="mg-b-0"><span>*</span>Department Description</p>
+                    <div class="input-group mb-3">
+                        <input name="description" type="text" 
+                               placeholder="Department Description" autocomplete="off"
+                               required="required" class="form-control" 
+                               id="department-description-input">
+                        <div class="error text-danger" id="department-description-input-error"></div>
                     </div>
                 </div>
             `

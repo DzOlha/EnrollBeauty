@@ -1322,7 +1322,7 @@ class WorkerDataSource extends DataSource
 
         $result = $this->db->singleRow();
         if($result) {
-            return true;
+            return $result[explode('.', Departments::$id)[1]];
         }
         return false;
     }

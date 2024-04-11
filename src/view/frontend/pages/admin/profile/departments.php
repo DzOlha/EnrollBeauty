@@ -1,10 +1,10 @@
 <?php require_once VIEW_COMMON."pages/user/profile/header/head.php"?>
 <link href="/public/css/custom/common/pages/page-profile.css" rel="stylesheet"/>
 <!-- InternalFileupload css-->
-<!--<link href="/public/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>-->
+<link href="/public/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>
 
 <!-- InternalFancy uploader css-->
-<!--<link href="/public/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />-->
+<link href="/public/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
 
 
 <link href="/public/css/custom/common/pages/user/profile.css" rel="stylesheet" />
@@ -18,6 +18,7 @@
 
 <!-- Internal Daterangepicker css-->
 <link href="/public/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="/public/css/custom/common/pages/admin/dropify.css" rel="stylesheet">
 
 
 <body class="ltr main-body leftmenu">
@@ -195,6 +196,11 @@
 
 <!-- Internal Form-elements js-->
 <script src="/public/assets/js/advanced-form-elements.js"></script>
+
+<!-- Internal Fileuploads js-->
+<script src="/public/assets/plugins/fileuploads/js/fileupload.js"></script>
+<script src="/public/assets/plugins/fileuploads/js/file-upload.js"></script>
+
 
 <!-- Sticky js -->
 <script src="/public/assets/js/sticky.js"></script>

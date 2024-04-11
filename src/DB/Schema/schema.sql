@@ -74,7 +74,9 @@ CREATE TABLE users_photo (
 
 CREATE TABLE departments (
      id INT AUTO_INCREMENT PRIMARY KEY,
-     name VARCHAR(50) NOT NULL
+     name VARCHAR(50) NOT NULL,
+     description VARCHAR(255) NOT NULL,
+     photo_filename VARCHAR(100) NOT NULL
 );
 CREATE TABLE positions (
    id INT AUTO_INCREMENT PRIMARY KEY,

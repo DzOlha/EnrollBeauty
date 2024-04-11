@@ -8,7 +8,7 @@ const CONST = {
 
     workerSystemProfile: '/web/admin/worker/profile',
 
-    adminImgFolder: PUBLIC_IMAGES + 'custom/uploads/admins/admin_',
+    adminImgFolder: PUBLIC_IMAGES + 'custom/uploads/admins',
     workerImgFolder: PUBLIC_IMAGES + 'custom/uploads/workers/worker_',
     userImgFolder: PUBLIC_IMAGES + 'custom/uploads/users/user_',
 

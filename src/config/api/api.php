@@ -235,6 +235,7 @@ const API = [
                 'delete' => '/api/admin/department/delete',
                 'get' => [
                     'all' => '/api/admin/department/get/all',
+                    'one' => '/api/admin/department/get/one',
                     'all-limited' => '/api/admin/department/get/all-limited',
                     'all-services' => '/api/admin/department/get/all-services',
                 ]

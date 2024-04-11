@@ -2,6 +2,8 @@ import Form from "../../../user/forms/Form.js";
 import Input from "../../../classes/element/Input.js";
 import GifLoader from "../../../classes/loader/GifLoader.js";
 import Notifier from "../../../classes/notifier/Notifier.js";
+import AjaxImageFiller from "../../../classes/helper/AjaxImageFiller.js";
+import ImageDropify from "../../../classes/element/ImageDropify.js";
 
 class AddDepartmentForm extends Form {
     constructor(
@@ -20,7 +22,12 @@ class AddDepartmentForm extends Form {
 
         this.addTriggerId = 'add-department-trigger';
 
+        this.inputFileWrapperSelector = `#modalAddDepartment .dropify-wrapper`;
+        this.allowedImageExtensions = ['jpg', 'svg', 'png', 'jpeg'];
+
         this.departmentNameInputId = 'department-name-input';
+        this.departmentDescriptionInputId = 'department-description-input';
+        this.departmentPhotoInputId = 'department-photo-input';
 
         this.modalBodyClass = 'modal-body';
     }
@@ -40,6 +47,7 @@ class AddDepartmentForm extends Form {
             this.modalForm.formBuilder.createAddDepartmentForm(),
             'Add'
         );
+        ImageDropify.init(this.departmentPhotoInputId);
 
         this.modalForm.close();
         this.addListenerSubmitForm();
@@ -58,14 +66,47 @@ class AddDepartmentForm extends Form {
 
         return result;
     }
+    departmentDescriptionValidationCallback = (value) => {
+        let result = {};
+        if(!value) {
+            result.error = "Department description is required field!";
+            return result;
+        }
+
+        if(value.length < 10) {
+            result.error = "Department description should be longer than 10 characters!";
+            return result;
+        }
+
+        return result;
+    }
+
+    mainPhotoValidationCallback = (value) => {
+        let image = new ImageDropify(
+            this.inputFileWrapperSelector,
+            this.departmentPhotoInputId,
+            'Department',
+            this.allowedImageExtensions
+        );
+        return image.validate(value);
+    }
+
     validateFormData() {
         let name = Input.validateInput(
             this.departmentNameInputId, 'name', this.departmentNameValidationCallback
-        )
-        if(name) {
-            return {
-                ...name
+        );
+        let description = Input.validateInput(
+            this.departmentDescriptionInputId, 'description', this.departmentDescriptionValidationCallback
+        );
+        let photo = Input.validateInput(
+            this.departmentPhotoInputId, 'photo', this.mainPhotoValidationCallback, true
+        );
+
+        if(name && description && photo) {
+            let data = {
+                ...name, ...description, ...photo
             }
+            return AjaxImageFiller._populateFormDataObject(data, 'photo');
         }
         return false;
     }
@@ -82,7 +123,7 @@ class AddDepartmentForm extends Form {
 
         if(data) {
             this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
-            this.requester.post(
+            this.requester.postFiles(
                 this.submitActionUrl,
                 data,
                 this.successCallbackSubmit.bind(this),

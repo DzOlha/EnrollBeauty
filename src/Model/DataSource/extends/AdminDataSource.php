@@ -240,10 +240,13 @@ class AdminDataSource extends WorkerDataSource
         return $this->_appendTotalRowsCount($queryFrom, $result);
     }
 
-    public function insertDepartment(string $name)
-    {
-        $this->builder->insertInto(Departments::$table, [Departments::$name])
-                    ->values([':name'], [$name])
+    public function insertDepartment(
+        string $name, string $description, string $photoFilename
+    ){
+        $this->builder->insertInto(Departments::$table,
+            [Departments::$name, Departments::$description, Departments::$photo_filename])
+                    ->values([':name', ':description', ':photo'],
+                            [$name, $description, $photoFilename])
             ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
@@ -252,10 +255,38 @@ class AdminDataSource extends WorkerDataSource
         return false;
     }
 
-    public function updateDepartmentName(int $id, string $name)
+    public function updateDepartment(int $id, string $name, string $description)
     {
         $this->builder->update(Departments::$table)
                     ->set(Departments::$name, ':name', $name)
+                    ->andSet(Departments::$description, ':description', $description)
+                    ->whereEqual(Departments::$id, ':id', $id)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function selectDepartmentPhotoById(int $id)
+    {
+        $this->builder->select([Departments::$photo_filename])
+                    ->from(Departments::$table)
+                    ->whereEqual(Departments::$id, ':id', $id)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return $result[explode('.', Departments::$photo_filename)[1]];
+        }
+        return $result;
+    }
+
+    public function updateDepartmentPhotoById(int $id, string $photoFilename)
+    {
+        $this->builder->update(Departments::$table)
+                    ->set(Departments::$photo_filename, ':photo', $photoFilename)
                     ->whereEqual(Departments::$id, ':id', $id)
             ->build();
 
@@ -646,5 +677,16 @@ class AdminDataSource extends WorkerDataSource
             return $result;
         }
         return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
+
+    public function selectDepartmentFullById(int $id)
+    {
+        $this->builder->select([Departments::$id, Departments::$name,
+                                Departments::$description, Departments::$photo_filename])
+                        ->from(Departments::$table)
+                    ->whereEqual(Departments::$id, ':id', $id)
+            ->build();
+
+        return $this->db->singleRow();
     }
 }

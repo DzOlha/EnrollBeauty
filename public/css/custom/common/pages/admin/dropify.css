@@ -1,0 +1,21 @@
+input[type='file'] {
+    height: 100%;
+}
+.dropify-filename-inner {
+    color: #777 !important;
+}
+.dropify-wrapper.touch-fallback .dropify-clear {
+    top: 0;
+    right: 0;
+    height: 40px;
+    width: 80px;
+}
+.dropify-wrapper.touch-fallback .dropify-clear:hover {
+    background-color: var(--primary-bg-hover);
+    color: white;
+    border-color: var(--primary-bg-hover);
+}
+.dropify-wrapper .dropify-clear {
+    top: 0;
+    right: 0;
+}

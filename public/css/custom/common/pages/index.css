@@ -168,7 +168,7 @@ for resetting the select2 value
     text-transform: none !important;
 }
 
-.sub-menu a {
+#site-header-menu .sub-menu a {
     color: #333 !important;
 }
 

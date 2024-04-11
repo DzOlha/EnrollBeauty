@@ -39,7 +39,7 @@ $(function () {
      */
     let editForm = new EditDepartmentForm(
         requester, modalForm, optionBuilder, departmentsTable,
-        API.ADMIN.API.DEPARTMENT.edit
+        API.ADMIN.API.DEPARTMENT.edit, API.ADMIN.API.DEPARTMENT.get.one
     );
     departmentsTable.setManageCallback(
         editForm.addListenerManage, editForm

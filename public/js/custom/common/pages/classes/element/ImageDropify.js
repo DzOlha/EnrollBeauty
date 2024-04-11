@@ -14,6 +14,10 @@ class ImageDropify {
         this.allowedImageExtensions = allowedImageExtensions;
     }
 
+    static init(imageInputId) {
+        $(`#${imageInputId}`).dropify();
+    }
+
     set(imageInputId, imagePath) {
         this._setDefaultImage(imageInputId, imagePath);
     }
