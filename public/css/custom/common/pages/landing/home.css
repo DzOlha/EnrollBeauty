@@ -90,8 +90,19 @@ a {
 #department-cards-wrapper {
     column-gap: 10px !important;
     row-gap: 10px !important;
+    padding-top: 30px;
 }
 #department-cards-wrapper .department-card {
     max-width: 31%;
+}
+@media (max-width: 768px) {
+    #department-cards-wrapper .department-card {
+        max-width: 49%;
+    }
+}
+@media (max-width: 600px) {
+    #department-cards-wrapper .department-card {
+        max-width: 100%;
+    }
 }
 

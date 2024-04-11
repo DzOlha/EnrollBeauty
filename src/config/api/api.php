@@ -271,7 +271,8 @@ const API = [
                     'services' => [
                         'all' => '/api/open/worker/get/services/all'
                     ],
-                    'all' => '/api/open/worker/get/all'
+                    'all' => '/api/open/worker/get/all',
+                    'all-limited' => '/api/open/worker/get/all-limited',
                 ]
             ],
             'SERVICE' => [

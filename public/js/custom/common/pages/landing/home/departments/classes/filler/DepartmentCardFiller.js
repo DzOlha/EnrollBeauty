@@ -3,7 +3,7 @@ import Notifier from "../../../../../classes/notifier/Notifier.js";
 class DepartmentCardFiller
 {
     constructor(requester, builder, apiGetDepartments) {
-        this.limit = 9;
+        this.limit = 6;
         this.requester = requester;
         this.builder = builder;
         this.apiGetDepartments = apiGetDepartments;
