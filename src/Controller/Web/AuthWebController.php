@@ -55,8 +55,8 @@ class AuthWebController extends WebController
             else if($this->url[3] === 'logout') {
                 if(SessionHelper::removeUserSession()) {
                     $this->view(
-                        COMMON_PAGES['index']['path'],
-                        COMMON_PAGES['index']['data']
+                        OPEN_PAGES['index']['path'],
+                        OPEN_PAGES['index']['data']
                     );
                 } else {
                     $this->error(
@@ -113,8 +113,8 @@ class AuthWebController extends WebController
             else if ($this->url[3] === 'logout') {
                 if(SessionHelper::removeWorkerSession()) {
                     $this->view(
-                        COMMON_PAGES['index']['path'],
-                        COMMON_PAGES['index']['data'],
+                        OPEN_PAGES['index']['path'],
+                        OPEN_PAGES['index']['data'],
                     );
                 } else {
                     $this->error(
@@ -153,8 +153,8 @@ class AuthWebController extends WebController
             else if ($this->url[3] === 'logout') {
                 if(SessionHelper::removeAdminSession()) {
                     $this->view(
-                        COMMON_PAGES['index']['path'],
-                        COMMON_PAGES['index']['data'],
+                        OPEN_PAGES['index']['path'],
+                        OPEN_PAGES['index']['data'],
                     );
                 } else {
                     $this->error(

@@ -14,7 +14,7 @@ class FileUploader implements IUploader
      */
     public function upload($file, $fileRandName, $folder): bool
     {
-        $dir = str_replace("\\", "/", ENROLL_BEAUTY_ROOT) . $folder;
+        $dir = str_replace("\\", "/", ROOT) . $folder;
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
@@ -42,7 +42,7 @@ class FileUploader implements IUploader
             return 'The image size should not exceed 5 MB';
         }
 
-        $dir = str_replace("\\", "/", ENROLL_BEAUTY_ROOT) . $folder;
+        $dir = str_replace("\\", "/", ROOT) . $folder;
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
@@ -56,7 +56,7 @@ class FileUploader implements IUploader
 
     public function copyFile($sourceFilePath, $destinationFolderPath): bool
     {
-        $root = str_replace("\\", "/", ENROLL_BEAUTY_ROOT);
+        $root = str_replace("\\", "/", ROOT);
         $sourceFilePath = $root . $sourceFilePath;
         $destinationFolderPath = $root . $destinationFolderPath;
         if (file_exists($sourceFilePath)) {
@@ -81,7 +81,7 @@ class FileUploader implements IUploader
 
     public static function deleteFolder($folderPath)
     {
-        $folderPath = str_replace("\\", "/", ENROLL_BEAUTY_ROOT) . $folderPath;
+        $folderPath = str_replace("\\", "/", ROOT) . $folderPath;
         if (is_dir($folderPath)) {
             // Remove all files within the folder
             $files = glob($folderPath . '*');
@@ -98,7 +98,7 @@ class FileUploader implements IUploader
 
     public static function deleteFolderContent($folderPath)
     {
-        $folderPath = str_replace("\\", "/", ENROLL_BEAUTY_ROOT) . $folderPath;
+        $folderPath = str_replace("\\", "/", ROOT) . $folderPath;
         if (is_dir($folderPath)) {
             // Remove all files within the folder
             $files = glob($folderPath . '*');
@@ -118,7 +118,7 @@ class FileUploader implements IUploader
         if(!$fileName) {
             return true;
         }
-        $folderPath = str_replace("\\", "/", ENROLL_BEAUTY_ROOT) . $folderPath;
+        $folderPath = str_replace("\\", "/", ROOT) . $folderPath;
         $fileToDelete = $folderPath . $fileName;
 
         if (file_exists($fileToDelete)) {
@@ -131,7 +131,7 @@ class FileUploader implements IUploader
 
     public static function renameFolder($folderPath, $newName)
     {
-        $folderPath = str_replace("\\", "/", ENROLL_BEAUTY_ROOT) . $folderPath;
+        $folderPath = str_replace("\\", "/", ROOT) . $folderPath;
         // Check if the folder exists
         if (is_dir($folderPath)) {
             // Get the parent directory of the folder

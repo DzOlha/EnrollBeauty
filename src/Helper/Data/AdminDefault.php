@@ -14,7 +14,7 @@ class AdminDefault
         return false;
     }
     public static function getAdminDefault() {
-        $adminConfigFile = SRC.'/DB/Config/admin.php';
+        $adminConfigFile = ADMIN_DEFAULT_CREDENTIALS;
         $admin = include $adminConfigFile;
 
         return $admin;

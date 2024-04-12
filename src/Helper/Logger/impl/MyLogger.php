@@ -18,19 +18,19 @@ class MyLogger implements ILogger
     {
         // create a logger instance for errors
         $this->errorLogger = new Logger('error');
-        $this->errorLogger->pushHandler(new StreamHandler(SRC . '/logs/error.log', Logger::ERROR));
+        $this->errorLogger->pushHandler(new StreamHandler(LOGS_FOLDER . '/error.log', Logger::ERROR));
 
         // create a logger instance for warnings
         $this->warningLogger = new Logger('warning');
-        $this->warningLogger->pushHandler(new StreamHandler(SRC . '/logs/warning.log', Logger::WARNING));
+        $this->warningLogger->pushHandler(new StreamHandler(LOGS_FOLDER . '/warning.log', Logger::WARNING));
 
         // create a logger instance for debug messages
         $this->debugLogger = new Logger('debug');
-        $this->debugLogger->pushHandler(new StreamHandler(SRC . '/logs/debug.log', Logger::DEBUG));
+        $this->debugLogger->pushHandler(new StreamHandler(LOGS_FOLDER . '/debug.log', Logger::DEBUG));
 
         // create a logger instance for info messages
         $this->infoLogger = new Logger('info');
-        $this->infoLogger->pushHandler(new StreamHandler(SRC . '/logs/info.log', Logger::INFO));
+        $this->infoLogger->pushHandler(new StreamHandler(LOGS_FOLDER . '/info.log', Logger::INFO));
     }
 
     public static function getInstance(): ILogger //singleton

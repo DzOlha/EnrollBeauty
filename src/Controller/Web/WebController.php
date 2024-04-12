@@ -35,8 +35,8 @@ class WebController extends AbstractController
 
     public function index() {
         $this->view(
-            COMMON_PAGES['index']['path'],
-            COMMON_PAGES['index']['data']
+            OPEN_PAGES['index']['path'],
+            OPEN_PAGES['index']['data']
         );
     }
 
@@ -49,8 +49,8 @@ class WebController extends AbstractController
             ];
         }
         $this->view(
-            COMMON_PAGES['error']['path'],
-            $data ?? COMMON_PAGES['error']['data'],
+            OPEN_PAGES['error']['path'],
+            $data ?? OPEN_PAGES['error']['data'],
         );
         exit();
     }

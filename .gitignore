@@ -6,3 +6,7 @@
 /src/Helper/Credentials/API/MailgunApiCredentials.php
 /src/Helper/Credentials/API/BrevoApiCredentials.php
 /public/images/custom/uploads/
+/public/custom/assets/img/uploads/
+/logs/
+/src/config/secrets/
+/src/config/credentials/
