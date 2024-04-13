@@ -145,6 +145,11 @@
 <!--</div>-->
 <?php require_once VIEW_PROTECTED_BLOCKS . '/footer/full_footer.php'?>
 
+<!-- Internal Fileuploads js-->
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/fileupload.js"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/file-upload.js"></script>
+
+
 <!--Mine scripts-->
 
 <script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/protected/admin/ui/department/departments.js"></script>

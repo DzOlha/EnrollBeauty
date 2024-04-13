@@ -1,7 +1,90 @@
 
+.main-header.side-header.sticky {
+    display: none;
+    background-color: rgba(0, 0, 0, 0);
+    color: #fff;
+    border-bottom: none;
+}
+.main-header-menu-icon span::before,
+.main-header-menu-icon span::after
+{
+    background-color: var(--light-brown-color);
+    width: 30px;
+}
+.main-header-menu-icon span {
+    background-color: var(--light-brown-color);
+    width: 25px;
+}
+.jumps-prevent {
+    padding-top: 30px !important;
+}
+@media (max-width: 992px) {
+    #masthead {
+        z-index: 1000;
+    }
+    .main-header.side-header.sticky {
+        display: block;
+        color: #fff;
+        height: 75px;
+        width: 50px;
+        position: relative !important;
+    }
+    #site-navigation {
+       margin-top: 7px;
+    }
+    #site-header-menu {
+        box-shadow: 1px 0px 1px 0px white;
+    }
+    .main-menu.main-sidebar.main-sidebar-sticky.side-menu {
+        max-width: 42%;
+    }
+    .main-header-menu-icon {
+        width: 50px !important;
+    }
+    .main-header.side-header.sticky .container-fluid
+    {
+        box-sizing: border-box;
+        margin-top: 8px;
+        margin-left: 2px !important;
+        margin-right: 15px !important;
+    }
+    .jumps-prevent {
+        padding-top: 30px !important;
+    }
+    .main-sidebar-show .side-menu {
+        padding-top: 120px;
+    }
+    .ttm-stickable-header-w {
+        top: -59px;
+    }
+    .main-header-menu-icon {
+        margin-left: 5px;
+    }
+    .home-link {
+        margin-left: 40px;
+    }
+    #logo-img {
+        padding-top: 13px;
+    }
+    .main-sidebar-show .side-menu {
+        top: 0px !important;
+    }
+    .main-content.side-content .page-header, .main-content .page-header {
+        padding-top: 0px !important;
+    }
+}
+@media (max-width: 991px) and (min-width: 767px) {
+    .main-body.leftmenu .main-content.side-content {
+        margin-top: 0px !important;
+    }
+}
+.site-header-menu-inner {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .ttm-stickable-header-w {
     position: relative !important;
     top: 0;
     z-index: 2000;
-    padding-left: 10px;
 }
