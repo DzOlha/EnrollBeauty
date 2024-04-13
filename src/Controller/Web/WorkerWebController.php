@@ -3,6 +3,8 @@
 namespace Src\Controller\Web;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Provider\Api\Web\WebApiProvider;
+use Src\Helper\Redirector\impl\UrlRedirector;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\extends\WorkerDataMapper;
 use Src\Model\DataSource\extends\WorkerDataSource;
@@ -27,10 +29,14 @@ class WorkerWebController extends WebController
         return new WorkerDataMapper(new WorkerDataSource(MySql::getInstance()));
     }
 
-    public function checkPermission(): void
+    public function checkPermission(array $url = []): void
     {
         if(!SessionHelper::getWorkerSession()) {
-            $this->_accessDenied();
+            /**
+             * Redirect to the Worker login page
+             */
+            SessionHelper::setRememberUrlSession($url);
+            UrlRedirector::redirect(WebApiProvider::workerLogin());
         }
     }
 

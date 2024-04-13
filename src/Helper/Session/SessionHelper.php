@@ -9,6 +9,9 @@ class SessionHelper
     private static string $user_id = 'user_id';
 
     private static string $recovery_code = 'recovery_code';
+
+    private static string $remember_url = 'remember_url';
+
     /**
      * User
      */
@@ -114,4 +117,50 @@ class SessionHelper
         }
         return false;
     }
+
+    /**
+     * Remembering the protected URL which tried to be accessed without authorization
+     *                         [ 0    1     2     3 ]
+     * Example: $rememberUrl = /web/user/profile/home
+     *          $roleName    =      user
+     */
+    public static function setRememberUrlSession(array $rememberUrl)
+    {
+        $role = $rememberUrl[1];
+        $url = '/'.implode('/', $rememberUrl);
+
+
+        if(in_array($role, ['user', 'worker', 'admin'])) {
+            $_SESSION[SessionHelper::$remember_url] = [
+                $role => $url
+            ];
+        }
+    }
+    public static function getRememberUrlSession(string $roleName)
+    {
+        if (isset($_SESSION[SessionHelper::$remember_url][$roleName])) {
+            return $_SESSION[SessionHelper::$remember_url][$roleName];
+        } else {
+            return false;
+        }
+    }
+
+    public static function removeRememberUrlSession($roleName): bool
+    {
+        if(SessionHelper::getRememberUrlSession($roleName)) {
+            unset($_SESSION[SessionHelper::$remember_url][$roleName]);
+            return true;
+        }
+        return false;
+    }
+
+    public static function removeAllRememberUrlSession(): bool
+    {
+        if(isset($_SESSION[SessionHelper::$remember_url])) {
+            unset($_SESSION[SessionHelper::$remember_url]);
+            return true;
+        }
+        return false;
+    }
+
 }

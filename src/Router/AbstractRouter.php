@@ -67,7 +67,6 @@ abstract class AbstractRouter
             ) {
                 //make the first letter of the controller name in uppercase format
                 $this->currentController = ucwords($url[1]) . $this->type . 'Controller';
-                unset($url[1]);
                 $setDefaultController = false;
             }
         }
@@ -94,7 +93,6 @@ abstract class AbstractRouter
         if (isset($url[2]) && $url[2] !== '') {
             if (method_exists($this->currentController, $url[2])) {
                 $this->currentMethod = $url[2];
-                unset($url[2]);
             } else {
                 $this->currentMethod = $this->pageNotFoundMethod;
             }

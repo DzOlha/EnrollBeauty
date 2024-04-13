@@ -3,6 +3,7 @@
 namespace Src\Service\Auth\User;
 
 use Src\Helper\Email\UserEmailHelper;
+use Src\Helper\Provider\Api\Web\WebApiProvider;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\UserWriteDto;
@@ -231,13 +232,21 @@ class UserAuthService extends AuthService
             }
 
             /**
+             * Redirect the user to the requested page (if such was attempted to be accessed)
+             */
+            $rememberUrl = SessionHelper::getRememberUrlSession('user');
+            $redirectUrl = $rememberUrl !== false ? $rememberUrl : WebApiProvider::userHome();
+            SessionHelper::removeAllRememberUrlSession();
+
+            /**
              * Store User's ID into session
              */
             SessionHelper::setUserSession($userId);
             return [
                 'success' => true,
                 'data' => [
-                    'session' => SessionHelper::getUserSession()
+                    'id' => SessionHelper::getUserSession(),
+                    'redirect_url' => $redirectUrl
                 ]
             ];
         }

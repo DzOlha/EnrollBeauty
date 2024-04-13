@@ -21,6 +21,11 @@ ini_set('max_execution_time', 100000);
 require_once 'config/constants/folder_constants.php';
 
 /**
+ * set credentials for third-party API services
+ */
+require_once CONFIG . '/credentials/api_credentials.php';
+
+/**
  * set constants for root urls
  */
 require_once CONFIG . '/constants/url_constants.php';

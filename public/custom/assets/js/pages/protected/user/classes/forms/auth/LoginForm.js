@@ -17,8 +17,15 @@ class LoginForm extends Form {
     }
 
     successCallbackSubmit(response) {
-        window.location.href = this.accountUrl;
-        //console.log(response);
+        if(response.data) {
+            if(response.data.redirect_url) {
+                window.location.href = response.data.redirect_url;
+            } else {
+                window.location.href = this.accountUrl;
+            }
+        } else {
+            window.location.href = this.accountUrl;
+        }
     }
 
     errorCallbackSubmit(response) {

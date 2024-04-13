@@ -3,6 +3,7 @@
 namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Provider\Folder\FolderProvider;
 use Src\Helper\Session\SessionHelper;
 use Src\Helper\Uploader\impl\FileUploader;
 use Src\Model\DataMapper\DataMapper;
@@ -41,7 +42,8 @@ class AdminApiController extends WorkerApiController
         return new AdminDataMapper(new AdminDataSource(MySql::getInstance()));
     }
 
-    public function checkPermission(): void {
+    public function checkPermission(array $url = []): void
+    {
         if(!SessionHelper::getAdminSession()) {
             $this->_accessDenied();
         }
@@ -1124,7 +1126,7 @@ class AdminApiController extends WorkerApiController
             /**
              * Delete the folder with worker's images
              */
-            $folderPath = WORKERS_PHOTO_FOLDER . "worker_$id/";
+            $folderPath = FolderProvider::workerUploadsImg($id);
             FileUploader::deleteFolder($folderPath);
 
             $this->returnJson([
@@ -1228,7 +1230,7 @@ class AdminApiController extends WorkerApiController
              * Upload photo into department_{id} folder
              */
             $uploader = new FileUploader();
-            $folderPath = ADMINS_PHOTO_FOLDER . "departments/department_$insertedId/";
+            $folderPath = FolderProvider::adminUploadsDepartmentImg($insertedId);
 
             $uploaded = $uploader->upload(
                 $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
@@ -1363,7 +1365,7 @@ class AdminApiController extends WorkerApiController
                      * Upload the new image into the folder
                      */
                     $uploader = new FileUploader();
-                    $folderPath = ADMINS_PHOTO_FOLDER . "departments/department_{$items['id']}/";
+                    $folderPath = FolderProvider::adminUploadsDepartmentImg($items['id']);
 
                     $uploaded = $uploader->upload(
                         $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
@@ -1453,7 +1455,7 @@ class AdminApiController extends WorkerApiController
             /**
              * Delete the department folder
              */
-            $folderPath = ADMINS_PHOTO_FOLDER . "departments/department_$id/";
+            $folderPath = FolderProvider::adminUploadsDepartmentImg($id);
             FileUploader::deleteFolder($folderPath);
 
             $this->returnJson([

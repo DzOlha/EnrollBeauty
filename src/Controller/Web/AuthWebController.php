@@ -3,6 +3,7 @@
 namespace Src\Controller\Web;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Redirector\impl\UrlRedirector;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\extends\WorkerDataMapper;
 use Src\Model\DataSource\extends\WorkerDataSource;
@@ -54,10 +55,7 @@ class AuthWebController extends WebController
              */
             else if($this->url[3] === 'logout') {
                 if(SessionHelper::removeUserSession()) {
-                    $this->view(
-                        OPEN_PAGES['index']['path'],
-                        OPEN_PAGES['index']['data']
-                    );
+                    UrlRedirector::redirect('/');
                 } else {
                     $this->error(
                         'Logout Error',
@@ -112,10 +110,7 @@ class AuthWebController extends WebController
              */
             else if ($this->url[3] === 'logout') {
                 if(SessionHelper::removeWorkerSession()) {
-                    $this->view(
-                        OPEN_PAGES['index']['path'],
-                        OPEN_PAGES['index']['data'],
-                    );
+                    UrlRedirector::redirect('/');
                 } else {
                     $this->error(
                         'Logout Error',
@@ -152,10 +147,7 @@ class AuthWebController extends WebController
              */
             else if ($this->url[3] === 'logout') {
                 if(SessionHelper::removeAdminSession()) {
-                    $this->view(
-                        OPEN_PAGES['index']['path'],
-                        OPEN_PAGES['index']['data'],
-                    );
+                    UrlRedirector::redirect('/');
                 } else {
                     $this->error(
                         'Logout Error',

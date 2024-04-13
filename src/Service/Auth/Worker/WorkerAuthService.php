@@ -5,6 +5,7 @@ namespace Src\Service\Auth\Worker;
 use Src\Helper\Builder\impl\UrlBuilder;
 use Src\Helper\Email\AdminEmailHelper;
 use Src\Helper\Email\WorkerEmailHelper;
+use Src\Helper\Provider\Api\Web\WebApiProvider;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\WorkerWriteDTO;
@@ -490,13 +491,21 @@ class WorkerAuthService extends AuthService
             }
 
             /**
+             * Redirect the worker to the requested page (if such was attempted to be accessed)
+             */
+            $rememberUrl = SessionHelper::getRememberUrlSession('worker');
+            $redirectUrl = $rememberUrl !== false ? $rememberUrl : WebApiProvider::workerHome();
+            SessionHelper::removeAllRememberUrlSession();
+
+            /**
              * Store Worker's ID into session
              */
             SessionHelper::setWorkerSession($workerId);
             return [
                 'success' => true,
                 'data' => [
-                    'session' => SessionHelper::getWorkerSession()
+                    'id' => SessionHelper::getWorkerSession(),
+                    'redirect_url' => $redirectUrl
                 ]
             ];
         }

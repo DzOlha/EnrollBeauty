@@ -3,10 +3,13 @@
 namespace Src\Controller\Web;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Provider\Api\Web\WebApiProvider;
+use Src\Helper\Redirector\impl\UrlRedirector;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\MainDataMapper;
 use Src\Model\DataSource\extends\MainDataSource;
+use Src\Router\extends\Router;
 
 class UserWebController extends WebController
 {
@@ -20,10 +23,16 @@ class UserWebController extends WebController
         return new MainDataMapper(new MainDataSource(MySql::getInstance()));
     }
 
-    public function checkPermission(): void
+    public function checkPermission(array $url = []): void
     {
         if(!SessionHelper::getUserSession()) {
-            $this->_accessDenied();
+            /**
+             * Redirect to the User login page
+             *
+             * $url[1] - contains role name
+             */
+            SessionHelper::setRememberUrlSession($url);
+            UrlRedirector::redirect(WebApiProvider::userLogin());
         }
     }
 

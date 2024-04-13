@@ -6,6 +6,7 @@ use Src\DB\Database\MySql;
 use Src\Helper\Builder\impl\UrlBuilder;
 use Src\Helper\Email\UserEmailHelper;
 use Src\Helper\Email\WorkerEmailHelper;
+use Src\Helper\Provider\Folder\FolderProvider;
 use Src\Helper\Uploader\impl\FileUploader;
 use Src\Service\Generator\impl\ImageNameGenerator;
 use Src\Helper\Session\SessionHelper;
@@ -44,7 +45,7 @@ class WorkerApiController extends ApiController
         return new WorkerDataMapper(new WorkerDataSource(MySql::getInstance()));
     }
 
-    public function checkPermission(): void
+    public function checkPermission(array $url = []): void
     {
         if (!SessionHelper::getWorkerSession()) {
             $this->_accessDenied();
@@ -1712,7 +1713,7 @@ class WorkerApiController extends ApiController
                      * Upload the new image into the folder
                      */
                     $uploader = new FileUploader();
-                    $folderPath = WORKERS_PHOTO_FOLDER . "worker_{$items['id']}/";
+                    $folderPath = FolderProvider::workerUploadsImg($items['id']);
 
                     $uploaded = $uploader->upload(
                         $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath

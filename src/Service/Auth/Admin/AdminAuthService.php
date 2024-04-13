@@ -3,6 +3,7 @@
 namespace Src\Service\Auth\Admin;
 
 use Src\Helper\Data\AdminDefault;
+use Src\Helper\Provider\Api\Web\WebApiProvider;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\AdminWriteDTO;
@@ -355,13 +356,21 @@ class AdminAuthService extends WorkerAuthService
             }
 
             /**
+             * Redirect the user to the requested page (if such was attempted to be accessed)
+             */
+            $rememberUrl = SessionHelper::getRememberUrlSession('admin');
+            $redirectUrl = $rememberUrl !== false ? $rememberUrl : WebApiProvider::adminHome();
+            SessionHelper::removeAllRememberUrlSession();
+
+            /**
              * Store Admin's ID into session
              */
             SessionHelper::setAdminSession($adminId);
             return [
                 'success' => true,
                 'data' => [
-                    'session' => SessionHelper::getAdminSession()
+                    'id' => SessionHelper::getAdminSession(),
+                    'redirect_url' => $redirectUrl
                 ]
             ];
         }

@@ -4,6 +4,7 @@ namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
 use Src\Helper\Email\UserEmailHelper;
+use Src\Helper\Provider\Folder\FolderProvider;
 use Src\Helper\Session\SessionHelper;
 use Src\Helper\Uploader\impl\FileUploader;
 use Src\Model\DataMapper\DataMapper;
@@ -41,7 +42,7 @@ class UserApiController extends ApiController
         return new UserDataMapper(new UserDataSource(MySql::getInstance()));
     }
 
-    public function checkPermission(): void
+    public function checkPermission(array $url = []): void
     {
         if(!SessionHelper::getUserSession()) {
             $this->_accessDenied(
@@ -566,7 +567,7 @@ class UserApiController extends ApiController
                      * Upload the new image into the folder
                      */
                     $uploader = new FileUploader();
-                    $folderPath = USERS_PHOTO_FOLDER . "user_{$items['id']}/";
+                    $folderPath = FolderProvider::userUploadsImg($items['id']);
 
                     $uploaded = $uploader->upload(
                         $_FILES['photo'], $_FILES['photo']['random_name'], $folderPath
