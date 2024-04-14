@@ -24,6 +24,10 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
         let iconOne = userId !== null ? 'fe-check' : 'fe-edit-3';
         let iconTwo = userId !== null ? 'fe-x' : 'fe-trash-2';
 
+        let ID = orderId !== null ?
+                                `<span>Order ID: </span>
+                                ${orderId}` : '';
+
         return `<div class="card" id="schedule-card-${scheduleId}" 
                         data-schedule-id="${scheduleId}"
                         data-user-id="${userId}" 
@@ -44,9 +48,14 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
                             </i>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center pt-3 mt-auto
-                               card-worker-wrapper">                            
+                    <div class="d-flex align-items-center pt-1 mt-auto
+                               card-worker-wrapper">                        
                         <div>
+                            <div class="pt-1 pb-1">
+                                <b>                         
+                                    ${ID}
+                                </b>    
+                            </div>
                             <span class="d-block text-muted">
                                 <span>Price: </span>
                                 <span class="price">${price}</span>
