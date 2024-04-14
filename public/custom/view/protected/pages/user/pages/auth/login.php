@@ -6,12 +6,12 @@
     <h2 class="text-center">Login</h2>
     <div class="column">
             <div class="form-group">
-                <input name="email" type="email" placeholder="Email"
+                <input name="email" type="email" placeholder="Email" autocomplete="off"
                        required="required" class="form-control" id="email-input">
                 <div class="error" id="email-input-error"></div>
             </div>
             <div class="form-group">
-                <input name="password" type="password" placeholder="Password"
+                <input name="password" type="password" placeholder="Password" autocomplete="off"
                        required="required" class="form-control" id="password-input">
                 <div class="error" id="password-input-error"></div>
             </div>

@@ -3,8 +3,11 @@
 namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Http\HttpCode;
+use Src\Helper\Http\HttpRequest;
 use Src\Helper\Provider\Folder\FolderProvider;
 use Src\Helper\Session\SessionHelper;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Helper\Uploader\impl\FileUploader;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\AdminDataMapper;
@@ -389,18 +392,9 @@ class AdminApiController extends WorkerApiController
     }
 
 
-    private function _getAdminId()
+    private function _getAdminId($request)
     {
-        $userId = 0;
-        if (isset($_GET['admin_id']) && $_GET['admin_id'] !== '') {
-            $userId = htmlspecialchars(trim($_GET['admin_id']));
-        } else {
-            $sessionUserId = SessionHelper::getAdminSession();
-            if ($sessionUserId) {
-                $userId = $sessionUserId;
-            }
-        }
-        return $userId;
+        return SessionHelper::getAdminSession() ?? $request->get('admin_id');
     }
 
     /**
@@ -410,25 +404,37 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getAdminInfo(): void
     {
-        $adminId = $this->_getAdminId();
-        /**
-         *  [
-         *      'name' =>
-         *      'surname' =>
-         *      'email' =>
-         * ]
-         */
-        $result = $this->dataMapper->selectAdminInfoById($adminId);
+        if(HttpRequest::method() === 'GET') {
+            $request = new HttpRequest(new RequestTrimmer());
 
-        if ($result) {
-            $this->returnJson([
-                'success' => true,
-                'data' => $result
-            ]);
-        } else {
-            $this->returnJson([
-                'error' => "The error occurred while getting admin's info"
-            ], 404);
+            $adminId = $this->_getAdminId($request);
+
+            if(!$adminId) {
+                $this->_missingRequestFields();
+            }
+
+            /**
+             *  [
+             *      'name' =>
+             *      'surname' =>
+             *      'email' =>
+             * ]
+             */
+            $result = $this->dataMapper->selectAdminInfoById($adminId);
+
+            if ($result) {
+                $this->returnJson([
+                    'success' => true,
+                    'data'    => $result
+                ]);
+            } else {
+                $this->returnJson([
+                    'error' => "The error occurred while getting admin's info"
+                ], HttpCode::notFound());
+            }
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 
@@ -439,25 +445,30 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getWorkerById()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
-                $this->returnJson([
-                    'error' => 'Missing get fields!'
-                ], 400);
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
+                $this->_missingRequestFields();
             }
-            $id = htmlspecialchars(trim($_GET['id']));
+            $id = $request->get('id');
 
             $result = $this->dataMapper->selectWorkerByIdForEdit($id);
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the worker!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 
@@ -468,36 +479,42 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getWorkers(): void
     {
-        $param = $this->_getLimitPageFieldOrderOffset();
-        /**
-         *  * [
-         *      0 => [
-         *          id =>
-         *          name =>
-         *          surname =>
-         *          email =>
-         *          position =>
-         *          salary =>
-         *          experience =>
-         *      ]
-         *      ....................
-         * ]
-         */
-        $result = $this->dataMapper->selectAllWorkersForAdmin(
-            $param['limit'],
-            $param['offset'],
-            $param['order_field'],
-            $param['order_direction']
-        );
-        if($result === false) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $param = $this->_getLimitPageFieldOrderOffset();
+            /**
+             *  * [
+             *      0 => [
+             *          id =>
+             *          name =>
+             *          surname =>
+             *          email =>
+             *          position =>
+             *          salary =>
+             *          experience =>
+             *      ]
+             *      ....................
+             * ]
+             */
+            $result = $this->dataMapper->selectAllWorkersForAdmin(
+                $param['limit'],
+                $param['offset'],
+                $param['order_field'],
+                $param['order_direction']
+            );
+            if($result === false) {
+                $this->returnJson([
+                    'error' => "The error occurred while getting data about all workers!"
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
-                'error' => "The error occurred while getting data about all workers!"
-            ], 404);
+                'success' => true,
+                'data' => $result
+            ]);
         }
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
@@ -507,19 +524,21 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getWorkersByDepartment()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['department_id'])
-            || empty($_GET['limit'])
-            || empty($_GET['page'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['department_id'])
+            || empty($DATA['limit'])
+            || empty($DATA['page'])) {
+                $this->_missingRequestFields();
             }
 
             $items = [
-                'department_id' => htmlspecialchars(trim($_GET['department_id'])),
-                'limit' => htmlspecialchars(trim($_GET['limit'])),
-                'page' => htmlspecialchars(trim($_GET['page'])),
+                'department_id' => $request->get('department_id'),
+                'limit' => $request->get('limit'),
+                'page' => $request->get('page'),
             ];
             $offset = ($items['page'] - 1) * $items['limit'];
 
@@ -529,7 +548,7 @@ class AdminApiController extends WorkerApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting workers for the department!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $result += [
@@ -540,6 +559,9 @@ class AdminApiController extends WorkerApiController
                 'data' => $result
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
@@ -549,19 +571,22 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getWorkersByService()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['service_id'])
-                || empty($_GET['limit'])
-                || empty($_GET['page'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['service_id'])
+                || empty($DATA['limit'])
+                || empty($DATA['page']))
+            {
+                $this->_missingRequestFields();
             }
 
             $items = [
-                'service_id' => htmlspecialchars(trim($_GET['service_id'])),
-                'limit' => htmlspecialchars(trim($_GET['limit'])),
-                'page' => htmlspecialchars(trim($_GET['page'])),
+                'service_id' => $request->get('service_id'),
+                'limit' => $request->get('limit'),
+                'page' => $request->get('page'),
             ];
             $offset = ($items['page'] - 1) * $items['limit'];
 
@@ -571,7 +596,7 @@ class AdminApiController extends WorkerApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting workers for the service!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $result += [
@@ -581,6 +606,9 @@ class AdminApiController extends WorkerApiController
                 'success' => true,
                 'data' => $result
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 
@@ -594,15 +622,17 @@ class AdminApiController extends WorkerApiController
      */
     protected function _addPosition()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['department_id']) || empty($_POST['position_name'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['department_id']) || empty($DATA['position_name'])) {
+                $this->_missingRequestFields();
             }
             $items = [
-                'position_name' => htmlspecialchars(trim($_POST['position_name'])),
-                'department_id' => htmlspecialchars(trim($_POST['department_id']))
+                'position_name' => $request->get('position_name'),
+                'department_id' => $request->get('department_id')
             ];
 
             /**
@@ -611,7 +641,7 @@ class AdminApiController extends WorkerApiController
             if (strlen($items['position_name']) < 3) {
                 $this->returnJson([
                     'error' => 'Position name should be equal to or longer than 3 characters!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -623,7 +653,7 @@ class AdminApiController extends WorkerApiController
             if($exists) {
                 $this->returnJson([
                     'error' => 'The position with provided name already exists in the selected department!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             $insertedId = $this->dataMapper->insertPosition(
@@ -632,7 +662,7 @@ class AdminApiController extends WorkerApiController
             if($insertedId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting the position!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -640,7 +670,10 @@ class AdminApiController extends WorkerApiController
                 'data' => [
                     'id' => $insertedId
                 ]
-            ], 201);
+            ], HttpCode::created());
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 
@@ -655,19 +688,21 @@ class AdminApiController extends WorkerApiController
      */
     protected function _editPosition()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['department_id'])
-                || empty($_POST['position_name'])
-                || empty($_POST['id'])
+        if(HttpRequest::method() === 'PUT')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['department_id'])
+                || empty($DATA['position_name'])
+                || empty($DATA['id'])
             ) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+                $this->_missingRequestFields();
             }
             $items = [
-                'id' => htmlspecialchars(trim($_POST['id'])),
-                'position_name' => htmlspecialchars(trim($_POST['position_name'])),
-                'department_id' => htmlspecialchars(trim($_POST['department_id']))
+                'id' => $request->get('id'),
+                'position_name' => $request->get('position_name'),
+                'department_id' => $request->get('department_id')
             ];
 
             /**
@@ -676,7 +711,7 @@ class AdminApiController extends WorkerApiController
             if (strlen($items['position_name']) < 3) {
                 $this->returnJson([
                     'error' => 'Position name should be equal to or longer than 3 characters!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -688,7 +723,7 @@ class AdminApiController extends WorkerApiController
             if($exists) {
                 $this->returnJson([
                     'error' => 'The position with provided name already exists in the selected department!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             $updated = $this->dataMapper->updatePositionById(
@@ -697,20 +732,23 @@ class AdminApiController extends WorkerApiController
             if($updated === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating the position!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $updatedPositionRow = $this->dataMapper->selectPositionWithDepartmentById($items['id']);
             if($updatedPositionRow === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the updated position!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
                 'success' => "You successfully updated the position!",
                 'data' => $updatedPositionRow
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['PUT']);
         }
     }
 
@@ -724,14 +762,16 @@ class AdminApiController extends WorkerApiController
      */
     protected function _deletePosition()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['id'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'DELETE')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
+                $this->_missingRequestFields();
             }
 
-            $id = htmlspecialchars(trim($_POST['id']));
+            $id = $request->get('id');
 
             /**
              * Check if there is no incomplete upcoming orders
@@ -741,19 +781,19 @@ class AdminApiController extends WorkerApiController
             if($futureOrders === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the upcoming orders for workers with the position you would like to delete!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             if($futureOrders) {
                 $this->returnJson([
                     'error' => 'You can not delete the position, of workers with incomplete upcoming orders!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $deleted = $this->dataMapper->deletePositionById($id);
             if($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deleting the position!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -762,6 +802,9 @@ class AdminApiController extends WorkerApiController
                     'id' => $id
                 ]
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['DELETE']);
         }
     }
 
@@ -772,24 +815,30 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getPositionById(): void
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
+                $this->_missingRequestFields();
             }
-            $id = htmlspecialchars(trim($_GET['id']));
+            $id = $request->get('id');
+
             $result = $this->dataMapper->selectPositionById($id);
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the position!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 
@@ -800,56 +849,68 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getAllPositions(): void
     {
-        /**
-         * Get positions
-         */
-        $positions = $this->dataMapper->selectAllPositions();
-        if($positions === false) {
-            $this->returnJson([
-                'error' => "An error occurred while getting all positions"
-            ], 404);
-        }
-        if($positions === null) {
-            $this->returnJson([
-                'error' => "There are no positions found!"
-            ], 404);
-        }
+        if(HttpRequest::method() === 'GET')
+        {
+            /**
+             * Get positions
+             */
+            $positions = $this->dataMapper->selectAllPositions();
+            if($positions === false) {
+                $this->returnJson([
+                    'error' => "An error occurred while getting all positions"
+                ], HttpCode::notFound());
+            }
+            if($positions === null) {
+                $this->returnJson([
+                    'error' => "There are no positions found!"
+                ], HttpCode::notFound());
+            }
 
-        $this->returnJson([
-            'success' => true,
-            'data' => $positions
-        ]);
+            $this->returnJson([
+                'success' => true,
+                'data' => $positions
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     protected function _getAllPositionsWithDepartments()
     {
-        $param = $this->_getLimitPageFieldOrderOffset();
-        /**
-         *  * [
-         *      0 => [
-         *          id =>
-         *          name =>
-         *          department_id =>
-         *          department_name =>
-         *      ]
-         *      ....................
-         * ]
-         */
-        $result = $this->dataMapper->selectPositionsAllWithDepartments(
-            $param['limit'],
-            $param['offset'],
-            $param['order_field'],
-            $param['order_direction']
-        );
-        if($result === false) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $param = $this->_getLimitPageFieldOrderOffset();
+            /**
+             *  * [
+             *      0 => [
+             *          id =>
+             *          name =>
+             *          department_id =>
+             *          department_name =>
+             *      ]
+             *      ....................
+             * ]
+             */
+            $result = $this->dataMapper->selectPositionsAllWithDepartments(
+                $param['limit'],
+                $param['offset'],
+                $param['order_field'],
+                $param['order_direction']
+            );
+            if($result === false) {
+                $this->returnJson([
+                    'error' =>  "The error occurred while getting data about all positions!"
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
-                'error' =>  "The error occurred while getting data about all positions!"
-            ], 404);
+                'success' => true,
+                'data' => $result
+            ]);
         }
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
@@ -859,25 +920,31 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getAllRoles(): void
     {
-        /**
-         * Get roles
-         */
-        $roles = $this->dataMapper->selectAllRoles();
-        if($roles === false) {
-            $this->returnJson([
-                'error' => "An error occurred while getting all roles"
-            ], 404);
-        }
-        if($roles === null) {
-            $this->returnJson([
-                'error' => "There are no roles found!"
-            ], 404);
-        }
+        if(HttpRequest::method() === 'GET')
+        {
+            /**
+             * Get roles
+             */
+            $roles = $this->dataMapper->selectAllRoles();
+            if($roles === false) {
+                $this->returnJson([
+                    'error' => "An error occurred while getting all roles"
+                ], HttpCode::notFound());
+            }
+            if($roles === null) {
+                $this->returnJson([
+                    'error' => "There are no roles found!"
+                ], HttpCode::notFound());
+            }
 
-        $this->returnJson([
-            'success' => true,
-            'data' => $roles
-        ]);
+            $this->returnJson([
+                'success' => true,
+                'data' => $roles
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
@@ -899,23 +966,36 @@ class AdminApiController extends WorkerApiController
      */
     protected function _editWorker()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if(HttpRequest::method() === 'PUT')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['id']) || !isset($DATA['name'])
+                || !isset($DATA['surname']) || !isset($DATA['email'])
+                || !isset($DATA['position_id']) || !isset($DATA['role_id'])
+                || !isset($DATA['gender']) || !isset($DATA['age'])
+                || !isset($DATA['experience']) || !isset($DATA['salary'])
+            ) {
+                $this->_missingRequestFields();
+            }
+
             $items = [
-                'id' => htmlspecialchars(trim($_POST['id'])),
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'surname' => htmlspecialchars(trim($_POST['surname'])),
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'position_id' => htmlspecialchars(trim($_POST['position_id'])),
-                'role_id' => htmlspecialchars(trim($_POST['role_id'])),
-                'gender' => htmlspecialchars(trim($_POST['gender'])),
-                'age' => htmlspecialchars(trim($_POST['age'])),
-                'experience' => htmlspecialchars(trim($_POST['experience'])),
-                'salary' => htmlspecialchars(trim($_POST['salary'])),
+                'id' => $request->get('id'),
+                'name' => $request->get('name'),
+                'surname' => $request->get('surname'),
+                'email' => $request->get('email'),
+                'position_id' => $request->get('position_id'),
+                'role_id' => $request->get('role_id'),
+                'gender' => $request->get('gender'),
+                'age' => $request->get('age'),
+                'experience' => $request->get('experience'),
+                'salary' => $request->get('salary'),
             ];
 
             $valid = $this->_validateWorkerForm($items);
             if($valid !== true) {
-                $this->returnJson($valid, 422);
+                $this->returnJson($valid, HttpCode::unprocessableEntity());
             }
 
             /**
@@ -925,7 +1005,7 @@ class AdminApiController extends WorkerApiController
             if($existId) {
                 $this->returnJson([
                     'error' => 'The worker with such email already exists!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -940,14 +1020,14 @@ class AdminApiController extends WorkerApiController
             if($updated === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating the worker!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $updatedWorker = $this->dataMapper->selectWorkerRowById($items['id']);
             if($updatedWorker === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the updated worker!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -955,6 +1035,9 @@ class AdminApiController extends WorkerApiController
                 'data' => $updatedWorker
             ]);
 
+        }
+        else {
+            $this->_methodNotAllowed(['PUT']);
         }
     }
     private function _validateWorkerForm(array &$items)
@@ -1091,14 +1174,16 @@ class AdminApiController extends WorkerApiController
      */
     public function _deleteWorker()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['id'])) {
-                $this->returnJson([
-                    'error' => 'Missing post fields!'
-                ], 400);
+        if(HttpRequest::method() === 'DELETE')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
+                $this->_missingRequestFields();
             }
 
-            $id = htmlspecialchars(trim($_POST['id']));
+            $id = $request->get('id');
 
             /**
              * Check if there is no incomplete upcoming orders
@@ -1108,19 +1193,19 @@ class AdminApiController extends WorkerApiController
             if($futureOrders === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting incomplete upcoming orders for the worker!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             if($futureOrders) {
                 $this->returnJson([
                     'error' => 'Tou can not delete the worker which has incomplete upcoming orders!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $deleted = $this->dataMapper->deleteWorkerById($id);
             if($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deletion of the worker!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1135,6 +1220,9 @@ class AdminApiController extends WorkerApiController
                     'id' => $id
                 ]
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['DELETE']);
         }
     }
 
@@ -1163,15 +1251,19 @@ class AdminApiController extends WorkerApiController
      */
     public function _addDepartment()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['name']) || empty($_POST['description'])
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['name']) || empty($DATA['description'])
             || empty($_FILES['photo'])) {
                 $this->_missingRequestFields();
             }
 
             $items = [
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'description' => htmlspecialchars(trim($_POST['description']))
+                'name' => $request->get('name'),
+                'description' => $request->get('description')
             ];
 
             /**
@@ -1180,7 +1272,7 @@ class AdminApiController extends WorkerApiController
             if(strlen($items['name']) < 3) {
                 $this->returnJson([
                     'error' => 'Department name should be longer than 3 characters!!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1190,7 +1282,7 @@ class AdminApiController extends WorkerApiController
             if($exists !== false) {
                 $this->returnJson([
                     'error' => 'The department with such name already exists!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -1199,7 +1291,7 @@ class AdminApiController extends WorkerApiController
             if(strlen($items['description']) < 10) {
                 $this->returnJson([
                     'error' => 'Department description should be longer than 10 characters!!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1207,7 +1299,7 @@ class AdminApiController extends WorkerApiController
              */
             $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
             if($validPhoto !== true) {
-                $this->returnJson($validPhoto, 422);
+                $this->returnJson($validPhoto, HttpCode::unprocessableEntity());
             }
 
 
@@ -1223,7 +1315,7 @@ class AdminApiController extends WorkerApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while inserting the department!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1239,7 +1331,7 @@ class AdminApiController extends WorkerApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while uploading department photo into appropriate folder!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
 
@@ -1249,7 +1341,10 @@ class AdminApiController extends WorkerApiController
                 'data' => [
                     'id' => $insertedId
                 ]
-            ], 201);
+            ], HttpCode::created());
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 
@@ -1261,17 +1356,21 @@ class AdminApiController extends WorkerApiController
      */
     public function _editDepartment()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['id']) || empty($_POST['name'])
-                || empty($_POST['description']))
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id']) || empty($DATA['name'])
+                || empty($DATA['description']))
             {
                 $this->_missingRequestFields();
             }
 
             $items = [
-                'id' => htmlspecialchars(trim($_POST['id'])),
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'description' => htmlspecialchars(trim($_POST['description']))
+                'id' => $request->get('id'),
+                'name' => $request->get('name'),
+                'description' => $request->get('description')
             ];
 
             /**
@@ -1280,7 +1379,7 @@ class AdminApiController extends WorkerApiController
             if(strlen($items['name']) < 3) {
                 $this->returnJson([
                     'error' => 'Department name should be longer than 3 characters!!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1290,7 +1389,7 @@ class AdminApiController extends WorkerApiController
             if($existsId !== false && $existsId != $items['id']) {
                 $this->returnJson([
                     'error' => 'The department with such name already exists!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -1299,7 +1398,7 @@ class AdminApiController extends WorkerApiController
             if(strlen($items['description']) < 10) {
                 $this->returnJson([
                     'error' => 'Department description should be longer than 10 characters!!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1311,7 +1410,7 @@ class AdminApiController extends WorkerApiController
             } else {
                 $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
                 if($validPhoto !== true) {
-                    $this->returnJson($validPhoto, 422);
+                    $this->returnJson($validPhoto, HttpCode::unprocessableEntity());
                 }
             }
 
@@ -1341,7 +1440,7 @@ class AdminApiController extends WorkerApiController
                     $this->dataMapper->rollBackTransaction();
                     $this->returnJson([
                         'error' => "An error occurred while getting the current photo of the department"
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
 
                 /**
@@ -1358,7 +1457,7 @@ class AdminApiController extends WorkerApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => 'An error occurred while updating department photo!'
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
 
                     /**
@@ -1374,7 +1473,7 @@ class AdminApiController extends WorkerApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => 'An error occurred while uploading department photo into appropriate folder!'
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
 
                     /**
@@ -1385,7 +1484,7 @@ class AdminApiController extends WorkerApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => "An error occurred while deleting the old department photo "
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
                 }
             }
@@ -1398,7 +1497,7 @@ class AdminApiController extends WorkerApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while updating department info!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->dataMapper->commitTransaction();
@@ -1410,6 +1509,9 @@ class AdminApiController extends WorkerApiController
                 ]
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
     }
 
 
@@ -1420,14 +1522,16 @@ class AdminApiController extends WorkerApiController
      */
     public function _deleteDepartment()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['id'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'DELETE')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
+                $this->_missingRequestFields();
             }
 
-            $id = htmlspecialchars(trim($_POST['id']));
+            $id = $request->get('id');
 
             /**
              * Check if there is no ordered schedules
@@ -1437,19 +1541,19 @@ class AdminApiController extends WorkerApiController
             if($futureOrders === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting upcoming orders for the department!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             if($futureOrders) {
                 $this->returnJson([
                     'error' => 'The department can not be deleted because there are left upcoming incomplete orders for its services!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $deleted = $this->dataMapper->deleteDepartmentById($id);
             if($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deleting the department!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1465,6 +1569,9 @@ class AdminApiController extends WorkerApiController
                 ]
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['DELETE']);
+        }
     }
 
     /**
@@ -1472,11 +1579,16 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getDepartmentById()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
                 $this->_missingRequestFields();
             }
-            $id = htmlspecialchars(trim($_GET['id']));
+            $id = $request->get('id');
+
             $result = $this->dataMapper->selectDepartmentFullById($id);
             if($result === false) {
                 $this->returnJson([
@@ -1487,7 +1599,8 @@ class AdminApiController extends WorkerApiController
                 'success' => true,
                 'data' => $result
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -1499,31 +1612,37 @@ class AdminApiController extends WorkerApiController
      */
     public function _getDepartmentsAllForTable()
     {
-        $param = $this->_getLimitPageFieldOrderOffset();
-        /**
-         *  * [
-         *      0 => [
-         *          id =>
-         *          name =>
-         *      ]
-         *      ....................
-         * ]
-         */
-        $result = $this->dataMapper->selectDepartmentsAllForAdmin(
-            $param['limit'],
-            $param['offset'],
-            $param['order_field'],
-            $param['order_direction']
-        );
-        if($result === false) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $param = $this->_getLimitPageFieldOrderOffset();
+            /**
+             *  * [
+             *      0 => [
+             *          id =>
+             *          name =>
+             *      ]
+             *      ....................
+             * ]
+             */
+            $result = $this->dataMapper->selectDepartmentsAllForAdmin(
+                $param['limit'],
+                $param['offset'],
+                $param['order_field'],
+                $param['order_direction']
+            );
+            if($result === false) {
+                $this->returnJson([
+                    'error' => "The error occurred while getting data about all departments!"
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
-                'error' => "The error occurred while getting data about all departments!"
-            ], 404);
+                'success' => true,
+                'data' => $result
+            ]);
         }
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
@@ -1533,14 +1652,16 @@ class AdminApiController extends WorkerApiController
      */
     public function _getServicesAllByDepartment()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['department_id'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['department_id'])) {
+                $this->_missingRequestFields();
             }
 
-            $id = htmlspecialchars(trim($_GET['department_id']));
+            $id = $request->get('department_id');
 
             /**
              * services = {
@@ -1555,13 +1676,16 @@ class AdminApiController extends WorkerApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting services for the department'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 
@@ -1573,23 +1697,26 @@ class AdminApiController extends WorkerApiController
      */
     protected function _addAffiliate()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['name']) || empty($_POST['country'])
-            || empty($_POST['city']) || empty($_POST['address']))
+        if(HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(empty($DATA['name']) || empty($DATA['country'])
+            || empty($DATA['city']) || empty($DATA['address']))
             {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+                $this->_missingRequestFields();
             }
 
             $items = [
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'manager_id' => $_POST['manager_id']
-                                ? htmlspecialchars(trim($_POST['manager_id']))
+                'name' => $request->get('name'),
+                'manager_id' => $DATA['manager_id']
+                                ? $trimmer->in($DATA['manager_id'])
                                 : null,
-                'country' => htmlspecialchars(trim($_POST['country'])),
-                'city' => htmlspecialchars(trim($_POST['city'])),
-                'address' => htmlspecialchars(trim($_POST['address'])),
+                'country' => $request->get('country'),
+                'city' => $request->get('city'),
+                'address' => $request->get('address'),
             ];
 
             /**
@@ -1598,7 +1725,7 @@ class AdminApiController extends WorkerApiController
             if(strlen($items['name']) < 3) {
                 $this->returnJson([
                     'error' => 'Affiliate name should be equal to or longer than 3 characters!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1608,7 +1735,7 @@ class AdminApiController extends WorkerApiController
             if(!$validator->validate($items['country'])) {
                 $this->returnJson([
                     'error' => 'Invalid country name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1617,7 +1744,7 @@ class AdminApiController extends WorkerApiController
             if(!$validator->validate($items['city'])) {
                 $this->returnJson([
                     'error' => 'Invalid city name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1627,7 +1754,7 @@ class AdminApiController extends WorkerApiController
             if(!$streetValidator->validate($items['address'])) {
                 $this->returnJson([
                     'error' => "Invalid format for the street address! Please, follow the example like 'str. Street, 3' or 'вул. Назва Вулиці, 1'"
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1639,7 +1766,7 @@ class AdminApiController extends WorkerApiController
             if($existsByAddress) {
                 $this->returnJson([
                     'error' => 'The affiliate with the same address already exists!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -1652,7 +1779,7 @@ class AdminApiController extends WorkerApiController
             if($insertedId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting the affiliate!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -1660,7 +1787,10 @@ class AdminApiController extends WorkerApiController
                 'data' => [
                     'id' => $insertedId
                 ]
-            ], 201);
+            ], HttpCode::created());
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 
@@ -1671,25 +1801,28 @@ class AdminApiController extends WorkerApiController
      */
     protected function _editAffiliate()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['name']) || empty($_POST['country'])
-                || empty($_POST['city']) || empty($_POST['address'])
-                || empty($_POST['id']))
+        if(HttpRequest::method() === 'PUT')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(empty($DATA['name']) || empty($DATA['country'])
+                || empty($DATA['city']) || empty($DATA['address'])
+                || empty($DATA['id']))
             {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+                $this->_missingRequestFields();
             }
 
             $items = [
-                'id' => htmlspecialchars(trim($_POST['id'])),
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'manager_id' => $_POST['manager_id']
-                    ? htmlspecialchars(trim($_POST['manager_id']))
+                'id' => $request->get('id'),
+                'name' => $request->get('name'),
+                'manager_id' => $DATA['manager_id']
+                    ? $trimmer->in($DATA['manager_id'])
                     : null,
-                'country' => htmlspecialchars(trim($_POST['country'])),
-                'city' => htmlspecialchars(trim($_POST['city'])),
-                'address' => htmlspecialchars(trim($_POST['address'])),
+                'country' => $request->get('country'),
+                'city' => $request->get('city'),
+                'address' => $request->get('address'),
             ];
 
             /**
@@ -1698,7 +1831,7 @@ class AdminApiController extends WorkerApiController
             if(strlen($items['name']) < 3) {
                 $this->returnJson([
                     'error' => 'Affiliate name should be equal to or longer than 3 characters!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1708,7 +1841,7 @@ class AdminApiController extends WorkerApiController
             if(!$validator->validate($items['country'])) {
                 $this->returnJson([
                     'error' => 'Invalid country name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1717,7 +1850,7 @@ class AdminApiController extends WorkerApiController
             if(!$validator->validate($items['city'])) {
                 $this->returnJson([
                     'error' => 'Invalid city name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1727,7 +1860,7 @@ class AdminApiController extends WorkerApiController
             if(!$streetValidator->validate($items['address'])) {
                 $this->returnJson([
                     'error' => "Invalid format for the street address! Please, follow the example like 'str. Street, 3' or 'вул. Назва Вулиці, 1'"
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1739,7 +1872,7 @@ class AdminApiController extends WorkerApiController
             if($existsByAddress) {
                 $this->returnJson([
                     'error' => 'The affiliate with the same address already exists!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -1752,20 +1885,23 @@ class AdminApiController extends WorkerApiController
             if($insertedId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating the affiliate!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $updatedAffiliate = $this->dataMapper->selectAffiliateByIdForTable($items['id']);
             if($updatedAffiliate === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting updated affiliate!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
                 'success' => "You successfully updated the affiliate!",
                 'data' => $updatedAffiliate
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['PUT']);
         }
     }
 
@@ -1777,14 +1913,17 @@ class AdminApiController extends WorkerApiController
      */
     protected function _deleteAffiliate()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['id'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'DELETE')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
+                $this->_missingRequestFields();
             }
 
-            $id = htmlspecialchars(trim($_POST['id']));
+            $id = $request->get('id');
 
             /**
              * Check if there is no upcoming incomplete orders
@@ -1794,14 +1933,14 @@ class AdminApiController extends WorkerApiController
             if($futureOrders) {
                 $this->returnJson([
                     'error' => 'You can not delete the affiliate which has incomplete upcoming orders!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $deleted = $this->dataMapper->deleteAffiliateById($id);
             if($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deleting the affiliate!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -1810,6 +1949,9 @@ class AdminApiController extends WorkerApiController
                     'id' => $id
                 ]
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['DELETE']);
         }
     }
 
@@ -1820,14 +1962,16 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getAffiliateById()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
-                $this->returnJson([
-                    'error' => 'Missing request fields!'
-                ], 400);
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
+                $this->_missingRequestFields();
             }
 
-            $id = htmlspecialchars(trim($_GET['id']));
+            $id = $request->get('id');
 
             /**
              * 'id':
@@ -1842,13 +1986,16 @@ class AdminApiController extends WorkerApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the affiliate!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 
@@ -1859,39 +2006,45 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getAllAffiliatesForAdminTable()
     {
-        $param = $this->_getLimitPageFieldOrderOffset();
+        if(HttpRequest::method() === 'GET')
+        {
+            $param = $this->_getLimitPageFieldOrderOffset();
 
-        /**
-         *  * [
-         *      0 => [
-         *          id =>
-         *          name =>
-         *          country =>
-         *          city =>
-         *          address =>
-         *          manager_id =>
-         *          manager_name =>
-         *          manager_surname =>
-         *          created_date =>
-         *      ]
-         *      ....................
-         * ]
-         */
-        $result = $this->dataMapper->selectAllAffiliatesForAdminTable(
-            $param['limit'],
-            $param['offset'],
-            $param['order_field'],
-            $param['order_direction']
-        );
-        if($result === false) {
+            /**
+             *  * [
+             *      0 => [
+             *          id =>
+             *          name =>
+             *          country =>
+             *          city =>
+             *          address =>
+             *          manager_id =>
+             *          manager_name =>
+             *          manager_surname =>
+             *          created_date =>
+             *      ]
+             *      ....................
+             * ]
+             */
+            $result = $this->dataMapper->selectAllAffiliatesForAdminTable(
+                $param['limit'],
+                $param['offset'],
+                $param['order_field'],
+                $param['order_direction']
+            );
+            if($result === false) {
+                $this->returnJson([
+                    'error' => "The error occurred while getting data about all affiliates!"
+                ], HttpCode::notFound());
+            }
+
             $this->returnJson([
-                'error' => "The error occurred while getting data about all affiliates!"
-            ], 404);
+                'success' => true,
+                'data' => $result
+            ]);
         }
-
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 }

@@ -3,8 +3,11 @@
 namespace Src\Service\Auth\Admin;
 
 use Src\Helper\Data\AdminDefault;
+use Src\Helper\Http\HttpCode;
+use Src\Helper\Http\HttpRequest;
 use Src\Helper\Provider\Api\Web\WebApiProvider;
 use Src\Helper\Session\SessionHelper;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\AdminWriteDTO;
 use Src\Model\DTO\Write\UserWriteDto;
@@ -33,7 +36,8 @@ class AdminAuthService extends WorkerAuthService
         $dbContainsAdmins = $this->dataMapper->selectAllAdminsRows();
         if ($dbContainsAdmins) {
             return [
-                'error' => 'The database already contains administrators! The default admin can be created only if there is no admin users in the database!'
+                'error' => 'The database already contains administrators! The default admin can be created only if there is no admin users in the database!',
+                'code' => HttpCode::forbidden()
             ];
         }
         return $this->registerAdmin($admin);
@@ -42,15 +46,33 @@ class AdminAuthService extends WorkerAuthService
     public function registerAdmin($admin = null)
     {
         if ($admin === null) {
-            $admin = [
-                'name' => htmlspecialchars($_POST['name']),
-                'surname' => htmlspecialchars($_POST['surname']),
-                'email' => htmlspecialchars($_POST['email']),
-                'password' => htmlspecialchars($_POST['password']),
-                'confirm-password' => htmlspecialchars(trim($_POST['confirm-password'] ?? '')),
-                'role' => Roles::$ADMIN
-            ];
+            if (HttpRequest::method() === 'POST')
+            {
+                $trimmer = new RequestTrimmer();
+                $request = new HttpRequest($trimmer);
+                $DATA = $request->getData();
+
+                if(!isset($DATA['name']) || !isset($DATA['surname'])
+                || !isset($DATA['email']) || !isset($DATA['password'])
+                || !isset($DATA['confirm-password']))
+                {
+                    return $this->_missingRequestFields();
+                }
+
+                $admin = [
+                    'name'             => $request->get('name'),
+                    'surname'          => $request->get('surname'),
+                    'email'            => $request->get('email'),
+                    'password'         => $request->get('password'),
+                    'confirm-password' => $request->get('confirm-password'),
+                    'role'             => Roles::$ADMIN
+                ];
+            }
+            else {
+                return $this->_methodNotAllowed(['POST']);
+            }
         }
+
         $nameValidator = new NameValidator();
         $emailValidator = new EmailValidator();
         $passwordValidator = new PasswordValidator();
@@ -61,7 +83,8 @@ class AdminAuthService extends WorkerAuthService
         $validName = $nameValidator->validate($admin['name']);
         if (!$validName) {
             return [
-                'error' => 'Name must be at least 3 characters long and contain only letters'
+                'error' => 'Name must be at least 3 characters long and contain only letters',
+                'code' => HttpCode::unprocessableEntity()
             ];
         }
 
@@ -71,7 +94,8 @@ class AdminAuthService extends WorkerAuthService
         $validSurname = $nameValidator->validate($admin['surname']);
         if (!$validSurname) {
             return [
-                'error' => 'Surname must be at least 3 characters long and contain only letters'
+                'error' => 'Surname must be at least 3 characters long and contain only letters',
+                'code' => HttpCode::unprocessableEntity()
             ];
         }
 
@@ -81,7 +105,8 @@ class AdminAuthService extends WorkerAuthService
         $validEmail = $emailValidator->validate($admin['email']);
         if (!$validEmail) {
             return [
-                'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                'error' => 'Please enter an email address in the format myemail@mailservice.domain',
+                'code' => HttpCode::unprocessableEntity()
             ];
         }
 
@@ -92,7 +117,8 @@ class AdminAuthService extends WorkerAuthService
         if (!$validPass) {
             return [
                 'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
+                                one digit, one special character, and be between 8 to 30 characters long',
+                'code' => HttpCode::unprocessableEntity()
             ];
         }
 
@@ -101,7 +127,8 @@ class AdminAuthService extends WorkerAuthService
          */
         if (isset($admin['confirm-password']) && $admin['password'] !== $admin['confirm-password']) {
             return [
-                'error' => 'Passwords do not match'
+                'error' => 'Passwords do not match',
+                'code' => HttpCode::unprocessableEntity()
             ];
         }
 
@@ -118,6 +145,7 @@ class AdminAuthService extends WorkerAuthService
             }
             return [
                 'error' => "The admin with such email is already registered!",
+                'code' => HttpCode::forbidden(),
                 'default_already_registered' => $defaultAlreadyRegistered
             ];
         }
@@ -133,7 +161,8 @@ class AdminAuthService extends WorkerAuthService
         if ($adminId === false) {
             $this->dataMapper->rollBackTransaction();
             return [
-                'error' => "The error occurred while creating a new admin account!"
+                'error' => "The error occurred while creating a new admin account!",
+                'code' => HttpCode::notFound()
             ];
         }
 
@@ -144,25 +173,39 @@ class AdminAuthService extends WorkerAuthService
         if ($inserted === false) {
             $this->dataMapper->rollBackTransaction();
             return [
-                'error' => "The error occurred while inserting admin setting!"
+                'error' => "The error occurred while inserting admin setting!",
+                'code' => HttpCode::notFound()
             ];
         }
 
         $this->dataMapper->commitTransaction();
         return [
-            'success' => "You successfully created a new admin account!"
+            'success' => "You successfully created a new admin account!",
+            'code' => HttpCode::created()
         ];
     }
 
     public function changeDefaultAdminData() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['name']) || !isset($DATA['surname'])
+                || !isset($DATA['email']) || !isset($DATA['old-password'])
+                || !isset($DATA['new-password']) || !isset($DATA['confirm-new-password']))
+            {
+                return $this->_missingRequestFields();
+            }
+
             $admin = [
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'surname' => htmlspecialchars(trim($_POST['surname'])),
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'old-password' => htmlspecialchars(trim($_POST['old-password'])),
-                'new-password' => htmlspecialchars(trim($_POST['new-password'])),
-                'confirm-new-password' => htmlspecialchars(trim($_POST['confirm-new-password']))
+                'name' => $request->get('name'),
+                'surname' => $request->get('surname'),
+                'email' => $request->get('email'),
+                'old-password' => $request->get('old-password'),
+                'new-password' => $request->get('new-password'),
+                'confirm-new-password' => $request->get('confirm-new-password')
             ];
             $nameValidator = new NameValidator();
             $emailValidator = new EmailValidator();
@@ -174,12 +217,14 @@ class AdminAuthService extends WorkerAuthService
             $countAdmins = $this->dataMapper->selectAllAdminsRows();
             if (!$countAdmins) {
                 return [
-                    'error' => 'The database does not contain any administrators!'
+                    'error' => 'The database does not contain any administrators!',
+                    'code' => HttpCode::notFound()
                 ];
             }
             if ($countAdmins > 1) {
                 return [
-                    'error' => 'The database contains more than one administrator!'
+                    'error' => 'The database contains more than one administrator!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -189,7 +234,8 @@ class AdminAuthService extends WorkerAuthService
             $validName = $nameValidator->validate($admin['name']);
             if (!$validName) {
                 return [
-                    'error' => 'Name must be at least 3 characters long and contain only letters'
+                    'error' => 'Name must be at least 3 characters long and contain only letters',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -199,7 +245,8 @@ class AdminAuthService extends WorkerAuthService
             $validSurname = $nameValidator->validate($admin['surname']);
             if (!$validSurname) {
                 return [
-                    'error' => 'Surname must be at least 3 characters long and contain only letters'
+                    'error' => 'Surname must be at least 3 characters long and contain only letters',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -209,7 +256,8 @@ class AdminAuthService extends WorkerAuthService
             $validEmail = $emailValidator->validate($admin['email']);
             if (!$validEmail) {
                 return [
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                    'error' => 'Please enter an email address in the format myemail@mailservice.domain',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -220,6 +268,7 @@ class AdminAuthService extends WorkerAuthService
             if ($registeredBefore) {
                 return [
                     'error' => "The admin with such email is already registered!",
+                    'code' => HttpCode::forbidden()
                 ];
             }
 
@@ -230,7 +279,8 @@ class AdminAuthService extends WorkerAuthService
             if (!$validPass) {
                 return [
                     'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
+                                one digit, one special character, and be between 8 to 30 characters long',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
             /**
@@ -239,7 +289,8 @@ class AdminAuthService extends WorkerAuthService
             $defaultPassword = AdminDefault::getAdminDefaultPassword();
             if($defaultPassword !== $admin['old-password']) {
                 return [
-                    'error' => 'Incorrect old password provided!'
+                    'error' => 'Incorrect old password provided!',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -250,7 +301,8 @@ class AdminAuthService extends WorkerAuthService
             if (!$validPass) {
                 return [
                     'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
+                                one digit, one special character, and be between 8 to 30 characters long',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -259,7 +311,8 @@ class AdminAuthService extends WorkerAuthService
              */
             if($admin['new-password'] === $defaultPassword) {
                 return [
-                    'error' => 'Please provide correct new password!'
+                    'error' => 'Please provide correct new password!',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -269,7 +322,8 @@ class AdminAuthService extends WorkerAuthService
             if ($admin['confirm-new-password']
                 && $admin['new-password'] !== $admin['confirm-new-password']) {
                 return [
-                    'error' => 'New password and its confirmation do not match'
+                    'error' => 'New password and its confirmation do not match',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -284,21 +338,33 @@ class AdminAuthService extends WorkerAuthService
             $updated = $this->dataMapper->updateAdmin($adminObj);
             if($updated === false) {
                 return [
-                    'error' => 'The error occurred while updating the admin information!'
+                    'error' => 'The error occurred while updating the admin information!',
+                    'code' => HttpCode::notFound()
                 ];
             }
             return [
                 'success' => 'You successfully changed admin details!'
             ];
         }
-        return [];
+        else {
+            return $this->_methodNotAllowed(['POST']);
+        }
     }
 
     public function loginAdmin() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['email']) || !isset($DATA['password']))
+            {
+                return $this->_missingRequestFields();
+            }
             $items = [
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'password' => htmlspecialchars(trim($_POST['password'])),
+                'email' => $request->get('email'),
+                'password' => $request->get('password'),
             ];
             $emailValidator = new EmailValidator();
             $passwordValidator = new PasswordValidator();
@@ -309,7 +375,8 @@ class AdminAuthService extends WorkerAuthService
             $validEmail = $emailValidator->validate($items['email']);
             if (!$validEmail) {
                 return [
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                    'error' => 'Please enter an email address in the format myemail@mailservice.domain',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -320,7 +387,8 @@ class AdminAuthService extends WorkerAuthService
             if (!$validPass) {
                 return [
                     'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
+                                one digit, one special character, and be between 8 to 30 characters long',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -330,7 +398,8 @@ class AdminAuthService extends WorkerAuthService
             $actualPasswordHash = $this->dataMapper->selectAdminPasswordByEmail($items['email']);
             if ($actualPasswordHash === false) {
                 return [
-                    'error' => 'There is no admin with such email'
+                    'error' => 'There is no admin with such email',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -341,7 +410,8 @@ class AdminAuthService extends WorkerAuthService
             $validPassword = $hashValidator->validate($items['password']);
             if (!$validPassword) {
                 return [
-                    'error' => 'The provided password does not match the one saved for the requested admin!'
+                    'error' => 'The provided password does not match the one saved for the requested admin!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -351,7 +421,8 @@ class AdminAuthService extends WorkerAuthService
             $adminId = $this->dataMapper->selectAdminIdByEmail($items['email']);
             if ($adminId === false) {
                 return [
-                    'error' => 'The error occurred while getting user id!'
+                    'error' => 'The error occurred while getting user id!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -374,7 +445,9 @@ class AdminAuthService extends WorkerAuthService
                 ]
             ];
         }
-        return [];
+        else {
+            return $this->_methodNotAllowed(['POST']);
+        }
     }
 
 }

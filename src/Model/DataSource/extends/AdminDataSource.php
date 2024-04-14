@@ -560,6 +560,19 @@ class AdminDataSource extends WorkerDataSource
         return $this->db->singleRow();
     }
 
+    public function selectAffiliateByCountryCityAndAddress(
+        string $country, string $city, string $address
+    ) {
+        $this->builder->select([Affiliates::$id])
+            ->from(Affiliates::$table)
+            ->whereEqual(Affiliates::$country, ':country', $country)
+            ->andEqual(Affiliates::$city, ':city', $city)
+            ->andEqual(Affiliates::$address, ':address', $address)
+        ->build();
+
+        return $this->db->singleRow();
+    }
+
     public function updateAffiliateById(
         int $id, string $name, string $country,
         string $city, string $address, ?int $managerId = null

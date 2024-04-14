@@ -8,32 +8,32 @@
       action="#"
 >
     <h2 class="text-center message-success">
-        You successfully created a default admin account! Please change its info to yours!
+        You successfully created a default admin account! Please change the info to yours!
     </h2>
     <div class="column">
         <div class="form-group">
-            <input name="name" type="text" placeholder="Name" autocomplete="off"
+            <input name="name" type="text" placeholder="* Name" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Name must be at least 3 characters long and contain only letters"
                    required="required" class="form-control" id="name-input">
             <div class="error" id="name-input-error"></div>
         </div>
         <div class="form-group">
-            <input name="surname" type="text" placeholder="Surname" autocomplete="off"
+            <input name="surname" type="text" placeholder="* Surname" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Surname must be at least 3 characters long and contain only letters"
                    required="required" class="form-control" id="surname-input">
             <div class="error" id="surname-input-error"></div>
         </div>
         <div class="form-group">
-            <input name="email" type="email" placeholder="New Email" autocomplete="off"
+            <input name="email" type="email" placeholder="* New Email" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Email address must be in the format myemail@mailservice.domain"
                    required="required" class="form-control" id="email-input">
             <div class="error" id="email-input-error"></div>
         </div>
         <div class="form-group">
-            <input name="old-password" type="password" placeholder="Old Password" autocomplete="off"
+            <input name="old-password" type="password" placeholder="* Old Password" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Old password must contain at least one uppercase letter, one lowercase letter,
                                one digit, one special character, and be between 8 to 30 characters long"
@@ -41,7 +41,7 @@
             <div class="error" id="old-password-input-error"></div>
         </div>
         <div class="form-group">
-            <input name="new-password" type="password" placeholder="New Password" autocomplete="off"
+            <input name="new-password" type="password" placeholder="* New Password" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="New password must contain at least one uppercase letter, one lowercase letter,
                                one digit, one special character, and be between 8 to 30 characters long"
@@ -49,7 +49,7 @@
             <div class="error" id="new-password-input-error"></div>
         </div>
         <div class="form-group">
-            <input name="confirm-new-password" type="password" placeholder="Confirm New Password" autocomplete="off"
+            <input name="confirm-new-password" type="password" placeholder="* Confirm New Password" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Password confirmation must be equal to the provided password"
                    required="required" class="form-control" id="confirm-password-input">

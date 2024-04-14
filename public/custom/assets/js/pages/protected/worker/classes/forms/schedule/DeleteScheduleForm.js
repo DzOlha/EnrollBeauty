@@ -19,7 +19,7 @@ class DeleteScheduleForm extends OrderConfirmationModal {
         let scheduleId = triggerIcon.getAttribute('data-schedule-id');
 
         return {
-            'schedule_id': scheduleId
+            'id': scheduleId
         }
     }
     getDataToSend(data) {
@@ -49,7 +49,7 @@ class DeleteScheduleForm extends OrderConfirmationModal {
          * Update the schedule card after cancelling
          */
         let oldCard = document.getElementById(
-            `${this.cardBaseId}-${response.data.schedule_id}`
+            `${this.cardBaseId}-${response.data.id}`
         );
         oldCard.remove();
     }

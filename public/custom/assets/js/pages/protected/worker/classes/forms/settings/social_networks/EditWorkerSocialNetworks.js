@@ -260,7 +260,7 @@ class EditWorkerSocialNetworks
 
         if(data) {
             data.id = e.currentTarget.getAttribute(this.dataIdAttribute);
-            this.requester.post(
+            this.requester.put(
                 this.submitActionUrl,
                 data,
                 this.successCallbackSubmit.bind(this),

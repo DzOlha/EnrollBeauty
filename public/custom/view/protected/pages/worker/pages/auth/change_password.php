@@ -11,7 +11,7 @@
     <div class="column">
         <div class="form-group">
             <!--            <ion-icon name="information-circle-outline"></ion-icon>-->
-            <input name="password" type="password" placeholder="New Password" autocomplete="off"
+            <input name="password" type="password" placeholder="* New Password" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Password must contain at least one uppercase letter, one lowercase letter,
                                one digit, one special character, and be between 8 to 30 characters long"
@@ -19,7 +19,7 @@
             <div class="error" id="password-input-error"></div>
         </div>
         <div class="form-group">
-            <input name="confirm-password" type="password" placeholder="Confirm New Password" autocomplete="off"
+            <input name="confirm-password" type="password" placeholder="* Confirm New Password" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Password confirmation must be equal to the provided password"
                    required="required" class="form-control" id="confirm-password-input">

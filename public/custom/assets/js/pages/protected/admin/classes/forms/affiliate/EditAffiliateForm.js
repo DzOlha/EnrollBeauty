@@ -124,6 +124,32 @@ class EditAffiliateForm extends AddAffiliateForm
         $(`#${this.addressInputId}`).val(data.address);
     }
 
+    listenerSubmitForm = (e) => {
+        /**
+         * {
+         *     name:
+         *     manager_id:
+         *     country:
+         *     city:
+         *     address:
+         * }
+         */
+        let data = this.validateFormData();
+        //console.log(data);
+        if(data) {
+            this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
+            this.requester.put(
+                this.submitActionUrl,
+                data,
+                this.successCallbackSubmit.bind(this),
+                (response) => {
+                    GifLoader.hide(this.requestTimeout);
+                    Notifier.showErrorMessage(response.error);
+                }
+            )
+        }
+    }
+
     validateFormData() {
         let data = super.validateFormData();
         if(data) {

@@ -2,22 +2,19 @@
 
 namespace Src\Service\Auth\Worker;
 
-use Src\Helper\Builder\impl\UrlBuilder;
-use Src\Helper\Email\AdminEmailHelper;
 use Src\Helper\Email\WorkerEmailHelper;
+use Src\Helper\Http\HttpCode;
+use Src\Helper\Http\HttpRequest;
 use Src\Helper\Provider\Api\Web\WebApiProvider;
 use Src\Helper\Session\SessionHelper;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\WorkerWriteDTO;
 use Src\Model\Entity\Gender;
 use Src\Service\Auth\AuthService;
-use Src\Service\Auth\User\UserAuthService;
 use Src\Service\Generator\impl\PasswordGenerator;
 use Src\Service\Generator\impl\RecoveryCodeGenerator;
 use Src\Service\Hasher\impl\PasswordHasher;
-use Src\Service\Sender\impl\email\EmailSender;
-use Src\Service\Sender\impl\email\model\Email;
-use Src\Service\Sender\impl\email\services\impl\MailgunService;
 use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
 use Src\Service\Validator\impl\PasswordHashValidator;
@@ -46,18 +43,33 @@ class WorkerAuthService extends AuthService
             salary:
         }
      */
-    public function registerWorker(): array {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function registerWorker(): array
+    {
+        if (HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['name']) || !isset($DATA['surname'])
+                || !isset($DATA['email']) || !isset($DATA['position_id'])
+                || !isset($DATA['role_id']) || !isset($DATA['age'])
+                || !isset($DATA['experience']))
+            {
+                return $this->_missingRequestFields();
+            }
+
+
             $items = [
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'surname' => htmlspecialchars(trim($_POST['surname'])),
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'position_id' => htmlspecialchars(trim($_POST['position_id'])),
-                'role_id' => htmlspecialchars(trim($_POST['role_id'])),
-                'gender' => htmlspecialchars(trim($_POST['gender'])),
-                'age' => htmlspecialchars(trim($_POST['age'])),
-                'experience' => htmlspecialchars(trim($_POST['experience'])),
-                'salary' => htmlspecialchars(trim($_POST['salary'])),
+                'name' => $request->get('name'),
+                'surname' => $request->get('surname'),
+                'email' => $request->get('email'),
+                'position_id' => $request->get('position_id'),
+                'role_id' => $request->get('role_id'),
+                'gender' => $request->get('gender'),
+                'age' => $request->get('age'),
+                'experience' => $request->get('experience'),
+                'salary' => $request->get('salary'),
             ];
             $nameValidator = new NameValidator();
             $emailValidator = new EmailValidator();
@@ -68,7 +80,8 @@ class WorkerAuthService extends AuthService
             $validName = $nameValidator->validate($items['name']);
             if (!$validName) {
                 return [
-                    'error' => 'Name must be at least 3 characters long and contain only letters'
+                    'error' => 'Name must be at least 3 characters long and contain only letters',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -78,7 +91,8 @@ class WorkerAuthService extends AuthService
             $validSurname = $nameValidator->validate($items['surname']);
             if (!$validSurname) {
                 return [
-                    'error' => 'Surname must be at least 3 characters long and contain only letters'
+                    'error' => 'Surname must be at least 3 characters long and contain only letters',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -88,7 +102,8 @@ class WorkerAuthService extends AuthService
             $validEmail = $emailValidator->validate($items['email']);
             if (!$validEmail) {
                 return [
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                    'error' => 'Please enter an email address in the format myemail@mailservice.domain',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -102,7 +117,8 @@ class WorkerAuthService extends AuthService
             }
             if(!is_int((int)$items['position_id'])) {
                 return [
-                    'error' => 'Invalid position has been selected!'
+                    'error' => 'Invalid position has been selected!',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -116,7 +132,8 @@ class WorkerAuthService extends AuthService
             }
             if(!is_int((int)$items['role_id'])) {
                 return [
-                    'error' => 'Invalid role has been selected!'
+                    'error' => 'Invalid role has been selected!',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -130,7 +147,8 @@ class WorkerAuthService extends AuthService
                     && $items['gender'] !== Gender::$OTHER
                 ) {
                     return [
-                        'error' => 'Invalid gender selected! It should be Male, Female, or Other'
+                        'error' => 'Invalid gender selected! It should be Male, Female, or Other',
+                        'code' => HttpCode::unprocessableEntity()
                     ];
                 }
             } else {
@@ -147,7 +165,8 @@ class WorkerAuthService extends AuthService
             }
             if($items['age'] < 14 || $items['age'] > 80) {
                 return [
-                    'error' => "The worker's age should be from 14 to 80 years!"
+                    'error' => "The worker's age should be from 14 to 80 years!",
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -156,12 +175,14 @@ class WorkerAuthService extends AuthService
              */
             if(!$items['experience']) {
                 return [
-                    'error' => "Years of worker's experience is required field!"
+                    'error' => "Years of worker's experience is required field!",
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
             if($items['experience'] < 0 || $items['experience'] > 66) {
                 return [
-                    'error' => "The years of the worker's experience should be from 0 to 66 years!"
+                    'error' => "The years of the worker's experience should be from 0 to 66 years!",
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -171,12 +192,14 @@ class WorkerAuthService extends AuthService
             if($items['salary']) {
                 if($items['salary'] < 0){
                     return [
-                        'error' => 'Salary can not be negative number!'
+                        'error' => 'Salary can not be negative number!',
+                        'code' => HttpCode::unprocessableEntity()
                     ];
                 }
                 if(!is_int((int)$items['salary']) && !is_double((double)$items['salary'])) {
                     return [
-                        'error' => 'Invalid salary number is provided!'
+                        'error' => 'Invalid salary number is provided!',
+                        'code' => HttpCode::unprocessableEntity()
                     ];
                 }
             } else {
@@ -189,7 +212,8 @@ class WorkerAuthService extends AuthService
             $existId = $this->dataMapper->selectWorkerByEmail($items['email']);
             if($existId) {
                 return [
-                    'error' => 'The worker with such email has already been registered!'
+                    'error' => 'The worker with such email has already been registered!',
+                    'code' => HttpCode::forbidden()
                 ];
             }
 
@@ -221,7 +245,8 @@ class WorkerAuthService extends AuthService
             if($workerId === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [
-                    'error' => 'An error occurred while inserting the worker into database!'
+                    'error' => 'An error occurred while inserting the worker into database!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -234,7 +259,8 @@ class WorkerAuthService extends AuthService
             if($workerSettingId === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [
-                    'error' => 'An error occurred while inserting the worker settings into database!'
+                    'error' => 'An error occurred while inserting the worker settings into database!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -245,7 +271,8 @@ class WorkerAuthService extends AuthService
             if($workerSocial === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [
-                    'error' => 'An error occurred while inserting the worker social into database!'
+                    'error' => 'An error occurred while inserting the worker social into database!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -257,7 +284,8 @@ class WorkerAuthService extends AuthService
             if($workerPhoto === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [
-                    'error' => 'An error occurred while inserting the worker photo into database!'
+                    'error' => 'An error occurred while inserting the worker photo into database!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -273,11 +301,14 @@ class WorkerAuthService extends AuthService
             } else {
                 $this->dataMapper->commitTransaction();
                 return [
-                    'success' => "You successfully registered the worker '{$items['name']} {$items['surname']}'! The letter with the link to get access to the account has been sent to their email."
+                    'success' => "You successfully registered the worker '{$items['name']} {$items['surname']}'! The letter with the link to get access to the account has been sent to their email.",
+                    'code' => HttpCode::created()
                 ];
             }
         }
-        return [];
+        else {
+            return $this->_methodNotAllowed(['POST']);
+        }
     }
 
     protected function _sendLetterToWelcomeWorker(
@@ -297,12 +328,14 @@ class WorkerAuthService extends AuthService
                 ];
             } else {
                 return [
-                    'error' => 'Something went wrong while saving password recovery code!'
+                    'error' => 'Something went wrong while saving password recovery code!',
+                    'code' => HttpCode::notFound()
                 ];
             }
         } else {
             return [
-                'error' => $emailSent
+                'error' => $emailSent,
+                'code' => HttpCode::badGateway()
             ];
         }
     }
@@ -313,52 +346,59 @@ class WorkerAuthService extends AuthService
      *
      * used by Web controller, so return 'title' too
      */
-    public function recoveryWorkerPassword() {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (isset($_GET['recovery_code'])) {
-                $code = htmlspecialchars(trim($_GET['recovery_code']));
+    public function recoveryWorkerPassword()
+    {
+        if (HttpRequest::method() === 'GET')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
 
-                $validator = new RecoveryCodeValidator();
-                $isValidCode = $validator->validate($code);
-                if (!$isValidCode) {
-                    return [
-                        'error' => [
-                            'title' => 'Invalid Recovery Code',
-                            'message' =>"The provided recovery code is invalid by its characters!"
-                        ]
-                    ];
-                }
-
-                $dateOfSending = $this->dataMapper->selectWorkerDateSendingByRecoveryCode($code);
-                if (!$dateOfSending) {
-                    return [
-                        'error' => [
-                            'title' => 'Wrong Recovery Code',
-                            'message' => "There is no worker record with such recovery code!"
-                        ]
-                    ];
-                }
-
-                $dateTimestamp = (new \DateTime($dateOfSending))->getTimestamp();
-                if (time() > $dateTimestamp + VALID_TIME_RECOVERY_CODE) {
-                    return [
-                        'error' => [
-                            'title' => 'Expired Recovery Code',
-                            'message' => "The recovery code is already expired!"
-                        ]
-                    ];
-                }
-               return [
-                   'success' => true,
-                   'recovery_code' => $code
-               ];
+            if (!isset($DATA['recovery_code'])) {
+                return [
+                    'error' => [
+                        'title' => 'No Recovery Code',
+                        'message' => "No recovery code has been provided!"
+                    ]
+                ];
             }
-            return [
-                'error' => [
-                    'title' => 'No Recovery Code',
-                    'message' => "No recovery code has been provided!"
-                ]
-            ];
+            $code = $request->get('recovery_code');
+
+            $validator = new RecoveryCodeValidator();
+            $isValidCode = $validator->validate($code);
+            if (!$isValidCode) {
+                return [
+                    'error' => [
+                        'title' => 'Invalid Recovery Code',
+                        'message' => "The provided recovery code is invalid by its characters!"
+                    ]
+                ];
+            }
+
+            $dateOfSending = $this->dataMapper->selectWorkerDateSendingByRecoveryCode($code);
+            if (!$dateOfSending) {
+                return [
+                    'error' => [
+                        'title' => 'Wrong Recovery Code',
+                        'message' => "There is no worker record with such recovery code!"
+                    ]
+                ];
+            }
+
+            $dateTimestamp = (new \DateTime($dateOfSending))->getTimestamp();
+            if (time() > $dateTimestamp + VALID_TIME_RECOVERY_CODE) {
+                return [
+                    'error' => [
+                        'title' => 'Expired Recovery Code',
+                        'message' => "The recovery code is already expired!"
+                    ]
+                ];
+            }
+           return [
+               'success' => true,
+               'recovery_code' => $code
+           ];
+
         }
         return [
             'error' => [
@@ -373,12 +413,24 @@ class WorkerAuthService extends AuthService
      */
     public function changeWorkerPassword()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!SessionHelper::getRecoveryCodeSession()
+                || !isset($DATA['password'])
+                || !isset($DATA['confirm-password']))
+            {
+                $this->_missingRequestFields();
+            }
+
             $items = [
                 // $_SESSION['recovery_code'] has been set in the recoveryPassword()
                 'recovery-code' => SessionHelper::getRecoveryCodeSession(),
-                'password' => htmlspecialchars(trim($_POST['password'] ?? '')),
-                'confirm-password' => htmlspecialchars(trim($_POST['confirm-password'] ?? ''))
+                'password' => $request->get('password'),
+                'confirm-password' => $request->get('confirm-password')
             ];
             $passValidator = new PasswordValidator();
             $pass1 = $passValidator->validate($items['password']);
@@ -386,20 +438,23 @@ class WorkerAuthService extends AuthService
             if (!$pass1) {
                 return [
                     'error' => "Password must contain at least one uppercase letter, one lowercase letter,
-                               one digit, one special character, and be between 8 and 30 characters long!"
+                               one digit, one special character, and be between 8 and 30 characters long!",
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
             if ($items['password'] !== $items['confirm-password']) {
                 return [
-                    'error' => "Password and its confirmation one are not equal!"
+                    'error' => "Password and its confirmation one are not equal!",
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
             $validator = new RecoveryCodeValidator();
             $isValidCode = $validator->validate($items['recovery-code']);
             if (!$isValidCode) {
                 return [
-                    'error' => "The provided recovery code is invalid by its characters!"
+                    'error' => "The provided recovery code is invalid by its characters!",
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
             $passwordHash = PasswordHasher::hash($items['password']);
@@ -409,7 +464,8 @@ class WorkerAuthService extends AuthService
             );
             if (!$changed) {
                 return [
-                    'error' => "An error occurred while changing the password!"
+                    'error' => "An error occurred while changing the password!",
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -418,21 +474,37 @@ class WorkerAuthService extends AuthService
             );
             if(!$recoveryNullified) {
                 return [
-                    'error' => "An error occurred while updating the recovery code!"
+                    'error' => "An error occurred while updating the recovery code!",
+                    'code' => HttpCode::notFound()
                 ];
             }
             return [
                 'success' => 'You successfully changed your password'
             ];
         }
+        else {
+            return $this->_methodNotAllowed(['POST']);
+        }
     }
 
-    public function loginWorker() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function loginWorker()
+    {
+        if (HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['email']) || !isset($DATA['password']))
+            {
+                $this->_missingRequestFields();
+            }
+
             $items = [
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'password' => htmlspecialchars(trim($_POST['password'])),
+                'email' => $request->get('email'),
+                'password' => $request->get('password')
             ];
+
             $emailValidator = new EmailValidator();
             $passwordValidator = new PasswordValidator();
 
@@ -442,7 +514,8 @@ class WorkerAuthService extends AuthService
             $validEmail = $emailValidator->validate($items['email']);
             if (!$validEmail) {
                 return [
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                    'error' => 'Please enter an email address in the format myemail@mailservice.domain',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -453,7 +526,8 @@ class WorkerAuthService extends AuthService
             if (!$validPass) {
                 return [
                     'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
+                                one digit, one special character, and be between 8 to 30 characters long',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -465,7 +539,8 @@ class WorkerAuthService extends AuthService
             );
             if ($actualPasswordHash === false) {
                 return [
-                    'error' => 'There is no worker with such email'
+                    'error' => 'There is no worker with such email',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -476,7 +551,8 @@ class WorkerAuthService extends AuthService
             $validPassword = $hashValidator->validate($items['password']);
             if (!$validPassword) {
                 return [
-                    'error' => 'The provided password does not match the one saved for the requested worker!'
+                    'error' => 'The provided password does not match the one saved for the requested worker!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -486,7 +562,8 @@ class WorkerAuthService extends AuthService
             $workerId = $this->dataMapper->selectWorkerIdByEmail($items['email']);
             if ($workerId === false) {
                 return [
-                    'error' => 'The error occurred while getting worker id!'
+                    'error' => 'The error occurred while getting worker id!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -509,6 +586,8 @@ class WorkerAuthService extends AuthService
                 ]
             ];
         }
-        return [];
+        else {
+            return $this->_methodNotAllowed(['POST']);
+        }
     }
 }

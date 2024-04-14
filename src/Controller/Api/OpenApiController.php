@@ -5,7 +5,10 @@ namespace Src\Controller\Api;
 use PhpParser\JsonDecoder;
 use Src\DB\Database\MySql;
 use Src\Helper\Decoder\impl\ReadJsonDecoder;
+use Src\Helper\Http\HttpCode;
+use Src\Helper\Http\HttpRequest;
 use Src\Helper\Session\SessionHelper;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\OpenDataMapper;
 use Src\Model\DataSource\extends\OpenDataSource;
@@ -85,28 +88,34 @@ class OpenApiController extends ApiController
     }
     protected function _getWorkerProfileById()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['id'])) {
                 $this->_missingRequestFields();
             }
 
-            $id = (int)htmlspecialchars(trim($_GET['id']));
+            $id = (int)$request->get('id');
 
             $result = $this->dataMapper->selectWorkerPublicProfileById($id);
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting worker public profile'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $result['description'] = $result['description'] !== null
-                                    ? html_entity_decode($result['description'])
+                                    ? $trimmer->out($result['description'])
                                     : '';
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -229,12 +238,13 @@ class OpenApiController extends ApiController
      */
     protected function _getServicePricingAll()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if(HttpRequest::method() === 'GET')
+        {
             $result = $this->dataMapper->selectServicePricingAll();
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting service pricing'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             foreach ($result as &$department) {
@@ -246,7 +256,8 @@ class OpenApiController extends ApiController
                     'departments' => $result
                 ]
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -256,22 +267,29 @@ class OpenApiController extends ApiController
      */
     protected function _getDepartmentsCards()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['limit'])) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['limit'])) {
                 $this->_missingRequestFields();
             }
-            $limit = htmlspecialchars(trim($_GET['limit']));
+
+            $limit = $request->get('limit');
+
             $result = $this->dataMapper->selectDepartmentsFull($limit);
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting departments!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -281,22 +299,28 @@ class OpenApiController extends ApiController
      */
     protected function _getWorkersAllLimited()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['limit'])) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['limit'])) {
                 $this->_missingRequestFields();
             }
-            $limit = htmlspecialchars(trim($_GET['limit']));
+            $limit = $request->get('limit');
+
             $result = $this->dataMapper->selectWorkersForHomepage($limit);
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting workers!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }

@@ -209,7 +209,7 @@ class EditScheduleForm extends AddScheduleForm
 
         if (data) {
             this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
-            this.requester.post(
+            this.requester.put(
                 this.submitActionUrl,
                 data,
                 this.successCallbackSubmit.bind(this),

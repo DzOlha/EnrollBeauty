@@ -199,6 +199,14 @@ class AdminDataMapper extends WorkerDataMapper
         );
     }
 
+    public function selectAffiliateByCountryCityAndAddress(
+        string $country, string $city, string $address
+    ) {
+        return $this->dataSource->selectAffiliateByCountryCityAndAddress(
+            $country, $city, $address
+        );
+    }
+
     public function updateAffiliateById(
         int $id, string $name, string $country,
         string $city, string $address, ?int $managerId = null

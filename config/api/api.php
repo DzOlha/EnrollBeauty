@@ -17,7 +17,7 @@ const API = [
                 'logout' => '/web/auth/admin/logout'
             ]
         ],
-        'API' => [
+        'API' => [ // POST
             'USER'   => [
                 'register' => '/api/auth/user/register',
                 'login'    => '/api/auth/use/login'
@@ -41,30 +41,30 @@ const API = [
         ],
         'API' => [
             'PROFILE'   => [
-                'get'             => '/api/user/profile/get',
+                'get'             => '/api/user/profile/get', // GET
                 'social-networks' => [
-                    'get' => '/api/user/profile/social-networks/get',
-                    'edit' => '/api/user/profile/social-networks/edit',
+                    'get' => '/api/user/profile/social-networks/get', // GET
+                    'edit' => '/api/user/profile/social-networks/edit', // PUT
                 ],
-                'id' => '/api/user/profile/id',
+                'id' => '/api/user/profile/id', // GET
                 'personal-info' => [
-                    'get' => '/api/user/profile/personal-info/get',
-                    'edit' => '/api/user/profile/personal-info/edit',
+                    'get' => '/api/user/profile/personal-info/get', // GET
+                    'edit' => '/api/user/profile/personal-info/edit', // POST
                 ],
             ],
             'ORDER'     => [
                 'service' => [
                     'upcoming' => [
-                        'get' => [
+                        'get' => [ // GET
                             'all' => '/api/user/order/service/upcoming/get/all'
                         ]
                     ],
-                    'add'      => '/api/user/order/service/add',
-                    'cancel'   => '/api/user/order/service/cancel'
+                    'add'      => '/api/user/order/service/add', // POST
+                    'cancel'   => '/api/user/order/service/cancel' // POST
                 ]
             ],
             'SERVICE'   => [
-                'get' => [
+                'get' => [ // GET
                     'workers' => [
                         'all' => '/api/user/service/get/workers/all'
                     ],
@@ -72,7 +72,7 @@ const API = [
                 ]
             ],
             'WORKER'    => [
-                'get' => [
+                'get' => [ // GET
                     'services' => [
                         'all' => '/api/user/worker/get/services/all'
                     ],
@@ -80,12 +80,12 @@ const API = [
                 ],
             ],
             'AFFILIATE' => [
-                'get' => [
+                'get' => [ // GET
                     'all' => '/api/user/affiliate/get/all'
                 ]
             ],
             'SCHEDULE'  => [
-                'search' => '/api/user/schedule/search'
+                'search' => '/api/user/schedule/search' // POST
             ]
         ]
     ],
@@ -101,78 +101,78 @@ const API = [
         ],
         'API' => [
             'SERVICE'    => [
-                'add'    => '/api/worker/service/add',
-                'edit'   => '/api/worker/service/edit',
-                'delete' => '/api/worker/service/delete',
-                'get'    => [
+                'add'    => '/api/worker/service/add', // POST
+                'edit'   => '/api/worker/service/edit', // PUT
+                'delete' => '/api/worker/service/delete', // DELETE
+                'get'    => [ // GET
                     'one'                  => '/api/worker/service/get/one',
                     'all'                  => '/api/worker/service/get/all',
                     'all-with-departments' => '/api/worker/service/get/all-with-departments'
                 ]
             ],
             'AFFILIATE'  => [
-                'get' => [
+                'get' => [ // GET
                     'all' => '/api/worker/affiliate/get/all'
                 ]
             ],
             'SCHEDULE'   => [
-                'add'    => '/api/worker/schedule/add',
-                'edit'   => '/api/worker/schedule/edit',
-                'delete' => '/api/worker/schedule/delete',
-                'search' => '/api/worker/schedule/search',
-                'get'    => [
+                'add'    => '/api/worker/schedule/add', // POST
+                'edit'   => '/api/worker/schedule/edit', // PUT
+                'delete' => '/api/worker/schedule/delete', // DELETE
+                'search' => '/api/worker/schedule/search', // POST
+                'get'    => [ // GET
                     'one'                      => '/api/worker/schedule/get/one',
                     'busy-time-intervals'      => '/api/worker/schedule/get/busy-time-intervals',
                     'edit-busy-time-intervals' => '/api/worker/schedule/get/edit-busy-time-intervals',
                 ]
             ],
             'PROFILE'    => [
-                'get'             => '/api/worker/profile/get',
+                'get'             => '/api/worker/profile/get', // GET
                 'service-pricing' => [
-                    'get'    => [
+                    'get'    => [ // GET
                         'all' => '/api/worker/profile/service-pricing/get/all',
                     ],
-                    'add'    => '/api/worker/profile/service-pricing/add',
-                    'edit'   => '/api/worker/profile/service-pricing/edit',
-                    'delete' => '/api/worker/profile/service-pricing/delete'
+                    'add'    => '/api/worker/profile/service-pricing/add', // POST
+                    'edit'   => '/api/worker/profile/service-pricing/edit', // PUT
+                    'delete' => '/api/worker/profile/service-pricing/delete' // DELETE
                 ],
                 'service'         => [
-                    'get' => [
+                    'get' => [ // GET
                         'all' => '/api/worker/profile/service/get/all'
                     ]
                 ],
-                'id' => '/api/worker/profile/id',
+                'id' => '/api/worker/profile/id', // GET
                 'personal-info' => [
-                    'get' => '/api/worker/profile/personal-info/get',
-                    'edit' => '/api/worker/profile/personal-info/edit',
+                    'get' => '/api/worker/profile/personal-info/get', // GET
+                    'edit' => '/api/worker/profile/personal-info/edit', // POST
                 ],
                 'social' => [
-                    'get' => [
+                    'get' => [ // GET
                         'all' => '/api/worker/profile/social/get/all',
                     ],
-                    'edit' => [
+                    'edit' => [ // PUT
                         'all' => '/api/worker/profile/social/edit/all',
                     ],
                 ]
             ],
             'ORDER'      => [
-                'service' => [
+                'service' => [ // POST
                     'cancel'   => '/api/worker/order/service/cancel',
                     'complete' => '/api/worker/order/service/complete',
                 ]
             ],
             'DEPARTMENT' => [
-                'get' => [
+                'get' => [ // GET
                     'all' => ' /api/worker/department/get/all'
                 ]
             ],
             'POSITION' => [
-                'get' => [
+                'get' => [ // GET
                     'one' => '/api/worker/position/get/one'
                 ]
             ],
             'ROLE' => [
-                'get' => [
+                'get' => [ // GET
                     'one' => '/api/worker/role/get/one'
                 ]
             ],
@@ -191,49 +191,49 @@ const API = [
         ],
         'API' => [
             'PROFILE'    => [
-                'get' => '/api/admin/profile/get'
+                'get' => '/api/admin/profile/get' // GET
             ],
             'WORKER'     => [
-                'edit' => '/api/admin/worker/edit',
-                'delete' => '/api/admin/worker/delete',
-                'get'      => [
+                'edit' => '/api/admin/worker/edit', // POST
+                'delete' => '/api/admin/worker/delete', // DELETE
+                'get'      => [ // GET
                     'one' => '/api/admin/worker/get/one',
                     'all' => '/api/admin/worker/get/all',
                     'all-limited' => '/api/admin/worker/get/all-limited',
                     'all-by-department' => '/api/admin/worker/get/all-by-department',
                     'all-by-service' => '/api/admin/worker/get/all-by-service'
                 ],
-                'register' => '/api/admin/worker/register'
+                'register' => '/api/admin/worker/register' // POST
             ],
             'POSITION'   => [
-                'add' => '/api/admin/position/add',
-                'edit' => '/api/admin/position/edit',
-                'delete' => '/api/admin/position/delete',
-                'get' => [
+                'add' => '/api/admin/position/add', // POST
+                'edit' => '/api/admin/position/edit', // PUT
+                'delete' => '/api/admin/position/delete', // DELETE
+                'get' => [ // GET
                     'one' => '/api/admin/position/get/one',
                     'all' => '/api/admin/position/get/all',
                     'all-with-departments' => '/api/admin/position/get/all-with-departments',
                 ]
             ],
             'ROLE'       => [
-                'get' => [
+                'get' => [ // GET
                     'all' => '/api/admin/role/get/all'
                 ]
             ],
             'SERVICE'    => [
-                'add'    => '/api/admin/service/add',
-                'edit'   => '/api/admin/service/edit',
-                'delete' => '/api/admin/service/delete',
-                'get'    => [
+                'add'    => '/api/admin/service/add', // POST
+                'edit'   => '/api/admin/service/edit', // PUT
+                'delete' => '/api/admin/service/delete', // DELETE
+                'get'    => [ // GET
                     'one'                  => '/api/admin/service/get/one',
                     'all-with-departments' => '/api/admin/service/get/all-with-departments',
                 ],
             ],
             'DEPARTMENT' => [
-                'add' => '/api/admin/department/add',
-                'edit' => '/api/admin/department/edit',
-                'delete' => '/api/admin/department/delete',
-                'get' => [
+                'add' => '/api/admin/department/add', // POST
+                'edit' => '/api/admin/department/edit', // POST
+                'delete' => '/api/admin/department/delete', // DELETE
+                'get' => [ // GET
                     'all' => '/api/admin/department/get/all',
                     'one' => '/api/admin/department/get/one',
                     'all-limited' => '/api/admin/department/get/all-limited',
@@ -241,10 +241,10 @@ const API = [
                 ]
             ],
             'AFFILIATES' => [
-                'add' => '/api/admin/affiliate/add',
-                'edit' => '/api/admin/affiliate/edit',
-                'delete' => '/api/admin/affiliate/delete',
-                'get' => [
+                'add' => '/api/admin/affiliate/add', // POST
+                'edit' => '/api/admin/affiliate/edit', // PUT
+                'delete' => '/api/admin/affiliate/delete', // DELETE
+                'get' => [ // GET
                     'one' => '/api/admin/affiliate/get/one',
                     'all-limited' => '/api/admin/affiliate/get/all-limited'
                 ]
@@ -263,11 +263,11 @@ const API = [
         'API' => [
             'WORKER' => [
                 'profile' => [
-                    'get' => [
+                    'get' => [ // GET
                         'one' => '/api/open/worker/profile/get/one'
                     ]
                 ],
-                'get' => [
+                'get' => [ // GET
                     'services' => [
                         'all' => '/api/open/worker/get/services/all'
                     ],
@@ -277,11 +277,11 @@ const API = [
             ],
             'SERVICE' => [
                 'PRICING' => [
-                    'get' => [
+                    'get' => [ // GET
                         'all' => '/api/open/service/pricing/get/all'
                     ]
                 ],
-                'get' => [
+                'get' => [ // GET
                     'workers' => [
                         'all' => '/api/open/service/get/workers/all'
                     ],
@@ -289,20 +289,20 @@ const API = [
                 ]
             ],
             'AFFILIATE' => [
-                'get' => [
+                'get' => [ // GET
                     'all' => '/api/open/affiliate/get/all'
                 ]
             ],
             'SCHEDULE' => [
-                'search' => '/api/open/schedule/search'
+                'search' => '/api/open/schedule/search' // POST
             ],
             'ORDER' => [
                 'service' => [
-                    'add' => '/api/user/order/service/add' // just use the UserApiController here
+                    'add' => '/api/user/order/service/add' // POST,  just use the UserApiController here
                 ]
             ],
             'DEPARTMENT' => [
-                'get' => [
+                'get' => [ // GET
                     'all-limited' => '/api/open/department/get/all-limited'
                 ]
             ]

@@ -3,6 +3,7 @@
 namespace Src\Controller\Web;
 
 use Src\DB\Database\MySql;
+use Src\Helper\Data\AdminDefault;
 use Src\Helper\Provider\Api\Web\WebApiProvider;
 use Src\Helper\Redirector\impl\UrlRedirector;
 use Src\Helper\Session\SessionHelper;
@@ -39,7 +40,8 @@ class AdminWebController extends WebController
 
     public function checkPermission(array $url = []): void
     {
-        if(!SessionHelper::getAdminSession()) {
+        if(!SessionHelper::getAdminSession()
+            && $url[0] !== AdminDefault::getRegistrationUrl()) {
             /**
              * Redirect to the Admin login page
              */

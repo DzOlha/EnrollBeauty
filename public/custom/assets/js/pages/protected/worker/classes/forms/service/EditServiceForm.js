@@ -114,6 +114,33 @@ class EditServiceForm extends AddServiceForm
 
         this.departmentSelect2.set(this.departmentId);
     }
+
+    listenerSubmitForm = (e) => {
+        /**
+         * @type {{[p: string]: *}|boolean}
+         *
+         * {
+         *     service_id:
+         *     price:
+         * }
+         */
+        let data = this.validateFormData();
+        //console.log(data);
+
+        if(data) {
+            this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
+            this.requester.put(
+                this.submitActionUrl,
+                data,
+                this.successCallbackSubmit.bind(this),
+                (response) => {
+                    GifLoader.hide(this.requestTimeout);
+                    Notifier.showErrorMessage(response.error);
+                }
+            )
+        }
+    }
+
     validateFormData() {
         let department = this.departmentSelect2.validate('department_id');
         let serviceName = Input.validateInput(

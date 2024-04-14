@@ -89,7 +89,7 @@ class DeleteModal
             `${this.deleteSubmitId}-${id}`
         );
         btn.addEventListener('click', () => {
-            this.requester.post(
+            this.requester.delete(
                 this.apiUrl,
                 {'id': id},
                 (response) => {

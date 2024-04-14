@@ -3,12 +3,12 @@
 namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
-use Src\Helper\Builder\impl\UrlBuilder;
 use Src\Helper\Email\UserEmailHelper;
-use Src\Helper\Email\WorkerEmailHelper;
+use Src\Helper\Http\HttpCode;
+use Src\Helper\Http\HttpRequest;
 use Src\Helper\Provider\Folder\FolderProvider;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Helper\Uploader\impl\FileUploader;
-use Src\Service\Generator\impl\ImageNameGenerator;
 use Src\Helper\Session\SessionHelper;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\WorkerDataMapper;
@@ -17,12 +17,7 @@ use Src\Model\DTO\Read\UserReadDto;
 use Src\Model\Entity\Gender;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\Worker\WorkerAuthService;
-use Src\Service\Sender\impl\email\EmailSender;
-use Src\Service\Sender\impl\email\model\Email;
-use Src\Service\Sender\impl\email\services\impl\MailgunService;
 use Src\Service\Validator\impl\EmailValidator;
-use Src\Service\Validator\impl\FileSizeValidator;
-use Src\Service\Validator\impl\FileTypeValidator;
 use Src\Service\Validator\impl\NameValidator;
 use Src\Service\Validator\impl\PhotoValidator;
 use Src\Service\Validator\impl\SocialNetworksUrlValidator;
@@ -118,13 +113,6 @@ class WorkerApiController extends ApiController
     public function affiliate()
     {
         if (isset($this->url[3])) {
-//                /**
-//                 * url = /api/worker/affiliate/add
-//                 */
-//                if($this->url[3] === 'add') {
-//                    $this->_addAffiliate();
-//                }
-//
             /**
              * url = /api/worker/affiliate/get/
              */
@@ -455,22 +443,9 @@ class WorkerApiController extends ApiController
         }
     }
 
-    private function _getWorkerId()
+    private function _getWorkerId($request)
     {
-        $workerId = 0;
-        if (isset($_GET['worker_id']) && $_GET['worker_id'] !== '') {
-            $workerId = htmlspecialchars(trim($_GET['worker_id']));
-        } else {
-            if (isset($_POST['worker_id']) && $_POST['worker_id'] !== '') {
-                $workerId = htmlspecialchars(trim($_POST['worker_id']));
-            } else {
-                $sessionWorkerId = SessionHelper::getWorkerSession();
-                if ($sessionWorkerId) {
-                    $workerId = $sessionWorkerId;
-                }
-            }
-        }
-        return $workerId;
+        return SessionHelper::getWorkerSession() ?? $request->get('worker_id');
     }
 
     /**
@@ -480,25 +455,37 @@ class WorkerApiController extends ApiController
      */
     protected function _getWorker()
     {
-        $workerId = $this->_getWorkerId();
-        /**
-         *  [
-         *      'name' =>
-         *      'surname' =>
-         *      'email' =>
-         * ]
-         */
-        $result = $this->dataMapper->selectWorkerInfoById($workerId);
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $workerId = $this->_getWorkerId($request);
 
-        if ($result) {
-            $this->returnJson([
-                'success' => true,
-                'data'    => $result
-            ]);
-        } else {
-            $this->returnJson([
-                'error' => "The error occurred while getting worker's info"
-            ], 404);
+            if(!$workerId) {
+                $this->_missingRequestFields();
+            }
+
+            /**
+             *  [
+             *      'name' =>
+             *      'surname' =>
+             *      'email' =>
+             * ]
+             */
+            $result = $this->dataMapper->selectWorkerInfoById($workerId);
+
+            if ($result) {
+                $this->returnJson([
+                    'success' => true,
+                    'data'    => $result
+                ]);
+            } else {
+                $this->returnJson([
+                    'error' => "The error occurred while getting worker's info"
+                ], HttpCode::notFound());
+            }
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 
@@ -529,38 +516,59 @@ class WorkerApiController extends ApiController
      */
     protected function _getServicesAllForWorker()
     {
-        $workerId = $this->_getWorkerId();
-        $services = $this->dataMapper->selectServicesForWorker(
-            $workerId
-        );
-        if ($services === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all services'
-            ], 404);
-        }
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
 
-        $this->returnJson([
-            'success' => true,
-            'data'    => $services
-        ]);
+            $workerId = $this->_getWorkerId($request);
+
+            if(!$workerId) {
+                $this->_missingRequestFields();
+            }
+
+            $services = $this->dataMapper->selectServicesForWorker(
+                $workerId
+            );
+            if ($services === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting all services'
+                ], HttpCode::notFound());
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data'    => $services
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     protected function _searchSchedule()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $workerId = $this->_getWorkerId();
+        if (HttpRequest::method() == 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+
+            $workerId = $this->_getWorkerId($request);
+
+            if(!$workerId) {
+                $this->_missingRequestFields();
+            }
+
             $items = [
-                'service_id'   => htmlspecialchars(trim($_POST['service_id'])),
+                'service_id'   => $request->get('service_id'),
                 'worker_id'    => $workerId,
-                'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
-                'start_date'   => htmlspecialchars(trim($_POST['start_date'])),
-                'end_date'     => htmlspecialchars(trim($_POST['end_date'])),
-                'start_time'   => htmlspecialchars(trim($_POST['start_time'])),
-                'end_time'     => htmlspecialchars(trim($_POST['end_time'])),
-                'price_bottom' => htmlspecialchars(trim($_POST['price_bottom'])),
-                'price_top'    => htmlspecialchars(trim($_POST['price_top'])),
-                'only_ordered' => htmlspecialchars(trim($_POST['only_ordered'])),
-                'only_free'    => htmlspecialchars(trim($_POST['only_free']))
+                'affiliate_id' => $request->get('affiliate_id'),
+                'start_date'   => $request->get('start_date'),
+                'end_date'     => $request->get('end_date'),
+                'start_time'   => $request->get('start_time'),
+                'end_time'     => $request->get('end_time'),
+                'price_bottom' => $request->get('price_bottom'),
+                'price_top'    => $request->get('price_top'),
+                'only_ordered' => $request->get('only_ordered'),
+                'only_free'    => $request->get('only_free')
             ];
 
             $items['only_ordered'] = !($items['only_ordered'] === 'false');
@@ -584,13 +592,10 @@ class WorkerApiController extends ApiController
             if ($departments === false) {
                 $this->returnJson([
                     'error' => 'There is error occurred while getting all departments'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             if (!$departments) {
-//                $this->returnJson([
-//                    'error' => 'There is no any departments yet for the current worker!'
-//                ]);
                 $this->returnJson([
                     'success' => true
                 ]);
@@ -606,7 +611,7 @@ class WorkerApiController extends ApiController
                 if ($activeDepartment === false) {
                     $this->returnJson([
                         'error' => 'The error occurred while getting the department for the service'
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
             }
 
@@ -621,7 +626,7 @@ class WorkerApiController extends ApiController
                 if ($scheduleOrdered === false) {
                     $this->returnJson([
                         'error' => 'An error occurred while getting ordered schedules!'
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
             }
             $scheduleFree = [];
@@ -635,7 +640,7 @@ class WorkerApiController extends ApiController
                 if ($scheduleFree === false) {
                     $this->returnJson([
                         'error' => 'An error occurred while getting free schedules!'
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
             }
 
@@ -653,6 +658,9 @@ class WorkerApiController extends ApiController
                 ]
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
     }
 
     /**
@@ -662,9 +670,17 @@ class WorkerApiController extends ApiController
      */
     protected function _cancelServiceOrder()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $orderId = htmlspecialchars(trim($_POST['order_id']));
-            $scheduleId = htmlspecialchars(trim($_POST['schedule_id']));
+        if (HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['order_id']) || !isset($DATA['schedule_id'])) {
+                $this->_missingRequestFields();
+            }
+
+            $orderId = $request->get('order_id');
+            $scheduleId = $request->get('schedule_id');
 
             $this->dataMapper->beginTransaction();
 
@@ -681,7 +697,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while getting info about the user placed the order!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $userNameSurname = [
@@ -697,7 +713,7 @@ class WorkerApiController extends ApiController
                     $this->dataMapper->rollBackTransaction();
                     $this->returnJson([
                         'error' => 'The error occurred while getting name/surname of the user placed the order!'
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
             }
 
@@ -712,7 +728,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while getting order details!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             // Create a DateTime object from the datetime string
             $datetime = new \DateTime($order['start_datetime']);
@@ -729,7 +745,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating cancellation datetime of the order!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -742,7 +758,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating order id!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -756,7 +772,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while sending informational letter to the user who placed the canceled order!'
-                ], 502);
+                ], HttpCode::badGateway());
             }
 
             $updatedScheduleItem = $this->dataMapper->selectWorkerScheduleById($scheduleId);
@@ -764,7 +780,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while getting schedule item!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -776,6 +792,9 @@ class WorkerApiController extends ApiController
                 'data'    => $updatedScheduleItem
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
     }
 
     /**
@@ -785,9 +804,18 @@ class WorkerApiController extends ApiController
      */
     protected function _completeServiceOrder()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $orderId = htmlspecialchars(trim($_POST['order_id']));
-            $scheduleId = htmlspecialchars(trim($_POST['schedule_id']));
+        if (HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['order_id']) || !isset($DATA['schedule_id'])) {
+                $this->_missingRequestFields();
+            }
+
+            $orderId = $request->get('order_id');
+            $scheduleId = $request->get('schedule_id');
+
 
             /**
              * Update completed datetime of the order
@@ -797,7 +825,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating completed datetime of the order!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -810,6 +838,9 @@ class WorkerApiController extends ApiController
                 ]
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
     }
 
     /**
@@ -819,29 +850,39 @@ class WorkerApiController extends ApiController
      */
     public function _getServiceById()
     {
-        $serviceId = 0;
-        if (isset($_GET['id']) && $_GET['id'] !== '') {
-            $serviceId = (int)htmlspecialchars(trim($_GET['id']));
-        }
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
 
-        /**
-         * [
-         *      id:
-         *      name:
-         *      department_id:
-         * ]
-         */
-        $result = $this->dataMapper->selectServiceById($serviceId);
-        if ($result === false) {
+            if(!isset($DATA['id'])) {
+                $this->_missingRequestFields();
+            }
+
+            $serviceId = (int)$request->get('id');
+
+            /**
+             * [
+             *      id:
+             *      name:
+             *      department_id:
+             * ]
+             */
+            $result = $this->dataMapper->selectServiceById($serviceId);
+            if ($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting service details!'
+                ], HttpCode::notFound());
+            }
+
             $this->returnJson([
-                'error' => 'An error occurred while getting service details!'
-            ], 404);
+                'success' => true,
+                'data'    => $result
+            ]);
         }
-
-        $this->returnJson([
-            'success' => true,
-            'data'    => $result
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
 
@@ -852,22 +893,28 @@ class WorkerApiController extends ApiController
      */
     protected function _getServicesAllWithDepartments()
     {
-        $param = $this->_getLimitPageFieldOrderOffset();
-        $services = $this->dataMapper->selectAllServicesWithDepartments(
-            $param['limit'],
-            $param['offset'],
-            $param['order_field'],
-            $param['order_direction']
-        );
-        if ($services === false) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $param = $this->_getLimitPageFieldOrderOffset();
+            $services = $this->dataMapper->selectAllServicesWithDepartments(
+                $param['limit'],
+                $param['offset'],
+                $param['order_field'],
+                $param['order_direction']
+            );
+            if ($services === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting all services'
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
-                'error' => 'The error occurred while getting all services'
-            ], 404);
+                'success' => true,
+                'data'    => $services
+            ]);
         }
-        $this->returnJson([
-            'success' => true,
-            'data'    => $services
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
@@ -877,11 +924,21 @@ class WorkerApiController extends ApiController
      */
     protected function _addServicePricing()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            $workerId = $this->_getWorkerId($request);
+
+            if($workerId || !isset($DATA['service_id']) || !isset($DATA['price'])) {
+                $this->_missingRequestFields();
+            }
+
             $items = [
-                'worker_id'  => $this->_getWorkerId(),
-                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
-                'price'      => htmlspecialchars(trim($_POST['price']))
+                'worker_id'  => $workerId,
+                'service_id' => $request->get('service_id'),
+                'price'      => $request->get('price')
             ];
             /**
              * Validate Price
@@ -889,17 +946,17 @@ class WorkerApiController extends ApiController
             if (!$items['price']) {
                 $this->returnJson([
                     'error' => 'Price is the required field!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
             if ($items['price'] < 0) {
                 $this->returnJson([
                     'error' => 'Price can not be negative number!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
             if (!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
                 $this->returnJson([
                     'error' => 'Invalid price number was provided!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -911,7 +968,7 @@ class WorkerApiController extends ApiController
             if ($pricingId) {
                 $this->returnJson([
                     'error' => 'The pricing for the selected service has already been added before!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -923,7 +980,7 @@ class WorkerApiController extends ApiController
             if ($insertedId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new pricing into database!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -931,7 +988,10 @@ class WorkerApiController extends ApiController
                 'data'    => [
                     'id' => $insertedId
                 ]
-            ], 201);
+            ], HttpCode::created());
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 
@@ -942,55 +1002,71 @@ class WorkerApiController extends ApiController
      */
     protected function _editServicePricing()
     {
-        $items = [
-            'worker_id'  => $this->_getWorkerId(),
-            'service_id' => htmlspecialchars(trim($_POST['service_id'])),
-            'price'      => htmlspecialchars(trim($_POST['price']))
-        ];
-        /**
-         * Validate Price
-         */
-        if (!$items['price']) {
-            $this->returnJson([
-                'error' => 'Price is the required field!'
-            ], 422);
-        }
-        if ($items['price'] < 0) {
-            $this->returnJson([
-                'error' => 'Price can not be negative number!'
-            ], 422);
-        }
-        if (!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
-            $this->returnJson([
-                'error' => 'Invalid price number was provided!'
-            ], 422);
-        }
+        if (HttpRequest::method() === 'PUT')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
 
-        /**
-         * Update pricing in db
-         */
-        $updated = $this->dataMapper->updateWorkerServicePricing(
-            $items['worker_id'], $items['service_id'], $items['price']
-        );
-        if ($updated === false) {
-            $this->returnJson([
-                'error' => 'An error occurred while updating pricing details!'
-            ], 404);
-        }
+            $workerId = $this->_getWorkerId($request);
 
-        $updatedPricing = $this->dataMapper->selectWorkerServicePricing(
-            $items['worker_id'], $items['service_id']
-        );
-        if ($updatedPricing === false) {
-            $this->returnJson([
-                'error' => 'An error occurred while getting updated service pricing!'
-            ], 404);
-        }
+            if ($workerId || !isset($DATA['service_id']) || !isset($DATA['price'])) {
+                $this->_missingRequestFields();
+            }
 
-        $this->returnJson([
-            'success' => 'You successfully updated info about selected pricing!',
-            'data'    => $updatedPricing
-        ]);
+            $items = [
+                'worker_id'  => $workerId,
+                'service_id' => $request->get('service_id'),
+                'price'      => $request->get('price')
+            ];
+
+            /**
+             * Validate Price
+             */
+            if (!$items['price']) {
+                $this->returnJson([
+                    'error' => 'Price is the required field!'
+                ], HttpCode::unprocessableEntity());
+            }
+            if ($items['price'] < 0) {
+                $this->returnJson([
+                    'error' => 'Price can not be negative number!'
+                ], HttpCode::unprocessableEntity());
+            }
+            if (!is_int((int)$items['price']) && !is_double((double)$items['price'])) {
+                $this->returnJson([
+                    'error' => 'Invalid price number was provided!'
+                ], HttpCode::unprocessableEntity());
+            }
+
+            /**
+             * Update pricing in db
+             */
+            $updated = $this->dataMapper->updateWorkerServicePricing(
+                $items['worker_id'], $items['service_id'], $items['price']
+            );
+            if ($updated === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while updating pricing details!'
+                ], HttpCode::notFound());
+            }
+
+            $updatedPricing = $this->dataMapper->selectWorkerServicePricing(
+                $items['worker_id'], $items['service_id']
+            );
+            if ($updatedPricing === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting updated service pricing!'
+                ], HttpCode::notFound());
+            }
+
+            $this->returnJson([
+                'success' => 'You successfully updated info about selected pricing!',
+                'data'    => $updatedPricing
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['PUT']);
+        }
     }
 
 
@@ -1001,8 +1077,16 @@ class WorkerApiController extends ApiController
      */
     protected function _deleteServicePricing()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $pricingId = (int)htmlspecialchars(trim($_POST['id']));
+        if (HttpRequest::method() === 'DELETE')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['id'])) {
+                $this->_missingRequestFields();
+            }
+
+            $pricingId = (int)$request->get('id');
             /**
              * [
              *      0 => [
@@ -1014,7 +1098,7 @@ class WorkerApiController extends ApiController
             if ($existingOrders === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting information about active orders'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1026,7 +1110,7 @@ class WorkerApiController extends ApiController
             if ($existingOrders) {
                 $this->returnJson([
                     'error' => 'You can not remove this pricing because there are left some upcoming orders with it'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1036,7 +1120,7 @@ class WorkerApiController extends ApiController
             if ($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deleting the pricing item!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -1045,6 +1129,9 @@ class WorkerApiController extends ApiController
                     'id' => $pricingId
                 ]
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['DELETE']);
         }
     }
 
@@ -1055,38 +1142,52 @@ class WorkerApiController extends ApiController
      */
     protected function _getServicePricing()
     {
-        $param = $this->_getLimitPageFieldOrderOffset();
-        /**
-         *  * [
-         *      0 => [
-         *          id =>
-         *          name =>
-         *          surname =>
-         *          email =>
-         *          position =>
-         *          salary =>
-         *          experience =>
-         *      ]
-         *      ....................
-         * ]
-         */
-        $result = $this->dataMapper->selectAllWorkersServicePricing(
-            $this->_getWorkerId(),
-            $param['limit'],
-            $param['offset'],
-            $param['order_field'],
-            $param['order_direction']
-        );
-        if ($result === false) {
-            $this->returnJson([
-                'error' => "The error occurred while getting data about pricing!"
-            ], 404);
-        }
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
 
-        $this->returnJson([
-            'success' => true,
-            'data'    => $result
-        ]);
+            $workerId = $this->_getWorkerId($request);
+
+            if(!$workerId) {
+                $this->_missingRequestFields();
+            }
+
+            $param = $this->_getLimitPageFieldOrderOffset();
+            /**
+             *  * [
+             *      0 => [
+             *          id =>
+             *          name =>
+             *          surname =>
+             *          email =>
+             *          position =>
+             *          salary =>
+             *          experience =>
+             *      ]
+             *      ....................
+             * ]
+             */
+            $result = $this->dataMapper->selectAllWorkersServicePricing(
+                $workerId,
+                $param['limit'],
+                $param['offset'],
+                $param['order_field'],
+                $param['order_direction']
+            );
+            if ($result === false) {
+                $this->returnJson([
+                    'error' => "The error occurred while getting data about pricing!"
+                ], HttpCode::notFound());
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data'    => $result
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
@@ -1097,83 +1198,108 @@ class WorkerApiController extends ApiController
      */
     protected function _getBusyTimeIntervals()
     {
-        $day = null;
-        if (isset($_GET['day']) && $_GET['day'] !== '') {
-            $day = htmlspecialchars(trim($_GET['day']));
-        }
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
 
-        $workerId = $this->_getWorkerId();
+            $workerId = $this->_getWorkerId($request);
 
-        /**
-         * [
-         *      0 => [
-         *          'start_time' =>
-         *          'end_time' =>
-         *      ]
-         *  ........................
-         * ]
-         */
-        $filledIntervals = $this->dataMapper->selectFilledTimeIntervalsByWorkerIdAndDay(
-            $workerId, $day
-        );
-        if ($filledIntervals === false) {
+            if($workerId || !isset($DATA['day'])) {
+                $this->_missingRequestFields();
+            }
+
+            $day = $request->get('day');
+
+            /**
+             * [
+             *      0 => [
+             *          'start_time' =>
+             *          'end_time' =>
+             *      ]
+             *  ........................
+             * ]
+             */
+            $filledIntervals = $this->dataMapper->selectFilledTimeIntervalsByWorkerIdAndDay(
+                $workerId, $day
+            );
+            if ($filledIntervals === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting filled time intervals for the selected day!'
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
-                'error' => 'An error occurred while getting filled time intervals for the selected day!'
-            ], 404);
+                'success' => true,
+                'data'    => $filledIntervals
+            ]);
         }
-        $this->returnJson([
-            'success' => true,
-            'data'    => $filledIntervals
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
 
     protected function _getEditBusyTimeIntervals()
     {
-        if (empty($_GET['day']) || empty($_GET['schedule_id'])) {
-            $this->_missingRequestFields();
-        }
-        $day = htmlspecialchars(trim($_GET['day']));
-        $scheduleId = htmlspecialchars(trim($_GET['schedule_id']));
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
 
-        $workerId = $this->_getWorkerId();
+            $workerId = $this->_getWorkerId($request);
 
-        /**
-         * [
-         *      0 => [
-         *          'start_time' =>
-         *          'end_time' =>
-         *      ]
-         *  ........................
-         * ]
-         */
-        $filledIntervals = $this->dataMapper->selectEditFilledTimeIntervalsByWorkerIdAndDay(
-            $workerId, $day, $scheduleId
-        );
-        if ($filledIntervals === false) {
+            if(!$workerId || !isset($DATA['day']) || !isset($DATA['schedule_id'])) {
+                $this->_missingRequestFields();
+            }
+
+            $day = $request->get('day');
+            $scheduleId = $request->get('schedule_id');
+
+            /**
+             * [
+             *      0 => [
+             *          'start_time' =>
+             *          'end_time' =>
+             *      ]
+             *  ........................
+             * ]
+             */
+            $filledIntervals = $this->dataMapper->selectEditFilledTimeIntervalsByWorkerIdAndDay(
+                $workerId, $day, $scheduleId
+            );
+            if ($filledIntervals === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting edit filled time intervals for the selected day!'
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
-                'error' => 'An error occurred while getting edit filled time intervals for the selected day!'
-            ], 404);
+                'success' => true,
+                'data'    => $filledIntervals
+            ]);
         }
-        $this->returnJson([
-            'success' => true,
-            'data'    => $filledIntervals
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     protected function _getOneSchedule()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (empty($_GET['schedule_id'])) {
+        if (HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if (empty($DATA['schedule_id'])) {
                 $this->_missingRequestFields();
             }
-            $id = htmlspecialchars(trim($_GET['schedule_id']));
+
+            $id = $request->get('schedule_id');
 
             $result = $this->dataMapper->selectWorkerScheduleById($id);
             if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the schedule item!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -1181,12 +1307,15 @@ class WorkerApiController extends ApiController
                 'data'    => $result
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
      * @return void
      *
-     * url = /api/worker/addSchedule
+     * url = /api/worker/schedule/add
      *
      * POST = [
      *      'service_id' =>
@@ -1198,14 +1327,27 @@ class WorkerApiController extends ApiController
      */
     protected function _addSchedule()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            $workerId = $this->_getWorkerId($request);
+
+            if(!$workerId || !isset($DATA['service_id'])
+                || !isset($DATA['affiliate_id']) || !isset($DATA['day'])
+                || !isset($DATA['start_time']) || !isset($DATA['end_time']))
+            {
+                $this->_missingRequestFields();
+            }
+
             $items = [
-                'worker_id'    => $this->_getWorkerId(),
-                'service_id'   => htmlspecialchars(trim($_POST['service_id'])),
-                'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
-                'day'          => htmlspecialchars(trim($_POST['day'])),
-                'start_time'   => htmlspecialchars(trim($_POST['start_time'])),
-                'end_time'     => htmlspecialchars(trim($_POST['end_time']))
+                'worker_id'    => $workerId,
+                'service_id'   => $request->get('service_id'),
+                'affiliate_id' => $request->get('affiliate_id'),
+                'day'          => $request->get('day'),
+                'start_time'   => $request->get('start_time'),
+                'end_time'     => $request->get('end_time')
             ];
 
             /**
@@ -1216,7 +1358,7 @@ class WorkerApiController extends ApiController
             if ($startTime >= $endTime) {
                 $this->returnJson([
                     'error' => 'Start time should be less than end time!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1229,7 +1371,7 @@ class WorkerApiController extends ApiController
             if ($scheduleExists) {
                 $this->returnJson([
                     'error' => 'There is an overlapping with another of your schedule items! Please, review your schedule for the selected day to choose available time intervals!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1241,7 +1383,7 @@ class WorkerApiController extends ApiController
             if ($priceId === false) {
                 $this->returnJson([
                     'error' => 'There is no pricing for the selected worker and service!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1254,7 +1396,7 @@ class WorkerApiController extends ApiController
             if ($inserted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new schedule item!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             $this->returnJson([
                 'success' => 'You successfully added new schedule item!',
@@ -1262,7 +1404,10 @@ class WorkerApiController extends ApiController
                     'service_id' => $items['service_id'],
                     'day'        => $items['day']
                 ]
-            ], 201);
+            ], HttpCode::created());
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 
@@ -1270,7 +1415,7 @@ class WorkerApiController extends ApiController
     /**
      * @return void
      *
-     * url = /api/worker/addSchedule
+     * url = /api/worker/schedule/edit
      *
      * POST = [
      *      'id' =>
@@ -1283,15 +1428,28 @@ class WorkerApiController extends ApiController
      */
     protected function _editSchedule()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'PUT')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            $workerId = $this->_getWorkerId($request);
+
+            if(!$workerId || !isset($DATA['id']) || !isset($DATA['service_id'])
+                || !isset($DATA['affiliate_id']) || !isset($DATA['day'])
+                || !isset($DATA['start_time']) || !isset($DATA['end_time']))
+            {
+                $this->_missingRequestFields();
+            }
+
             $items = [
-                'id'           => htmlspecialchars(trim($_POST['id'])),
-                'worker_id'    => $this->_getWorkerId(),
-                'service_id'   => htmlspecialchars(trim($_POST['service_id'])),
-                'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
-                'day'          => htmlspecialchars(trim($_POST['day'])),
-                'start_time'   => htmlspecialchars(trim($_POST['start_time'])),
-                'end_time'     => htmlspecialchars(trim($_POST['end_time']))
+                'id'           => $request->get('id'),
+                'worker_id'    => $workerId,
+                'service_id'   => $request->get('service_id'),
+                'affiliate_id' => $request->get('affiliate_id'),
+                'day'          => $request->get('day'),
+                'start_time'   => $request->get('start_time'),
+                'end_time'     => $request->get('end_time')
             ];
 
             /**
@@ -1302,7 +1460,7 @@ class WorkerApiController extends ApiController
             if ($startTime >= $endTime) {
                 $this->returnJson([
                     'error' => 'Start time should be less than end time!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1316,7 +1474,7 @@ class WorkerApiController extends ApiController
             if ($scheduleExists) {
                 $this->returnJson([
                     'error' => 'There is an overlapping with another of your schedule items! Please, review your schedule for the selected day to choose available time intervals!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1328,7 +1486,7 @@ class WorkerApiController extends ApiController
             if ($priceId === false) {
                 $this->returnJson([
                     'error' => 'There is no pricing for the selected worker and service!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1341,7 +1499,7 @@ class WorkerApiController extends ApiController
             if ($updated === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating the schedule item!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1351,7 +1509,7 @@ class WorkerApiController extends ApiController
             if ($updatedSchedule === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the updated schedule item!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -1359,30 +1517,40 @@ class WorkerApiController extends ApiController
                 'data'    => $updatedSchedule
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['PUT']);
+        }
     }
 
     protected function _deleteSchedule()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (empty($_POST['schedule_id'])) {
+        if (HttpRequest::method() === 'DELETE')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if (empty($DATA['id'])) {
                 $this->_missingRequestFields();
             }
 
-            $id = htmlspecialchars(trim($_POST['schedule_id']));
+            $id = $request->get('id');
 
             $deleted = $this->dataMapper->deleteWorkerScheduleItemById($id);
             if ($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deletion of the schedule item!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
                 'success' => 'You successfully deleted the schedule item!',
                 'data'    => [
-                    'schedule_id' => $id
+                    'id' => $id
                 ]
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['DELETE']);
         }
     }
 
@@ -1393,10 +1561,18 @@ class WorkerApiController extends ApiController
      */
     protected function _addService()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['service_name']) || !isset($DATA['department_id'])) {
+                $this->_missingRequestFields();
+            }
+
             $items = [
-                'service_name'  => htmlspecialchars(trim($_POST['service_name'])),
-                'department_id' => htmlspecialchars(trim($_POST['department_id']))
+                'service_name'  => $request->get('service_name'),
+                'department_id' => $request->get('department_id')
             ];
             /**
              * Validate service name
@@ -1404,12 +1580,12 @@ class WorkerApiController extends ApiController
             if (!$items['service_name']) {
                 $this->returnJson([
                     'error' => 'Service name can not be empty!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
             if (strlen($items['service_name']) < 3) {
                 $this->returnJson([
                     'error' => 'Service name should be equal to or longer than 3 characters!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
             /**
              * Check if there is no service with such name in the selected department
@@ -1420,7 +1596,7 @@ class WorkerApiController extends ApiController
             if ($exists) {
                 $this->returnJson([
                     'error' => 'The service with provided name already exists in the selected department!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -1432,11 +1608,14 @@ class WorkerApiController extends ApiController
             if ($serviceId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while inserting new service into database!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             $this->returnJson([
                 'success' => "You successfully added new service '{$items['service_name']}'"
-            ], 201);
+            ], HttpCode::created());
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 
@@ -1447,11 +1626,21 @@ class WorkerApiController extends ApiController
      */
     protected function _editService()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'PUT')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['service_id']) || !isset($DATA['service_name'])
+            || !isset($DATA['department_id']))
+            {
+                $this->_missingRequestFields();
+            }
+
             $items = [
-                'service_id'    => htmlspecialchars(trim($_POST['service_id'])),
-                'service_name'  => htmlspecialchars(trim($_POST['service_name'])),
-                'department_id' => htmlspecialchars(trim($_POST['department_id']))
+                'service_id'    => $request->get('service_id'),
+                'service_name'  => $request->get('service_name'),
+                'department_id' => $request->get('department_id')
             ];
             /**
              * Validate service name
@@ -1459,12 +1648,12 @@ class WorkerApiController extends ApiController
             if (!$items['service_name']) {
                 $this->returnJson([
                     'error' => 'Service name can not be empty!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
             if (strlen($items['service_name']) < 3) {
                 $this->returnJson([
                     'error' => 'Service name should be longer than 3 characters!'
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
             /**
              * Check if there is no service with such name in the selected department
@@ -1475,7 +1664,7 @@ class WorkerApiController extends ApiController
             if ($exists) {
                 $this->returnJson([
                     'error' => 'The service with provided name already exists in the selected department!'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -1487,20 +1676,23 @@ class WorkerApiController extends ApiController
             if ($serviceId === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating information about the service in the database!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $updatedService = $this->dataMapper->selectServiceWithDepartmentById($items['service_id']);
             if ($updatedService === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting updated service!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
                 'success' => "You successfully updated the service '{$items['service_name']}'",
                 'data'    => $updatedService
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['PUT']);
         }
     }
 
@@ -1511,14 +1703,16 @@ class WorkerApiController extends ApiController
      */
     protected function _deleteService()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (empty($_POST['id'])) {
-                //http_response_code(422);
-                $this->returnJson([
-                    'error' => 'Empty post request!'
-                ], 400);
+        if (HttpRequest::method() === 'DELETE')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['id'])) {
+                $this->_missingRequestFields();
             }
-            $serviceId = htmlspecialchars(trim($_POST['id']));
+
+            $serviceId = $request->get('id');
 
             /**
              * Check if there is no future order for the service
@@ -1528,12 +1722,12 @@ class WorkerApiController extends ApiController
             if ($activeOrders === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting information about active orders for the provided service!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             if ($activeOrders) {
                 $this->returnJson([
                     'error' => 'You can not remove this service because there are left some upcoming orders with it'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1543,7 +1737,7 @@ class WorkerApiController extends ApiController
             if ($deleted === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while deletion of the service!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -1552,6 +1746,9 @@ class WorkerApiController extends ApiController
                     'id' => $serviceId
                 ]
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['DELETE']);
         }
     }
 
@@ -1562,12 +1759,13 @@ class WorkerApiController extends ApiController
      */
     protected function _getCurrentWorkerId()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (HttpRequest::method() === 'GET')
+        {
             $id = SessionHelper::getWorkerSession();
             if (!$id) {
-                $this->returnJson([
-                    'error' => 'Not authorized worker!'
-                ], 401);
+                $this->_notAuthorizedUser(
+                    'Not authorized worker!'
+                );
             }
             $this->returnJson([
                 'success' => true,
@@ -1575,7 +1773,8 @@ class WorkerApiController extends ApiController
                     'id' => $id
                 ]
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -1587,26 +1786,32 @@ class WorkerApiController extends ApiController
      */
     protected function _getWorkerPersonalInformation()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (empty($_GET['id'])) {
+        if (HttpRequest::method() === 'GET')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if (empty($DATA['id'])) {
                 $this->_missingRequestFields();
             }
-            $workerId = htmlspecialchars(trim($_GET['id']));
+            $workerId = $request->get('id');
 
             $result = $this->dataMapper->selectWorkerPersonalInformationById($workerId);
             if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the user personal information!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             $result['description'] = $result['description'] !== null
-                                    ? html_entity_decode($result['description'])
+                                    ? $trimmer->out($result['description'])
                                     : '';
             $this->returnJson([
                 'success' => true,
                 'data'    => $result
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -1618,24 +1823,29 @@ class WorkerApiController extends ApiController
      */
     protected function _editWorkerPersonalInformation()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (empty($_POST['id']) || empty($_POST['name'])
-                || empty($_POST['surname']) || empty($_POST['email'])
-                || empty($_POST['gender']) || empty($_POST['age'])
-                || !isset($_POST['experience']) || !isset($_POST['description']))
+        if (HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if (empty($DATA['id']) || empty($DATA['name'])
+                || empty($DATA['surname']) || empty($DATA['email'])
+                || empty($DATA['gender']) || empty($DATA['age'])
+                || !isset($DATA['experience']) || !isset($DATA['description']))
             {
                 $this->_missingRequestFields();
             }
 
             $items = [
-                'id' => htmlspecialchars(trim($_POST['id'])),
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'surname' => htmlspecialchars(trim($_POST['surname'])),
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'gender' => htmlspecialchars(trim($_POST['gender'])),
-                'age' => htmlspecialchars(trim($_POST['age'])),
-                'experience' => htmlspecialchars(trim($_POST['experience'])),
-                'description' => htmlspecialchars(trim($_POST['description'])),
+                'id' => $request->get('id'),
+                'name' => $request->get('name'),
+                'surname' => $request->get('surname'),
+                'email' => $request->get('email'),
+                'gender' => $request->get('gender'),
+                'age' => $request->get('age'),
+                'experience' => $request->get('experience'),
+                'description' => $request->get('description'),
             ];
 
             /**
@@ -1643,7 +1853,7 @@ class WorkerApiController extends ApiController
              */
             $valid = $this->validateEditWorkerPersonalInfoForm($items);
             if($valid !== true) {
-                $this->returnJson($valid, 422);
+                $this->returnJson($valid, HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1655,7 +1865,7 @@ class WorkerApiController extends ApiController
             } else {
                 $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
                 if($validPhoto !== true) {
-                    $this->returnJson($validPhoto, 422);
+                    $this->returnJson($validPhoto, HttpCode::unprocessableEntity());
                 }
             }
 
@@ -1689,7 +1899,7 @@ class WorkerApiController extends ApiController
                     $this->dataMapper->rollBackTransaction();
                     $this->returnJson([
                         'error' => "An error occurred while getting the current worker's photo"
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
 
                 /**
@@ -1706,7 +1916,7 @@ class WorkerApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => 'An error occurred while updating your main photo!'
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
 
                     /**
@@ -1722,7 +1932,7 @@ class WorkerApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => 'An error occurred while uploading your main photo into appropriate folder!'
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
 
                     /**
@@ -1733,7 +1943,7 @@ class WorkerApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => "An error occurred while deleting the old worker's main photo "
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
                 }
             }
@@ -1747,7 +1957,7 @@ class WorkerApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while updating your personal info!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->dataMapper->commitTransaction();
@@ -1757,7 +1967,8 @@ class WorkerApiController extends ApiController
                     'id' => $items['id']
                 ]
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['POST']);
         }
     }
@@ -1863,19 +2074,20 @@ class WorkerApiController extends ApiController
      */
     protected function _getPositionForCurrentWorker()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (HttpRequest::method() === 'GET')
+        {
             $workerId = SessionHelper::getWorkerSession();
             if (!$workerId) {
-                $this->returnJson([
-                    'error' => 'Not authorized worker'
-                ], 401);
+                $this->_notAuthorizedUser(
+                    'Not authorized worker'
+                );
             }
 
             $result = $this->dataMapper->selectPositionIdNameByWorkerId($workerId);
             if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting position for the current worker!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             $this->returnJson([
                 'success' => true,
@@ -1883,7 +2095,8 @@ class WorkerApiController extends ApiController
                     0 => $result
                 ]
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -1895,19 +2108,20 @@ class WorkerApiController extends ApiController
      */
     protected function _getRoleForCurrentWorker()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (HttpRequest::method() === 'GET')
+        {
             $workerId = SessionHelper::getWorkerSession();
             if (!$workerId) {
-                $this->returnJson([
-                    'error' => 'Not authorized worker'
-                ], 401);
+                $this->_notAuthorizedUser(
+                    'Not authorized worker'
+                );
             }
 
             $result = $this->dataMapper->selectRoleIdNameByWorkerId($workerId);
             if ($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting role for the current worker!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             $this->returnJson([
                 'success' => true,
@@ -1915,7 +2129,8 @@ class WorkerApiController extends ApiController
                     0 => $result
                 ]
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -1927,16 +2142,23 @@ class WorkerApiController extends ApiController
      */
     protected function _getWorkerSocialNetworksAll()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
                 $this->_missingRequestFields();
             }
-            $id = htmlspecialchars(trim($_GET['id']));
+
+            $id = $request->get('id');
+
             $result = $this->dataMapper->selectWorkerSocialNetworksByWorkerId($id);
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting your social networks!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -1944,13 +2166,14 @@ class WorkerApiController extends ApiController
              */
             foreach ($result as &$link) {
                 if(!$link) continue;
-                $link = html_entity_decode($link);
+                $link = $trimmer->out($link);
             }
             $this->returnJson([
                 'success' => true,
                 'data' => $result
             ]);
-        } else {
+        }
+        else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -1973,20 +2196,24 @@ class WorkerApiController extends ApiController
          *      Telegram
          * }
          */
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['id'])) {
+        if(HttpRequest::method() === 'PUT')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
                 $this->_missingRequestFields();
             }
-            $rowId = htmlspecialchars(trim($_POST['id']));
+            $rowId = $request->get('id');
 
             $items = [
-                'Instagram' => htmlspecialchars(trim($_POST['Instagram'])),
-                'Facebook' => htmlspecialchars(trim($_POST['Facebook'])),
-                'TikTok' => htmlspecialchars(trim($_POST['TikTok'])),
-                'YouTube' => htmlspecialchars(trim($_POST['YouTube'])),
-                'LinkedIn' => htmlspecialchars(trim($_POST['LinkedIn'])),
-                'Github' => htmlspecialchars(trim($_POST['Github'])),
-                'Telegram' => htmlspecialchars(trim($_POST['Telegram'])),
+                'Instagram' => $request->get('Instagram'),
+                'Facebook' => $request->get('Facebook'),
+                'TikTok' => $request->get('TikTok'),
+                'YouTube' => $request->get('YouTube'),
+                'LinkedIn' => $request->get('LinkedIn'),
+                'Github' => $request->get('Github'),
+                'Telegram' => $request->get('Telegram'),
             ];
 
             /**
@@ -1997,7 +2224,7 @@ class WorkerApiController extends ApiController
             if($valid !== true) {
                 $this->returnJson([
                     'error' => $valid
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -2009,7 +2236,7 @@ class WorkerApiController extends ApiController
             if($updated === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating your social networks!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -2018,7 +2245,7 @@ class WorkerApiController extends ApiController
             ]);
         }
         else {
-            $this->_methodNotAllowed(['POST']);
+            $this->_methodNotAllowed(['PUT']);
         }
     }
 }

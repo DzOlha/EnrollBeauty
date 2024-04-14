@@ -4,23 +4,22 @@ namespace Src\Controller\Api;
 
 use Src\DB\Database\MySql;
 use Src\Helper\Email\UserEmailHelper;
+use Src\Helper\Http\HttpCode;
+use Src\Helper\Http\HttpRequest;
 use Src\Helper\Provider\Folder\FolderProvider;
 use Src\Helper\Session\SessionHelper;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Helper\Uploader\impl\FileUploader;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\UserDataMapper;
 use Src\Model\DataSource\extends\UserDataSource;
 use Src\Model\DTO\Read\UserReadDto;
 use Src\Model\DTO\Read\UserSocialReadDto;
-use Src\Model\DTO\Write\UserWriteDto;
 use Src\Model\Table\WorkersServiceSchedule;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\User\UserAuthService;
-use Src\Service\Hasher\impl\PasswordHasher;
 use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
-use Src\Service\Validator\impl\PasswordHashValidator;
-use Src\Service\Validator\impl\PasswordValidator;
 use Src\Service\Validator\impl\PhotoValidator;
 use Src\Service\Validator\impl\SocialNetworksUrlValidator;
 
@@ -123,12 +122,11 @@ class UserApiController extends ApiController
      */
     protected function _getCurrentUserId()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (HttpRequest::method() === 'GET')
+        {
             $id = SessionHelper::getUserSession();
             if (!$id) {
-                $this->returnJson([
-                    'error' => 'Not authorized user!'
-                ], 401);
+                $this->_notAuthorizedUser();
             }
             $this->returnJson([
                 'success' => true,
@@ -347,7 +345,7 @@ class UserApiController extends ApiController
         } else {
             $this->returnJson([
                 'error' => "The error occurred while getting user's info"
-            ], 404);
+            ], HttpCode::notFound());
         }
     }
 
@@ -358,11 +356,15 @@ class UserApiController extends ApiController
      */
     protected function _getUserSocialNetworks()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
                 $this->_missingRequestFields();
             }
-            $userId = htmlspecialchars(trim($_GET['id']));
+            $userId = $request->get('id');
 
             /**
              * @var UserSocialReadDto|false $result
@@ -371,7 +373,7 @@ class UserApiController extends ApiController
             if ($result === false) {
                 $this->returnJson([
                     'error' => "The error occurred while getting user's social info"
-                ], 404);
+                ], HttpCode::notFound());
             }
             $this->returnJson([
                 'success' => true,
@@ -398,17 +400,21 @@ class UserApiController extends ApiController
          *      YouTube
          * }
          */
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if(empty($_POST['id'])) {
+        if(HttpRequest::method() === 'PUT')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
                 $this->_missingRequestFields();
             }
-            $rowId = htmlspecialchars(trim($_POST['id']));
+            $rowId = $request->get('id');
 
             $items = [
-                'Instagram' => htmlspecialchars(trim($_POST['Instagram'])),
-                'Facebook' => htmlspecialchars(trim($_POST['Facebook'])),
-                'TikTok' => htmlspecialchars(trim($_POST['TikTok'])),
-                'YouTube' => htmlspecialchars(trim($_POST['YouTube']))
+                'Instagram' => $request->get('Instagram'),
+                'Facebook' => $request->get('Facebook'),
+                'TikTok' => $request->get('TikTok'),
+                'YouTube' => $request->get('YouTube')
             ];
 
             /**
@@ -419,7 +425,7 @@ class UserApiController extends ApiController
             if($valid !== true) {
                 $this->returnJson([
                     'error' => $valid
-                ], 422);
+                ], HttpCode::unprocessableEntity());
             }
 
             /**
@@ -431,7 +437,7 @@ class UserApiController extends ApiController
             if($updated === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while updating your social networks!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -440,7 +446,7 @@ class UserApiController extends ApiController
             ]);
         }
         else {
-            $this->_methodNotAllowed(['POST']);
+            $this->_methodNotAllowed(['PUT']);
         }
     }
 
@@ -452,17 +458,21 @@ class UserApiController extends ApiController
      */
     protected function _getUserPersonalInfo()
     {
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if(empty($_GET['id'])) {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(empty($DATA['id'])) {
                 $this->_missingRequestFields();
             }
-            $userId = htmlspecialchars(trim($_GET['id']));
+            $userId = $request->get('id');
 
             $result = $this->dataMapper->selectUserPersonalInfoById($userId);
             if ($result === false) {
                 $this->returnJson([
                     'error' => "The error occurred while getting user's personal info"
-                ], 404);
+                ], HttpCode::notFound());
             }
             $this->returnJson([
                 'success' => true,
@@ -481,16 +491,21 @@ class UserApiController extends ApiController
      */
     protected function _editUserPersonalInfo()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (empty($_POST['id']) || empty($_POST['name'])
-                || empty($_POST['surname']) || empty($_POST['email'])) {
+        if (HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if (empty($DATA['id']) || empty($DATA['name'])
+                || empty($DATA['surname']) || empty($DATA['email'])) {
                 $this->_missingRequestFields();
             }
+
             $items = [
-                'id' => htmlspecialchars(trim($_POST['id'])),
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'surname' => htmlspecialchars(trim($_POST['surname'])),
-                'email' => htmlspecialchars(trim($_POST['email'])),
+                'id' => $request->get('id'),
+                'name' => $request->get('name'),
+                'surname' => $request->get('surname'),
+                'email' => $request->get('email'),
             ];
 
             /**
@@ -498,7 +513,7 @@ class UserApiController extends ApiController
              */
             $valid = $this->_validateEditPersonalInfo($items);
             if(isset($valid['error'])) {
-                $this->returnJson($valid, 404);
+                $this->returnJson($valid, HttpCode::notFound());
             }
 
             /**
@@ -510,7 +525,7 @@ class UserApiController extends ApiController
             } else {
                 $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
                 if($validPhoto !== true) {
-                    $this->returnJson($validPhoto, 422);
+                    $this->returnJson($validPhoto, HttpCode::unprocessableEntity());
                 }
             }
 
@@ -543,7 +558,7 @@ class UserApiController extends ApiController
                     $this->dataMapper->rollBackTransaction();
                     $this->returnJson([
                         'error' => "An error occurred while getting the current user's photo"
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
 
                 /**
@@ -560,7 +575,7 @@ class UserApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => 'An error occurred while updating your main photo!'
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
 
                     /**
@@ -576,7 +591,7 @@ class UserApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => 'An error occurred while uploading your main photo into appropriate folder!'
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
 
                     /**
@@ -587,7 +602,7 @@ class UserApiController extends ApiController
                         $this->dataMapper->rollBackTransaction();
                         $this->returnJson([
                             'error' => "An error occurred while deleting the old user's main photo "
-                        ], 404);
+                        ], HttpCode::notFound());
                     }
                 }
             }
@@ -600,7 +615,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'An error occurred while updating your personal info!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->dataMapper->commitTransaction();
@@ -675,7 +690,7 @@ class UserApiController extends ApiController
         } else {
             $this->returnJson([
                 'error' => "The error occurred while getting user's coming appointments"
-            ], 404);
+            ], HttpCode::notFound());
         }
     }
 
@@ -745,24 +760,29 @@ class UserApiController extends ApiController
      *
      * url = /api/user/order/service/add
      */
-    protected function _orderServiceSchedule() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    protected function _orderServiceSchedule()
+    {
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
             /**
              * Get user id to work with
              */
             $userId = SessionHelper::getUserSession();
             if(!$userId) {
-                if(!isset($_POST['email'])) {
-                    $this->returnJson([
-                        'error' => 'To be able to make an order, please, register or log into your account!'
-                    ], 400);
+                if(!isset($DATA['email'])) {
+                    $this->_notAuthorizedUser(
+                        'To be able to make an order, please, register or log into your account!'
+                    );
                 } else {
                     $userId = null;
-                    $email = htmlspecialchars(trim($_POST['email']));
+                    $email = $request->get('email');
                 }
             }
 
-            $scheduleId = htmlspecialchars(trim($_POST['schedule_id']));
+            $scheduleId = $request->get('schedule_id');
 
             /**
              * Get schedule details
@@ -771,12 +791,12 @@ class UserApiController extends ApiController
             if($scheduleDetails === false) {
                 $this->returnJson([
                     'error' => 'There is error occurred while getting schedule details'
-                ], 404);
+                ], HttpCode::notFound());
             }
             if($scheduleDetails === null) {
                 $this->returnJson([
                     'error' => 'There is no schedule with such id'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -787,12 +807,12 @@ class UserApiController extends ApiController
                 if($email === false) {
                     $this->returnJson([
                         'error' => 'The error occurred while getting user email'
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
                 if($email === null) {
                     $this->returnJson([
                         'error' => 'There is no user email for the given id'
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
             }
 
@@ -803,7 +823,7 @@ class UserApiController extends ApiController
             if($exists) {
                 $this->returnJson([
                     'error' => 'The order for selected schedule item already exists'
-                ], 403);
+                ], HttpCode::forbidden());
             }
 
             /**
@@ -840,12 +860,12 @@ class UserApiController extends ApiController
             if($isOverlapped === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting your current schedule!'
-                ], 404);
+                ], HttpCode::notFound());
             }
             if($isOverlapped) {
                 $this->returnJson([
                     'error' => 'There is an overlapping with another of your appointments! Please, review your schedule for the selected day to choose available time intervals for one more appointment!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->dataMapper->beginTransaction();
@@ -858,7 +878,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'There is error occurred while inserting order into database'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -872,7 +892,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating schedule availability'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -901,7 +921,7 @@ class UserApiController extends ApiController
             if($orderDetails === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting the order details.'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -913,7 +933,7 @@ class UserApiController extends ApiController
             if($emailSent === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while sending email with order details!'
-                ], 502);
+                ], HttpCode::badGateway());
             }
 
             $this->returnJson([
@@ -921,7 +941,10 @@ class UserApiController extends ApiController
                 'data' => [
                     'schedule_id' => $scheduleId
                 ]
-            ], 201);
+            ], HttpCode::created());
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 
@@ -930,9 +953,18 @@ class UserApiController extends ApiController
      *
      * url = /api/user/order/service/cancel
      */
-    protected function _cancelServiceOrder() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = htmlspecialchars(trim($_POST['order_id']));
+    protected function _cancelServiceOrder()
+    {
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $DATA = $request->getData();
+
+            if(!isset($DATA['order_id'])) {
+                $this->_missingRequestFields();
+            }
+
+            $id = $request->get('order_id');
 
             $this->dataMapper->beginTransaction();
 
@@ -944,7 +976,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating cancellation datetime of the order!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -956,7 +988,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while getting schedule id'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             if($scheduleId === null) {
@@ -979,7 +1011,7 @@ class UserApiController extends ApiController
                 $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating order id!'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             /**
@@ -992,6 +1024,9 @@ class UserApiController extends ApiController
                     'id' => $id
                 ]
             ]);
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 }

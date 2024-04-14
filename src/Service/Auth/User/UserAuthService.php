@@ -3,8 +3,11 @@
 namespace Src\Service\Auth\User;
 
 use Src\Helper\Email\UserEmailHelper;
+use Src\Helper\Http\HttpCode;
+use Src\Helper\Http\HttpRequest;
 use Src\Helper\Provider\Api\Web\WebApiProvider;
 use Src\Helper\Session\SessionHelper;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\UserWriteDto;
 use Src\Service\Auth\AuthService;
@@ -26,14 +29,27 @@ class UserAuthService extends AuthService
 
     public function registerUser()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['name']) || !isset($DATA['surname'])
+            || !isset($DATA['email']) || !isset($DATA['password'])
+            || !isset($DATA['confirm-password']))
+            {
+                return $this->_missingRequestFields();
+            }
+
             $items = [
-                'name' => htmlspecialchars(trim($_POST['name'])),
-                'surname' => htmlspecialchars(trim($_POST['surname'])),
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'password' => htmlspecialchars(trim($_POST['password'])),
-                'confirm-password' => htmlspecialchars(trim($_POST['confirm-password']))
+                'name' => $request->get('name'),
+                'surname' => $request->get('surname'),
+                'email' => $request->get('email'),
+                'password' => $request->get('password'),
+                'confirm-password' => $request->get('confirm-password')
             ];
+
             $nameValidator = new NameValidator();
             $emailValidator = new EmailValidator();
             $passwordValidator = new PasswordValidator();
@@ -44,7 +60,8 @@ class UserAuthService extends AuthService
             $validName = $nameValidator->validate($items['name']);
             if (!$validName) {
                 return [
-                    'error' => 'Name must be at least 3 characters long and contain only letters'
+                    'error' => 'Name must be at least 3 characters long and contain only letters',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -54,7 +71,8 @@ class UserAuthService extends AuthService
             $validSurname = $nameValidator->validate($items['surname']);
             if (!$validSurname) {
                 return [
-                    'error' => 'Surname must be at least 3 characters long and contain only letters'
+                    'error' => 'Surname must be at least 3 characters long and contain only letters',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -64,7 +82,8 @@ class UserAuthService extends AuthService
             $validEmail = $emailValidator->validate($items['email']);
             if (!$validEmail) {
                 return [
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                    'error' => 'Please enter an email address in the format myemail@mailservice.domain',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -75,7 +94,8 @@ class UserAuthService extends AuthService
             if (!$validPass) {
                 return [
                     'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
+                                one digit, one special character, and be between 8 to 30 characters long',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -84,7 +104,8 @@ class UserAuthService extends AuthService
              */
             if ($items['password'] !== $items['confirm-password']) {
                 return [
-                    'error' => 'Passwords do not match'
+                    'error' => 'Passwords do not match',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -96,7 +117,8 @@ class UserAuthService extends AuthService
             $registeredBefore = $this->dataMapper->selectUserIdByEmail($items['email']);
             if ($registeredBefore) {
                 return [
-                    'error' => "The user with such email is already registered!"
+                    'error' => "The user with such email is already registered!",
+                    'code' => HttpCode::forbidden()
                 ];
             }
 
@@ -112,7 +134,8 @@ class UserAuthService extends AuthService
             if ($userId === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [
-                    'error' => "The error occurred while creating a new user account!"
+                    'error' => "The error occurred while creating a new user account!",
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -123,7 +146,8 @@ class UserAuthService extends AuthService
             if ($inserted === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [
-                    'error' => "The error occurred while inserting user setting!"
+                    'error' => "The error occurred while inserting user setting!",
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -135,7 +159,8 @@ class UserAuthService extends AuthService
             if ($inserted === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [
-                    'error' => "The error occurred while inserting user photo!"
+                    'error' => "The error occurred while inserting user photo!",
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -146,7 +171,8 @@ class UserAuthService extends AuthService
             if ($inserted === false) {
                 $this->dataMapper->rollBackTransaction();
                 return [
-                    'error' => "The error occurred while inserting user social!"
+                    'error' => "The error occurred while inserting user social!",
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -158,23 +184,37 @@ class UserAuthService extends AuthService
             );
             if($emailSent === false) {
                 return [
-                    'error' => 'An error occurred while sending welcome email to the user!'
+                    'error' => 'An error occurred while sending welcome email to the user!',
+                    'code' => HttpCode::badGateway()
                 ];
             }
 
             $this->dataMapper->commitTransaction();
             return[
-                'success' => "You successfully created a new user account!"
+                'success' => "You successfully created a new user account!",
+                'code' => HttpCode::created()
             ];
         }
-        return [];
+        else {
+            return $this->_methodNotAllowed(['POST']);
+        }
     }
 
     public function loginUser() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (HttpRequest::method() === 'POST')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['email']) || !isset($DATA['password']))
+            {
+                return $this->_missingRequestFields();
+            }
+
             $items = [
-                'email' => htmlspecialchars(trim($_POST['email'])),
-                'password' => htmlspecialchars(trim($_POST['password'])),
+                'email' => $request->get('email'),
+                'password' => $request->get('password'),
             ];
             $emailValidator = new EmailValidator();
             $passwordValidator = new PasswordValidator();
@@ -185,7 +225,8 @@ class UserAuthService extends AuthService
             $validEmail = $emailValidator->validate($items['email']);
             if (!$validEmail) {
                 return [
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                    'error' => 'Please enter an email address in the format myemail@mailservice.domain',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -196,7 +237,8 @@ class UserAuthService extends AuthService
             if (!$validPass) {
                 return [
                     'error' => 'Password must contain at least one uppercase letter, one lowercase letter, 
-                                one digit, one special character, and be between 8 to 30 characters long'
+                                one digit, one special character, and be between 8 to 30 characters long',
+                    'code' => HttpCode::unprocessableEntity()
                 ];
             }
 
@@ -206,7 +248,8 @@ class UserAuthService extends AuthService
             $actualPasswordHash = $this->dataMapper->selectUserPasswordByEmail($items['email']);
             if ($actualPasswordHash === false) {
                 return [
-                    'error' => 'There is no user with such email'
+                    'error' => 'There is no user with such email',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -217,7 +260,8 @@ class UserAuthService extends AuthService
             $validPassword = $hashValidator->validate($items['password']);
             if (!$validPassword) {
                 return [
-                    'error' => 'The provided password does not match the one saved for the requested user!'
+                    'error' => 'The provided password does not match the one saved for the requested user!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -227,7 +271,8 @@ class UserAuthService extends AuthService
             $userId = $this->dataMapper->selectUserIdByEmail($items['email']);
             if ($userId === false) {
                 return [
-                    'error' => 'The error occurred while getting user id!'
+                    'error' => 'The error occurred while getting user id!',
+                    'code' => HttpCode::notFound()
                 ];
             }
 
@@ -250,6 +295,8 @@ class UserAuthService extends AuthService
                 ]
             ];
         }
-        return [];
+        else {
+            return $this->_methodNotAllowed(['POST']);
+        }
     }
 }

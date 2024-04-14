@@ -4,7 +4,9 @@ namespace Src\Controller\Api;
 
 use Src\Controller\AbstractController;
 use Src\DB\Database\MySql;
-use JetBrains\PhpStorm\NoReturn;
+use Src\Helper\Http\HttpCode;
+use Src\Helper\Http\HttpRequest;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DataMapper\extends\MainDataMapper;
 use Src\Model\DataSource\extends\MainDataSource;
@@ -21,47 +23,64 @@ class ApiController extends AbstractController
         return new MainDataMapper(new MainDataSource(MySql::getInstance()));
     }
 
-    #[NoReturn] public function returnJson(array $array, int $code = 200): void
+    public function returnJson(array $array, int $code = 200): void
     {
-        http_response_code($code);
-        $array += [
-            'code' => $code
-        ];
-        echo json_encode($array);
-        exit();
+        if(array_key_exists('code', $array))
+        {
+            http_response_code($array['code']);
+            echo json_encode($array);
+            exit();
+        }
+        else {
+            http_response_code($code);
+            $array += [
+                'code' => $code
+            ];
+            echo json_encode($array);
+            exit();
+        }
     }
 
     protected function _accessDenied(
         string $message = 'Access is denied to the requested resource!'
-    ) {
+    ): void {
         $this->returnJson([
             'error' => $message
-        ], 403);
+        ], HttpCode::forbidden());
     }
 
-    protected function _methodNotAllowed(array $allowedMethods)
+    protected function _notAuthorizedUser(
+        string $message = 'Not authorized user!'
+    ): void {
+        $this->returnJson([
+            'error' => $message
+        ], HttpCode::unauthorized());
+    }
+
+    protected function _methodNotAllowed(array $allowedMethods): void
     {
         $methods = implode(', ', $allowedMethods);
         $this->returnJson([
             'error' => "Method not allowed! Allowed ones: $methods"
-        ], 405);
+        ], HttpCode::methodNotAllowed());
     }
 
-    protected function _missingRequestFields()
+    protected function _missingRequestFields(): void
     {
         $this->returnJson([
             'error' => "Missing request fields!"
-        ], 400);
+        ], HttpCode::badRequest());
     }
 
     protected function _getLimitPageFieldOrderOffset(): array
     {
+        $trimmer = new RequestTrimmer();
         /**
          * get limits of displaying rows
          */
         $limit = 10;
         if (isset($_GET['limit'])) {
-            $limit = (int)htmlspecialchars(trim($_GET['limit']));
+            $limit = (int)$trimmer->in($_GET['limit']);
         }
 
         /**
@@ -69,7 +88,7 @@ class ApiController extends AbstractController
          */
         $page = 1;
         if (isset($_GET['page'])) {
-            $page = (int)htmlspecialchars(trim($_GET['page']));
+            $page = (int)$trimmer->in($_GET['page']);
         }
 
         /**
@@ -77,7 +96,7 @@ class ApiController extends AbstractController
          */
         $orderByField = 'id';
         if (isset($_GET['order_field'])) {
-            $orderByField = htmlspecialchars(trim($_GET['order_field']));
+            $orderByField = $trimmer->in($_GET['order_field']);
         }
 
         /**
@@ -89,7 +108,7 @@ class ApiController extends AbstractController
          */
         $orderDirection = 'asc';
         if (isset($_GET['order_direction'])) {
-            $orderDirection = htmlspecialchars(trim($_GET['order_direction']));
+            $orderDirection = $trimmer->in($_GET['order_direction']);
         }
 
         /**
@@ -109,65 +128,96 @@ class ApiController extends AbstractController
         ];
     }
 
-    protected function _getAffiliatesAll() {
-        $affiliates = $this->dataMapper->selectAllAffiliates();
-        if ($affiliates === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all affiliates'
-            ]);
-        }
-        foreach ($affiliates as &$affiliate) {
-            $affiliate['name'] =
-                "{$affiliate['city']}, {$affiliate['address']}";
-        }
+    protected function _getAffiliatesAll()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $trimmer = new RequestTrimmer();
 
-        $this->returnJson([
-            'success' => true,
-            'data' => $affiliates
-        ]);
+            $affiliates = $this->dataMapper->selectAllAffiliates();
+            if ($affiliates === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting all affiliates'
+                ], HttpCode::notFound());
+            }
+            foreach ($affiliates as &$affiliate) {
+                $affiliate['name'] = $trimmer->out(
+                    "{$affiliate['city']}, {$affiliate['address']}"
+                );
+            }
+
+            $this->returnJson([
+                'success' => true,
+                'data' => $affiliates
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
-    protected function _getDepartmentsAll() {
-        $departments = $this->dataMapper->selectAllDepartments();
-        if ($departments === false) {
-            $this->returnJson([
-                'error' => 'The error occurred while getting all affiliates'
-            ]);
-        }
+    protected function _getDepartmentsAll()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $departments = $this->dataMapper->selectAllDepartments();
+            if ($departments === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting all affiliates'
+                ], HttpCode::notFound());
+            }
 
-        $this->returnJson([
-            'success' => true,
-            'data' => $departments
-        ]);
+            $this->returnJson([
+                'success' => true,
+                'data' => $departments
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
-    protected function _getWorkersAll() {
-        $workers = $this->dataMapper->selectAllWorkers();
-        if ($workers === false) {
+    protected function _getWorkersAll()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $trimmer = new RequestTrimmer();
+
+            $workers = $this->dataMapper->selectAllWorkers();
+            if ($workers === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting all workers'
+                ], HttpCode::notFound());
+            }
+            foreach ($workers as &$worker) {
+                $worker['name'] = $trimmer->out(
+                    $worker['name'] . " " . $worker['surname']
+                );
+            }
             $this->returnJson([
-                'error' => 'The error occurred while getting all workers'
+                'success' => true,
+                'data' => $workers
             ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
         }
-        foreach ($workers as &$worker) {
-            $worker['name'] = $worker['name'] . " " . $worker['surname'];
-        }
-        $this->returnJson([
-            'success' => true,
-            'data' => $workers
-        ]);
     }
 
-    protected function _getServicesAll() {
-        $services = $this->dataMapper->selectAllServices();
-        if ($services === false) {
+    protected function _getServicesAll()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $services = $this->dataMapper->selectAllServices();
+            if ($services === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting all services'
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
-                'error' => 'The error occurred while getting all services'
+                'success' => true,
+                'data' => $services
             ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
         }
-        $this->returnJson([
-            'success' => true,
-            'data' => $services
-        ]);
     }
 
     /**
@@ -178,17 +228,20 @@ class ApiController extends AbstractController
      */
     protected function _searchSchedule()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (HttpRequest::method() == 'POST')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+
             $items = [
-                'service_id' => htmlspecialchars(trim($_POST['service_id'])),
-                'worker_id' => htmlspecialchars(trim($_POST['worker_id'])),
-                'affiliate_id' => htmlspecialchars(trim($_POST['affiliate_id'])),
-                'start_date' => htmlspecialchars(trim($_POST['start_date'])),
-                'end_date' => htmlspecialchars(trim($_POST['end_date'])),
-                'start_time' => htmlspecialchars(trim($_POST['start_time'])),
-                'end_time' => htmlspecialchars(trim($_POST['end_time'])),
-                'price_bottom' => htmlspecialchars(trim($_POST['price_bottom'])),
-                'price_top' => htmlspecialchars(trim($_POST['price_top']))
+                'service_id' => $request->get('service_id'),
+                'worker_id' => $request->get('worker_id'),
+                'affiliate_id' => $request->get('affiliate_id'),
+                'start_date' => $request->get('start_date'),
+                'end_date' => $request->get('end_date'),
+                'start_time' => $request->get('start_time'),
+                'end_time' => $request->get('end_time'),
+                'price_bottom' => $request->get('price_bottom'),
+                'price_top' => $request->get('price_top'),
             ];
 
             $items['start_date'] = date("Y-m-d", $items['start_date']);
@@ -209,13 +262,13 @@ class ApiController extends AbstractController
             if ($departments === false) {
                 $this->returnJson([
                     'error' => 'There is error occurred while getting all departments'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             if (!$departments) {
                 $this->returnJson([
                     'error' => 'There is no any departments yet!'
-                ], 204);
+                ], HttpCode::noContent());
             }
 
             $activeDepartment = null;
@@ -228,7 +281,7 @@ class ApiController extends AbstractController
                 if($activeDepartment === false) {
                     $this->returnJson([
                         'error' => 'The error occurred while getting the department for the service'
-                    ], 404);
+                    ], HttpCode::notFound());
                 }
             }
 
@@ -241,7 +294,7 @@ class ApiController extends AbstractController
             if($schedule === false) {
                 $this->returnJson([
                     'error' => 'The error occurred while getting schedule'
-                ], 404);
+                ], HttpCode::notFound());
             }
 
             $this->returnJson([
@@ -255,6 +308,9 @@ class ApiController extends AbstractController
                 ]
             ]);
         }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
     }
 
     /**
@@ -265,25 +321,38 @@ class ApiController extends AbstractController
      */
     protected function _getWorkersForService()
     {
-        $serviceId = 0;
-        if (isset($_GET['service_id']) && $_GET['service_id'] !== '') {
-            $serviceId = htmlspecialchars(trim($_GET['service_id']));
-        }
-        $result = $this->dataMapper->selectWorkersForService($serviceId);
-        if ($result === false) {
+        if (HttpRequest::method() == 'GET')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['service_id'])) {
+                $this->_missingRequestFields();
+            }
+            $serviceId = $request->get('service_id');
+
+            $result = $this->dataMapper->selectWorkersForService($serviceId);
+            if ($result === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting workers for the selected service'
+                ], HttpCode::notFound());
+            }
+
+            foreach ($result as &$worker) {
+                $worker['name'] = $trimmer->out(
+                    $worker['name'] . " " . $worker['surname']
+                );
+            }
+
             $this->returnJson([
-                'error' => 'The error occurred while getting workers for the selected service'
-            ], 404);
+                'success' => true,
+                'data' => $result
+            ]);
         }
-
-        foreach ($result as &$worker) {
-            $worker['name'] = $worker['name'] . " " . $worker['surname'];
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
-
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
     }
 
 
@@ -295,19 +364,30 @@ class ApiController extends AbstractController
      */
     protected function _getServicesForWorker()
     {
-        $workerId = 0;
-        if (isset($_GET['worker_id']) && $_GET['worker_id'] !== '') {
-            $workerId = htmlspecialchars(trim($_GET['worker_id']));
-        }
-        $result = $this->dataMapper->selectServicesForWorker($workerId);
-        if ($result === false) {
+        if (HttpRequest::method() == 'GET')
+        {
+            $trimmer = new RequestTrimmer();
+            $request = new HttpRequest($trimmer);
+            $DATA = $request->getData();
+
+            if(!isset($DATA['worker_id'])) {
+                $this->_missingRequestFields();
+            }
+            $workerId = $request->get('worker_id');
+
+            $result = $this->dataMapper->selectServicesForWorker($workerId);
+            if ($result === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting services for the selected worker'
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
-                'error' => 'The error occurred while getting services for the selected worker'
-            ], 404);
+                'success' => true,
+                'data' => $result
+            ]);
         }
-        $this->returnJson([
-            'success' => true,
-            'data' => $result
-        ]);
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 }

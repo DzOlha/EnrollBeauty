@@ -4,7 +4,6 @@ class Requester {
     }
 
     get(apiUrl, successCallback, errorCallback) {
-        // Send the GET request using jQuery's AJAX function
         $.ajax({
             url: apiUrl,
             method: 'GET',
@@ -27,7 +26,6 @@ class Requester {
     }
 
     post(apiUrl, dataToSend, successCallback, errorCallback) {
-        // Send the POST request using jQuery's AJAX function
         $.ajax({
             url: apiUrl,
             method: 'POST',
@@ -51,7 +49,6 @@ class Requester {
     }
 
     postFiles(apiUrl, dataToSend, successCallback, errorCallback) {
-        // Send the POST request using jQuery's AJAX function
         $.ajax({
             url: apiUrl,
             method: 'POST',
@@ -59,6 +56,82 @@ class Requester {
             dataType: 'json',
             processData: false, // Prevent jQuery from processing the data
             contentType: false, // Set content type as false to let the server handle it
+            success: (response) => {
+                if (response.error) {
+                    errorCallback(response);
+                } else {
+                    successCallback(response);
+                }
+            },
+            error: (xhr) => {
+                if(xhr.responseJSON) {
+                    errorCallback(xhr.responseJSON)
+                } else {
+                    errorCallback({ 'error': `${this.defaultErrorMessage}` });
+                }
+            }
+        });
+    }
+
+    put(apiUrl, dataToSend, successCallback, errorCallback) {
+        // Convert the data to URL-encoded format
+        let formData = $.param(dataToSend);
+
+        $.ajax({
+            url: apiUrl,
+            method: 'PUT',
+            dataType: 'json',
+            data: formData,
+            success: (response) => {
+                if (response.error) {
+                    errorCallback(response);
+                } else {
+                    successCallback(response);
+                }
+            },
+            error: (xhr) => {
+                if(xhr.responseJSON) {
+                    errorCallback(xhr.responseJSON)
+                } else {
+                    errorCallback({ 'error': `${this.defaultErrorMessage}` });
+                }
+            }
+        });
+    }
+
+    putFiles(apiUrl, dataToSend, successCallback, errorCallback) {
+        $.ajax({
+            url: apiUrl,
+            method: 'PUT',
+            data: dataToSend,
+            dataType: 'json',
+            processData: false, // Prevent jQuery from processing the data
+            contentType: false, // Set content type as false to let the server handle it
+            success: (response) => {
+                if (response.error) {
+                    errorCallback(response);
+                } else {
+                    successCallback(response);
+                }
+            },
+            error: (xhr) => {
+                if(xhr.responseJSON) {
+                    errorCallback(xhr.responseJSON)
+                } else {
+                    errorCallback({ 'error': `${this.defaultErrorMessage}` });
+                }
+            }
+        });
+    }
+
+    delete(apiUrl, dataToSend, successCallback, errorCallback)
+    {
+        let queryString = $.param(dataToSend);
+
+        $.ajax({
+            url: apiUrl + `?${queryString}`,
+            method: 'DELETE',
+            dataType: 'json',
             success: (response) => {
                 if (response.error) {
                     errorCallback(response);
