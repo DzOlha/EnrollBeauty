@@ -2,22 +2,90 @@
 .register-button {
     border-left: 1px solid white;
 }
+.login-button
+{
+    border-left: 1px solid #333 !important;
+    border-right: 1px solid #333 !important;
+    padding-right: 15px;
+}
+.login-button, .register-button {
+    padding-right: 15px;
+    margin-left: -5px;
+    border-right: 1px solid white;
+    border-left: 1px solid white;
+}
+
+.register-button:hover, .login-button:hover {
+    color: white !important;
+    font-weight: bold;
+}
+
+.logout-button a,
+.profile-button a
+{
+    color: var(--light-brown-color) !important;
+}
+
+.logout-button,
+.profile-button
+{
+    border-left: 1px solid var(--light-brown-color);
+    border-right: 1px solid var(--light-brown-color);
+    text-align: center !important;
+    padding-right: 15px;
+}
+
+#menu .profile-button li,
+#menu .logout-button > ul > li
+{
+    text-align: center !important;
+}
+
 @media (min-width: 1200px) {
     .login-button a,
     .register-button a {
         color: white !important;
     }
+    .login-button {
+        padding-right: 0px;
+    }
+    .profile-button {
+        border-left: none;
+    }
+    .logout-button, .profile-button {
+        padding-right: 0px !important;
+    }
+    .profile-button {
+        margin-right: 80px;
+        margin-left: -5px;
+        /*padding-right: 0px;*/
+    }
+    .login-button
+    {
+        border-left: 1px solid #333 !important;
+        border-right: 1px solid #333 !important;
+    }
+    .register-button
+    {
+        padding-right: 0px;
+    }
+    .login-button,
+    .register-button {
+        border-right: 1px solid white !important;
+        border-left: 1px solid white !important;
+    }
+
+    #menu .profile-button li,
+    #menu .logout-button > ul > li
+    {
+        text-align: left !important;
+    }
+    #site-header-menu #site-navigation .menu ul > li:last-child > a
+    {
+        padding-right: 15px !important;
+    }
 }
 
-.login-button {
-    padding-right: 15px;
-    border-right: 1px solid white;
-    border-left: 1px solid white;
-}
-.register-button:hover, .login-button:hover {
-    color: white !important;
-    font-weight: bold;
-}
 .login-form {
     /*margin-top: 160px;*/
     margin: 5% 30% 10% 30%;
@@ -184,4 +252,17 @@ for resetting the select2 value
 
 i.fa-heart {
     display: none;
+}
+
+@media (max-width: 572px)
+{
+    .time-interval-wrapper {
+        row-gap: 30px;
+    }
+
+    /*.main-sidebar-body .nav-item.active .nav-link:after,*/
+    /*.main-sidebar-body .nav-item.active .nav-link .shape2*/
+    /*{*/
+    /*    top: 58px;*/
+    /*}*/
 }

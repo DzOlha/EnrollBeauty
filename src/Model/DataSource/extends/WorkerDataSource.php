@@ -848,6 +848,8 @@ class WorkerDataSource extends DataSource
                 
                 OR ($start_time >= :start_time AND  $start_time < :end_time
                     AND $end_time > :start_time AND $end_time >= :end_time)
+                
+                 OR ($start_time <= :start_time AND $end_time >= :end_time)
             )
         ";
         //echo $q;
@@ -869,6 +871,8 @@ class WorkerDataSource extends DataSource
                 
                 OR ($start_time >= :start_time AND  $start_time < :end_time
                     AND $end_time > :start_time AND $end_time >= :end_time)
+                
+                OR ($start_time <= :start_time AND $end_time >= :end_time)
             )
         ");
         $this->db->bind(':worker_id', $workerId);

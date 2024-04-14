@@ -34,7 +34,7 @@
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-receipt sidemenu-icon menu-icon "></i>
-            <span class="sidemenu-label">Schedule Management</span>
+            <span class="sidemenu-label">Schedule</span>
         </a>
     </li>
 

@@ -931,7 +931,7 @@ class WorkerApiController extends ApiController
 
             $workerId = $this->_getWorkerId($request);
 
-            if($workerId || !isset($DATA['service_id']) || !isset($DATA['price'])) {
+            if(!$workerId || !isset($DATA['service_id']) || !isset($DATA['price'])) {
                 $this->_missingRequestFields();
             }
 
@@ -1009,7 +1009,7 @@ class WorkerApiController extends ApiController
 
             $workerId = $this->_getWorkerId($request);
 
-            if ($workerId || !isset($DATA['service_id']) || !isset($DATA['price'])) {
+            if (!$workerId || !isset($DATA['service_id']) || !isset($DATA['price'])) {
                 $this->_missingRequestFields();
             }
 
@@ -1524,7 +1524,7 @@ class WorkerApiController extends ApiController
 
     protected function _deleteSchedule()
     {
-        if (HttpRequest::method() === 'DELETE')
+        if (HttpRequest::method() === 'POST')
         {
             $request = new HttpRequest(new RequestTrimmer());
             $DATA = $request->getData();
@@ -1550,7 +1550,7 @@ class WorkerApiController extends ApiController
             ]);
         }
         else {
-            $this->_methodNotAllowed(['DELETE']);
+            $this->_methodNotAllowed(['POST']);
         }
     }
 

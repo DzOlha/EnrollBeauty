@@ -63,83 +63,88 @@
 <!--                                </li>-->
 <!--                                <li><a href="contact-us.html">CONTACT US</a></li>-->
 
-                                <?php if(!SessionHelper::getUserSession()
-                                        && !SessionHelper::getWorkerSession()
-                                        && !SessionHelper::getAdminSession()) {?>
-                                    <li class="register-button">
-                                        <a href="<?=API['AUTH']['WEB']['USER']['registration']?>">
-                                            Register
-                                        </a>
-                                    </li>
-                                    <li class="login-button">
+                                <?php if(SessionHelper::getUserSession()
+                                        || SessionHelper::getWorkerSession()
+                                        || SessionHelper::getAdminSession()) { ?>
+                                <li class="logout-button">
                                     <a href="#">
-                                        Log In
+                                        Log Out
                                     </a>
                                     <ul>
-                                        <?php if(!SessionHelper::getUserSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['USER']['login']?>">
-                                                    Log In as a User
+                                        <?php if(SessionHelper::getUserSession()) {?>
+                                            <li><a href="<?=API['AUTH']['WEB']['USER']['logout']?>">
+                                                    Log out from <b>User</b> account
                                                 </a></li>
                                         <?php }?>
 
-                                        <?php if(!SessionHelper::getWorkerSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['WORKER']['login']?>">
-                                                    Log In as a Worker
+                                        <?php if(SessionHelper::getWorkerSession()) {?>
+                                            <li><a href="<?=API['AUTH']['WEB']['WORKER']['logout']?>">
+                                                    Log out from <b>Worker</b> account
                                                 </a></li>
                                         <?php }?>
 
-                                        <?php if(!SessionHelper::getAdminSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['ADMIN']['login']?>">
-                                                    Log In as an Admin
+                                        <?php if(SessionHelper::getAdminSession()) {?>
+                                            <li><a href="<?=API['AUTH']['WEB']['ADMIN']['logout']?>">
+                                                    Log out from <b>Admin</b> account
                                                 </a></li>
                                         <?php }?>
                                     </ul>
                                 </li>
-                                <?php } else { ?>
-                                    <li class="register-button">
-                                        <a href="#">
-                                            Log Out
-                                        </a>
-                                        <ul>
-                                            <?php if(SessionHelper::getUserSession()) {?>
-                                                <li><a href="<?=API['AUTH']['WEB']['USER']['logout']?>">
-                                                        Log out as a User
-                                                    </a></li>
-                                            <?php }?>
-
-                                            <?php if(SessionHelper::getWorkerSession()) {?>
-                                                <li><a href="<?=API['AUTH']['WEB']['WORKER']['logout']?>">
-                                                        Log out as a Worker
-                                                    </a></li>
-                                            <?php }?>
-
-                                            <?php if(SessionHelper::getAdminSession()) {?>
-                                                <li><a href="<?=API['AUTH']['WEB']['ADMIN']['logout']?>">
-                                                        Log out as an Admin
-                                                    </a></li>
-                                            <?php }?>
-                                        </ul>
-                                    </li>
-                                    <li class="login-button">
+                                <li class="profile-button">
                                     <a href="#">
                                         Profile
                                     </a>
                                     <ul>
                                         <?php if(SessionHelper::getUserSession()) {?>
                                             <li><a href="<?=API['USER']['WEB']['PROFILE']['home']?>">
-                                                    Profile of the User
+                                                    User profile
                                                 </a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getWorkerSession()) {?>
                                             <li><a href="<?=API['WORKER']['WEB']['PROFILE']['home']?>">
-                                                    Profile of the Worker
+                                                    Worker profile
                                                 </a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getAdminSession()) {?>
                                             <li><a href="<?=API['ADMIN']['WEB']['PROFILE']['home']?>">
-                                                    Profile of the Admin
+                                                    Admin profile
+                                                </a></li>
+                                        <?php }?>
+                                    </ul>
+                                </li>
+                                <?php } ?>
+
+                                <?php if(!SessionHelper::getUserSession()) {?>
+                                    <li class="register-button">
+                                        <a href="<?=API['AUTH']['WEB']['USER']['registration']?>">
+                                            Register
+                                        </a>
+                                    </li>
+                                <?php } if(!SessionHelper::getUserSession()
+                                        || !SessionHelper::getWorkerSession()
+                                        || !SessionHelper::getAdminSession()) {?>
+                                        <li class="login-button">
+                                    <a href="#">
+                                        Log In
+                                    </a>
+                                    <ul>
+                                        <?php if(!SessionHelper::getUserSession()) {?>
+                                            <li><a href="<?=API['AUTH']['WEB']['USER']['login']?>">
+                                                    Log In as a <b>User</b>
+                                                </a></li>
+                                        <?php }?>
+
+                                        <?php if(!SessionHelper::getWorkerSession()) {?>
+                                            <li><a href="<?=API['AUTH']['WEB']['WORKER']['login']?>">
+                                                    Log In as a <b>Worker</b>
+                                                </a></li>
+                                        <?php }?>
+
+                                        <?php if(!SessionHelper::getAdminSession()) {?>
+                                            <li><a href="<?=API['AUTH']['WEB']['ADMIN']['login']?>">
+                                                    Log In as an <b>Admin</b>
                                                 </a></li>
                                         <?php }?>
                                     </ul>

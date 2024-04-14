@@ -2,7 +2,7 @@
 const PUBLIC_IMAGES = '/public/custom/assets/img/';
 const CONST = {
     closeIcon: PUBLIC_IMAGES + 'system/icons/close.svg',
-    gifLoader: 'public/mockups/open/assets/img/pre-loader-1.gif',
+    gifLoader: '/public/mockups/open/assets/img/pre-loader-1.gif',
     arrowDown: PUBLIC_IMAGES + 'system/icons/arrows_down.svg',
     arrowUp: PUBLIC_IMAGES + 'system/icons/arrows_up.svg',
 
