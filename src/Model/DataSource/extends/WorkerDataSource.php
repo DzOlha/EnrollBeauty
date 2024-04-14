@@ -234,6 +234,26 @@ class WorkerDataSource extends DataSource
         return $this->db->singleRow();
     }
 
+    protected function _timeFilter($timeFrom, $timeTo)
+    {
+        $result = [
+            'where' => ''
+        ];
+        $schedule_start_time = WorkersServiceSchedule::$start_time;
+        $schedule_end_time = WorkersServiceSchedule::$end_time;
+
+        $setFrom = ($timeFrom !== null && $timeFrom !== '');
+        $setTo = ($timeTo !== null && $timeTo !== '');
+
+        if($setFrom) {
+            $result['where'] = " AND $schedule_start_time >= '$timeFrom' ";
+        }
+        if($setTo) {
+            $result['where'] .= " AND $schedule_end_time <= '$timeTo' ";
+        }
+        return $result;
+    }
+
     /**
      * @param $departmentId
      * @param $serviceId

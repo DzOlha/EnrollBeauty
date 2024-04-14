@@ -846,6 +846,17 @@ class UserApiController extends ApiController
             $_start_datetime = new \DateTime($start_datetime_str);
             $_end_datetime = new \DateTime($end_datetime_str);
 
+            /**
+             * Check if the start datetime is greater that the current one
+             * to avoid ordering the past schedules for appointment
+             */
+            $current_datetime = new \DateTime();
+            if($current_datetime > $_end_datetime) {
+                $this->returnJson([
+                    'error' => 'You can not make the order for appointment in the past!'
+                ], HttpCode::unprocessableEntity());
+            }
+
             // Format the DateTime objects as needed
             $start_datetime = $_start_datetime->format('Y-m-d H:i:s');
             $end_datetime = $_end_datetime->format('Y-m-d H:i:s');

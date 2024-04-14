@@ -1205,7 +1205,7 @@ class WorkerApiController extends ApiController
 
             $workerId = $this->_getWorkerId($request);
 
-            if($workerId || !isset($DATA['day'])) {
+            if(!$workerId || !isset($DATA['day'])) {
                 $this->_missingRequestFields();
             }
 

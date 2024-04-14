@@ -334,12 +334,15 @@ abstract class DataSource
         ];
         $schedule_start_time = WorkersServiceSchedule::$start_time;
         $schedule_end_time = WorkersServiceSchedule::$end_time;
+        $schedule_day = WorkersServiceSchedule::$day;
 
         $setFrom = ($timeFrom !== null && $timeFrom !== '');
         $setTo = ($timeTo !== null && $timeTo !== '');
 
         if($setFrom) {
             $result['where'] = " AND $schedule_start_time >= '$timeFrom' ";
+        } else {
+            $result['where'] = " AND $schedule_day > CURDATE() OR ($schedule_day = CURDATE() AND $schedule_start_time > CURTIME()) ";
         }
         if($setTo) {
             $result['where'] .= " AND $schedule_end_time <= '$timeTo' ";
