@@ -321,7 +321,6 @@
             <!-- End Row -->
         </div>
     </div>
-    </div><!--ttm-header-wrap end -->
     <!--footer start-->
     <?php require_once VIEW_OPEN_BLOCKS."/footer/footer_widget.php"?>
     <!--footer end-->

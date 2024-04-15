@@ -341,18 +341,10 @@ class UserDataSource extends DataSource
             WHERE $email_column = :email
             AND $completed_time IS NULL
             AND $canceled_time IS NULL
-            AND (
-                 ($start_datetime <= :start_datetime AND $start_datetime < :end_datetime 
-                    AND $end_datetime > :start_datetime AND $end_datetime >= :end_datetime)
-                
-                OR ($start_datetime <= :start_datetime AND $start_datetime < :end_datetime 
-                    AND $end_datetime > :start_datetime AND $end_datetime <= :end_datetime)
-                
-                OR ($start_datetime >= :start_datetime AND  $end_datetime < :end_datetime
-                    AND $end_datetime > :start_datetime AND $end_datetime >= :end_datetime)
-                
-                OR ($start_datetime >= :start_datetime AND $start_datetime <= :end_datetime)
-            )
+            AND NOT (
+                :end_datetime <= $start_datetime OR
+                :start_datetime >= $end_datetime
+            );
         ");
         $this->db->bind(':email', $email);
         $this->db->bind(':start_datetime', $startDatetime);

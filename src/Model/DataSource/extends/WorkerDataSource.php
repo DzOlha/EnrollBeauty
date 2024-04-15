@@ -831,29 +831,6 @@ class WorkerDataSource extends DataSource
         $day_column = WorkersServiceSchedule::$day;
         $id = WorkersServiceSchedule::$id;
 
-        $q = "
-            SELECT $id FROM $schedule
-            INNER JOIN $pricing ON $schedule_price_id = $pricing_id
-            LEFT JOIN $orders ON $schedule_order_id = $orders_id
-            WHERE $pricing_worker_id = :worker_id
-            AND $day_column = :day
-            AND $orders_canceled IS NULL
-            AND $orders_completed IS NULL
-            AND (
-                 ($start_time <= :start_time AND $start_time < :end_time 
-                    AND $end_time > :start_time AND $end_time >= :end_time)
-                
-                OR ($start_time <= :start_time AND $start_time < :end_time 
-                    AND $end_time > :start_time AND $end_time <= :end_time)
-                
-                OR ($start_time >= :start_time AND  $start_time < :end_time
-                    AND $end_time > :start_time AND $end_time >= :end_time)
-                
-                 OR ($start_time <= :start_time AND $end_time >= :end_time)
-            )
-        ";
-        //echo $q;
-
         $this->db->query("
             SELECT $id FROM $schedule
             INNER JOIN $pricing ON $schedule_price_id = $pricing_id
@@ -862,18 +839,10 @@ class WorkerDataSource extends DataSource
             AND $day_column = :day
             AND $orders_canceled IS NULL
             AND $orders_completed IS NULL
-            AND (
-                 ($start_time <= :start_time AND $start_time < :end_time 
-                    AND $end_time > :start_time AND $end_time >= :end_time)
-                
-                OR ($start_time <= :start_time AND $start_time < :end_time 
-                    AND $end_time > :start_time AND $end_time <= :end_time)
-                
-                OR ($start_time >= :start_time AND  $start_time < :end_time
-                    AND $end_time > :start_time AND $end_time >= :end_time)
-                
-                OR ($start_time <= :start_time AND $end_time >= :end_time)
-            )
+            AND NOT (
+                :end_time <= $start_time OR
+                :start_time >= $end_time
+            );
         ");
         $this->db->bind(':worker_id', $workerId);
         $this->db->bind(':day', $day);
