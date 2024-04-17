@@ -2,6 +2,8 @@ import Form from "../../../../user/classes/forms/Form.js";
 import GifLoader from "../../../../../../classes/loader/GifLoader.js";
 import Notifier from "../../../../../../classes/notifier/Notifier.js";
 import Input from "../../../../../../classes/element/Input.js";
+import NameRegex from "../../../../../../classes/regex/impl/NameRegex.js";
+import EmailRegex from "../../../../../../classes/regex/impl/EmailRegex.js";
 
 
 class AddWorkerForm extends Form {
@@ -238,9 +240,9 @@ class AddWorkerForm extends Form {
             return result;
         }
 
-        let pattern = /^[A-Za-zА-Яа-яіїІЇ]{3,}$/;
+        let pattern = new NameRegex();
         if(!pattern.test(value)) {
-            result.error = "Name must be at least 3 characters long and contain only letters"
+            result.error = "Name must be between 3-50 characters long and contain only letters"
         }
 
         return result;
@@ -254,9 +256,9 @@ class AddWorkerForm extends Form {
             return result;
         }
 
-        let pattern = /^[A-Za-zА-Яа-яіїІЇ]{3,}$/;
+        let pattern = new NameRegex();
         if(!pattern.test(value)) {
-            result.error = "Surname must be at least 3 characters long and contain only letters"
+            result.error = "Surname must be between 3-50 characters long and contain only letters"
         }
 
         return result;
@@ -270,7 +272,7 @@ class AddWorkerForm extends Form {
             return result;
         }
 
-        let pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        let pattern = new EmailRegex();
         if(!pattern.test(value)) {
             result.error = 'Please enter an email address in the format myemail@mailservice.domain';
         }

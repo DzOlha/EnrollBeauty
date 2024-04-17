@@ -3,6 +3,8 @@ import Select2 from "../../../../../../classes/element/Select2.js";
 import Input from "../../../../../../classes/element/Input.js";
 import GifLoader from "../../../../../../classes/loader/GifLoader.js";
 import Notifier from "../../../../../../classes/notifier/Notifier.js";
+import AddressRegex from "../../../../../../classes/regex/impl/AddressRegex.js";
+import NameRegex from "../../../../../../classes/regex/impl/NameRegex.js";
 
 
 class AddAffiliateForm extends Form
@@ -173,8 +175,9 @@ class AddAffiliateForm extends Form
             return result;
         }
 
-        if(value.length < 3) {
-            result.error = "Affiliate name should be equal to or longer than 3 characters!";
+        let pattern = new NameRegex(3, 100, true);
+        if(!pattern.test(value)) {
+            result.error = "Affiliate name should have length between 3-100 characters and contain only letters and whitespaces!";
             return result;
         }
 
@@ -188,12 +191,17 @@ class AddAffiliateForm extends Form
             return result;
         }
 
-        let pattern = /^str\. ([A-Za-z\s]+,)? \d+[A-Za-z]?\b/;
+        let pattern = new AddressRegex();
         //let pattern2 = /^(вул\.)\. ([\u0400-\u04FFіїІЇ\s]+,)? \d+[\u0400-\u04FFіїІЇ]?\b/;
 
 
         if(!pattern.test(value)) {
             result.error = "Invalid format for the street address! Please, follow the example like 'str. Street, 3'";
+            return result;
+        }
+
+        if(value.length > 255) {
+            result.error = 'Street address should not exceed 255 characters!';
             return result;
         }
 

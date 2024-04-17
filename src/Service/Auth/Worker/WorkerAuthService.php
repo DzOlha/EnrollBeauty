@@ -28,6 +28,134 @@ class WorkerAuthService extends AuthService
         parent::__construct($dataMapper);
     }
 
+    public function validateWorkerAddForm(array &$items)
+    {
+        $nameValidator = new NameValidator();
+        $emailValidator = new EmailValidator();
+
+        /**
+         * Name
+         */
+        $validName = $nameValidator->validate($items['name']);
+        if (!$validName) {
+            return [
+                'error' => 'Name must be between 3-50 characters long and contain only letters',
+            ];
+        }
+
+        /**
+         * Surname
+         */
+        $validSurname = $nameValidator->validate($items['surname']);
+        if (!$validSurname) {
+            return [
+                'error' => 'Surname must be between 3-50 characters long and contain only letters',
+            ];
+        }
+
+        /**
+         * Email
+         */
+        $validEmail = $emailValidator->validate($items['email']);
+        if (!$validEmail) {
+            return [
+                'error' => 'Please enter an email address in the format myemail@mailservice.domain that not exceeding 100 characters.',
+            ];
+        }
+
+        /**
+         * Position id
+         */
+        if(!$items['position_id']) {
+            return [
+                'error' => 'Position is required field!'
+            ];
+        }
+        if(!is_int((int)$items['position_id'])) {
+            return [
+                'error' => 'Invalid position has been selected!',
+            ];
+        }
+
+        /**
+         * Role id
+         */
+        if(!$items['role_id']) {
+            return [
+                'error' => 'Role is required field!'
+            ];
+        }
+        if(!is_int((int)$items['role_id'])) {
+            return [
+                'error' => 'Invalid role has been selected!',
+            ];
+        }
+
+        /**
+         * Gender
+         */
+        if($items['gender']) {
+            if(
+                $items['gender'] !== Gender::$MALE
+                && $items['gender'] !== Gender::$FEMALE
+                && $items['gender'] !== Gender::$OTHER
+            ) {
+                return [
+                    'error' => 'Invalid gender selected! It should be Male, Female, or Other',
+                ];
+            }
+        } else {
+            $items['gender'] = null;
+        }
+
+        /**
+         * Age
+         */
+        if(!$items['age']) {
+            return [
+                'error' => 'Age is required field!'
+            ];
+        }
+        if($items['age'] < 14 || $items['age'] > 80) {
+            return [
+                'error' => "The worker's age should be from 14 to 80 years!",
+            ];
+        }
+
+        /**
+         * Years of experience
+         */
+        if(!$items['experience']) {
+            return [
+                'error' => "Years of worker's experience is required field!",
+            ];
+        }
+        if($items['experience'] < 0 || $items['experience'] > 66) {
+            return [
+                'error' => "The years of the worker's experience should be from 0 to 66 years!",
+            ];
+        }
+
+        /**
+         * Salary
+         */
+        if($items['salary']) {
+            if($items['salary'] < 0){
+                return [
+                    'error' => 'Salary can not be negative number!',
+                ];
+            }
+            if(!is_int((int)$items['salary']) && !is_double((double)$items['salary'])) {
+                return [
+                    'error' => 'Invalid salary number is provided!',
+                ];
+            }
+        } else {
+            $items['salary'] = null;
+        }
+        return true;
+    }
+
     /**
      * @return array
      *
@@ -71,139 +199,14 @@ class WorkerAuthService extends AuthService
                 'experience' => $request->get('experience'),
                 'salary' => $request->get('salary'),
             ];
-            $nameValidator = new NameValidator();
-            $emailValidator = new EmailValidator();
 
-            /**
-             * Name
-             */
-            $validName = $nameValidator->validate($items['name']);
-            if (!$validName) {
-                return [
-                    'error' => 'Name must be at least 3 characters long and contain only letters',
+
+            $valid = $this->validateWorkerAddForm($items);
+            if($valid !== true) {
+                $valid += [
                     'code' => HttpCode::unprocessableEntity()
                 ];
-            }
-
-            /**
-             * Surname
-             */
-            $validSurname = $nameValidator->validate($items['surname']);
-            if (!$validSurname) {
-                return [
-                    'error' => 'Surname must be at least 3 characters long and contain only letters',
-                    'code' => HttpCode::unprocessableEntity()
-                ];
-            }
-
-            /**
-             * Email
-             */
-            $validEmail = $emailValidator->validate($items['email']);
-            if (!$validEmail) {
-                return [
-                    'error' => 'Please enter an email address in the format myemail@mailservice.domain',
-                    'code' => HttpCode::unprocessableEntity()
-                ];
-            }
-
-            /**
-             * Position id
-             */
-            if(!$items['position_id']) {
-                return [
-                    'error' => 'Position is required field!'
-                ];
-            }
-            if(!is_int((int)$items['position_id'])) {
-                return [
-                    'error' => 'Invalid position has been selected!',
-                    'code' => HttpCode::unprocessableEntity()
-                ];
-            }
-
-            /**
-             * Role id
-             */
-            if(!$items['role_id']) {
-                return [
-                    'error' => 'Role is required field!'
-                ];
-            }
-            if(!is_int((int)$items['role_id'])) {
-                return [
-                    'error' => 'Invalid role has been selected!',
-                    'code' => HttpCode::unprocessableEntity()
-                ];
-            }
-
-            /**
-             * Gender
-             */
-            if($items['gender']) {
-                if(
-                    $items['gender'] !== Gender::$MALE
-                    && $items['gender'] !== Gender::$FEMALE
-                    && $items['gender'] !== Gender::$OTHER
-                ) {
-                    return [
-                        'error' => 'Invalid gender selected! It should be Male, Female, or Other',
-                        'code' => HttpCode::unprocessableEntity()
-                    ];
-                }
-            } else {
-                $items['gender'] = null;
-            }
-
-            /**
-             * Age
-             */
-            if(!$items['age']) {
-                return [
-                    'error' => 'Age is required field!'
-                ];
-            }
-            if($items['age'] < 14 || $items['age'] > 80) {
-                return [
-                    'error' => "The worker's age should be from 14 to 80 years!",
-                    'code' => HttpCode::unprocessableEntity()
-                ];
-            }
-
-            /**
-             * Years of experience
-             */
-            if(!$items['experience']) {
-                return [
-                    'error' => "Years of worker's experience is required field!",
-                    'code' => HttpCode::unprocessableEntity()
-                ];
-            }
-            if($items['experience'] < 0 || $items['experience'] > 66) {
-                return [
-                    'error' => "The years of the worker's experience should be from 0 to 66 years!",
-                    'code' => HttpCode::unprocessableEntity()
-                ];
-            }
-
-            /**
-             * Salary
-             */
-            if($items['salary']) {
-                if($items['salary'] < 0){
-                    return [
-                        'error' => 'Salary can not be negative number!',
-                        'code' => HttpCode::unprocessableEntity()
-                    ];
-                }
-                if(!is_int((int)$items['salary']) && !is_double((double)$items['salary'])) {
-                    return [
-                        'error' => 'Invalid salary number is provided!',
-                        'code' => HttpCode::unprocessableEntity()
-                    ];
-                }
-            } else {
-                $items['salary'] = null;
+                return $valid;
             }
 
             /**

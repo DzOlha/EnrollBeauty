@@ -613,6 +613,19 @@ class AdminApiController extends WorkerApiController
         }
     }
 
+    protected function _validatePositionName(array $items)
+    {
+        /**
+         * Validate the name
+         */
+        $validator = new NameValidator(3, 50, true);
+        if (!$validator->validate($items['position_name']) < 3) {
+            $this->returnJson([
+                'error' => 'Position name should be between 3-50 characters and contain only letters with whitespaces!'
+            ], HttpCode::unprocessableEntity());
+        }
+    }
+
     /**
      * @return void
      *
@@ -636,14 +649,7 @@ class AdminApiController extends WorkerApiController
                 'department_id' => $request->get('department_id')
             ];
 
-            /**
-             * Validate the name
-             */
-            if (strlen($items['position_name']) < 3) {
-                $this->returnJson([
-                    'error' => 'Position name should be equal to or longer than 3 characters!'
-                ], HttpCode::unprocessableEntity());
-            }
+            $this->_validatePositionName($items);
 
             /**
              * Check if there is such position already in the db
@@ -706,14 +712,7 @@ class AdminApiController extends WorkerApiController
                 'department_id' => $request->get('department_id')
             ];
 
-            /**
-             * Validate the name
-             */
-            if (strlen($items['position_name']) < 3) {
-                $this->returnJson([
-                    'error' => 'Position name should be equal to or longer than 3 characters!'
-                ], HttpCode::unprocessableEntity());
-            }
+            $this->_validatePositionName($items);
 
             /**
              * Check if there is such position already in the db
@@ -994,7 +993,7 @@ class AdminApiController extends WorkerApiController
                 'salary' => $request->get('salary'),
             ];
 
-            $valid = $this->_validateWorkerForm($items);
+            $valid = $this->authService->validateWorkerAddForm($items);
             if($valid !== true) {
                 $this->returnJson($valid, HttpCode::unprocessableEntity());
             }
@@ -1040,132 +1039,6 @@ class AdminApiController extends WorkerApiController
         else {
             $this->_methodNotAllowed(['PUT']);
         }
-    }
-    private function _validateWorkerForm(array &$items)
-    {
-        $nameValidator = new NameValidator();
-        $emailValidator = new EmailValidator();
-        /**
-         * Name
-         */
-        $validName = $nameValidator->validate($items['name']);
-        if (!$validName) {
-            return [
-                'error' => 'Name must be at least 3 characters long and contain only letters'
-            ];
-        }
-
-        /**
-         * Surname
-         */
-        $validSurname = $nameValidator->validate($items['surname']);
-        if (!$validSurname) {
-            return [
-                'error' => 'Surname must be at least 3 characters long and contain only letters'
-            ];
-        }
-
-        /**
-         * Email
-         */
-        $validEmail = $emailValidator->validate($items['email']);
-        if (!$validEmail) {
-            return [
-                'error' => 'Please enter an email address in the format myemail@mailservice.domain'
-            ];
-        }
-
-        /**
-         * Position id
-         */
-        if(!$items['position_id']) {
-            return [
-                'error' => 'Position is required field!'
-            ];
-        }
-        if(!is_int((int)$items['position_id'])) {
-            return [
-                'error' => 'Invalid position has been selected!'
-            ];
-        }
-
-        /**
-         * Role id
-         */
-        if(!$items['role_id']) {
-            return [
-                'error' => 'Role is required field!'
-            ];
-        }
-        if(!is_int((int)$items['role_id'])) {
-            return [
-                'error' => 'Invalid role has been selected!'
-            ];
-        }
-
-        /**
-         * Gender
-         */
-        if($items['gender']) {
-            if(
-                $items['gender'] !== Gender::$MALE
-                && $items['gender'] !== Gender::$FEMALE
-                && $items['gender'] !== Gender::$OTHER
-            ) {
-                return [
-                    'error' => 'Invalid gender selected! It should be Male, Female, or Other'
-                ];
-            }
-        } else {
-            $items['gender'] = null;
-        }
-
-        /**
-         * Age
-         */
-        if(!$items['age']) {
-            return [
-                'error' => 'Age is required field!'
-            ];
-        }
-        if($items['age'] < 14 || $items['age'] > 80) {
-            return [
-                'error' => "The worker's age should be from 14 to 80 years!"
-            ];
-        }
-
-        /**
-         * Years of experience
-         */
-        if(!$items['experience']) {
-            return [
-                'error' => "Years of worker's experience is required field!"
-            ];
-        }
-        if($items['experience'] < 0 || $items['experience'] > 66) {
-            return [
-                'error' => "The years of the worker's experience should be from 0 to 66 years!"
-            ];
-        }
-
-        /**
-         * Salary
-         */
-        if($items['salary']) {
-            if($items['salary'] < 0){
-                return [
-                    'error' => 'Salary can not be negative number!'
-                ];
-            }
-            if(!is_int((int)$items['salary']) && !is_double((double)$items['salary'])) {
-                return [
-                    'error' => 'Invalid salary number is provided!'
-                ];
-            }
-        } else {
-            $items['salary'] = null;
-        }
-        return true;
     }
 
     /**
@@ -1245,6 +1118,33 @@ class AdminApiController extends WorkerApiController
         parent::_addService();
     }
 
+    protected function _validateDepartmentForm(array $items)
+    {
+        /**
+         * Validate name format
+         */
+        $validator = new NameValidator(3, 50, true);
+        if(!$validator->validate($items['name'])) {
+            $this->returnJson([
+                'error' => 'Department name should be between 3-50 characters long and contain only letters with whitespaces!'
+            ], HttpCode::unprocessableEntity());
+        }
+
+        /**
+         * Validate description format
+         */
+        if(strlen($items['description']) < 10) {
+            $this->returnJson([
+                'error' => 'Department description should be longer than 10 characters!'
+            ], HttpCode::unprocessableEntity());
+        }
+        if(strlen($items['description']) > 255) {
+            $this->returnJson([
+                'error' => 'Department description should not exceed 255 characters!'
+            ], HttpCode::unprocessableEntity());
+        }
+    }
+
     /**
      * @return void
      *
@@ -1267,13 +1167,14 @@ class AdminApiController extends WorkerApiController
                 'description' => $request->get('description')
             ];
 
+            $this->_validateDepartmentForm($items);
+
             /**
-             * Validate name format
+             * Validate the photo and set 'random_name'
              */
-            if(strlen($items['name']) < 3) {
-                $this->returnJson([
-                    'error' => 'Department name should be longer than 3 characters!!'
-                ], HttpCode::unprocessableEntity());
+            $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
+            if($validPhoto !== true) {
+                $this->returnJson($validPhoto, HttpCode::unprocessableEntity());
             }
 
             /**
@@ -1284,23 +1185,6 @@ class AdminApiController extends WorkerApiController
                 $this->returnJson([
                     'error' => 'The department with such name already exists!'
                 ], HttpCode::forbidden());
-            }
-
-            /**
-             * Validate description format
-             */
-            if(strlen($items['description']) < 10) {
-                $this->returnJson([
-                    'error' => 'Department description should be longer than 10 characters!!'
-                ], HttpCode::unprocessableEntity());
-            }
-
-            /**
-             * Validate the photo and set 'random_name'
-             */
-            $validPhoto = PhotoValidator::validateImageAndSetRandomName($_FILES['photo']);
-            if($validPhoto !== true) {
-                $this->returnJson($validPhoto, HttpCode::unprocessableEntity());
             }
 
 
@@ -1374,14 +1258,7 @@ class AdminApiController extends WorkerApiController
                 'description' => $request->get('description')
             ];
 
-            /**
-             * Validate name format
-             */
-            if(strlen($items['name']) < 3) {
-                $this->returnJson([
-                    'error' => 'Department name should be longer than 3 characters!!'
-                ], HttpCode::unprocessableEntity());
-            }
+            $this->_validateDepartmentForm($items);
 
             /**
              * Check if there is no department with the same name
@@ -1393,14 +1270,6 @@ class AdminApiController extends WorkerApiController
                 ], HttpCode::forbidden());
             }
 
-            /**
-             * Validate description format
-             */
-            if(strlen($items['description']) < 10) {
-                $this->returnJson([
-                    'error' => 'Department description should be longer than 10 characters!!'
-                ], HttpCode::unprocessableEntity());
-            }
 
             /**
              * Validate the photo and set 'random_name'
@@ -1720,43 +1589,7 @@ class AdminApiController extends WorkerApiController
                 'address' => $request->get('address'),
             ];
 
-            /**
-             * Validate name
-             */
-            if(strlen($items['name']) < 3) {
-                $this->returnJson([
-                    'error' => 'Affiliate name should be equal to or longer than 3 characters!'
-                ], HttpCode::unprocessableEntity());
-            }
-
-            /**
-             * Validate country
-             */
-            $validator = new NameValidator();
-            if(!$validator->validate($items['country'])) {
-                $this->returnJson([
-                    'error' => 'Invalid country name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
-                ], HttpCode::unprocessableEntity());
-            }
-
-            /**
-             * Validate city
-             */
-            if(!$validator->validate($items['city'])) {
-                $this->returnJson([
-                    'error' => 'Invalid city name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
-                ], HttpCode::unprocessableEntity());
-            }
-
-            /**
-             * Validate street address
-             */
-            $streetValidator = new StreetAddressValidator();
-            if(!$streetValidator->validate($items['address'])) {
-                $this->returnJson([
-                    'error' => "Invalid format for the street address! Please, follow the example like 'str. Street, 3' or 'вул. Назва Вулиці, 1'"
-                ], HttpCode::unprocessableEntity());
-            }
+            $this->_validateAffiliateForm($items);
 
             /**
              * Check if there is no affiliate with the same address
@@ -1795,6 +1628,53 @@ class AdminApiController extends WorkerApiController
         }
     }
 
+    protected function _validateAffiliateForm($items)
+    {
+        /**
+         * Validate name
+         */
+        $validator = new NameValidator(3, 100, true);
+        if(!$validator->validate($items['name'])) {
+            $this->returnJson([
+                'error' => 'Affiliate name should be equal length between 3-100 characters and contain only letters and whitespaces!'
+            ], HttpCode::unprocessableEntity());
+        }
+
+        /**
+         * Validate country
+         */
+        $validator = new NameValidator(3, 50);
+        if(!$validator->validate($items['country'])) {
+            $this->returnJson([
+                'error' => 'Invalid country name format! It must not contain any digits or special chars and has length between 3-50 characters'
+            ], HttpCode::unprocessableEntity());
+        }
+
+        /**
+         * Validate city
+         */
+        if(!$validator->validate($items['city'])) {
+            $this->returnJson([
+                'error' => 'Invalid city name format! It must not contain any digits or special chars and has length between 3-50 characters'
+            ], HttpCode::unprocessableEntity());
+        }
+
+        /**
+         * Validate street address
+         */
+        $streetValidator = new StreetAddressValidator();
+        if(!$streetValidator->validate($items['address'])) {
+            $this->returnJson([
+                'error' => "Invalid format for the street address! Please, follow the example like 'str. Street, 3' or 'вул. Назва Вулиці, 1'"
+            ], HttpCode::unprocessableEntity());
+        }
+        if(strlen($items['address']) > 255) {
+            $this->returnJson([
+                'error' => 'Street address should not exceed 255 characters!'
+            ], HttpCode::unprocessableEntity());
+        }
+    }
+
     /**
      * @return void
      *
@@ -1826,43 +1706,7 @@ class AdminApiController extends WorkerApiController
                 'address' => $request->get('address'),
             ];
 
-            /**
-             * Validate name
-             */
-            if(strlen($items['name']) < 3) {
-                $this->returnJson([
-                    'error' => 'Affiliate name should be equal to or longer than 3 characters!'
-                ], HttpCode::unprocessableEntity());
-            }
-
-            /**
-             * Validate country
-             */
-            $validator = new NameValidator();
-            if(!$validator->validate($items['country'])) {
-                $this->returnJson([
-                    'error' => 'Invalid country name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
-                ], HttpCode::unprocessableEntity());
-            }
-
-            /**
-             * Validate city
-             */
-            if(!$validator->validate($items['city'])) {
-                $this->returnJson([
-                    'error' => 'Invalid city name format! It must not contain any digits or special chars and has length equal to or longer that 3.'
-                ], HttpCode::unprocessableEntity());
-            }
-
-            /**
-             * Validate street address
-             */
-            $streetValidator = new StreetAddressValidator();
-            if(!$streetValidator->validate($items['address'])) {
-                $this->returnJson([
-                    'error' => "Invalid format for the street address! Please, follow the example like 'str. Street, 3' or 'вул. Назва Вулиці, 1'"
-                ], HttpCode::unprocessableEntity());
-            }
+           $this->_validateAffiliateForm($items);
 
             /**
              * Check if there is no affiliate with the same address

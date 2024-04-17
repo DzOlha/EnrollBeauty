@@ -3,6 +3,7 @@ import Notifier from "../../../../../../classes/notifier/Notifier.js";
 import Select2 from "../../../../../../classes/element/Select2.js";
 import Input from "../../../../../../classes/element/Input.js";
 import GifLoader from "../../../../../../classes/loader/GifLoader.js";
+import NameRegex from "../../../../../../classes/regex/impl/NameRegex.js";
 
 class AddServiceForm extends Form {
     constructor(
@@ -81,8 +82,9 @@ class AddServiceForm extends Form {
             return result;
         }
 
-        if(value.length < 3) {
-            result.error = "Service name should be longer than 3 characters!";
+        let pattern = new NameRegex(3, 100, true);
+        if(!pattern.test(value)) {
+            result.error = "Service name should be between 3-100 characters long and contain only letters with whitespaces!";
             return result;
         }
 

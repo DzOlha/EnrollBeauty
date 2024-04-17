@@ -4,6 +4,7 @@ import Input from "../../../../../../classes/element/Input.js";
 import AjaxImageFiller from "../../../../../../classes/helper/AjaxImageFiller.js";
 import GifLoader from "../../../../../../classes/loader/GifLoader.js";
 import Notifier from "../../../../../../classes/notifier/Notifier.js";
+import NameRegex from "../../../../../../classes/regex/impl/NameRegex.js";
 
 class AddDepartmentForm extends Form {
     constructor(
@@ -59,8 +60,9 @@ class AddDepartmentForm extends Form {
             return result;
         }
 
-        if(value.length < 3) {
-            result.error = "Department name should be longer than 3 characters!";
+        let pattern = new NameRegex(3, 50, true);
+        if(!pattern.test(value)) {
+            result.error = "Department name should be between 3-50 characters long and contain only letters with whitespaces!";
             return result;
         }
 
@@ -75,6 +77,10 @@ class AddDepartmentForm extends Form {
 
         if(value.length < 10) {
             result.error = "Department description should be longer than 10 characters!";
+            return result;
+        }
+        if(value.length > 255) {
+            result.error = "Department description should not exceed 255 characters!";
             return result;
         }
 

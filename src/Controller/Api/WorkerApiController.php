@@ -1554,6 +1554,24 @@ class WorkerApiController extends ApiController
         }
     }
 
+    protected function _validateServiceName(array $items)
+    {
+        /**
+         * Validate service name
+         */
+        $validator = new NameValidator(3, 100, true);
+        if (!$items['service_name']) {
+            $this->returnJson([
+                'error' => 'Service name can not be empty!'
+            ], HttpCode::unprocessableEntity());
+        }
+        if (!$validator->validate($items['service_name'])) {
+            $this->returnJson([
+                'error' => 'Service name should be between 3-100 characters long and contain only letters with whitespaces!'
+            ], HttpCode::unprocessableEntity());
+        }
+    }
+
     /**
      * @return void
      *
@@ -1574,19 +1592,9 @@ class WorkerApiController extends ApiController
                 'service_name'  => $request->get('service_name'),
                 'department_id' => $request->get('department_id')
             ];
-            /**
-             * Validate service name
-             */
-            if (!$items['service_name']) {
-                $this->returnJson([
-                    'error' => 'Service name can not be empty!'
-                ], HttpCode::unprocessableEntity());
-            }
-            if (strlen($items['service_name']) < 3) {
-                $this->returnJson([
-                    'error' => 'Service name should be equal to or longer than 3 characters!'
-                ], HttpCode::unprocessableEntity());
-            }
+
+            $this->_validateServiceName($items);
+
             /**
              * Check if there is no service with such name in the selected department
              */
@@ -1642,19 +1650,9 @@ class WorkerApiController extends ApiController
                 'service_name'  => $request->get('service_name'),
                 'department_id' => $request->get('department_id')
             ];
-            /**
-             * Validate service name
-             */
-            if (!$items['service_name']) {
-                $this->returnJson([
-                    'error' => 'Service name can not be empty!'
-                ], HttpCode::unprocessableEntity());
-            }
-            if (strlen($items['service_name']) < 3) {
-                $this->returnJson([
-                    'error' => 'Service name should be longer than 3 characters!'
-                ], HttpCode::unprocessableEntity());
-            }
+
+            $this->_validateServiceName($items);
+
             /**
              * Check if there is no service with such name in the selected department
              */

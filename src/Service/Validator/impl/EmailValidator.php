@@ -8,7 +8,7 @@ class EmailValidator implements IValidator
 {
     public function validate($value): bool
     {
-        if (preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/", $value)) {
+        if (preg_match("/^(?=.{1,100}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/", $value)) {
             return true;
         }
         return false;
