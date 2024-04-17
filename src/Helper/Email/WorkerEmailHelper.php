@@ -8,16 +8,17 @@ use Src\Service\Sender\impl\email\services\impl\MailgunService;
 
 class WorkerEmailHelper
 {
-    protected static function _createRecoveryLink(string $recoveryCode) {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT.API['AUTH']['WEB']['WORKER']['recovery-password']."?recovery_code=$recoveryCode";
+    protected static function _createRecoveryLink(string $recoveryCode)
+    {
+        return COMPANY['url_https'] . API['AUTH']['WEB']['WORKER']['recovery-password']."?recovery_code=$recoveryCode";
     }
 
     public static function sendLetterToWelcomeWorker(
         $email, $recoveryCode, $name, $surname
     ) {
         $email = new Email(
-            COMPANY_EMAIL,
-            COMPANY_NAME,
+            COMPANY['email'],
+            COMPANY['name'],
             [$email],
             'welcome',
             EMAIL_WITH_LINK,

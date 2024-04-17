@@ -48,12 +48,22 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="<?=API['WORKER']['WEB']['PROFILE']['pricing']?>">
+        <a class="nav-link with-sub" href="javascript:void(0)">
             <span class="shape1"></span>
             <span class="shape2"></span>
             <i class="ti-wallet sidemenu-icon menu-icon "></i>
-            <span class="sidemenu-label">Service Pricing</span>
+            <span class="sidemenu-label">Pricing</span>
+            <i class="angle fe fe-chevron-right"></i>
         </a>
+        <ul class="nav-sub">
+
+            <li class="nav-sub-item">
+                <a class="nav-sub-link" href="<?=API['WORKER']['WEB']['PROFILE']['pricing']?>">
+                    Services
+                </a>
+            </li>
+
+        </ul>
     </li>
 
 

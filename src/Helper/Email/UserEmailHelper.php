@@ -10,7 +10,7 @@ class UserEmailHelper
 {
     protected static function _createLinkToLogin()
     {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT . API['AUTH']['WEB']['USER']['login'];
+        return COMPANY['url_https'] . API['AUTH']['WEB']['USER']['login'];
     }
 
 
@@ -18,8 +18,8 @@ class UserEmailHelper
         $email, $name, $surname, $order
     ){
         $email = new Email(
-            COMPANY_EMAIL,
-            COMPANY_NAME,
+            COMPANY['email'],
+            COMPANY['name'],
             [$email],
             'order_canceled',
             EMAIL_WITH_LINK,
@@ -39,15 +39,15 @@ class UserEmailHelper
 
     protected static function _createLinkToUserProfile()
     {
-        return ENROLL_BEAUTY_URL_HTTP_ROOT . API['USER']['WEB']['PROFILE']['home'];
+        return COMPANY['url_https'] . API['USER']['WEB']['PROFILE']['home'];
     }
 
     public static function sendLetterToWelcomeUser(
         $email, $name, $surname
     ) {
         $email = new Email(
-            COMPANY_EMAIL,
-            COMPANY_NAME,
+            COMPANY['email'],
+            COMPANY['name'],
             [$email],
             'welcome',
             EMAIL_WITH_LINK,
@@ -65,8 +65,8 @@ class UserEmailHelper
         $email, $order
     ){
         $email = new Email(
-            COMPANY_EMAIL,
-            COMPANY_NAME,
+            COMPANY['email'],
+            COMPANY['name'],
             [$email],
             'order_details',
             EMAIL_WITH_LINK,

@@ -209,6 +209,26 @@ button[type="button"] {
     }
 }
 
+.tiktok-icon-footer
+{
+    width: 11px;
+    fill: var(--light-brown-color);
+}
+
+.tiktok-icon-footer-a:hover .tiktok-icon-footer
+{
+    fill: white;
+}
+
+.tiktok-icon-header
+{
+    width: 11px;
+    fill: white;
+}
+.tiktok-icon-header:hover
+{
+    fill: var(--light-brown-color);
+}
 
 /**
     Use Profile

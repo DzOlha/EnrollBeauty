@@ -404,7 +404,8 @@ class AdminApiController extends WorkerApiController
      */
     protected function _getAdminInfo(): void
     {
-        if(HttpRequest::method() === 'GET') {
+        if(HttpRequest::method() === 'GET')
+        {
             $request = new HttpRequest(new RequestTrimmer());
 
             $adminId = $this->_getAdminId($request);

@@ -1,10 +1,10 @@
 <?php
 //str_replace('\\', '/', dirname(__FILE__, 3));
 define('ROOT', dirname(__FILE__, 3));
+
 const SRC = ROOT . '/src';
 const CONFIG = ROOT . '/config';
 const ADMIN_DEFAULT_CREDENTIALS = CONFIG.'/credentials/default_admin_credentials.php';
-const PUBLIC_FOLDER = ROOT . '/public';
 const LOGS_FOLDER = ROOT . '/logs';
 
 const VIEW_PROTECTED_PAGES = 'public/custom/view/protected/pages';
@@ -42,9 +42,7 @@ const VALID_TIME_RECOVERY_CODE = 3600*30; //in seconds 30 hours
 /**
  * Mailing service constants
  */
-const EMAIL_WITH_LINK = SRC.'/Service/Sender/impl/email/templates/email_with_link.html';
-const COMPANY_NAME = 'Enroll Beauty';
-const COMPANY_EMAIL = 'enroll@beauty.com';
+const EMAIL_WITH_LINK = SRC.'/Service/Sender/impl/email/templates/html/email_with_link.html';
 
 const ARROW_DOWN = '/'.CUSTOM_ASSETS. '/img/system/icons/arrows_down.svg';
 const NO_PHOTO = '/'.CUSTOM_ASSETS . '/img/system/nophoto.jpg';
@@ -54,7 +52,7 @@ const ADMINS_PHOTO_FOLDER = UPLOADS_FOLDER . 'admins/';
 const USERS_PHOTO_FOLDER = UPLOADS_FOLDER . 'users/';
 
 
-const TEMP_EMAIL_IMAGES_UPLOAD_FOLDER = '/public/images/custom/uploads/tmp_email_images/';
+const TEMP_EMAIL_IMAGES_UPLOAD_FOLDER = '/public/custom/assets/img/uploads/tmp_email_images/';
 
 const WORKER_SOCIAL_NETWORKS_ROOT_URLS = [
     'Instagram' => 'https://www.instagram.com/',
@@ -65,8 +63,6 @@ const WORKER_SOCIAL_NETWORKS_ROOT_URLS = [
     'Github' => 'https://github.com/',
     'Telegram' => 'https://t.me/'
 ];
-
-const PUBLIC_JS_FOLDER = 'public/js';
 
 
 

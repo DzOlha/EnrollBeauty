@@ -2,14 +2,14 @@
 
 const OPEN_PAGES = [
     'index' => [
-        'path' =>  VIEW_OPEN_PAGES .'/'. 'index',
+        'path' =>  VIEW_OPEN_PAGES . '/index',
         'data' => [
             'title' => 'Homepage'
         ]
     ],
 
     'error' => [
-        'path' => VIEW_OPEN_PAGES .'/' . 'error/error',
+        'path' => VIEW_OPEN_PAGES . '/error/error',
         'data' => [
             'title' => 'Page Not Found',
             'message' => 'The requested page not found!'
@@ -19,14 +19,14 @@ const OPEN_PAGES = [
 
 const ADMIN_PAGES = [
     'change_default' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'admin/pages/auth/change_default',
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/auth/change_default',
         'data' => [
             'title' => 'Change Admin Info'
         ]
     ],
 
     'home' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'admin/pages/home',
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/home',
         'data' => [
             'title'     => 'Admin Account',
             'page_name' => 'Homepage'
@@ -34,7 +34,7 @@ const ADMIN_PAGES = [
     ],
 
     'workers' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'admin/pages/worker/workers',
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/worker/workers',
         'data' =>  [
             'title'     => 'User Management',
             'page_name' => 'Workers'
@@ -42,7 +42,7 @@ const ADMIN_PAGES = [
     ],
 
     'services' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'admin/pages/service/services',
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/service/services',
         'data' => [
             'title'     => 'Service Management',
             'page_name' => 'Services'
@@ -50,7 +50,7 @@ const ADMIN_PAGES = [
     ],
 
     'departments' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'admin/pages/department/departments',
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/department/departments',
         'data' => [
             'title'     => 'Department Management',
             'page_name' => 'Departments'
@@ -58,7 +58,7 @@ const ADMIN_PAGES = [
     ],
 
     'positions' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'admin/pages/position/positions',
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/position/positions',
         'data' => [
             'title'     => 'Position Management',
             'page_name' => 'Positions'
@@ -66,7 +66,7 @@ const ADMIN_PAGES = [
     ],
 
     'affiliates' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'admin/pages/affiliate/affiliates',
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/affiliate/affiliates',
         'data' => [
             'title'     => 'Affiliate Management',
             'page_name' => 'Affiliates'
@@ -74,7 +74,7 @@ const ADMIN_PAGES = [
     ],
 
     'login' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'admin/pages/auth/login',
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/auth/login',
         'data' => [
             'title' => 'Login | Admin'
         ]
@@ -83,21 +83,21 @@ const ADMIN_PAGES = [
 
 const WORKER_PAGES = [
     'login' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'worker/pages/auth/login',
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/auth/login',
         'data' => [
             'title' => 'Login | Worker'
         ]
     ],
 
     'change_password' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'worker/pages/auth/change_password',
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/auth/change_password',
         'data' => [
             'title' => 'Change Password'
         ]
     ],
 
     'home' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'worker/pages/home',
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/home',
         'data' => [
             'title' => 'Worker Account',
             'page_name' => 'Homepage'
@@ -105,7 +105,7 @@ const WORKER_PAGES = [
     ],
 
     'settings' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'worker/pages/settings/settings',
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/settings/settings',
         'data' => [
             'title' => 'Worker Account',
             'page_name' => 'Profile Settings'
@@ -113,7 +113,7 @@ const WORKER_PAGES = [
     ],
 
     'schedule' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'worker/pages/schedule/schedule',
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/schedule/schedule',
         'data' => [
             'title' => 'Schedule Management',
             'page_name' => 'Schedule'
@@ -121,7 +121,7 @@ const WORKER_PAGES = [
     ],
 
     'services' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'worker/pages/service/services',
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/service/services',
         'data' => [
             'title' => 'Service Management',
             'page_name' => 'Services'
@@ -129,7 +129,7 @@ const WORKER_PAGES = [
     ],
 
     'pricing' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'worker/pages/pricing/pricing',
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/pricing/pricing',
         'data' => [
             'title' => 'Service Pricing',
             'page_name' => 'Price-list'
@@ -137,7 +137,7 @@ const WORKER_PAGES = [
     ],
 
     'public_profile' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'worker/pages/profile/public/public_profile',
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/profile/public/public_profile',
         'data' => [
             'title' => 'Worker Profile',
             'page_num' => ''
@@ -147,21 +147,21 @@ const WORKER_PAGES = [
 
 const USER_PAGES = [
     'registration' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'user/pages/auth/registration',
+        'path' => VIEW_PROTECTED_PAGES . '/user/pages/auth/registration',
         'data' => [
             'title' => 'Registration'
         ]
     ],
 
     'login' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'user/pages/auth/login',
+        'path' => VIEW_PROTECTED_PAGES . '/user/pages/auth/login',
         'data' => [
             'title' => 'Login'
         ]
     ],
 
     'home' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'user/pages/home',
+        'path' => VIEW_PROTECTED_PAGES . '/user/pages/home',
         'data' => [
             'title' => 'Account',
             'page_name' => 'Homepage'
@@ -169,7 +169,7 @@ const USER_PAGES = [
     ],
 
     'settings' => [
-        'path' => VIEW_PROTECTED_PAGES .'/' . 'user/pages/settings/settings',
+        'path' => VIEW_PROTECTED_PAGES . '/user/pages/settings/settings',
         'data' => [
             'title' => 'Account Settings',
             'page_name' => 'Settings'

@@ -26,14 +26,14 @@ require_once 'config/constants/folder_constants.php';
 require_once CONFIG . '/credentials/api_credentials.php';
 
 /**
- * set constants for root urls
- */
-require_once CONFIG . '/constants/url_constants.php';
-
-/**
  * set constants for the file paths of the pages and their 'title'
  */
 require_once CONFIG . '/constants/page_constants.php';
+
+/**
+ * Set company constants
+ */
+require_once CONFIG . '/constants/company.php';
 
 /**
  * api constants

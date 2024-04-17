@@ -19,7 +19,7 @@ body {
 }
 .search-btn-schedule {
     align-self: start;
-    margin-bottom: 5px;
+    margin-top: 0px;
 }
 #submit-search-button {
     background-color: #333;
@@ -112,5 +112,12 @@ a {
         align-items: center;
         justify-content: center;
     }
+}
+
+.footer-socials a {
+    color: var(--light-brown-color) !important;
+}
+.footer-socials a:hover {
+    color: white !important;
 }
 

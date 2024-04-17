@@ -46,7 +46,9 @@
                                 </div>
                                 <div class="featured-content">
                                     <div class="featured-desc">
-                                        <p>123, Independence Street<br>Kyiv City </p>
+                                        <p>
+                                            <?=COMPANY['address']?>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +61,7 @@
                                 <div class="featured-content">
                                     <div class="featured-desc">
                                         <p><a href="mailto:info@example.com.com" style="color: white !important;">
-                                                support@enrollbeauty.com
+                                                <?=COMPANY['email']?>
                                             </a></p>
                                     </div>
                                 </div>
@@ -72,7 +74,9 @@
                                 </div>
                                 <div class="featured-content">
                                     <div class="featured-desc">
-                                        <p>(+380) 123 456 789</p>
+                                        <p>
+                                            <?=COMPANY['phone']?>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -87,20 +91,70 @@
             <div class="row copyright">
                 <div class="col-md-9">
                     <div class="ttm-textcolor-white">
-                        <span>Copyright &copy; 2024&nbsp;<a class="ttm-textcolor-skincolor" href="#">Enroll Beauty</a></span>
+                        <span>Copyright &copy; 2024&nbsp;<a class="ttm-textcolor-skincolor" href="#">
+                                <?=COMPANY['name']?>
+                            </a></span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="d-flex flex-row align-items-center justify-content-end social-icons">
-                        <ul class="social-icons list-inline">
-                            <li><a href="#" class=" tooltip-top" data-tooltip="Facebook"><i class="fa fa-facebook"></i></a>
-                            </li>
-                            <li><a href="#" class=" tooltip-top" data-tooltip="Twitter"><i class="fa fa-twitter"></i></a>
-                            </li>
-                            <li><a href="#" class=" tooltip-top" data-tooltip="Flickr"><i class="fa fa-flickr"></i></a>
-                            </li>
-                            <li><a href="#" class=" tooltip-top" data-tooltip="Linkedin"><i class="fa fa-linkedin"></i></a>
-                            </li>
+                        <ul class="footer-socials social-icons list-inline">
+                            <?php if(isset(COMPANY['socials']['Instagram'])) {?>
+                                <li>
+                                    <a href="<?=COMPANY['socials']['Instagram']?>" target="_blank"
+                                       class="tooltip-top" data-tooltip="Instagram">
+                                        <i class="fa fa-instagram"></i>
+                                    </a>
+                                </li>
+                            <?php }?>
+                            <?php if(isset(COMPANY['socials']['Facebook'])) {?>
+                                <li>
+                                    <a href="<?=COMPANY['socials']['Facebook']?>" target="_blank"
+                                       class="tooltip-top" data-tooltip="Facebook">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+                                </li>
+                            <?php }?>
+                            <?php if(isset(COMPANY['socials']['TikTok'])) {?>
+                                <li>
+                                    <a href="<?=COMPANY['socials']['TikTok']?>" target="_blank"
+                                       class="tooltip-top tiktok-icon-footer-a" data-tooltip="TikTok">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="tiktok-icon-footer" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z"/></svg>
+                                    </a>
+                                </li>
+                            <?php }?>
+                            <?php if(isset(COMPANY['socials']['LinkedIn'])) {?>
+                                <li>
+                                    <a href="<?=COMPANY['socials']['LinkedIn']?>" target="_blank"
+                                       class="tooltip-top" data-tooltip="LinkedIn">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
+                                </li>
+                            <?php }?>
+                            <?php if(isset(COMPANY['socials']['YouTube'])) {?>
+                                <li>
+                                    <a href="<?=COMPANY['socials']['YouTube']?>" target="_blank"
+                                       class="tooltip-top" data-tooltip="YouTube">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+                                </li>
+                            <?php }?>
+                            <?php if(isset(COMPANY['socials']['Twitter'])) {?>
+                                <li>
+                                    <a href="<?=COMPANY['socials']['Twitter']?>" class=" tooltip-top"
+                                       data-tooltip="Twitter">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+                                </li>
+                            <?php }?>
+                            <?php if(isset(COMPANY['socials']['Telegram'])) {?>
+                                <li>
+                                    <a href="<?=COMPANY['socials']['Telegram']?>" class=" tooltip-top"
+                                       data-tooltip="Telegram">
+                                        <i class="fa fa-telegram"></i>
+                                    </a>
+                                </li>
+                            <?php }?>
                         </ul>
                     </div>
                 </div>

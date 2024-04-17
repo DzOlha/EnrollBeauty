@@ -9,7 +9,7 @@
                     <div id="site-navigation" class="site-navigation d-flex flex-row">
                         <div class="site-branding mr-auto">
                             <!-- site-branding -->
-                            <a class="home-link" href="<?=ENROLL_BEAUTY_URL_HTTPS_ROOT?>" title="Sylin Beauty" rel="home">
+                            <a class="home-link" href="<?=COMPANY['url_https']?>" title="Sylin Beauty" rel="home">
                                 <img id="logo-img" class="img-center lazyload" src="/<?=MOCKUP_OPEN_FOLDER?>/assets/img/logo/logo.png" alt="logo">
                             </a>
                             <!-- site-branding end -->
@@ -24,9 +24,9 @@
                         </div>
                         <nav id="menu" class="menu">
                             <ul class="dropdown">
-<!--                                <li class="active"><a href="--><?php //=ENROLL_BEAUTY_URL_HTTPS_ROOT?><!--">Home</a>-->
+<!--                                <li class="active"><a href="--><?php //=COMPANY['url_https]?><!--">Home</a>-->
 <!--                                    <ul>-->
-<!--                                        <li class="active"><a href="--><?php //=ENROLL_BEAUTY_URL_HTTPS_ROOT?><!--">Homepage 1</a></li>-->
+<!--                                        <li class="active"><a href="--><?php //=COMPANY['url_https]?><!--">Homepage 1</a></li>-->
 <!--                                        <li><a href="home-2.html">Homepage 2</a></li>-->
 <!--                                        <li><a href="http://themetechmount.net/html/sylin/barber">Demo Barber</a></li>-->
 <!--                                        <li><a href="http://themetechmount.net/html/sylin/spa">Demo Spa</a></li>-->
