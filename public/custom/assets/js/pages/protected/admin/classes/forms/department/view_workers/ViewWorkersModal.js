@@ -3,7 +3,8 @@ import Notifier from "../../../../../../../classes/notifier/Notifier.js";
 
 class ViewWorkersModal extends FormModal {
     constructor(
-        requester, formBuilder, apiGetWorkers, dataIdAttribute, dataId
+        requester, formBuilder, apiGetWorkers,
+        dataIdAttribute, dataId, modalHeadline = null
     ) {
         super(formBuilder);
         this.requester = requester;
@@ -16,11 +17,14 @@ class ViewWorkersModal extends FormModal {
         this.dataIdAttribute = dataIdAttribute;
         this.dataId = dataId
 
+        this.dataNameAttribute = 'data-name';
         this.uploadMoreWorkersId = `upload-more-workers`;
 
         this.uploadWorkersParentId = `workers-wrapper`;
 
         this.apiGetWorkers = apiGetWorkers;
+
+        this.modalHeadline = modalHeadline ?? 'Workers of the Department';
     }
     setSelectors() {
         this.modalId = `modalMentions`;
@@ -44,8 +48,10 @@ class ViewWorkersModal extends FormModal {
     handleShowModal = (e) => {
         this.setSelectors();
         let id = e.currentTarget.getAttribute(this.dataIdAttribute);
+        let name = e.currentTarget.getAttribute(this.dataNameAttribute);
+
         this.show(
-            'Informational Modal',
+            `${this.modalHeadline}: ${name}`,
             this.formBuilder.createContentWrapper(this.tabId, this.tabName),
             ''
         );

@@ -43,12 +43,18 @@ class ImageDropify {
         imageInputDropify.init();
     }
 
-    validate = (value) =>  {
+    validate = (value, required = true) =>  {
         let result = {};
 
         let wrapper = document.querySelector(this.inputFileWrapperSelector)
         if (!value) {
-            return result;
+            if(required) {
+                result.error = 'The image is a required field!';
+                return result;
+            }
+            else {
+                return result;
+            }
         }
 
         const fileName = value.name;

@@ -34,6 +34,7 @@ class ServicesTable extends Table {
         row.append(`<td>
                         <button class="btn bg-secondary button-in-cell ${disabled}" type="button"
                                 id="${this.extraModalTrigger}-${item.id}" 
+                                data-name="${item.name}"
                                 ${this.dataIdAttribute}="${item.id}">
                             View Workers
                         </button>

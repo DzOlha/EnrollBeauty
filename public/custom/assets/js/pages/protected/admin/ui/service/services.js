@@ -72,7 +72,7 @@ $(function () {
     let extraModalBuilder = new ModalBuilder();
     let viewWorkers = new ViewWorkersModal(
         requester, extraModalBuilder, API.ADMIN.API.WORKER.get["all-by-service"],
-        'data-service-id', 'service_id'
+        'data-service-id', 'service_id', 'Workers who provide the Service'
     );
     servicesTable.setShowWorkersCallback(
         viewWorkers.addListenerShow, viewWorkers

@@ -91,6 +91,16 @@ class EditDepartmentForm extends AddDepartmentForm
         submitBtn.setAttribute(this.dataIdAttribute, data.id);
     }
 
+    mainPhotoValidationCallback = (value) => {
+        let image = new ImageDropify(
+            this.inputFileWrapperSelector,
+            this.departmentPhotoInputId,
+            'Department',
+            this.allowedImageExtensions
+        );
+        return image.validate(value, false);
+    }
+
     validateFormData() {
         let name = Input.validateInput(
             this.departmentNameInputId, 'name', this.departmentNameValidationCallback
