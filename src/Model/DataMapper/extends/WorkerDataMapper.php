@@ -316,11 +316,11 @@ class WorkerDataMapper extends DataMapper
     }
 
     public function selectAllServicesWithDepartments(
-        int $limit, int $offset,
+        int $workerId, int $limit, int $offset,
         string $orderByField = 'services.id', string $orderDirection = 'asc'
     ){
         return $this->dataSource->selectAllServicesWithDepartments(
-            $limit, $offset, $orderByField, $orderDirection
+            $workerId, $limit, $offset, $orderByField, $orderDirection
         );
     }
 

@@ -896,30 +896,33 @@ class WorkerDataSource extends DataSource
     }
 
     public function selectAllServicesWithDepartments(
-        int $limit, int $offset,
+        int $workerId, int $limit, int $offset,
         string $orderByField = 'services.id', string $orderDirection = 'asc'
     )
     {
-        $services = Services::$table;
-        $servicesDepartmentId = Services::$department_id;
-
-        $departments = Departments::$table;
-        $departmentsId = Departments::$id;
-        $departmentsName = Departments::$name;
-
         $queryFrom = "
-            $services INNER JOIN $departments ON $servicesDepartmentId = $departmentsId
+            ".Services::$table." 
+                INNER JOIN ".Departments::$table." ON ".Services::$department_id." = ".Departments::$id."
+                INNER JOIN ".Positions::$table." ON ".Departments::$id." = ".Positions::$department_id."
+                INNER JOIN ".Workers::$table." ON ".Positions::$id." = ".Workers::$position_id."
+            WHERE ".Workers::$id." = $workerId
         ";
+
         $this->builder->select([Services::$id, Services::$name,
-                                "$departmentsName as department_name",
-                                "$departmentsId as department_id"])
+                                Departments::$name." as department_name",
+                                Departments::$id." as department_id"])
             ->from(Services::$table)
-            ->innerJoin(Departments::$table)
-            ->on(Services::$department_id, $departmentsId)
+                ->innerJoin(Departments::$table)
+                    ->on(Services::$department_id, Departments::$id)
+                ->innerJoin(Positions::$table)
+                    ->on(Departments::$id, Positions::$department_id)
+                ->innerJoin(Workers::$table)
+                    ->on(Positions::$id, Workers::$position_id)
+                ->whereEqual(Workers::$id, ':id', $workerId)
             ->orderBy($orderByField, $orderDirection)
             ->limit($limit)
             ->offset($offset)
-            ->build();
+        ->build();
 
         $result = $this->db->manyRows();
         if($result == null) {

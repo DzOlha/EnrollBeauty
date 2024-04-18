@@ -1105,8 +1105,31 @@ class AdminApiController extends WorkerApiController
      *
      * url = /api/admin/service/get/all-with-departments
      */
-    protected function _getServicesAllWithDepartments() {
-        parent::_getServicesAllWithDepartments();
+    protected function _getServicesAllWithDepartments()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $param = $this->_getLimitPageFieldOrderOffset();
+
+            $services = $this->dataMapper->selectAllServicesWithDepartmentsInfo(
+                $param['limit'],
+                $param['offset'],
+                $param['order_field'],
+                $param['order_direction']
+            );
+            if ($services === false) {
+                $this->returnJson([
+                    'error' => 'The error occurred while getting all services'
+                ], HttpCode::notFound());
+            }
+            $this->returnJson([
+                'success' => true,
+                'data'    => $services
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**

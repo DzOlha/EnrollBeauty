@@ -702,4 +702,31 @@ class AdminDataSource extends WorkerDataSource
 
         return $this->db->singleRow();
     }
+
+    public function selectAllServicesWithDepartmentsInfo(
+        int $limit, int $offset,
+        string $orderByField = 'services.id', string $orderDirection = 'asc'
+    ){
+        $queryFrom = "
+            ".Services::$table." 
+                INNER JOIN ".Departments::$table." ON ".Services::$department_id." = ".Departments::$id."
+        ";
+
+        $this->builder->select([Services::$id, Services::$name,
+                                Departments::$name." as department_name",
+                                Departments::$id." as department_id"])
+            ->from(Services::$table)
+            ->innerJoin(Departments::$table)
+                ->on(Services::$department_id, Departments::$id)
+            ->orderBy($orderByField, $orderDirection)
+            ->limit($limit)
+            ->offset($offset)
+        ->build();
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
 }

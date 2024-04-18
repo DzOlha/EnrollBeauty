@@ -22,9 +22,9 @@ class NameValidator implements IValidator
     public function validate($value): bool
     {
         if ($this->allowWhitespace) {
-            $pattern = "/^(?=.*\S)[A-Za-z\p{Cyrillic}іїІЇ\s]{{$this->minLength},{$this->maxLength}}$/u";
+            $pattern = "/^(?!-+$)(?=.*\S)[A-Za-z\p{Cyrillic}іїІЇ\s-]{{$this->minLength},{$this->maxLength}}$/u";
         } else {
-            $pattern = "/^(?=.*\S)[A-Za-z\p{Cyrillic}іїІЇ]{{$this->minLength},{$this->maxLength}}$/u";
+            $pattern = "/^(?!-+$)(?=.*\S)[A-Za-z\p{Cyrillic}іїІЇ-]{{$this->minLength},{$this->maxLength}}$/u";
         }
 
         if (preg_match($pattern, $value)) {

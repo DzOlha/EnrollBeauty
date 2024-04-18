@@ -943,8 +943,17 @@ class WorkerApiController extends ApiController
     {
         if(HttpRequest::method() === 'GET')
         {
+            $request = new HttpRequest();
+            $workerId = $this->_getWorkerId($request);
+
+            if(!$workerId) {
+                $this->_missingRequestFields();
+            }
+
             $param = $this->_getLimitPageFieldOrderOffset();
+
             $services = $this->dataMapper->selectAllServicesWithDepartments(
+                $workerId,
                 $param['limit'],
                 $param['offset'],
                 $param['order_field'],

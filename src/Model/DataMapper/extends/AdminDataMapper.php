@@ -242,4 +242,13 @@ class AdminDataMapper extends WorkerDataMapper
     {
         return $this->dataSource->selectDepartmentFullById($id);
     }
+
+    public function selectAllServicesWithDepartmentsInfo(
+        int $limit, int $offset,
+        string $orderByField = 'services.id', string $orderDirection = 'asc'
+    ){
+        return $this->dataSource->selectAllServicesWithDepartmentsInfo(
+            $limit, $offset, $orderByField, $orderDirection
+        );
+    }
 }

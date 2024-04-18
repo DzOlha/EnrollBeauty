@@ -75,28 +75,31 @@ class ApiController extends AbstractController
     protected function _getLimitPageFieldOrderOffset(): array
     {
         $trimmer = new RequestTrimmer();
+        $request = new HttpRequest($trimmer);
+        $DATA = $request->getData();
+
         /**
          * get limits of displaying rows
          */
         $limit = 10;
-        if (isset($_GET['limit'])) {
-            $limit = (int)$trimmer->in($_GET['limit']);
+        if (isset($DATA['limit'])) {
+            $limit = (int)$trimmer->in($DATA['limit']);
         }
 
         /**
          * get number of the pagination page that should be populated with the data
          */
         $page = 1;
-        if (isset($_GET['page'])) {
-            $page = (int)$trimmer->in($_GET['page']);
+        if (isset($DATA['page'])) {
+            $page = (int)$trimmer->in($DATA['page']);
         }
 
         /**
          * get the name of the column (field) the data should be sorted by
          */
         $orderByField = 'id';
-        if (isset($_GET['order_field'])) {
-            $orderByField = $trimmer->in($_GET['order_field']);
+        if (isset($DATA['order_field'])) {
+            $orderByField = $trimmer->in($DATA['order_field']);
         }
 
         /**
@@ -107,8 +110,8 @@ class ApiController extends AbstractController
          * desc -> by decreasing
          */
         $orderDirection = 'asc';
-        if (isset($_GET['order_direction'])) {
-            $orderDirection = $trimmer->in($_GET['order_direction']);
+        if (isset($DATA['order_direction'])) {
+            $orderDirection = $trimmer->in($DATA['order_direction']);
         }
 
         /**
