@@ -4,6 +4,8 @@ import ImageDropify from "../../../../../../../classes/element/ImageDropify.js";
 import Input from "../../../../../../../classes/element/Input.js";
 import AjaxImageFiller from "../../../../../../../classes/helper/AjaxImageFiller.js";
 import User from "../../../User.js";
+import NameRegex from "../../../../../../../classes/regex/impl/NameRegex.js";
+import EmailRegex from "../../../../../../../classes/regex/impl/EmailRegex.js";
 
 
 class EditUserPersonalInfo
@@ -142,9 +144,9 @@ class EditUserPersonalInfo
             return result;
         }
 
-        let pattern = /^[A-Za-zА-Яа-яіїІЇ]{3,}$/;
+        let pattern = new NameRegex();
         if(!pattern.test(value)) {
-            result.error = "Name must be at least 3 characters long and contain only letters"
+            result.error = "Name must be between 3-50 characters long and contain only letters and dash signs"
         }
 
         return result;
@@ -158,9 +160,9 @@ class EditUserPersonalInfo
             return result;
         }
 
-        let pattern = /^[A-Za-zА-Яа-яіїІЇ]{3,}$/;
+        let pattern = new NameRegex();
         if(!pattern.test(value)) {
-            result.error = "Surname must be at least 3 characters long and contain only letters"
+            result.error = "Surname must be between 3-50 characters long and contain only letters and dash signs"
         }
 
         return result;
@@ -174,9 +176,9 @@ class EditUserPersonalInfo
             return result;
         }
 
-        let pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        let pattern = new EmailRegex();
         if(!pattern.test(value)) {
-            result.error = 'Please enter an email address in the format myemail@mailservice.domain';
+            result.error = 'Please enter an email address in the format myemail@mailservice.domain that not exceeds 100 characters';
         }
 
         return result;
@@ -186,7 +188,7 @@ class EditUserPersonalInfo
         let image = new ImageDropify(
             this.inputFileWrapperSelector, this.mainPhotoInputId, 'main'
         );
-        return image.validate(value);
+        return image.validate(value, false);
     }
 
     validateForm()  {

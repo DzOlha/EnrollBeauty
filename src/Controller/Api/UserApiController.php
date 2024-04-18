@@ -639,7 +639,7 @@ class UserApiController extends ApiController
         $validName = $nameValidator->validate($items['name']);
         if (!$validName) {
             return [
-                'error' => 'Name must be at least 3 characters long and contain only letters'
+                'error' => 'Name must be between 3-50 characters long and contain only letters and dash signs'
             ];
         }
 
@@ -649,7 +649,7 @@ class UserApiController extends ApiController
         $validSurname = $nameValidator->validate($items['surname']);
         if (!$validSurname) {
             return [
-                'error' => 'Surname must be at least 3 characters long and contain only letters'
+                'error' => 'Surname must be between 3-50 characters long and contain only letters and dash signs'
             ];
         }
 
@@ -659,7 +659,7 @@ class UserApiController extends ApiController
         $validEmail = $emailValidator->validate($items['email']);
         if (!$validEmail) {
             return [
-                'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                'error' => 'Please enter an email address in the format myemail@mailservice.domain that not exceeds 100 characters'
             ];
         }
 
