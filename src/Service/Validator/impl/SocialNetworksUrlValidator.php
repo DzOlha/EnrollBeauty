@@ -5,13 +5,13 @@ namespace Src\Service\Validator\impl;
 class SocialNetworksUrlValidator
 {
     private array $patterns = [
-        'Instagram' => '/^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9_]+\/?(?:\?[\w=&]+)?$/',
-        'Facebook' => '/^(https?:\/\/)?(www\.)?facebook\.com\/(profile\.php\?id=)?[0-9]{1,}$/',
-        'TikTok' => '/^(https?:\/\/)?(www\.)?tiktok\.com\/@[\w.-]+(\?_t=.+)?$/',
-        'YouTube' => '/^(https?:\/\/)?(www\.)?youtube\.com\/@[\w.-]+\?si=[a-zA-Z0-9_-]+$/',
+        'Instagram' => '/^https:\/\/www\.instagram\.com\/[a-zA-Z0-9_]+\/?(?:\?[\w=&]+)?$/',
+        'Facebook' => '/^https:\/\/www\.facebook\.com\/(profile\.php\?id=)?[0-9]{1,}$/',
+        'TikTok' => '/^https:\/\/www\.tiktok\.com\/@[\w.-]+(\?_t=.+)?$/',
+        'YouTube' => '/^https:\/\/youtube\.com\/@[\w.-]+(?:\?si=[a-zA-Z0-9_-]+)?$/',
         'LinkedIn' => '/^https:\/\/www\.linkedin\.com\/in\/[a-zA-Z0-9_-]+(\?.*)?$/',
-        'Github' => '/^(https?:\/\/)?(www\.)?github\.com\/[a-zA-Z0-9-]+$/',
-        'Telegram' => '/^(https?:\/\/)?(www\.)?t\.me\/[a-zA-Z0-9_]+$/',
+        'Github' => '/^https:\/\/github\.com\/[a-zA-Z0-9-]+$/',
+        'Telegram' => '/^https:\/\/t\.me\/[a-zA-Z0-9_]+$/',
     ];
 
     /**

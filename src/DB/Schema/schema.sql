@@ -15,7 +15,6 @@ CREATE TABLE users (
        password VARCHAR(255) NOT NULL,
        email VARCHAR(100) UNIQUE NOT NULL,
        created_date DATETIME NOT NULL,
-       referral_parent_id INT,
        last_login_date DATETIME,
        role_id INT NOT NULL,
        FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE

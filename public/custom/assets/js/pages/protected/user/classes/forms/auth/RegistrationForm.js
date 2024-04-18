@@ -1,5 +1,8 @@
 
 import Form from "./../Form.js";
+import PasswordRegex from "../../../../../../classes/regex/impl/PasswordRegex.js";
+import NameRegex from "../../../../../../classes/regex/impl/NameRegex.js";
+import EmailRegex from "../../../../../../classes/regex/impl/EmailRegex.js";
 
 
 
@@ -80,21 +83,23 @@ class RegistrationForm extends Form {
     getRules() {
         const formRules = {};
 
+        let nameReg = new NameRegex();
+
         formRules[this.nameInputId] = {
             required: true,
-            pattern: /^[A-Za-zА-Яа-яіїІЇ]{3,}$/
+            pattern: nameReg
         };
         formRules[this.surnameInputId] = {
             required: true,
-            pattern: /^[A-Za-zА-Яа-яіїІЇ]{3,}$/
+            pattern: nameReg
         };
         formRules[this.emailInputId] = {
             required: true,
-            pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+            pattern: new EmailRegex()
         };
         formRules[this.passwordInputId] = {
             required: true,
-            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,30}$/
+            pattern: new PasswordRegex()
         };
         formRules[this.confirmPasswordInputId] = {
             required: true,
@@ -108,15 +113,15 @@ class RegistrationForm extends Form {
 
         formMessages[this.nameInputId] = {
             required: 'Please enter your name',
-            pattern: 'Name must be at least 3 characters long and contain only letters'
+            pattern: 'Name must be between 3-50 characters long and contain only letters'
         };
         formMessages[this.surnameInputId] = {
             required: 'Please enter your surname',
-            pattern: 'Surname must be at least 3 characters long and contain only letters'
+            pattern: 'Surname must be between 3-50 characters long and contain only letters'
         };
         formMessages[this.emailInputId] = {
             required: 'Please enter your email address',
-            pattern: 'Please enter an email address in the format myemail@mailservice.domain'
+            pattern: 'Please enter an email address in the format myemail@mailservice.domain that not exceeds 100 characters'
         };
         formMessages[this.passwordInputId] = {
             required: 'Please enter your password',

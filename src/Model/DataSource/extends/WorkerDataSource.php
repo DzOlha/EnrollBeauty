@@ -1443,4 +1443,34 @@ class WorkerDataSource extends DataSource
         }
         return false;
     }
+
+    public function selectServicesInDepartmentByWorkerId(int $workerId)
+    {
+        $this->builder->select([Services::$id, Services::$name])
+                    ->from(Services::$table)
+                    ->innerJoin(Departments::$table)
+                        ->on(Services::$department_id, Departments::$id)
+                    ->innerJoin(Positions::$table)
+                        ->on(Departments::$id, Positions::$department_id)
+                    ->innerJoin(Workers::$table)
+                        ->on(Positions::$id, Workers::$position_id)
+                ->whereEqual(Workers::$id, ':id', $workerId)
+            ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function selectDepartmentsByWorkerId(int $workerId)
+    {
+        $this->builder->select([Departments::$id, Departments::$name])
+                    ->from(Departments::$table)
+                    ->innerJoin(Positions::$table)
+                        ->on(Departments::$id, Positions::$department_id)
+                    ->innerJoin(Workers::$table)
+                        ->on(Positions::$id, Workers::$position_id)
+                    ->whereEqual(Workers::$id, ':id', $workerId)
+            ->build();
+
+        return $this->db->manyRows();
+    }
 }

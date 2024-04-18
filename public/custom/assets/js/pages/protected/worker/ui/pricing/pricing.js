@@ -21,7 +21,7 @@ $(function () {
     let addNewPricingForm = new AddPricingForm(
         requester,
         API.WORKER.API.PROFILE["service-pricing"].add,
-        API.WORKER.API.SERVICE.get.all,
+        API.WORKER.API.SERVICE.get["all-by-worker"],
         API.WORKER.API.PROFILE["service-pricing"].get.all,
         modalForm, optionBuilder, pricingTable
     );
@@ -29,7 +29,7 @@ $(function () {
     let editPricingForm = new EditPricingForm(
         requester,
         API.WORKER.API.PROFILE["service-pricing"].edit,
-        API.WORKER.API.SERVICE.get.all,
+        API.WORKER.API.SERVICE.get["all-by-worker"],
         API.WORKER.API.PROFILE["service-pricing"].get.all,
         modalForm, optionBuilder, pricingTable
     );

@@ -202,12 +202,12 @@ class EditScheduleForm extends AddScheduleForm
          */
         let data = this.validateFormData();
 
-        /**
-         * Add the schedule id to the data sent to the server
-         */
-        data.id = e.currentTarget.getAttribute(this.dataIdAttribute);
-
         if (data) {
+            /**
+             * Add the schedule id to the data sent to the server
+             */
+            data.id = e.currentTarget.getAttribute(this.dataIdAttribute);
+
             this.requestTimeout = GifLoader.showBeforeBegin(e.currentTarget);
             this.requester.put(
                 this.submitActionUrl,

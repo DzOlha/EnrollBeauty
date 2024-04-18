@@ -14,21 +14,21 @@
         <div class="form-group">
             <input name="name" type="text" placeholder="* Name" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                   data-title="Name must be at least 3 characters long and contain only letters"
+                   data-title="Name must be between 3-50 characters long and contain only letters"
                    required="required" class="form-control" id="name-input">
             <div class="error" id="name-input-error"></div>
         </div>
         <div class="form-group">
             <input name="surname" type="text" placeholder="* Surname" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                   data-title="Surname must be at least 3 characters long and contain only letters"
+                   data-title="Surname must be between 3-50 characters long and contain only letters"
                    required="required" class="form-control" id="surname-input">
             <div class="error" id="surname-input-error"></div>
         </div>
         <div class="form-group">
             <input name="email" type="email" placeholder="* New Email" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                   data-title="Email address must be in the format myemail@mailservice.domain"
+                   data-title="Email address must be in the format myemail@mailservice.domain that not exceeds 100 characters"
                    required="required" class="form-control" id="email-input">
             <div class="error" id="email-input-error"></div>
         </div>

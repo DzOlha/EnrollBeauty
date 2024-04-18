@@ -59,7 +59,7 @@ class WorkerAuthService extends AuthService
         $validEmail = $emailValidator->validate($items['email']);
         if (!$validEmail) {
             return [
-                'error' => 'Please enter an email address in the format myemail@mailservice.domain that not exceeding 100 characters.',
+                'error' => 'Please enter an email address in the format myemail@mailservice.domain that not exceeds 100 characters.',
             ];
         }
 

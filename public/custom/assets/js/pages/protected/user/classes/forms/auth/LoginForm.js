@@ -1,5 +1,7 @@
 
 import Form from "./../Form.js";
+import EmailRegex from "../../../../../../classes/regex/impl/EmailRegex.js";
+import PasswordRegex from "../../../../../../classes/regex/impl/PasswordRegex.js";
 
 
 class LoginForm extends Form {
@@ -60,11 +62,11 @@ class LoginForm extends Form {
 
         formRules[this.emailInputId] = {
             required: true,
-            pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+            pattern: new EmailRegex()
         };
         formRules[this.passwordInputId] = {
             required: true,
-            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,30}$/
+            pattern: new PasswordRegex()
         };
 
         return formRules;
@@ -75,7 +77,7 @@ class LoginForm extends Form {
 
         formMessages[this.emailInputId] = {
             required: 'Please enter your email address',
-            pattern: 'Please enter an email address in the format myemail@mailservice.domain'
+            pattern: 'Please enter an email address in the format myemail@mailservice.domain that not exceeds 100 characters'
         };
         formMessages[this.passwordInputId] = {
             required: 'Please enter your password',

@@ -100,6 +100,16 @@ class WorkerApiController extends ApiController
                     if ($this->url[4] === 'all-with-departments') {
                         $this->_getServicesAllWithDepartments();
                     }
+
+                    /**
+                     * url = /api/worker/service/get/all-by-worker
+                     *
+                     * this selects the services within the department
+                     * to which the worker belongs by their position
+                     */
+                    if ($this->url[4] === 'all-by-worker') {
+                        $this->_getServicesAllByWorker();
+                    }
                 }
             }
         }
@@ -388,6 +398,13 @@ class WorkerApiController extends ApiController
                     if ($this->url[4] === 'all') {
                         $this->_getDepartmentsAll();
                     }
+
+                    /**
+                     * url = /api/worker/department/get/all-by-worker
+                     */
+                    if ($this->url[4] === 'all-by-worker') {
+                        $this->_getDepartmentsByWorker();
+                    }
                 }
             }
         }
@@ -507,6 +524,37 @@ class WorkerApiController extends ApiController
     protected function _getDepartmentsAll()
     {
         parent::_getDepartmentsAll();
+    }
+
+    /**
+     * @return void
+     *
+     * url = /api/worker/departments/get/all-by-worker
+     *
+     * this selects department where the worker has their position
+     */
+    protected function _getDepartmentsByWorker()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest();
+            $workerId = $this->_getWorkerId($request);
+            if(!$workerId) {
+                $this->_missingRequestFields();
+            }
+            $result = $this->dataMapper->selectDepartmentsByWorkerId($workerId);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting department for the worker'
+                ]);
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
+            $this->_methodNotAllowed(['GET']);
+        }
     }
 
     /**
@@ -913,6 +961,38 @@ class WorkerApiController extends ApiController
             ]);
         }
         else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * url = /api/worker/service/get/all-by-worker
+     *
+     * this selects the services within the department
+     * to which the worker belongs by their position
+     */
+    protected function _getServicesAllByWorker()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest(new RequestTrimmer());
+            $workerId = $this->_getWorkerId($request);
+
+            if(!$workerId) {
+                $this->_missingRequestFields();
+            }
+
+            $result = $this->dataMapper->selectServicesInDepartmentByWorkerId($workerId);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting services by worker'
+                ], HttpCode::notFound());
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        } else {
             $this->_methodNotAllowed(['GET']);
         }
     }
@@ -1981,7 +2061,7 @@ class WorkerApiController extends ApiController
         $validName = $nameValidator->validate($items['name']);
         if (!$validName) {
             return [
-                'error' => 'Name must be at least 3 characters long and contain only letters'
+                'error' => 'Name must be between 3-50 characters long and contain only letters'
             ];
         }
 
@@ -1991,7 +2071,7 @@ class WorkerApiController extends ApiController
         $validSurname = $nameValidator->validate($items['surname']);
         if (!$validSurname) {
             return [
-                'error' => 'Surname must be at least 3 characters long and contain only letters'
+                'error' => 'Surname must be between 3-50 characters long and contain only letters'
             ];
         }
 
@@ -2001,7 +2081,7 @@ class WorkerApiController extends ApiController
         $validEmail = $emailValidator->validate($items['email']);
         if (!$validEmail) {
             return [
-                'error' => 'Please enter an email address in the format myemail@mailservice.domain'
+                'error' => 'Please enter an email address in the format myemail@mailservice.domain that not exceeds 100 characters'
             ];
         }
 

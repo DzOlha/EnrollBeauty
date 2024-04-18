@@ -494,4 +494,14 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->updateWorkerSocialById($id, $data);
     }
+
+    public function selectServicesInDepartmentByWorkerId(int $workerId)
+    {
+        return $this->dataSource->selectServicesInDepartmentByWorkerId($workerId);
+    }
+
+    public function selectDepartmentsByWorkerId(int $workerId)
+    {
+        return $this->dataSource->selectDepartmentsByWorkerId($workerId);
+    }
 }

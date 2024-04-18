@@ -1,4 +1,5 @@
 import Form from "../../../../user/classes/forms/Form.js";
+import PasswordRegex from "../../../../../../classes/regex/impl/PasswordRegex.js";
 
 class ChangePasswordForm extends Form {
     constructor(requester, submitUrl, loginWebPage) {
@@ -55,7 +56,7 @@ class ChangePasswordForm extends Form {
 
         formRules[this.passwordInputId] = {
             required: true,
-            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,30}$/
+            pattern: new PasswordRegex()
         };
         formRules[this.confirmPasswordInputId] = {
             required: true,

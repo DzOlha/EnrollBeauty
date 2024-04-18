@@ -103,7 +103,7 @@ class EditPricingForm extends AddPricingForm {
                 data,
                 this.successCallbackSubmit.bind(this),
                 (response) => {
-                    GifLoader.hide(this.requestTimeout );
+                    GifLoader.hide(this.requestTimeout);
                     Notifier.showErrorMessage(response.error);
                 }
             )

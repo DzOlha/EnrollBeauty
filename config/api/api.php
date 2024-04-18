@@ -107,7 +107,8 @@ const API = [
                 'get'    => [ // GET
                     'one'                  => '/api/worker/service/get/one',
                     'all'                  => '/api/worker/service/get/all',
-                    'all-with-departments' => '/api/worker/service/get/all-with-departments'
+                    'all-with-departments' => '/api/worker/service/get/all-with-departments',
+                    'all-by-worker'        => '/api/worker/service/get/all-by-worker'
                 ]
             ],
             'AFFILIATE'  => [
@@ -163,7 +164,8 @@ const API = [
             ],
             'DEPARTMENT' => [
                 'get' => [ // GET
-                    'all' => ' /api/worker/department/get/all'
+                    'all'           => ' /api/worker/department/get/all',
+                    'all-by-worker' => '/api/worker/department/get/all-by-worker',
                 ]
             ],
             'POSITION' => [
