@@ -120,4 +120,7 @@ a {
 .footer-socials a:hover {
     color: white !important;
 }
-
+ .available-schedules {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}

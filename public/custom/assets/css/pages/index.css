@@ -127,7 +127,7 @@ button[type="button"] {
 :root {
     --dark-color: #333;
     --light-grey-color: #545b62;
-    --light-brown-color: #bf9456;
+    --light-brown-color: #c0914c;
     --dark-brown-color: #8f4e08;
     --success-color: rgba(91, 189, 114, .95);
     --error-color: rgba(217,92,92,.95);
@@ -276,8 +276,8 @@ i.fa-heart {
 
 @media (max-width: 572px)
 {
-    .time-interval-wrapper {
-        row-gap: 30px;
+    .time-interval > .card {
+        margin-bottom: 30px;
     }
 
     /*.main-sidebar-body .nav-item.active .nav-link:after,*/
@@ -285,4 +285,22 @@ i.fa-heart {
     /*{*/
     /*    top: 58px;*/
     /*}*/
+}
+
+/*Schedule set up form*/
+@media(max-width: 768px) {
+    .time-interval-value
+    {
+        display: none;
+    }
+    .appointments-wrapper thead {
+        border-bottom: none;
+        border-top: none;
+    }
+    .time-interval:nth-child(odd) {
+        border-left: none !important;
+    }
+    .time-interval:nth-child(even) {
+        border-left: none !important;
+    }
 }

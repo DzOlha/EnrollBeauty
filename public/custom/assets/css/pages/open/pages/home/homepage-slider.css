@@ -1,0 +1,85 @@
+.slider {
+    object-fit: cover;
+    position: relative;
+}
+.slider-wrapper {
+
+}
+.slider-image-wrapper {
+    color: white !important;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    top: 0;
+    height: 100%;
+}
+.slider-image {
+    color: white;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center
+}
+.slider-image-inner {
+    display: block;
+    margin: auto;
+    padding: 2rem !important;
+    padding-top: 7rem !important;
+}
+@media (max-width: 1200px) {
+    .slider-image-inner {
+        padding-top: 1.5rem !important;
+    }
+}
+.slider-image-text {
+    color: white;
+    font-size: 4rem;
+}
+@media (max-width: 768px) {
+    .slider-image-text {
+        font-size: 3.5rem;
+        display: block;
+        line-height: 1.5;
+    }
+
+}
+@media(max-width: 564px) {
+    .slider-image {
+        height: 70vh;
+    }
+    .slider-image-wrapper {
+        margin-left: 75%;
+    }
+    .slider-wrapper {
+        margin-left: -75%;
+    }
+}
+
+.slider-appointment-button {
+    background: transparent;
+    border: 1px solid var(--light-brown-color);
+    transform: perspective(1px) translateZ(0);
+    font-family: 'Nimbus Roman No9 L';
+    color: white;
+    padding: 15px 20px;
+    font-size: 20px;
+    color: white !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.slider-appointment-button:hover {
+    background-color: var(--light-brown-color); /* Change background color on hover */
+    color: white; /* Change text color on hover */
+}
+
+@media(max-width: 400px) {
+    .slider-image-text {
+        font-size: 2rem;
+        display: block;
+        line-height: 1.5;
+    }
+    .slider-appointment-button {
+        font-size: 14px;
+    }
+}

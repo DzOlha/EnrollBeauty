@@ -66,7 +66,7 @@
             <?php require_once VIEW_OPEN_BLOCKS."/sections/pricelist_section.php"?>
 
             <div class="main-content pt-0">
-                <div class="main-container container-fluid">
+                <div class="main-container container-fluid schedule">
                     <div class="inner-body">
                         <?php require_once VIEW_PROTECTED_PAGES . '/user/blocks/forms/search-schedule-form.php';?>
                     </div>
@@ -78,10 +78,10 @@
             <?php require_once VIEW_OPEN_BLOCKS."/sections/team_members_section.php"?>
             <!-- stylish Team section end-->
             <!-- styleservices section -->
-            <?php require_once VIEW_OPEN_BLOCKS."/sections/styleservices_section.php"?>
+<!--            --><?php //require_once VIEW_OPEN_BLOCKS."/sections/styleservices_section.php"?>
             <!-- styleservices section end-->
              <!-- testimonials -->
-            <?php require_once VIEW_OPEN_BLOCKS."/sections/testimonials_section.php"?>
+<!--            --><?php //require_once VIEW_OPEN_BLOCKS."/sections/testimonials_section.php"?>
              <!-- testimonials end -->
              <!-- contact-section  -->
 <!--            --><?php //require_once VIEW_OPEN_BLOCKS."/sections/contact_form_section.php"?>
@@ -113,44 +113,44 @@
         <?php require_once VIEW_PROTECTED_BLOCKS."/modals/modal-confirmation.php" ?>
 
         <!-- Jquery js-->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/jquery/jquery.min.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/jquery/jquery.min.js" defer></script>
 
         <!-- Bootstrap js-->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/popper.min.js"></script>
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/popper.min.js" defer></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/bootstrap.min.js" defer></script>
 
         <!-- Moment js-->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/min/moment.min.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/min/moment.min.js" defer></script>
 
         <!-- Datepicker js-->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/jquery-ui/ui/widgets/datepicker.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/jquery-ui/ui/widgets/datepicker.js" defer></script>
 
         <!-- Jquery-Ui js-->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/jquery-ui/ui/widgets/datepicker.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/jquery-ui/ui/widgets/datepicker.js" defer></script>
 
         <!-- Color Theme js -->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/themeColors.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/themeColors.js" defer></script>
 
         <!-- Custom js -->
 <!--        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/custom.js"></script>-->
 
         <?php require_once VIEW_OPEN_BLOCKS."/footer/footer_scripts.php"?>
         <!-- Select2 js-->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/select2/js/select2.min.js"></script>
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/select2/js/select2.full.min.js"></script>
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/select2.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/select2/js/select2.min.js" defer></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/select2/js/select2.full.min.js" defer></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/select2.js" defer></script>
 
         <!-- Internal Daternagepicker js-->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/moment.min.js" defer></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/daterangepicker.js" defer></script>
 
         <!--Moment-->
-        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/moment.js"></script>
+        <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/moment.js" defer></script>
 
 
         <!--Mine scripts-->
 
-        <script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/open/home/ui/home.js"></script>
+        <script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/open/home/ui/home.js" defer></script>
 </body>
 </html>
 

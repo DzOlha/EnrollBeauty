@@ -22,13 +22,13 @@
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/animate.css"/>
 
     <!-- owl-carousel -->
-    <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/owl.carousel.css">
+<!--    <link rel="stylesheet" type="text/css" href="/--><?php //=MOCKUP_OPEN_FOLDER?><!--/assets/css/owl.carousel.css">-->
 
     <!-- fontawesome -->
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/font-awesome.css"/>
 
     <!-- themify -->
-    <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/themify-icons.css"/>
+<!--    <link rel="stylesheet" type="text/css" href="/--><?php //=MOCKUP_OPEN_FOLDER?><!--/assets/css/themify-icons.css"/>-->
 
     <!-- flaticon -->
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/flaticon.css"/>
@@ -36,7 +36,7 @@
 
     <!-- REVOLUTION LAYERS STYLES -->
 
-    <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/revolution/css/rs6.css">
+<!--    <link rel="stylesheet" type="text/css" href="/--><?php //=MOCKUP_OPEN_FOLDER?><!--/assets/revolution/css/rs6.css">-->
 
     <!-- prettyphoto -->
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/prettyPhoto.css">

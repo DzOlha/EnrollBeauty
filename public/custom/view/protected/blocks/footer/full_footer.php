@@ -3,19 +3,19 @@
 <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/jquery/jquery.min.js"></script>
 
 <!-- Bootstrap js-->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/bootstrap.min.js" defer></script>
 
 <!-- Perfect-scrollbar js -->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js" defer></script>
 
 <!-- Sidemenu js -->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/sidemenu/sidemenu.js" id="leftmenu"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/sidemenu/sidemenu.js" id="leftmenu" defer></script>
 
 <!-- Color Theme js -->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/themeColors.js"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/themeColors.js" defer></script>
 
 <!-- Custom js -->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/custom.js"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/custom.js" defer></script>
 
 <?php require_once VIEW_OPEN_BLOCKS."/footer/footer_scripts.php"?>
 <!-- Select2 js-->
@@ -23,4 +23,4 @@
 <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/select2.js"></script>
 
 <!-- Sticky js -->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/sticky.js"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/sticky.js" defer></script>

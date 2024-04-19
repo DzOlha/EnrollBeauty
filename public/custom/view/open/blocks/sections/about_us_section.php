@@ -2,7 +2,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 res-767-center">
-                <img src="/<?=MOCKUP_OPEN_FOLDER?>/assets/img/bg-image/col-bgimage-1.jpg" class="img-fluid" alt="bg-image">
+                <img src="/<?=MOCKUP_OPEN_FOLDER?>/assets/img/bg-image/col-bgimage-1.jpg"
+                     class="img-fluid" alt="bg-image">
             </div>
             <div class="col-md-6 res-767-pt-40">
                 <!--  featured-icon-box -->
@@ -22,7 +23,9 @@
                             </div>
                             <div class="ttm-fid-contents text-left">
                                 <h4 class="ttm-fid-inner">
-                                    <span data-appear-animation="animateDigits" data-from="0" data-to="308" data-interval="10" data-before="" data-before-style="sup" data-after="" data-after-style="sub">308</span>
+                                    <span data-appear-animation="animateDigits" data-from="0" data-to="14" data-interval="1" data-before="" data-before-style="sup" data-after="" data-after-style="sub">
+                                        14
+                                    </span>
                                 </h4>
                                 <h3 class="ttm-fid-title">Branches</h3>
                             </div>
@@ -33,7 +36,9 @@
                             </div>
                             <div class="ttm-fid-contents text-left">
                                 <h4 class="ttm-fid-inner">
-                                    <span data-appear-animation="animateDigits" data-from="0" data-to="4570" data-interval="100" data-before="" data-before-style="sup" data-after="" data-after-style="sub">4570</span>
+                                    <span data-appear-animation="animateDigits" data-from="0" data-to="898" data-interval="50" data-before="" data-before-style="sup" data-after="" data-after-style="sub">
+                                        898
+                                    </span>
                                 </h4>
                                 <h3 class="ttm-fid-title">Happy Customers</h3>
                             </div>

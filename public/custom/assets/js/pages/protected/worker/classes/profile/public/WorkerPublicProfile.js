@@ -1,4 +1,5 @@
 import WorkerPublicProfileBuilder from "../../../../../../classes/builder/WorkerPublicProfileBuilder.js";
+import Notifier from "../../../../../../classes/notifier/Notifier.js";
 
 
 class WorkerPublicProfile
