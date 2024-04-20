@@ -10,7 +10,7 @@ class OrdersTable extends Table
 
         this.tableId = 'table-body';
         this.extraModalTrigger = 'show-extra-modal';
-        this.dataIdAttribute = 'data-order-id';
+        this.dataIdAttribute = 'data-id';
 
         this.tdCheckClass = `td-checkbox-cell`;
         this.checkboxClass = 'checkbox';
@@ -19,6 +19,10 @@ class OrdersTable extends Table
         this.paginationCountId = 'pagination-count-select';
 
         this.totalSumId = 'total-orders-sum';
+        this.totalCountId = 'total-orders-count';
+    }
+    setMassActionCallback(callback) {
+        this.massActionCallback = callback;
     }
     getItemsPerPage() {
         let count = document.getElementById(this.paginationCountId);
@@ -136,6 +140,15 @@ class OrdersTable extends Table
         if(sum) {
             sum.innerText =  Number(response.data['totalSum'] ?? 0).toFixed(2) + ' UAH';
         }
+
+        /**
+         * Populate total count of selected orders
+         */
+        let count = document.getElementById(this.totalCountId);
+        if(count) {
+            count.innerText = Number(response.data['totalRowsCount'] ?? 0).toFixed(0);
+        }
+
         /**
          * Fill the table with data
          */
@@ -152,6 +165,7 @@ class OrdersTable extends Table
                 this.manageCallback(item.id);
             }
         });
+        this.massActionCallback();
     }
 }
 export default OrdersTable

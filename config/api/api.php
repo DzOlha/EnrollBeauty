@@ -60,7 +60,7 @@ const API = [
                                    'all' => '/api/user/order/service/upcoming/get/all'
                         ]
                     ],
-                    'get' => [
+                    'get'      => [
                         'all-limited' => '/api/user/order/service/get/all-limited'
                     ],
                     'add'      => '/api/user/order/service/add', // POST
@@ -163,27 +163,27 @@ const API = [
             ],
             'ORDER'      => [
                 'service' => [ // POST
-                       'cancel'   => '/api/worker/order/service/cancel',
-                       'complete' => '/api/worker/order/service/complete',
-                       'get' => [
-                           'all-limited' => '/api/worker/order/service/get/all-limited'
-                       ],
+                               'cancel'   => '/api/worker/order/service/cancel',
+                               'complete' => '/api/worker/order/service/complete',
+                               'get'      => [
+                                   'all-limited' => '/api/worker/order/service/get/all-limited'
+                               ],
                 ]
             ],
             'DEPARTMENT' => [
                 'get' => [ // GET
-                       'all'           => ' /api/worker/department/get/all',
-                       'all-by-worker' => '/api/worker/department/get/all-by-worker',
+                           'all'           => ' /api/worker/department/get/all',
+                           'all-by-worker' => '/api/worker/department/get/all-by-worker',
                 ]
             ],
             'POSITION'   => [
                 'get' => [ // GET
-                       'one' => '/api/worker/position/get/one'
+                           'one' => '/api/worker/position/get/one'
                 ]
             ],
             'ROLE'       => [
                 'get' => [ // GET
-                       'one' => '/api/worker/role/get/one'
+                           'one' => '/api/worker/role/get/one'
                 ]
             ],
         ]
@@ -237,7 +237,7 @@ const API = [
                 'delete' => '/api/admin/service/delete', // DELETE
                 'get'    => [ // GET
                               'one'                  => '/api/admin/service/get/one',
-                              'all'                  =>  '/api/admin/service/get/all',
+                              'all'                  => '/api/admin/service/get/all',
                               'all-with-departments' => '/api/admin/service/get/all-with-departments',
                 ],
             ],
@@ -262,14 +262,17 @@ const API = [
                               'all-limited' => '/api/admin/affiliate/get/all-limited'
                 ]
             ],
-            'ORDER' => [
+            'ORDER'      => [
                 'service' => [
-                    'get' => [
-                        'all-limited' => '/api/admin/order/service/get/all-limited'
+                    'get'      => [
+                        'all-limited' => '/api/admin/order/service/get/all-limited',
                     ],
+                    'delete'   => '/api/admin/order/service/delete',
+                    'complete' => '/api/admin/order/service/complete',
+                    'cancel'   => '/api/admin/order/service/cancel',
                 ]
             ],
-            'USER' => [
+            'USER'       => [
                 'get' => [
                     'all-by-email' => '/api/admin/user/get/all-by-email'
                 ]

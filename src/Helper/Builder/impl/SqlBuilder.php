@@ -92,6 +92,25 @@ class SqlBuilder implements IBuilder
         return $this;
     }
 
+    public function whereIn(string $column, array $values)
+    {
+        // Prepare placeholders and values for binding
+        $placeholders = array_map(
+            function($index) {
+                return ":placeholder$index";
+        }, range(1, count($values)));
+
+        $bindings = array_combine($placeholders, $values);
+
+        $this->placeholders += $bindings;
+
+        $placeholderString = implode(', ', array_keys($bindings));
+
+        $this->query .= " WHERE $column IN ($placeholderString) ";
+
+        return $this;
+    }
+
     public function whereLikeInner(string $column, string $placeholder, string $value) {
         // Add the placeholder and value to the placeholders array
         $p2 = $placeholder.'_1';

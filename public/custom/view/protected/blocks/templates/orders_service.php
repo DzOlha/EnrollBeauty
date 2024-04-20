@@ -83,8 +83,12 @@
 
                 <div class="row row-sm appointments-wrapper mt-40">
                     <h3 class="pl-30 title">
-                        Total Orders Sum:
-                        <span id="total-orders-sum"><b>0 UAH</b></span>
+                        Total Sum:
+                        <span><b id="total-orders-sum">0 UAH</b></span>
+                    </h3>
+                    <h3 class="pl-30 title">
+                        Total Count:
+                        <span><b id="total-orders-count">0</b></span>
                     </h3>
                     <div class="card-body">
                         <div class="row table-filter">
@@ -92,6 +96,9 @@
                                 <div class="show-entries">
                                     <?php require_once VIEW_PROTECTED_BLOCKS."/units/select_pagination_count.php"?>
                                 </div>
+                            </div>
+                            <div class="buttons-wrapper d-flex col-lg-6" id="action-buttons-wrapper">
+
                             </div>
                         </div>
                         <div class="table-responsive my-data-table">

@@ -14,3 +14,12 @@
     cursor: pointer;
     pointer-events: none;
 }
+#action-buttons-wrapper {
+    column-gap: 10px;
+}
+#action-buttons-wrapper button
+{
+    height: 35px !important;
+    border-radius: 5px;
+    margin-top: 5px !important;
+}

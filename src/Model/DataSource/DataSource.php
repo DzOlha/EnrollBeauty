@@ -785,9 +785,65 @@ abstract class DataSource
         if($result == null) {
             return $result;
         }
-        $r = $this->_appendTotalRowsCount($queryFrom, $result);
-        if($r) {
+        $result = $this->_appendTotalRowsCount($queryFrom, $result);
+        if($result) {
             return $this->_appendTotalRowsSum($queryFrom, $result, WorkersServicePricing::$price);
+        }
+        return false;
+    }
+
+    public function updateCompletedDatetimeByOrderIds(array $ids)
+    {
+        $now = date('Y-m-d H:i:s');
+        $completed = 1;
+
+        $upcoming = 0;
+
+        $this->builder->update(OrdersService::$table)
+            ->set(OrdersService::$completed_datetime, ':completed', $now)
+            ->andSet(OrdersService::$status, ':status', $completed)
+            ->whereIn(OrdersService::$id, $ids)
+            ->andEqual(OrdersService::$status, ':old_status', $upcoming)
+        ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function deleteOrdersByIds(array $ids)
+    {
+        $upcoming = 0;
+
+        $this->builder->delete(OrdersService::$table)
+                ->from(OrdersService::$table)
+                ->whereIn(OrdersService::$id,  $ids)
+                ->andNotEqual(OrdersService::$status, ':status', $upcoming)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateCanceledDatetimeByOrderIds(array $ids)
+    {
+        $now = date('Y-m-d H:i:s');
+        $canceled = 1;
+
+        $upcoming = 0;
+
+        $this->builder->update(OrdersService::$table)
+            ->set(OrdersService::$canceled_datetime, ':canceled', $now)
+            ->andSet(OrdersService::$status, ':status', $canceled)
+            ->whereIn(OrdersService::$id, $ids)
+            ->andEqual(OrdersService::$status, ':old_status', $upcoming)
+            ->build();
+
+        if ($this->db->affectedRowsCount() > 0) {
+            return true;
         }
         return false;
     }

@@ -266,6 +266,9 @@ const API = {
                     get: {
                         'all-limited': '/api/admin/order/service/get/all-limited'
                     },
+                    'delete': '/api/admin/order/service/delete',
+                    'complete': '/api/admin/order/service/complete',
+                    'cancel': '/api/admin/order/service/cancel',
                 }
             },
             USER: {

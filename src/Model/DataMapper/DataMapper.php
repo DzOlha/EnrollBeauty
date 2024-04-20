@@ -167,4 +167,16 @@ abstract class DataMapper
         );
     }
 
+    public function updateCompletedDatetimeByOrderIds(array $ids)
+    {
+        return $this->dataSource->updateCompletedDatetimeByOrderIds($ids);
+    }
+    public function deleteOrdersByIds(array $ids)
+    {
+        return $this->dataSource->deleteOrdersByIds($ids);
+    }
+    public function updateCanceledDatetimeByOrderIds(array $ids)
+    {
+        return $this->dataSource->updateCanceledDatetimeByOrderIds($ids);
+    }
 }

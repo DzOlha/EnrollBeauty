@@ -42,9 +42,17 @@ class OptionBuilder {
             }
         }
 
-        return `<td class="${props[status]['color']}">
+        return `<td class="${props[status]['color']} text-center">
                     ${props[status]['text']}
                 </td>`
+    }
+
+    static createButton(buttonId, buttonClass, text, disabled = false)
+    {
+        let dis = disabled === true ? 'disabled' : '';
+        return `<button id="${buttonId}" class="${buttonClass} btn btn-block" ${dis} type="button">
+                    ${text}
+                </button>`
     }
 }
 export default OptionBuilder;
