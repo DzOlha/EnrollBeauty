@@ -1,14 +1,10 @@
 <?php require_once VIEW_PROTECTED_BLOCKS."/header/full_header.php"?>
 
-<!-- InternalFileupload css-->
-<link href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>
+<link href="/<?=CUSTOM_ASSETS?>/css/pages/protected/pages/worker/schedule.css" rel="stylesheet" />
+<link href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link rel="stylesheet" href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/date-month-year-picker/css/date-picker.css">
 
-<!-- InternalFancy uploader css-->
-<link href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
-
-<link href="/<?=CUSTOM_ASSETS?>/css/pages/protected/common/modal-with-workers.css" rel="stylesheet" />
-
-<link href="/<?=CUSTOM_ASSETS?>/css/pages/protected/common/dropify.css" rel="stylesheet"/>
+<link rel="stylesheet" href="/<?=CUSTOM_ASSETS?>/css/pages/protected/common/checkbox-row.css">
 
 
 <body class="ltr main-body leftmenu">
@@ -33,7 +29,7 @@
             <div class="main-sidebar-header main-container-1 active">
                 <div class="main-sidebar-body main-body-1">
                     <div class="slide-left disabled" id="slide-left"><i class="fe fe-chevron-left"></i></div>
-                    <?php require_once VIEW_PROTECTED_PAGES."/admin/blocks/menu/menu.php"?>
+                    <?php require_once VIEW_PROTECTED_PAGES."/$role/blocks/menu/menu.php"?>
                     <div class="slide-right" id="slide-right"><i class="fe fe-chevron-right"></i></div>
                 </div>
             </div>
@@ -55,7 +51,7 @@
 
                     <?php require_once VIEW_OPEN_BLOCKS."/menu/menu.php"?>
                 </div><!-- ttm-stickable-header-w end-->
-            </div><!--ttm-header-wrap end -->
+            </div><!-- ttm-stickable-header-w end-->
 
         </header><!--header end-->
 
@@ -79,50 +75,33 @@
                 <!-- End Page Header -->
 
                 <!-- Row -->
-                <div class="row row-sm table-wrapper">
-                    <!--                    <h3 class="pl-30 title">Table</h3>-->
+
+                <div class="row row-sm available-schedules mb-40">
+                    <h3 class="">Search The History Of Services' Orders</h3>
+                    <?php require_once VIEW_PROTECTED_BLOCKS . '/forms/orders-search-form.php';?>
+                </div>
+
+                <div class="row row-sm appointments-wrapper mt-40">
+                    <h3 class="pl-30 title">
+                        Total Orders Sum:
+                        <span id="total-orders-sum"><b>0 UAH</b></span>
+                    </h3>
                     <div class="card-body">
                         <div class="row table-filter">
-                            <div class="col-lg-3 d-lg-flex justify-content-start">
+                            <div class="col-lg-1 mg-l-15 d-lg-flex justify-content-start">
                                 <div class="show-entries">
                                     <?php require_once VIEW_PROTECTED_BLOCKS."/units/select_pagination_count.php"?>
-                                </div>
-                                <div class="button-wrapper mg-l-10">
-                                    <button aria-label="Add Service"
-                                            class="btn ripple pd-x-25"
-                                            id="add-department-trigger"
-                                            data-bs-dismiss="modal" type="button">
-                                        Add Department
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-9 d-lg-flex justify-content-end">
-                                <div class="d-flex mt-4 mt-lg-0 filter-wrapper">
-                                    <div class="mass-action-wrapper">
-                                       </div>
-
-                                    <?php //require_once "src/view/common/pages/admin/profile/blocks/search_by.php";?>
-
-
                                 </div>
                             </div>
                         </div>
                         <div class="table-responsive my-data-table">
                             <div class="col-lg-12 col-sm-12">
-                                <?php require_once VIEW_PROTECTED_BLOCKS."/units/data_loader_gif.php"?>
+                                <?php require_once VIEW_PROTECTED_BLOCKS."/units/data_loader_gif.php";?>
                             </div>
-                            <?php require_once VIEW_PROTECTED_PAGES."/admin/blocks/tables/departments_table.php"?>
+                            <?php require_once VIEW_PROTECTED_BLOCKS."/tables/orders_table.php";?>
                         </div>
                         <ul class="pagination mt-4 mb-0 float-end">
                         </ul>
-                    </div>
-                </div>
-
-                <div class="row row-sm available-schedules mt-40 mb-40">
-                    <h3 class="pl-15"></h3>
-                    <div class="card-body">
-
                     </div>
                 </div>
 
@@ -138,21 +117,30 @@
             <i class="fa fa-angle-up"></i>
         </a>
         <!--back-to-top end-->
-    </div><!-- page end -->
-</div>
-<!-- End Main Content-->
+    </div>
+    <!-- End Main Content-->
 
-<!--</div>-->
-<?php require_once VIEW_PROTECTED_BLOCKS . '/footer/full_footer.php'?>
+    <?php require_once VIEW_PROTECTED_BLOCKS . "/modals/modal-confirmation.php" ?>
+    <!-- End Page -->
 
-<!-- Internal Fileuploads js-->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/fileupload.js"></script>
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/file-upload.js"></script>
+    <?php require_once VIEW_PROTECTED_BLOCKS . '/footer/full_footer.php'?>
 
+    <!-- Bootstrap js-->
+    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/popper.min.js"></script>
 
-<!--Mine scripts-->
+    <!-- Internal Daternagepicker js-->
+    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 
-<script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/protected/admin/ui/department/departments.js"></script>
+    <!--Moment-->
+    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/moment.js"></script>
+    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/min/moment.min.js"></script>
+
+    <!--Datepicker plugin-->
+    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/date-month-year-picker/js/date-picker.js"></script>
+
+    <!--Mine scripts-->
+    <script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/protected/<?=$role?>/ui/order/service/orders.js"></script>
 
 </body>
 </html>

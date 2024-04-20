@@ -56,12 +56,43 @@ abstract class DataSource
             return false;
         }
     }
+    protected function _getTotalSumQuery(string $queryFrom, string $columnName)
+    {
+        $this->db->query(
+            "SELECT SUM($columnName) as totalSum FROM $queryFrom"
+        );
+
+        $result = $this->db->singleRow();
+
+        if ($result && isset($result['totalSum'])) {
+            return $result['totalSum'];
+        } else {
+            return false;
+        }
+    }
     protected function _appendTotalRowsCount(string $queryFrom, array $result) {
         if($result) {
             $totalRowsCount = $this->_getTotalRowsCountQuery($queryFrom);
             if($totalRowsCount !== false) {
                 $result += [
                     'totalRowsCount' => $totalRowsCount
+                ];
+                return $result;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    protected function _appendTotalRowsSum(
+        string $queryFrom, array $result, string $columnName
+    ) {
+        if($result) {
+            $totalRowsCount = $this->_getTotalSumQuery($queryFrom, $columnName);
+            if($totalRowsCount !== false) {
+                $result += [
+                    'totalSum' => $totalRowsCount
                 ];
                 return $result;
             } else {
@@ -292,6 +323,30 @@ abstract class DataSource
 
         if ($workerId !== null && $workerId !== '') {
             $result['where'] = " AND $columnToJoin = $workerId ";
+        }
+        return $result;
+    }
+
+    protected function _userFilter($userId, $columnToJoin)
+    {
+        $result = [
+            'where' => ''
+        ];
+
+        if ($userId !== null && $userId !== '') {
+            $result['where'] = " AND $columnToJoin = $userId ";
+        }
+        return $result;
+    }
+
+    protected function _statusFilter($status, $columnToJoin)
+    {
+        $result = [
+            'where' => ''
+        ];
+
+        if ($status !== null && $status !== '') {
+            $result['where'] = " AND $columnToJoin = $status ";
         }
         return $result;
     }
@@ -553,11 +608,14 @@ abstract class DataSource
         return $this->db->singleRow();
     }
 
-    public function updateServiceOrderCanceledDatetimeById(int $orderId) {
+    public function updateServiceOrderCanceledDatetimeById(int $orderId)
+    {
         $currentDatetime = date('Y-m-d H:i:s');
-        //$builder = new SqlBuilder($this->db);
+        $canceled = -1;
+
         $this->builder->update(OrdersService::$table)
             ->set(OrdersService::$canceled_datetime, ':canceled_datetime', $currentDatetime)
+            ->andSet(OrdersService::$status, ':status', $canceled)
             ->whereEqual(OrdersService::$id, ':order_id', $orderId)
             ->build();
 
@@ -580,10 +638,14 @@ abstract class DataSource
         return false;
     }
 
-    public function updateCompletedDatetimeByOrderId(int $orderId) {
+    public function updateCompletedDatetimeByOrderId(int $orderId)
+    {
         $now = date('Y-m-d H:i:s');
+        $completed = 1;
+
         $this->builder->update(OrdersService::$table)
                     ->set(OrdersService::$completed_datetime, ':completed', $now)
+                    ->andSet(OrdersService::$status, ':status', $completed)
                     ->whereEqual(OrdersService::$id, ':id', $orderId)
             ->build();
 
@@ -593,4 +655,140 @@ abstract class DataSource
         return false;
     }
 
+    public function selectOrders(
+        $limit, $offset,
+        $orderField = 'orders_service.id', $orderDirection = 'asc',
+        $departmentId = null, $serviceId = null,
+        $workerId = null, $affiliateId = null,
+        $dateFrom = null, $dateTo = null,
+        $priceFrom = null, $priceTo = null,
+        $userId = null, $status = null
+    ) {
+        $workerServiceSchedule = WorkersServiceSchedule::$table;
+        $schedule_id = WorkersServiceSchedule::$id;
+        $schedule_price_id = WorkersServiceSchedule::$price_id;
+        $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
+        $schedule_day = WorkersServiceSchedule::$day;
+        $schedule_start_time = WorkersServiceSchedule::$start_time;
+        $schedule_end_time = WorkersServiceSchedule::$end_time;
+
+        $ordersTable = OrdersService::$table;
+        $ordersId = OrdersService::$id;
+        $orders_schedule_id = OrdersService::$schedule_id;
+        $order_user_id = OrdersService::$user_id;
+        $orders_status = OrdersService::$status;
+
+        $users = Users::$table;
+        $users_id = Users::$id;
+        $users_name = Users::$name;
+        $users_surname = Users::$surname;
+
+        $services = Services::$table;
+        $services_id = Services::$id;
+        $services_serviceName = Services::$name;
+
+        $workers = Workers::$table;
+        $workers_id = Workers::$id;
+        $workers_name = Workers::$name;
+        $workers_surname = Workers::$surname;
+
+        $workersServicePricing = WorkersServicePricing::$table;
+
+        $pricing_id = WorkersServicePricing::$id;
+        $pricing_service_id = WorkersServicePricing::$service_id;
+        $pricing_worker_id = WorkersServicePricing::$worker_id;
+        $pricing_price = WorkersServicePricing::$price;
+        $pricing_currency = WorkersServicePricing::$currency;
+
+        $departmentFilter = $this->_departmentFilter($departmentId);
+        $serviceFilter = $this->_serviceFilter($serviceId, $pricing_service_id);
+        $workerFilter = $this->_workerFilter($workerId, $pricing_worker_id);
+        $userFilter = $this->_userFilter($userId, $order_user_id);
+        $statusFilter = $this->_statusFilter($status, $orders_status);
+        $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
+        $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
+        $priceFilter = $this->_priceFilter(
+            $priceFrom, $priceTo
+        );
+
+        $queryFrom = " $ordersTable
+                INNER JOIN $workerServiceSchedule ON $orders_schedule_id = $schedule_id
+                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
+                INNER JOIN $users ON $order_user_id = $users_id 
+            
+            WHERE 0=0
+                {$departmentFilter['where']}
+                    
+                {$serviceFilter['where']}
+                {$workerFilter['where']}
+                {$affiliateFilter['where']}
+              
+                {$dateFilter['where']}
+              
+                {$priceFilter['where']}
+                
+                {$userFilter['where']}
+            
+                {$statusFilter['where']}
+            
+           ";
+
+        $this->db->query("
+            SELECT $ordersId, 
+                   $services_id as service_id,
+                   $services_serviceName as service_name,
+                   $workers_id as worker_id, 
+                   $workers_name as worker_name,
+                   $workers_surname as worker_surname,
+                   $order_user_id as user_id,
+                   $users_name as user_name,
+                   $users_surname as user_surname,
+                   $schedule_day, 
+                   $schedule_start_time, $schedule_end_time,
+                   $pricing_price, $pricing_currency,
+                   $orders_status
+            
+            FROM $ordersTable
+                INNER JOIN $workerServiceSchedule ON $orders_schedule_id = $schedule_id
+                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
+                INNER JOIN $services ON $pricing_service_id = $services_id
+                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
+                INNER JOIN $users ON $order_user_id = $users_id 
+            
+            WHERE 0=0
+                {$departmentFilter['where']}
+                    
+                {$serviceFilter['where']}
+                {$workerFilter['where']}
+                {$affiliateFilter['where']}
+              
+                {$dateFilter['where']}
+              
+                {$priceFilter['where']}
+                
+                {$userFilter['where']}
+            
+                {$statusFilter['where']}
+            
+            ORDER BY 
+                $orderField $orderDirection
+            
+            LIMIT 
+                $limit
+            OFFSET 
+                $offset;
+            ");
+
+        $result = $this->db->manyRows();
+        if($result == null) {
+            return $result;
+        }
+        $r = $this->_appendTotalRowsCount($queryFrom, $result);
+        if($r) {
+            return $this->_appendTotalRowsSum($queryFrom, $result, WorkersServicePricing::$price);
+        }
+        return false;
+    }
 }

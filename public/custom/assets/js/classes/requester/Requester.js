@@ -3,9 +3,12 @@ class Requester {
         this.defaultErrorMessage = 'Error getting info! <br>Please, try again later!';
     }
 
-    get(apiUrl, successCallback, errorCallback) {
+    get(apiUrl, successCallback, errorCallback, dataToSend = null)
+    {
+        let queryString = dataToSend !== null ? `?${$.param(dataToSend)}` : '';
+
         $.ajax({
-            url: apiUrl,
+            url: apiUrl + queryString,
             method: 'GET',
             dataType: 'json',
             success: (response) => {

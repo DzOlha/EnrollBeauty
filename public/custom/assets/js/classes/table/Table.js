@@ -112,18 +112,14 @@ class Table {
         return `${this.apiUrl}limit=${itemsPerPage}&page=${currentPage}&order_field=${orderByField}&order_direction=${orderDirection}`;
     }
 
-    sendApiRequest(itemsPerPage, currentPage, orderByField = null, orderDirection = null) {
+    sendApiRequest(
+        itemsPerPage, currentPage, orderByField = null, orderDirection = null
+    ) {
         let requestTimeout = TableLoader.show(this.tableId);
-        //     setTimeout(() => {
-        //     // Hide the table and show the loader
-        //     $("#data-table").hide();
-        //     $("#dataTableLoader").show();
-        // }, 800);
+
 
         if (!orderByField || !orderDirection) {
-            //let object = this.getSortedByAndOrder();
-            // console.log('sortedBy = ' + this.sortedBy);
-            // console.log('sortingOrder = ' + this.sortingOrder);
+
             orderByField = this.sortedBy;
             orderDirection = this.sortingOrder;
         }
@@ -135,14 +131,9 @@ class Table {
                 // Clear the timeout since the response is received
 
                 TableLoader.hide(this.tableId, requestTimeout);
-                // clearTimeout(requestTimeout);
-                //
-                // $("#dataTableLoader").hide();
-                // $("#data-table").show();
 
                 this.populateTable(response);
 
-                //console.log('json = ' + JSON.stringify(data));
                 // regenerate pagination
                 this.totalRowsCount = response.data?.totalRowsCount;
 
@@ -225,8 +216,8 @@ class Table {
         let arrowDown = this.arrowDown;
         let icons = {
             'initial': arrowDown,
-            '/public/images/custom/system/icons/arrows_down.svg': arrowUp,
-            '/public/images/custom/system/icons/arrows_up.svg': arrowDown
+            'arrows_down.svg': arrowUp,
+            'arrows_up.svg': arrowDown
         }
         //console.log(JSON.stringify(icons));
         let arrowColumns = Array.from(
@@ -273,7 +264,7 @@ class Table {
                     /**
                      * set the icon src (up or down)
                      */
-                    icon = currentSrc !== '' ? currentSrc : 'initial';
+                    icon = currentSrc !== '' ? currentSrc.split('/').pop() : 'initial';
                 }
                 /**
                  * Click to change the order of sorting
@@ -289,7 +280,7 @@ class Table {
                     /**
                      * set the icon src (up or down)
                      */
-                    icon = currentSrc !== '' ? currentSrc : 'initial';
+                    icon = currentSrc !== '' ? currentSrc.split('/').pop() : 'initial';
                 }
 
                 sortArrows[i].setAttribute('data-order', orders[order]);

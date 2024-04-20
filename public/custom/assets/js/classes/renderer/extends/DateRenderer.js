@@ -103,6 +103,19 @@ class DateRenderer extends Renderer {
         }
     }
 
+    static getUnixTimestamp(
+        dateString, dateFormat = 'DD/MM/YYYY'
+    ) {
+        const trimmedDate = dateString.trim();
+        const parsedDate = moment(trimmedDate, dateFormat);
+        if (parsedDate.isValid()) {
+            return parsedDate.unix();
+        } else {
+            //console.log(`Invalid date: ${trimmedDate}`);
+            return null; // Handle invalid dates as needed
+        }
+    }
+
     _formatDate(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');

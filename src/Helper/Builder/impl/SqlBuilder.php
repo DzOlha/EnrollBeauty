@@ -92,6 +92,22 @@ class SqlBuilder implements IBuilder
         return $this;
     }
 
+    public function whereLikeInner(string $column, string $placeholder, string $value) {
+        // Add the placeholder and value to the placeholders array
+        $p2 = $placeholder.'_1';
+        $p3 = $placeholder.'_2';
+        $this->placeholders += [
+            $placeholder => "%$value%",
+            $p2 => "%$value",
+            $p3 => "$value%"
+        ];
+        // Concatenate the placeholder properly in the query string
+        $this->query .= " WHERE $column LIKE $placeholder OR
+                                $column LIKE $p2 OR 
+                                $column LIKE $p3 ";
+        return $this;
+    }
+
     public function andNotEmpty(string $column) {
         $this->query .= " AND $column != '' ";
         return $this;

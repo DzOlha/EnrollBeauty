@@ -205,6 +205,7 @@ CREATE TABLE orders_service (
     completed_datetime DATETIME,
     canceled_datetime DATETIME,
     created_datetime DATETIME NOT NULL,
+    status INT NOT NULL DEFAULT 0 COMMENT '-1 - canceled, 0 - created, 1 - completed',
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (schedule_id) REFERENCES workers_service_schedule(id) ON DELETE CASCADE,
     FOREIGN KEY (price_id) REFERENCES workers_service_pricing(id) ON DELETE CASCADE,

@@ -245,6 +245,12 @@ class AdminApiController extends WorkerApiController
                     if($this->url[4] === 'one') {
                         $this->_getServiceById();
                     }
+                    /**
+                     * url = /api/admin/service/get/all
+                     */
+                    if ($this->url[4] === 'all') {
+                        $this->_getServicesAll();
+                    }
                 }
             }
             /**
@@ -385,6 +391,75 @@ class AdminApiController extends WorkerApiController
                      */
                     if($this->url[4] === 'all-limited') {
                         $this->_getAllAffiliatesForAdminTable();
+                    }
+
+                    /**
+                     * url = /api/admin/affiliate/get/all
+                     */
+                    if ($this->url[4] === 'all') {
+                        $this->_getAffiliatesAll();
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @param $request
+     * @return void
+     */
+    public function order()
+    {
+        if(!empty($this->url[3]))
+        {
+            /**
+             * url = /api/admin/order/service/
+             */
+            if($this->url[3] === 'service')
+            {
+                if(!empty($this->url[4]))
+                {
+                    /**
+                     * url = /api/admin/order/service/get/
+                     */
+                    if($this->url[4] === 'get')
+                    {
+                        if(!empty($this->url[5]))
+                        {
+                            /**
+                             * url = /api/admin/order/service/get/all-limited
+                             */
+                            if($this->url[5] === 'all-limited') {
+                                $this->_getAllOrdersForAdminTable();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $request
+     * @return void
+     */
+    public function user()
+    {
+        if(!empty($this->url[3]))
+        {
+            /**
+             * url = /api/admin/user/get/
+             */
+            if($this->url[3] === 'get')
+            {
+                if(!empty($this->url[4]))
+                {
+                    /**
+                     * url = /api/admin/user/get/all-by-email
+                     */
+                    if($this->url[4] === 'all-by-email') {
+                        $this->_getAllUsersByEmail();
                     }
                 }
             }
@@ -1906,6 +1981,89 @@ class AdminApiController extends WorkerApiController
                 ], HttpCode::notFound());
             }
 
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * url = /api/admin/order/service/get/all-limited
+     * @return void
+     */
+    public function _getAllOrdersForAdminTable()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest();
+
+            $params = $this->_getLimitPageFieldOrderOffset();
+
+            $items = [
+                'service_id'   => $request->get('service_id'),
+                'department_id'   => $request->get('department_id'),
+                'worker_id'    => $request->get('worker_id'),
+                'user_id'    => $request->get('user_id'),
+                'affiliate_id' => $request->get('affiliate_id'),
+                'start_date'   => $request->get('start_date'),
+                'end_date'     => $request->get('end_date'),
+                'price_bottom' => $request->get('price_bottom'),
+                'price_top'    => $request->get('price_top'),
+                'status'    => $request->get('status'),
+            ];
+            $items['start_date'] = date("Y-m-d H:i:s", $items['start_date']);
+            $items['end_date'] = date("Y-m-d H:i:s", $items['end_date']);
+
+            $result = $this->dataMapper->selectOrders(
+                $params['limit'], $params['offset'],
+                $params['order_field'], $params['order_direction'],
+                $items['department_id'], $items['service_id'],
+                $items['worker_id'], $items['affiliate_id'],
+                $items['start_date'], $items['end_date'],
+                $items['price_bottom'], $items['price_top'],
+                $items['user_id'], $items['status']
+            );
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting orders!'
+                ], HttpCode::notFound());
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * url = /api/admin/user/get/all-by-email
+     * @return void
+     */
+    public function _getAllUsersByEmail()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest();
+            $DATA = $request->getData();
+
+            if(!isset($DATA['email'])) {
+                $this->_missingRequestFields();
+            }
+            $email = $request->get('email');
+
+            $result = $this->dataMapper->selectUsersByEmailPart($email);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting users!'
+                ], HttpCode::notFound());
+            }
             $this->returnJson([
                 'success' => true,
                 'data' => $result

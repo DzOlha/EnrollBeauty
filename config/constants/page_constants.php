@@ -78,7 +78,15 @@ const ADMIN_PAGES = [
         'data' => [
             'title' => 'Login | Admin'
         ]
-    ]
+    ],
+
+    'orders' => [
+        'path' => VIEW_PROTECTED_PAGES . '/admin/pages/order/orders',
+        'data' => [
+            'title' => 'History',
+            'page_name' => 'Orders'
+        ]
+    ],
 ];
 
 const WORKER_PAGES = [
@@ -142,7 +150,15 @@ const WORKER_PAGES = [
             'title' => 'Worker Profile',
             'page_num' => ''
         ]
-    ]
+    ],
+
+    'orders' => [
+        'path' => VIEW_PROTECTED_PAGES . '/worker/pages/order/orders',
+        'data' => [
+            'title' => 'History',
+            'page_name' => 'Orders'
+        ]
+    ],
 ];
 
 const USER_PAGES = [
@@ -174,5 +190,13 @@ const USER_PAGES = [
             'title' => 'Account Settings',
             'page_name' => 'Settings'
         ]
-    ]
+    ],
+
+    'orders' => [
+        'path' => VIEW_PROTECTED_PAGES . '/user/pages/order/orders',
+        'data' => [
+            'title' => 'History',
+            'page_name' => 'Orders'
+        ]
+    ],
 ];

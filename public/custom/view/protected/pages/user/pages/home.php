@@ -160,7 +160,7 @@
                     </div>
                 </div>
 
-                <?php require_once VIEW_PROTECTED_PAGES . "/user/blocks/forms/search-schedule-form.php";?>
+                <?php require_once VIEW_PROTECTED_BLOCKS . "/forms/schedule-search-form.php";?>
 
                 <!-- End Row -->
             </div>

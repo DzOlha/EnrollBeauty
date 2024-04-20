@@ -1,15 +1,6 @@
 <?php require_once VIEW_PROTECTED_BLOCKS."/header/full_header.php"?>
 
-<!-- InternalFileupload css-->
-<link href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/css/fileupload.css" rel="stylesheet" type="text/css"/>
-
-<!-- InternalFancy uploader css-->
-<link href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
-
 <link href="/<?=CUSTOM_ASSETS?>/css/pages/protected/common/modal-with-workers.css" rel="stylesheet" />
-
-<link href="/<?=CUSTOM_ASSETS?>/css/pages/protected/common/dropify.css" rel="stylesheet"/>
-
 
 <body class="ltr main-body leftmenu">
 
@@ -33,7 +24,7 @@
             <div class="main-sidebar-header main-container-1 active">
                 <div class="main-sidebar-body main-body-1">
                     <div class="slide-left disabled" id="slide-left"><i class="fe fe-chevron-left"></i></div>
-                    <?php require_once VIEW_PROTECTED_PAGES."/admin/blocks/menu/menu.php"?>
+                    <?php require_once VIEW_PROTECTED_PAGES."/$role/blocks/menu/menu.php"?>
                     <div class="slide-right" id="slide-right"><i class="fe fe-chevron-right"></i></div>
                 </div>
             </div>
@@ -90,9 +81,9 @@
                                 <div class="button-wrapper mg-l-10">
                                     <button aria-label="Add Service"
                                             class="btn ripple pd-x-25"
-                                            id="add-department-trigger"
+                                            id="add-service-trigger"
                                             data-bs-dismiss="modal" type="button">
-                                        Add Department
+                                        Add Service
                                     </button>
                                 </div>
                             </div>
@@ -100,10 +91,9 @@
                             <div class="col-lg-9 d-lg-flex justify-content-end">
                                 <div class="d-flex mt-4 mt-lg-0 filter-wrapper">
                                     <div class="mass-action-wrapper">
-                                       </div>
+                                    </div>
 
-                                    <?php //require_once "src/view/common/pages/admin/profile/blocks/search_by.php";?>
-
+                                    <?php //require_once VIEW_PROTECTED_BLOCKS . "/units/search_by.php";?>
 
                                 </div>
                             </div>
@@ -112,7 +102,7 @@
                             <div class="col-lg-12 col-sm-12">
                                 <?php require_once VIEW_PROTECTED_BLOCKS."/units/data_loader_gif.php"?>
                             </div>
-                            <?php require_once VIEW_PROTECTED_PAGES."/admin/blocks/tables/departments_table.php"?>
+                            <?php require_once VIEW_PROTECTED_BLOCKS."/tables/services_table.php"?>
                         </div>
                         <ul class="pagination mt-4 mb-0 float-end">
                         </ul>
@@ -143,16 +133,13 @@
 <!-- End Main Content-->
 
 <!--</div>-->
+<!-- End Page -->
+
 <?php require_once VIEW_PROTECTED_BLOCKS . '/footer/full_footer.php'?>
-
-<!-- Internal Fileuploads js-->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/fileupload.js"></script>
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/file-upload.js"></script>
-
 
 <!--Mine scripts-->
 
-<script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/protected/admin/ui/department/departments.js"></script>
+<script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/protected/<?=$role?>/ui/service/services.js"></script>
 
 </body>
 </html>

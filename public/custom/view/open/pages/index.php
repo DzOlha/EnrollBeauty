@@ -68,7 +68,7 @@
             <div class="main-content pt-0">
                 <div class="main-container container-fluid schedule">
                     <div class="inner-body">
-                        <?php require_once VIEW_PROTECTED_PAGES . '/user/blocks/forms/search-schedule-form.php';?>
+                        <?php require_once VIEW_PROTECTED_BLOCKS . "/forms/schedule-search-form.php";?>
                     </div>
                 </div>
             </div>

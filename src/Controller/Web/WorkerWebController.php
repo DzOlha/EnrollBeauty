@@ -58,25 +58,48 @@ class WorkerWebController extends WebController
         if (isset($this->url[3])) {
             $menuItemName = $this->url[3];
 
+            /**
+             * url = /web/worker/profile/home
+             */
             if ($menuItemName === 'home') {
                 $this->_home();
             }
 
+            /**
+             * url = /web/worker/profile/schedule
+             */
             else if ($menuItemName === 'schedule') {
                 $this->_schedule();
             }
 
+            /**
+             * url = /web/worker/profile/services
+             */
             else if ($menuItemName === 'services') {
                 $this->_services();
             }
 
+            /**
+             * url = /web/worker/profile/pricing
+             */
             else if($menuItemName === 'pricing') {
                 $this->_pricing();
             }
 
+            /**
+             * url = /web/worker/profile/settings
+             */
             else if($menuItemName === 'settings') {
                 $this->_settings();
             }
+
+            /**
+             * url = /web/worker/profile/orders
+             */
+            else if($menuItemName === 'orders') {
+                $this->_orders();
+            }
+
             else {
                 $this->error();
             }
@@ -141,6 +164,18 @@ class WorkerWebController extends WebController
         $this->view(
             WORKER_PAGES['settings']['path'],
             WORKER_PAGES['settings']['data']
+        );
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/worker/profile/orders
+     */
+    private function _orders() {
+        $this->view(
+            WORKER_PAGES['orders']['path'],
+            WORKER_PAGES['orders']['data']
         );
     }
 }

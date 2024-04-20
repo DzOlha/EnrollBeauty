@@ -150,4 +150,21 @@ abstract class DataMapper
         return $this->dataSource->updateCompletedDatetimeByOrderId($orderId);
     }
 
+    public function selectOrders(
+        $limit, $offset,
+        $orderField = 'orders_service.id', $orderDirection = 'asc',
+        $departmentId = null, $serviceId = null,
+        $workerId = null, $affiliateId = null,
+        $dateFrom = null, $dateTo = null,
+        $priceFrom = null, $priceTo = null,
+        $userId = null, $status = null
+    ) {
+        return $this->dataSource->selectOrders(
+            $limit, $offset, $orderField, $orderDirection,
+            $departmentId, $serviceId, $workerId, $affiliateId,
+            $dateFrom, $dateTo, $priceFrom, $priceTo,
+            $userId, $status
+        );
+    }
+
 }

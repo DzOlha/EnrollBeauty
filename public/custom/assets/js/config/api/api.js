@@ -36,6 +36,7 @@ const API = {
             PROFILE: {
                 home: '/web/user/profile/home',
                 settings: '/web/user/profile/settings',
+                orders: '/web/user/profile/orders',
             }
         },
         API: {
@@ -57,6 +58,9 @@ const API = {
                         get: {
                             all: '/api/user/order/service/upcoming/get/all'
                         }
+                    },
+                    get: {
+                        'all-limited': '/api/user/order/service/get/all-limited'
                     },
                     add: '/api/user/order/service/add',
                     cancel: '/api/user/order/service/cancel'
@@ -95,7 +99,8 @@ const API = {
                 settings: '/web/worker/profile/settings',
                 schedule: '/web/worker/profile/schedule',
                 services: '/web/worker/profile/services',
-                pricing: '/web/worker/profile/pricing'
+                pricing: '/web/worker/profile/pricing',
+                orders: '/web/worker/profile/orders',
             }
         },
         API: {
@@ -159,6 +164,9 @@ const API = {
                 service: {
                     cancel: '/api/worker/order/service/cancel',
                     complete: '/api/worker/order/service/complete',
+                    get: {
+                        'all-limited': '/api/worker/order/service/get/all-limited'
+                    }
                 }
             },
             DEPARTMENT: {
@@ -187,7 +195,8 @@ const API = {
                 services: '/web/admin/profile/services',
                 departments: '/web/admin/profile/departments',
                 positions: '/web/admin/profile/positions',
-                affiliates: '/web/admin/profile/affiliates'
+                affiliates: '/web/admin/profile/affiliates',
+                orders: '/web/admin/profile/orders',
             }
         },
         API: {
@@ -227,6 +236,7 @@ const API = {
                 delete: '/api/admin/service/delete',
                 get: {
                     one:  '/api/admin/service/get/one',
+                    all: '/api/admin/service/get/all',
                     'all-with-departments': '/api/admin/service/get/all-with-departments',
                 },
             },
@@ -247,7 +257,20 @@ const API = {
                 delete: '/api/admin/affiliate/delete',
                 get: {
                     one: '/api/admin/affiliate/get/one',
+                    all: '/api/admin/affiliate/get/all',
                     'all-limited': '/api/admin/affiliate/get/all-limited'
+                }
+            },
+            ORDER : {
+                service: {
+                    get: {
+                        'all-limited': '/api/admin/order/service/get/all-limited'
+                    },
+                }
+            },
+            USER: {
+                get: {
+                    'all-by-email': '/api/admin/user/get/all-by-email'
                 }
             }
         }

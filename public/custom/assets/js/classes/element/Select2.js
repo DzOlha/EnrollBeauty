@@ -102,6 +102,35 @@ class Select2 {
         select.select2('destroy').select2();
     }
 
+    static populate(
+        selectId, data, parentObject = null,
+        placeholder = 'Choose one'
+    ) {
+        let select = $(`#${selectId}`);
+
+        select.html('');
+        select.append(`<option label="${placeholder}" value=" ">${placeholder}</option>`);
+
+        data.forEach((item) => {
+            select.append(`<option value="${item.id}">
+                                ${item.name}
+                           </option>`
+            );
+        })
+        select.select2('destroy').select2();
+
+        if(parentObject) {
+            select.select2({
+                dropdownParent:  parentObject,
+                placeholder: placeholder
+            });
+        } else {
+            select.select2({
+                placeholder: placeholder
+            });
+        }
+    }
+
     populate(data) {
         this._populateSelectOptions(data);
         this._initSelect2();

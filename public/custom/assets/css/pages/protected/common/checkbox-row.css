@@ -1,0 +1,16 @@
+.td-checkbox-cell {
+    cursor: pointer;
+}
+.td-checkbox-cell span {
+    position: relative;
+    text-align: center;
+    top: 1px;
+    padding-left: 13px;
+}
+.form-check-input.checkbox {
+    position: relative;
+    top: 2px;
+    left: 13px;
+    cursor: pointer;
+    pointer-events: none;
+}

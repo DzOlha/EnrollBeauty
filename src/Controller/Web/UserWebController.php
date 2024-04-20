@@ -83,12 +83,21 @@ class UserWebController extends WebController
             if ($menuItemName === 'home') {
                 $this->_home();
             }
+
             /**
              * url = /web/user/profile/settings
              */
             else if($menuItemName === 'settings') {
                 $this->_settings();
             }
+
+            /**
+             * url = /web/user/profile/orders
+             */
+            else if($menuItemName === 'orders') {
+                $this->_orders();
+            }
+
             else {
                 $this->error();
             }
@@ -104,6 +113,18 @@ class UserWebController extends WebController
         $this->view(
             USER_PAGES['settings']['path'],
             USER_PAGES['settings']['data']
+        );
+    }
+
+    /**
+     * @return void
+     *
+     * url = /web/user/profile/orders
+     */
+    private function _orders() {
+        $this->view(
+            USER_PAGES['orders']['path'],
+            USER_PAGES['orders']['data']
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Src\Model\DataSource\extends;
 
+use http\Client\Curl\User;
 use Src\DB\IDatabase;
 use Src\Helper\Builder\impl\SqlBuilder;
 use Src\Model\DataSource\DataSource;
@@ -14,6 +15,7 @@ use Src\Model\Table\OrdersService;
 use Src\Model\Table\Positions;
 use Src\Model\Table\Roles;
 use Src\Model\Table\Services;
+use Src\Model\Table\Users;
 use Src\Model\Table\Workers;
 use Src\Model\Table\WorkersPhoto;
 use Src\Model\Table\WorkersServicePricing;
@@ -728,5 +730,15 @@ class AdminDataSource extends WorkerDataSource
             return $result;
         }
         return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
+
+    public function selectUsersByEmailPart(string $emailPart)
+    {
+        $this->builder->select([Users::$id, Users::$email])
+                    ->from(Users::$table)
+                    ->whereLikeInner(Users::$email, ':email', $emailPart)
+            ->build();
+
+        return $this->db->manyRows();
     }
 }
