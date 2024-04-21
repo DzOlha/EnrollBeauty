@@ -9,12 +9,12 @@ import ActionManyOrders from "../ActionManyOrders.js";
 class CancelManyOrders extends ActionManyOrders
 {
     constructor(
-        requester, table, apiAction
+        requester, table, apiAction, width = ''
     ) {
         super(requester, table);
         this.apiAction = apiAction;
         this.actionButtonId = 'cancel-orders-btn';
-        this.actionButtonClass = 'bg-danger';
+        this.actionButtonClass = `bg-danger ${width}`;
         this.actionButtonText = 'Cancel';
         this.listenerAttr = 'data-listener-set';
 

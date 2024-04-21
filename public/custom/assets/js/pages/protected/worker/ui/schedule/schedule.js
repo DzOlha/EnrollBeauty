@@ -40,7 +40,7 @@ $(function () {
      * @type {CancelOrderWorker}
      */
     let cancelOrderWorker = new CancelOrderWorker(
-        requester, confirmationModal, API.WORKER.API.ORDER.service.cancel,
+        requester, confirmationModal, API.WORKER.API.ORDER.service.cancel.one,
         scheduleBuilder, dateRenderer, timeRenderer
     );
     scheduleRenderer.setCancelOrderCallback(
@@ -53,7 +53,7 @@ $(function () {
      * @type {CompleteOrderWorker}
      */
     let completeOrderWorker = new CompleteOrderWorker(
-        requester, confirmationModal, API.WORKER.API.ORDER.service.complete
+        requester, confirmationModal, API.WORKER.API.ORDER.service.complete.one
     );
     scheduleRenderer.setCompleteOrderCallback(
         completeOrderWorker.addListener, completeOrderWorker

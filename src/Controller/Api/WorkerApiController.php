@@ -362,17 +362,77 @@ class WorkerApiController extends ApiController
             if ($this->url[3] === 'service') {
                 if (isset($this->url[4])) {
                     /**
-                     * url = /api/worker/order/service/cancel
+                     * url = /api/worker/order/service/complete
                      */
-                    if ($this->url[4] === 'cancel') {
-                        $this->_cancelServiceOrder();
+                    if($this->url[4] === 'complete')
+                    {
+                        if(!empty($this->url[5])) {
+                            /**
+                             * url = /api/worker/order/service/complete/many
+                             */
+                            if($this->url[5] === 'many') {
+                                $this->_completeOrders();
+                            }
+
+                            /**
+                             * url = /api/worker/order/service/complete/one
+                             */
+                            if($this->url[5] === 'one') {
+                                $this->_completeServiceOrder();
+                            }
+                        }
                     }
 
                     /**
-                     * url = /api/worker/order/service/complete
+                     * url = /api/worker/order/service/cancel
                      */
-                    if ($this->url[4] === 'complete') {
-                        $this->_completeServiceOrder();
+                    if($this->url[4] === 'cancel')
+                    {
+                        if(!empty($this->url[5])) {
+                            /**
+                             * url = /api/worker/order/service/cancel/many
+                             */
+                            if($this->url[5] === 'many') {
+                                $this->_cancelOrders();
+                            }
+                            /**
+                             * url = /api/worker/order/service/cancel/one
+                             */
+                            if($this->url[5] === 'one') {
+                                $this->_cancelServiceOrder();
+                            }
+                        }
+                    }
+
+                    /**
+                     * url = /api/worker/order/service/delete
+                     */
+                    if($this->url[4] === 'delete')
+                    {
+                        if(!empty($this->url[5])) {
+                            /**
+                             * url = /api/worker/order/service/delete/many
+                             */
+                            if($this->url[5] === 'many') {
+                                $this->_deleteOrders();
+                            }
+                        }
+                    }
+
+                    /**
+                     * url = /api/worker/order/service/get/
+                     */
+                    if($this->url[4] === 'get')
+                    {
+                        if(!empty($this->url[5]))
+                        {
+                            /**
+                             * url = /api/worker/order/service/get/all-limited
+                             */
+                            if($this->url[5] === 'all-limited') {
+                                $this->_getAllOrdersOfWorkerHistory();
+                            }
+                        }
                     }
                 }
             }
@@ -2365,6 +2425,62 @@ class WorkerApiController extends ApiController
         }
         else {
             $this->_methodNotAllowed(['PUT']);
+        }
+    }
+
+    /**
+     * url = /api/worker/order/service/get/all-limited
+     * @return void
+     */
+    protected function _getAllOrdersOfWorkerHistory()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest();
+
+            $params = $this->_getLimitPageFieldOrderOffset();
+
+            $workerId = $this->_getWorkerId($request);
+            if(empty($workerId)) {
+                $this->_notAuthorizedUser('Not authorized worker!');
+            }
+
+            $items = [
+                'service_id'   => $request->get('service_id'),
+                'department_id'   => $request->get('department_id'),
+                'worker_id'    => $workerId,
+                'user_id'    => '',
+                'affiliate_id' => $request->get('affiliate_id'),
+                'start_date'   => $request->get('start_date'),
+                'end_date'     => $request->get('end_date'),
+                'price_bottom' => $request->get('price_bottom'),
+                'price_top'    => $request->get('price_top'),
+                'status'    => $request->get('status'),
+            ];
+            $items['start_date'] = date("Y-m-d H:i:s", $items['start_date']);
+            $items['end_date'] = date("Y-m-d H:i:s", $items['end_date']);
+
+            $result = $this->dataMapper->selectOrders(
+                $params['limit'], $params['offset'],
+                $params['order_field'], $params['order_direction'],
+                $items['department_id'], $items['service_id'],
+                $items['worker_id'], $items['affiliate_id'],
+                $items['start_date'], $items['end_date'],
+                $items['price_bottom'], $items['price_top'],
+                $items['user_id'], $items['status']
+            );
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting orders!'
+                ], HttpCode::notFound());
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
         }
     }
 }

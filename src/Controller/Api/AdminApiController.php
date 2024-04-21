@@ -423,22 +423,46 @@ class AdminApiController extends WorkerApiController
                     /**
                      * url = /api/admin/order/service/complete
                      */
-                    if($this->url[4] === 'complete') {
-                        $this->_completeOrders();
+                    if($this->url[4] === 'complete')
+                    {
+                        if(!empty($this->url[5])) {
+                            /**
+                             * url = /api/admin/order/service/complete/many
+                             */
+                            if($this->url[5] === 'many') {
+                                $this->_completeOrders();
+                            }
+                        }
                     }
 
                     /**
                      * url = /api/admin/order/service/cancel
                      */
-                    if($this->url[4] === 'cancel') {
-                        $this->_cancelOrders();
+                    if($this->url[4] === 'cancel')
+                    {
+                        if(!empty($this->url[5])) {
+                            /**
+                             * url = /api/admin/order/service/cancel/many
+                             */
+                            if($this->url[5] === 'many') {
+                                $this->_cancelOrders();
+                            }
+                        }
                     }
 
                     /**
                      * url = /api/admin/order/service/delete
                      */
-                    if($this->url[4] === 'delete') {
-                        $this->_deleteOrders();
+                    if($this->url[4] === 'delete')
+                    {
+                        if(!empty($this->url[5])) {
+                            /**
+                             * url = /api/admin/order/service/delete/many
+                             */
+                            if($this->url[5] === 'many') {
+                                $this->_deleteOrders();
+                            }
+                        }
                     }
 
                     /**
@@ -452,7 +476,7 @@ class AdminApiController extends WorkerApiController
                              * url = /api/admin/order/service/get/all-limited
                              */
                             if($this->url[5] === 'all-limited') {
-                                $this->_getAllOrdersForAdminTable();
+                                $this->_getAllOrdersOfHistory();
                             }
                         }
                     }
@@ -2016,7 +2040,7 @@ class AdminApiController extends WorkerApiController
      * url = /api/admin/order/service/get/all-limited
      * @return void
      */
-    public function _getAllOrdersForAdminTable()
+    public function _getAllOrdersOfHistory()
     {
         if(HttpRequest::method() === 'GET')
         {
@@ -2092,107 +2116,6 @@ class AdminApiController extends WorkerApiController
         }
         else {
             $this->_methodNotAllowed(['GET']);
-        }
-    }
-
-    /**
-     * @return void
-     * /**
-     *  url = /api/admin/order/service/complete
-     * /
-     */
-    public function _completeOrders()
-    {
-        if(HttpRequest::method() === 'POST')
-        {
-            $request = new HttpRequest();
-            $DATA = $request->getData();
-
-            if(!isset($DATA['ids'])) {
-                $this->_missingRequestFields();
-            }
-
-            $ids = $DATA['ids'];
-
-            $result = $this->dataMapper->updateCompletedDatetimeByOrderIds($ids);
-            if($result === false) {
-                $this->returnJson([
-                    'error' => 'An error occurred while completing the selected orders!'
-                ], HttpCode::notFound());
-            }
-            $this->returnJson([
-                'success' => 'You successfully completed the selected orders!'
-            ]);
-        }
-        else {
-            $this->_methodNotAllowed(['POST']);
-        }
-    }
-
-    /**
-     * @return void
-     * /**
-     *  url = /api/admin/order/service/delete
-     * /
-     */
-    public function _deleteOrders()
-    {
-        if(HttpRequest::method() === 'POST')
-        {
-            $request = new HttpRequest();
-            $DATA = $request->getData();
-
-            if(!isset($DATA['ids'])) {
-                $this->_missingRequestFields();
-            }
-            $ids = $DATA['ids'];
-
-            $result = $this->dataMapper->deleteOrdersByIds($ids);
-            if($result === false) {
-                $this->returnJson([
-                    'error' => 'An error occurred while deleting the selected orders!'
-                ], HttpCode::notFound());
-            }
-            $this->returnJson([
-                'success' => 'You successfully deleted the selected orders!'
-            ]);
-        }
-        else {
-            $this->_methodNotAllowed(['POST']);
-        }
-    }
-
-    /**
-     * @return void
-     * /**
-     *  url = /api/admin/order/service/cancel
-     * /
-     */
-    public function _cancelOrders()
-    {
-        if(HttpRequest::method() === 'POST')
-        {
-            $request = new HttpRequest();
-            $DATA = $request->getData();
-
-            if(!isset($DATA['ids'])) {
-                $this->_missingRequestFields();
-            }
-
-            $ids = $DATA['ids'];
-
-            foreach ($ids as $orderId) {
-                $canceled = $this->_processOrderServiceCancellation($orderId);
-                if(isset($canceled['error'])) {
-                    $this->returnJson($canceled);
-                }
-            }
-            $this->returnJson([
-                'success' => 'You successfully cancelled the selected orders. All users have been notifier about that through email!',
-            ]);
-        }
-        else {
-            $this->_methodNotAllowed(['POST']);
         }
     }
 }

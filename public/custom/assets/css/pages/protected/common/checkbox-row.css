@@ -17,7 +17,7 @@
 #action-buttons-wrapper {
     column-gap: 10px;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
 }
 #action-buttons-wrapper #gif-loader {

@@ -64,7 +64,10 @@ const API = [
                         'all-limited' => '/api/user/order/service/get/all-limited'
                     ],
                     'add'      => '/api/user/order/service/add', // POST
-                    'cancel'   => '/api/user/order/service/cancel' // POST
+                    'cancel' => [
+                        'one' => '/api/user/order/service/cancel/one',
+                        'many' => '/api/user/order/service/cancel/many'
+                    ]
                 ]
             ],
             'SERVICE'   => [
@@ -163,11 +166,20 @@ const API = [
             ],
             'ORDER'      => [
                 'service' => [ // POST
-                               'cancel'   => '/api/worker/order/service/cancel',
-                               'complete' => '/api/worker/order/service/complete',
-                               'get'      => [
-                                   'all-limited' => '/api/worker/order/service/get/all-limited'
-                               ],
+                   'get'      => [
+                       'all-limited' => '/api/worker/order/service/get/all-limited'
+                   ],
+                   'delete'   => [
+                       'many' => '/api/worker/order/service/delete/many'
+                   ],
+                   'complete' => [
+                       'one' => '/api/worker/order/service/complete/one',
+                       'many' => '/api/worker/order/service/complete/many'
+                   ] ,
+                   'cancel' => [
+                       'one' => '/api/worker/order/service/cancel/one',
+                       'many' => '/api/worker/order/service/cancel/many'
+                   ]
                 ]
             ],
             'DEPARTMENT' => [
@@ -267,9 +279,15 @@ const API = [
                     'get'      => [
                         'all-limited' => '/api/admin/order/service/get/all-limited',
                     ],
-                    'delete'   => '/api/admin/order/service/delete',
-                    'complete' => '/api/admin/order/service/complete',
-                    'cancel'   => '/api/admin/order/service/cancel',
+                    'delete'   => [
+                        'many' => '/api/worker/order/service/delete/many'
+                    ],
+                    'complete' => [
+                        'many' => '/api/worker/order/service/complete/many'
+                    ] ,
+                    'cancel' => [
+                        'many' => '/api/worker/order/service/cancel/many'
+                    ]
                 ]
             ],
             'USER'       => [

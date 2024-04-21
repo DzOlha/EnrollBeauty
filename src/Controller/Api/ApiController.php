@@ -393,4 +393,109 @@ class ApiController extends AbstractController
             $this->_methodNotAllowed(['GET']);
         }
     }
+
+    /**
+     * @return void
+     * /**
+     *  url = /api/admin/order/service/complete/many
+     *  url = /api/worker/order/service/complete/many
+     * /
+     */
+    public function _completeOrders()
+    {
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest();
+            $DATA = $request->getData();
+
+            if(!isset($DATA['ids'])) {
+                $this->_missingRequestFields();
+            }
+
+            $ids = $DATA['ids'];
+
+            $result = $this->dataMapper->updateCompletedDatetimeByOrderIds($ids);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while completing the selected orders!'
+                ], HttpCode::notFound());
+            }
+            $this->returnJson([
+                'success' => 'You successfully completed the selected orders!'
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
+    }
+
+    /**
+     * @return void
+     * /**
+     *  url = /api/admin/order/service/delete/many
+     *  url = /api/worker/order/service/delete/many
+     * /
+     */
+    public function _deleteOrders()
+    {
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest();
+            $DATA = $request->getData();
+
+            if(!isset($DATA['ids'])) {
+                $this->_missingRequestFields();
+            }
+            $ids = $DATA['ids'];
+
+            $result = $this->dataMapper->deleteOrdersByIds($ids);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while deleting the selected orders!'
+                ], HttpCode::notFound());
+            }
+            $this->returnJson([
+                'success' => 'You successfully deleted the selected orders!'
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
+    }
+
+    /**
+     * @return void
+     * /**
+     *  url = /api/admin/order/service/cancel/many
+     *  url = /api/worker/order/service/cancel/many
+     *  url = /api/user/order/service/cancel/many
+     * /
+     */
+    public function _cancelOrders()
+    {
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest();
+            $DATA = $request->getData();
+
+            if(!isset($DATA['ids'])) {
+                $this->_missingRequestFields();
+            }
+
+            $ids = $DATA['ids'];
+
+            foreach ($ids as $orderId) {
+                $canceled = $this->_processOrderServiceCancellation($orderId);
+                if(isset($canceled['error'])) {
+                    $this->returnJson($canceled);
+                }
+            }
+            $this->returnJson([
+                'success' => 'You successfully cancelled the selected orders. All users have been notifier about that through email!',
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
+        }
+    }
 }

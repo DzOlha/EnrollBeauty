@@ -15,7 +15,7 @@ $(function () {
     let table = new OrdersTable(
         requester, API.ADMIN.API.ORDER.service.get["all-limited"]
     );
-    table.setManageCallback(() => {}, this);
+    //table.setManageCallback(() => {}, this);
 
     /**
      * Search Orders
@@ -34,13 +34,13 @@ $(function () {
      * Mass action
      */
     let complete_ = new CompleteManyOrders(
-        requester, table, API.ADMIN.API.ORDER.service.complete
+        requester, table, API.ADMIN.API.ORDER.service.complete.many
     );
     let delete_ = new DeleteManyOrders(
-        requester, table, API.ADMIN.API.ORDER.service.delete
+        requester, table, API.ADMIN.API.ORDER.service.delete.many
     );
     let cancel_ = new CancelManyOrders(
-        requester, table, API.ADMIN.API.ORDER.service.cancel
+        requester, table, API.ADMIN.API.ORDER.service.cancel.many
     );
 
     table.setMassActionCallback(() => {

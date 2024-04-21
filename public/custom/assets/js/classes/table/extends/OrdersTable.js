@@ -190,9 +190,9 @@ class OrdersTable extends Table
             // Append the row to the table body
             $(`#${this.tableId}`).append(row);
 
-            if(!this.manageCallback) {
-                this.manageCallback(item.id);
-            }
+            // if(!this.manageCallback) {
+            //     this.manageCallback(item.id);
+            // }
         });
         this.showTooltipEmailOnHover();
         this.massActionCallback();

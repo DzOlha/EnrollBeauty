@@ -59,6 +59,7 @@ class SearchOrdersForm
     }
 
     getAll(api, id) {
+        if(!api) return;
         this.requester.get(
             api,
             (response) => {
@@ -83,6 +84,7 @@ class SearchOrdersForm
 
     addListenerSearchUser() {
         let user = document.querySelector(`.${this.userSelectId}-wrapper`);
+        if(!user) return;
         user.addEventListener('click', () => {
             let searchInput = document.querySelector(
                 `.${this.searchSelectFieldClass}`

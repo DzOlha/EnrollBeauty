@@ -30,7 +30,7 @@ $(function () {
      * @type {CancelOrderUser}
      */
     let cancelOrderUser = new CancelOrderUser(
-        requester, confirmationModal, API.USER.API.ORDER.service.cancel
+        requester, confirmationModal, API.USER.API.ORDER.service.cancel.one
     );
     appointmentsTable.setCancelOrderCallback(
         cancelOrderUser.addListener, cancelOrderUser

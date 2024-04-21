@@ -63,7 +63,10 @@ const API = {
                         'all-limited': '/api/user/order/service/get/all-limited'
                     },
                     add: '/api/user/order/service/add',
-                    cancel: '/api/user/order/service/cancel'
+                    cancel: {
+                        one: '/api/user/order/service/cancel/one',
+                        many: '/api/user/order/service/cancel/many'
+                    }
                 }
             },
             SERVICE: {
@@ -162,10 +165,19 @@ const API = {
             },
             ORDER: {
                 service: {
-                    cancel: '/api/worker/order/service/cancel',
-                    complete: '/api/worker/order/service/complete',
                     get: {
                         'all-limited': '/api/worker/order/service/get/all-limited'
+                    },
+                    delete: {
+                        many: '/api/worker/order/service/delete/many',
+                    },
+                    complete: {
+                        one: '/api/worker/order/service/cancel/one',
+                        many: '/api/worker/order/service/cancel/many'
+                    },
+                    cancel: {
+                        one: '/api/worker/order/service/cancel/one',
+                        many: '/api/worker/order/service/cancel/many'
                     }
                 }
             },
@@ -266,9 +278,15 @@ const API = {
                     get: {
                         'all-limited': '/api/admin/order/service/get/all-limited'
                     },
-                    'delete': '/api/admin/order/service/delete',
-                    'complete': '/api/admin/order/service/complete',
-                    'cancel': '/api/admin/order/service/cancel',
+                    delete: {
+                        many: '/api/admin/order/service/delete/many',
+                    },
+                    complete: {
+                        many: '/api/admin/order/service/cancel/many'
+                    },
+                    cancel: {
+                        many: '/api/admin/order/service/cancel/many'
+                    }
                 }
             },
             USER: {

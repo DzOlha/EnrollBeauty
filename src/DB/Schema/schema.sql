@@ -221,7 +221,7 @@ CREATE TABLE workers_service_schedule (
       order_id INT COMMENT 'If not null, the time window has been taken',
       FOREIGN KEY (price_id) REFERENCES workers_service_pricing(id) ON DELETE CASCADE,
       FOREIGN KEY (affiliate_id) REFERENCES affiliates(id) ON DELETE CASCADE,
-      FOREIGN KEY (order_id) REFERENCES orders_service(id) ON DELETE SET NULL
+      FOREIGN KEY (order_id) REFERENCES orders_service(id) ON DELETE CASCADE
 );
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
