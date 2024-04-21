@@ -25,7 +25,7 @@ class UserEmailHelper
             EMAIL_WITH_LINK,
         );
 
-        $loginUrl = static::_createLinkToLogin();
+        $loginUrl = static::_createLinkToUserProfile();
         $email->populateWorkerWelcomeLetter(
             $loginUrl, $name, $surname, 'Enroll Beauty', 'Order Cancellation',
             "Your order '{$order['name']}' on {$order['start_datetime']} has been cancelled by the master. Please, log in to check your orders and schedule new appointments!",
@@ -72,7 +72,7 @@ class UserEmailHelper
             EMAIL_WITH_LINK,
         );
 
-        $loginUrl = static::_createLinkToLogin();
+        $loginUrl = static::_createLinkToUserProfile();
         $worker = $order['worker_name'].' '.$order['worker_surname'];
         $address = $order['city'].', '.$order['address'];
         $datetime = date('d F, H:i', strtotime($order['start_datetime']));

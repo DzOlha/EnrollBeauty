@@ -3,6 +3,7 @@ import Notifier from "../../../../../../classes/notifier/Notifier.js";
 import DatePicker from "../../../../../../classes/element/DatePicker.js";
 import GifLoader from "../../../../../../classes/loader/GifLoader.js";
 import Select2 from "../../../../../../classes/element/Select2.js";
+import AddressRenderer from "../../../../../../classes/renderer/extends/AddressRenderer.js";
 
 
 class EditScheduleForm extends AddScheduleForm
@@ -272,7 +273,7 @@ class EditScheduleForm extends AddScheduleForm
             this.dateRenderer.render(data.day),
             this.timeRenderer.renderShortTime(data.start_time),
             this.timeRenderer.renderShortTime(data.end_time),
-            `c. ${data.city}, ${data.address}`,
+            AddressRenderer.render(data.city, data.address),
             data.order_id
         );
         let div = document.createElement('div');

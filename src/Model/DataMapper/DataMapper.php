@@ -179,4 +179,9 @@ abstract class DataMapper
     {
         return $this->dataSource->updateCanceledDatetimeByOrderIds($ids);
     }
+
+    public function selectScheduleIdByOrderId(int $orderId)
+    {
+        return $this->dataSource->selectScheduleIdByOrderId($orderId);
+    }
 }

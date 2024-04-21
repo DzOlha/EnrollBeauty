@@ -1,6 +1,7 @@
 import Table from "../Table.js";
 import Notifier from "../../notifier/Notifier.js";
 import API from "../../../config/api/api.js";
+import UrlRenderer from "../../renderer/extends/UrlRenderer.js";
 
 
 class AppointmentsTable extends Table {
@@ -72,8 +73,13 @@ class AppointmentsTable extends Table {
                             ${item.service_name}
                       </td>`);
 
+            let profileUrl = UrlRenderer.renderWorkerPublicProfileUrl(
+                item.worker_name, item.worker_surname, item.worker_id
+            );
             row.append(`<td data-worker-id = "${item.worker_id}">
-                            ${item.worker_name + ' ' + item.worker_surname}
+                            <a href="${profileUrl}" target="_blank" class="link-a">
+                                ${item.worker_name} ${item.worker_surname}
+                            </a>
                       </td>`);
 
             row.append(`<td data-affiliate-id = "${item.affiliate_id}">

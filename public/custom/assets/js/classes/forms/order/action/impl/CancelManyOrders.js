@@ -14,7 +14,7 @@ class CancelManyOrders extends ActionManyOrders
         super(requester, table);
         this.apiAction = apiAction;
         this.actionButtonId = 'cancel-orders-btn';
-        this.actionButtonClass = 'bg-warning';
+        this.actionButtonClass = 'bg-danger';
         this.actionButtonText = 'Cancel';
         this.listenerAttr = 'data-listener-set';
 

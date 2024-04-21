@@ -1,4 +1,5 @@
 import ScheduleRenderer from "./ScheduleRenderer.js";
+import AddressRenderer from "./AddressRenderer.js";
 
 class WorkerScheduleRenderer extends ScheduleRenderer {
     constructor(
@@ -311,7 +312,7 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
                 date,
                 this.timeRenderer.renderShortTime(schedule.start_time),
                 this.timeRenderer.renderShortTime(schedule.end_time),
-                `c. ${schedule.city}, ${schedule.address}`,
+                AddressRenderer.render(schedule.city, schedule.address),
                 orderId
             )
             //console.log(scheduleCard);

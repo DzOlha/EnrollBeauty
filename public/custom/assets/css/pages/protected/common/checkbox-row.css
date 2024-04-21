@@ -16,6 +16,14 @@
 }
 #action-buttons-wrapper {
     column-gap: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#action-buttons-wrapper #gif-loader {
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
 }
 #action-buttons-wrapper button
 {

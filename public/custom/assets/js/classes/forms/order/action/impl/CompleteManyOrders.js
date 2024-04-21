@@ -3,7 +3,7 @@ import ActionManyOrders from "../ActionManyOrders.js";
 /**
  * Orders can be completed if:
  *      1) it has status
- *          0: Upcoming
+ *          0: Upcoming AND start_datetime < current_datetime
  *
  */
 class CompleteManyOrders extends ActionManyOrders

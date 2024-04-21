@@ -64,11 +64,11 @@
             </span>
         </th>
 
-        <th class="wd-lg-5p">
-            <span class="arrow_column">
-                Action
-            </span>
-        </th>
+<!--        <th class="wd-lg-5p">-->
+<!--            <span class="arrow_column">-->
+<!--                Action-->
+<!--            </span>-->
+<!--        </th>-->
     </tr>
     </thead>
     <tbody id="table-body">

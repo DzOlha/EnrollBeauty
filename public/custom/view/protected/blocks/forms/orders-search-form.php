@@ -66,7 +66,7 @@
         <?php }?>
         <div class="col-lg-4">
             <p class="mg-b-0">Dates</p>
-            <div class="input-group">
+            <div class="input-group" style="height: 37px;">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
                         <i class="fe fe-calendar"></i>
@@ -118,6 +118,7 @@
                         id="status-select"
                 >
                     <option label="Choose one" value=" ">
+                        Choose one
                     </option>
                     <option value="1">
                         Completed

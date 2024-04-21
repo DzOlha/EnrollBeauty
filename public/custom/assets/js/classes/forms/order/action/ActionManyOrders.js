@@ -1,5 +1,6 @@
 import Notifier from "../../../notifier/Notifier.js";
 import OptionBuilder from "../../../builder/OptionBuilder.js";
+import GifLoader from "../../../loader/GifLoader.js";
 
 class ActionManyOrders
 {
@@ -98,7 +99,7 @@ class ActionManyOrders
         if(!btn) return;
 
         if(!btn.getAttribute(this.listenerAttr)) {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
                 let ids = this._getAllCheckedIds();
 
                 if(ids.length === 0) {
@@ -106,12 +107,12 @@ class ActionManyOrders
                     return;
                 }
 
+                this.requestTimeout = GifLoader.showAfterEnd(btn, 800)
                 this.requester.post(
                     apiUrl,
                     {ids: ids},
                     this.successCallback.bind(this),
                     this.errorCallback.bind(this)
-
                 )
             });
             btn.setAttribute(this.listenerAttr, 'true');
@@ -119,11 +120,13 @@ class ActionManyOrders
     }
 
     successCallback(response) {
+        GifLoader.hide(this.requestTimeout)
         Notifier.showSuccessMessage(response.success);
         this.table.regenerate();
     }
 
     errorCallback(response) {
+        GifLoader.hide(this.requestTimeout)
         Notifier.showErrorMessage(response.error);
     }
 

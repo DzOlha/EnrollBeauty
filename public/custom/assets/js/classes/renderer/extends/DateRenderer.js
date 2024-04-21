@@ -168,5 +168,18 @@ class DateRenderer extends Renderer {
 
         return `${day} ${monthAbbreviation}`;
     }
+
+    /**
+     * yyyy-mm-dd -> dd.mm.yyyy
+     * @param date in yyyy-mm-dd format
+     */
+    static ymdToDmy(date)
+    {
+        let arr = date.split('-');
+
+        arr = arr.reverse();
+
+        return arr.join('.');
+    }
 }
 export default DateRenderer;

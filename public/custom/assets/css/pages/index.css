@@ -133,6 +133,7 @@ button[type="button"] {
     --error-color: rgba(217,92,92,.95);
     --warning-color: rgba(252,248,215,.95);
     --grey-around-form: #f4f4f2;
+    --link-color: #1a0dab;
 }
 
 .alertify-notifier .ajs-message.ajs-success {
@@ -239,6 +240,14 @@ button[type="button"] {
 
 .table td {
     vertical-align: middle !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 250px;
+}
+/* Example hover effect */
+.table td:hover {
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .button-in-cell {
@@ -303,4 +312,9 @@ i.fa-heart {
     .time-interval:nth-child(even) {
         border-left: none !important;
     }
+}
+
+.link-a {
+    color: var(--link-color);
+    text-decoration: underline solid 1px var(--link-color);
 }

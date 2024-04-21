@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/date-month-year-picker/css/date-picker.css">
 
 <link rel="stylesheet" href="/<?=CUSTOM_ASSETS?>/css/pages/protected/common/checkbox-row.css">
+<link rel="stylesheet" href="/<?=CUSTOM_ASSETS?>/css/pages/protected/common/orders.css">
 
 
 <body class="ltr main-body leftmenu">

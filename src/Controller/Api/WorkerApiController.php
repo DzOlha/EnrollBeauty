@@ -730,119 +730,151 @@ class WorkerApiController extends ApiController
             $orderId = $request->get('order_id');
             $scheduleId = $request->get('schedule_id');
 
-            $this->dataMapper->beginTransaction();
+            $canceled = $this->_processOrderServiceCancellation($orderId, $scheduleId);
 
-            /**
-             * Get user information who ordered the appointment
-             *
-             *
-             * user_id
-             * email
-             *
-             */
-            $user = $this->dataMapper->selectUserByOrderId($orderId);
-            if ($user === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'The error occurred while getting info about the user placed the order!'
-                ], HttpCode::notFound());
+            if(isset($canceled['error'])) {
+                $this->returnJson($canceled);
             }
 
-            $userNameSurname = [
-                'name'    => 'Dear',
-                'surname' => 'Customer'
-            ];
-            if ($user['user_id'] !== null) {
-                /**
-                 * @var UserReadDto $userNameSurname
-                 */
-                $userNameSurname = $this->dataMapper->selectUserInfoById($user['user_id']);
-                if ($userNameSurname === false) {
-                    $this->dataMapper->rollBackTransaction();
-                    $this->returnJson([
-                        'error' => 'The error occurred while getting name/surname of the user placed the order!'
-                    ], HttpCode::notFound());
-                }
-            }
-
-            /**
-             * Get order details
-             *
-             * name (of the service)
-             * start_datetime
-             */
-            $order = $this->dataMapper->selectOrderDetails($orderId);
-            if ($order === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'The error occurred while getting order details!'
-                ], HttpCode::notFound());
-            }
-            // Create a DateTime object from the datetime string
-            $datetime = new \DateTime($order['start_datetime']);
-
-            // Format the datetime as November 24, 15:00
-            $formattedStartDatetime = $datetime->format('F j, H:i');
-            $order['start_datetime'] = $formattedStartDatetime;
-
-            /**
-             * Changed the cancellation time of the service order
-             */
-            $canceled = $this->dataMapper->updateServiceOrderCanceledDatetimeById($orderId);
-            if ($canceled === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'The error occurred while updating cancellation datetime of the order!'
-                ], HttpCode::notFound());
-            }
-
-            /**
-             * Update the order_id in 'workers_service_schedule' table
-             * to mark the schedule as available for choosing
-             * (because previous person, who ordered it, canceled appointment)
-             */
-            $updatedOrderId = $this->dataMapper->updateOrderIdByScheduleId($scheduleId);
-            if ($updatedOrderId === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'The error occurred while updating order id!'
-                ], HttpCode::notFound());
-            }
-
-            /**
-             * Send the email to the user with the information about
-             * the cancellation of their appointment
-             */
-            $emailSent = UserEmailHelper::sendLetterToInformUserAboutCancellation(
-                $user['email'], $userNameSurname->name, $userNameSurname->surname, $order
-            );
-            if ($emailSent !== true) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'The error occurred while sending informational letter to the user who placed the canceled order!'
-                ], HttpCode::badGateway());
-            }
-
-            $updatedScheduleItem = $this->dataMapper->selectWorkerScheduleById($scheduleId);
-            if ($updatedScheduleItem === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'An error occurred while getting schedule item!'
-                ], HttpCode::notFound());
-            }
-
-            /**
-             * Return success
-             */
-            $this->dataMapper->commitTransaction();
             $this->returnJson([
                 'success' => 'You successfully canceled the appointment!',
-                'data'    => $updatedScheduleItem
+                'data'    => $canceled['data']
             ]);
         }
         else {
             $this->_methodNotAllowed(['POST']);
         }
+    }
+
+    protected function _processOrderServiceCancellation($orderId, $scheduleId = null)
+    {
+        if($scheduleId === null) {
+            $scheduleId = $this->dataMapper->selectScheduleIdByOrderId($orderId);
+            if($scheduleId === false) {
+                return [
+                    'error' => 'An error occurred while getting identifier of the schedule item!',
+                    'code' => HttpCode::notFound()
+                ];
+            }
+        }
+
+        $this->dataMapper->beginTransaction();
+
+        /**
+         * Get user information who ordered the appointment
+         *
+         *
+         * user_id
+         * email
+         *
+         */
+        $user = $this->dataMapper->selectUserByOrderId($orderId);
+        if ($user === false) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'The error occurred while getting info about the user placed the order!',
+                'code' => HttpCode::notFound()
+            ];
+        }
+
+        $userNameSurname = [
+            'name'    => 'Dear',
+            'surname' => 'Customer'
+        ];
+        if ($user['user_id'] !== null) {
+            /**
+             * @var UserReadDto $userNameSurname
+             */
+            $userNameSurname = $this->dataMapper->selectUserInfoById($user['user_id']);
+            if ($userNameSurname === false) {
+                $this->dataMapper->rollBackTransaction();
+                return [
+                    'error' => 'The error occurred while getting name/surname of the user placed the order!',
+                    'code' => HttpCode::notFound()
+                ];
+            }
+        }
+
+        /**
+         * Get order details
+         *
+         * name (of the service)
+         * start_datetime
+         */
+        $order = $this->dataMapper->selectOrderDetails($orderId);
+        if ($order === false) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'The error occurred while getting order details!',
+                'code' => HttpCode::notFound()
+            ];
+        }
+        // Create a DateTime object from the datetime string
+        $datetime = new \DateTime($order['start_datetime']);
+
+        // Format the datetime as November 24, 15:00
+        $formattedStartDatetime = $datetime->format('F j, H:i');
+        $order['start_datetime'] = $formattedStartDatetime;
+
+        /**
+         * Changed the cancellation time of the service order
+         */
+        $canceled = $this->dataMapper->updateServiceOrderCanceledDatetimeById($orderId);
+        if ($canceled === false) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'The error occurred while updating cancellation datetime of the order!',
+                'code' => HttpCode::notFound()
+            ];
+        }
+
+        /**
+         * Update the order_id in 'workers_service_schedule' table
+         * to mark the schedule as available for choosing
+         * (because previous person, who ordered it, canceled appointment)
+         */
+        $updatedOrderId = $this->dataMapper->updateOrderIdByScheduleId($scheduleId);
+        if ($updatedOrderId === false) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'The error occurred while updating order id!',
+                'code' => HttpCode::notFound()
+            ];
+        }
+
+        /**
+         * Send the email to the user with the information about
+         * the cancellation of their appointment
+         */
+        $emailSent = UserEmailHelper::sendLetterToInformUserAboutCancellation(
+            $user['email'], $userNameSurname->name, $userNameSurname->surname, $order
+        );
+        if ($emailSent !== true) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'The error occurred while sending informational letter to the user who placed the canceled order!',
+                'code' => HttpCode::notFound()
+            ];
+        }
+
+        $updatedScheduleItem = $this->dataMapper->selectWorkerScheduleById($scheduleId);
+        if ($updatedScheduleItem === false) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'An error occurred while getting schedule item!',
+                'code' => HttpCode::notFound()
+            ];
+        }
+
+        /**
+         * Return success
+         */
+        $this->dataMapper->commitTransaction();
+
+        return [
+            'success' => true,
+            'data' => $updatedScheduleItem
+        ];
     }
 
     /**

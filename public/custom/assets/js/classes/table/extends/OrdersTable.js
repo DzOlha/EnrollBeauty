@@ -1,6 +1,11 @@
 import Table from "../Table.js";
 import Notifier from "../../notifier/Notifier.js";
 import OptionBuilder from "../../builder/OptionBuilder.js";
+import TimeRenderer from "../../renderer/extends/TimeRenderer.js";
+import DateRenderer from "../../renderer/extends/DateRenderer.js";
+import CopyHelper from "../../helper/CopyHelper.js";
+import UrlRenderer from "../../renderer/extends/UrlRenderer.js";
+import AddressRenderer from "../../renderer/extends/AddressRenderer.js";
 
 class OrdersTable extends Table
 {
@@ -20,6 +25,9 @@ class OrdersTable extends Table
 
         this.totalSumId = 'total-orders-sum';
         this.totalCountId = 'total-orders-count';
+        this.tooltipClass = 'my-tooltip';
+        this.tooltipData = 'data-my-tooltip';
+        this.copySuccess = 'You have successfully copied the hover text!';
     }
     setMassActionCallback(callback) {
         this.massActionCallback = callback;
@@ -62,16 +70,26 @@ class OrdersTable extends Table
             )
         );
 
-        row.append(`<td data-service-id="${item.service_id}">
+        row.append(`<td data-service-id="${item.service_id}"
+                        class="${this.tooltipClass}" 
+                        ${this.tooltipData}="${item.department_name}">
                             ${item.service_name}
                     </td>`);
 
 
-        row.append(`<td data-worker-id="${item.worker_id}">
+        let profileUrl = UrlRenderer.renderWorkerPublicProfileUrl(
+                                    item.worker_name, item.worker_surname, item.worker_id
+                                );
+
+        row.append(`<td data-worker-id="${item.worker_id}" 
+                        ${this.tooltipData}="${item.worker_email}" class="${this.tooltipClass}">
+                        <a href="${profileUrl}" target="_blank">
                             ${item.worker_name} ${item.worker_surname}
+                        </a>
                     </td>`);
 
-        row.append(`<td data-user-id="${item.user_id}">
+        row.append(`<td data-user-id="${item.user_id}" 
+                        ${this.tooltipData}="${item.worker_email}" class="${this.tooltipClass}">
                             ${item.user_name} ${item.user_surname}
                     </td>`);
 
@@ -80,23 +98,26 @@ class OrdersTable extends Table
                     </td>`);
 
         // 12 April 2024, 12:00 - 13:00
-        row.append(`<td>
-                            ${item.day}, ${item.start_time} - ${item.end_time}
+        row.append(`<td class="${this.tooltipClass}" 
+                        ${this.tooltipData}="${AddressRenderer.render(item.city, item.address)}">
+                            ${DateRenderer.ymdToDmy(item.day)}, 
+                            ${TimeRenderer.hmsToHm(item.start_time)} - 
+                            ${TimeRenderer.hmsToHm(item.end_time)}
                     </td>`);
 
 
         row.append(OptionBuilder.createStatusCell(item?.status));
 
 
-        row.append(`<td>
-                        <a class="btn ripple btn-manage manage-button"
-                           id="manage-${item.id}"
-                           ${this.dataIdAttribute}="${item.id}"
-                           href="">
-                            <i class="fe fe-eye me-2"></i>
-                            Manage
-                        </a>
-                    </td>`);
+        // row.append(`<td>
+        //                 <a class="btn ripple btn-manage manage-button"
+        //                    id="manage-${item.id}"
+        //                    ${this.dataIdAttribute}="${item.id}"
+        //                    href="">
+        //                     <i class="fe fe-eye me-2"></i>
+        //                     Manage
+        //                 </a>
+        //             </td>`);
 
         row.append('</tr>');
         return row;
@@ -112,9 +133,16 @@ class OrdersTable extends Table
      *         worker_id:
      *         worker_name:
      *         worker_surname:
+     *         worker_email:
      *         user_id:
      *         user_name:
      *         user_surname:
+     *         user_email:
+     *         department_id:
+     *         department_name:
+     *         affiliate_id:
+     *         city:
+     *         address:
      *         price:
      *         currency:
      *         day: //12 April 2024, 12:00 - 13:00
@@ -123,6 +151,7 @@ class OrdersTable extends Table
      *         status: [-1, 0, 1]
      *     },
      *     totalRowsCount:
+     *     totalSum:
      * }
      */
     populateTable(response) {
@@ -165,7 +194,39 @@ class OrdersTable extends Table
                 this.manageCallback(item.id);
             }
         });
+        this.showTooltipEmailOnHover();
         this.massActionCallback();
+    }
+
+    showTooltipEmailOnHover() {
+        let tooltips = document.querySelectorAll(
+            `.${this.tooltipClass}`
+            );
+        let size = tooltips.length;
+
+        for(let i = 0; i < size; i++)
+        {
+            //console.log(tooltips[i]);
+            let originalText = tooltips[i].textContent;
+            let originalWidth = tooltips[i].getBoundingClientRect().width;
+            let text = tooltips[i].getAttribute(this.tooltipData);
+
+            tooltips[i].addEventListener('mouseover', () => {
+                tooltips[i].textContent = text;
+                tooltips[i].style.maxWidth = originalWidth + 'px';
+            });
+
+            tooltips[i].addEventListener('click', () => {
+                let copied = CopyHelper.handleCopy(text);
+                if(copied) {
+                    Notifier.showSuccessMessage(this.copySuccess);
+                }
+            });
+
+            tooltips[i].addEventListener('mouseout', () => {
+                tooltips[i].textContent = originalText;
+            });
+        }
     }
 }
 export default OrdersTable

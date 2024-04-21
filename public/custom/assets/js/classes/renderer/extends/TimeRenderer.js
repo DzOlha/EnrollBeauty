@@ -65,5 +65,17 @@ class TimeRenderer extends Renderer {
 
         return decimalTime;
     }
+
+    /**
+     * hh:mm:ss -> hh:mm
+     * @param timeString in hh:mm:ss format
+     */
+    static hmsToHm(timeString)
+    {
+        let arr = timeString.split(':');
+        arr.pop();
+
+        return arr.join(':');
+    }
 }
 export default TimeRenderer;

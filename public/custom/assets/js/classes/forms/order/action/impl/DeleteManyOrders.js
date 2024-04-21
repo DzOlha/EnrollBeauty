@@ -5,6 +5,7 @@ import ActionManyOrders from "../ActionManyOrders.js";
  *      1) it has status
  *          -1: Canceled
  *           1: Completed
+ *      2) status = 0 [Upcoming] AND end_datetime  < current_datetime
  *
  */
 class DeleteManyOrders extends ActionManyOrders
@@ -15,7 +16,7 @@ class DeleteManyOrders extends ActionManyOrders
         super(requester, table);
         this.apiAction = apiAction;
         this.actionButtonId = 'delete-orders-btn';
-        this.actionButtonClass = 'bg-danger';
+        this.actionButtonClass = 'bg-warning';
         this.actionButtonText = 'Delete';
         this.listenerAttr = 'data-listener-set';
 

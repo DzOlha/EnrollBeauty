@@ -1,0 +1,7 @@
+.my-tooltip:hover {
+    background-color: #dddde1;
+    cursor: pointer;
+}
+.my-tooltip a {
+    text-decoration: underline 1px solid #333;
+}

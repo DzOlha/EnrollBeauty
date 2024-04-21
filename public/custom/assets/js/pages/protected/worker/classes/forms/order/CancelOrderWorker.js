@@ -1,4 +1,5 @@
 import OrderConfirmationModal from "../../../../../../classes/modal/OrderConfirmationModal.js";
+import AddressRenderer from "../../../../../../classes/renderer/extends/AddressRenderer.js";
 
 class CancelOrderWorker extends OrderConfirmationModal
 {
@@ -90,7 +91,7 @@ class CancelOrderWorker extends OrderConfirmationModal
             this.dateRenderer.render(response.data.day),
             this.timeRenderer.renderShortTime(response.data.start_time),
             this.timeRenderer.renderShortTime(response.data.end_time),
-            `c. ${response.data.city}, ${response.data.address}`,
+            AddressRenderer.render(response.data.city, response.data.address),
             response.data.order_id
         );
         let div = document.createElement('div');

@@ -33,11 +33,11 @@ $(function () {
     /**
      * Mass action
      */
-    let delete_ = new DeleteManyOrders(
-        requester, table, API.ADMIN.API.ORDER.service.delete
-    );
     let complete_ = new CompleteManyOrders(
         requester, table, API.ADMIN.API.ORDER.service.complete
+    );
+    let delete_ = new DeleteManyOrders(
+        requester, table, API.ADMIN.API.ORDER.service.delete
     );
     let cancel_ = new CancelManyOrders(
         requester, table, API.ADMIN.API.ORDER.service.cancel

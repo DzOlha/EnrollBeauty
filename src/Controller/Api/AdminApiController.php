@@ -2179,6 +2179,17 @@ class AdminApiController extends WorkerApiController
                 $this->_missingRequestFields();
             }
 
+            $ids = $DATA['ids'];
+
+            foreach ($ids as $orderId) {
+                $canceled = $this->_processOrderServiceCancellation($orderId);
+                if(isset($canceled['error'])) {
+                    $this->returnJson($canceled);
+                }
+            }
+            $this->returnJson([
+                'success' => 'You successfully cancelled the selected orders. All users have been notifier about that through email!',
+            ]);
         }
         else {
             $this->_methodNotAllowed(['POST']);

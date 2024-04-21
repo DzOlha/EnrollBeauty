@@ -397,7 +397,7 @@ abstract class DataSource
         if($setFrom) {
             $result['where'] = " AND $schedule_start_time >= '$timeFrom' ";
         } else {
-            $result['where'] = " AND $schedule_day > CURDATE() OR ($schedule_day = CURDATE() AND $schedule_start_time > CURTIME()) ";
+            $result['where'] = " AND ($schedule_day > CURDATE() OR ($schedule_day = CURDATE() AND $schedule_start_time > CURTIME())) ";
         }
         if($setTo) {
             $result['where'] .= " AND $schedule_end_time <= '$timeTo' ";
@@ -647,6 +647,7 @@ abstract class DataSource
                     ->set(OrdersService::$completed_datetime, ':completed', $now)
                     ->andSet(OrdersService::$status, ':status', $completed)
                     ->whereEqual(OrdersService::$id, ':id', $orderId)
+                    ->andLess(OrdersService::$start_datetime, ':start', $now)
             ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
@@ -678,19 +679,31 @@ abstract class DataSource
         $order_user_id = OrdersService::$user_id;
         $orders_status = OrdersService::$status;
 
+        $departments = Departments::$table;
+        $departments_id = Departments::$id;
+        $departments_name = Departments::$name;
+
+        $affiliates = Affiliates::$table;
+        $affiliates_id = Affiliates::$id;
+        $affiliates_city = Affiliates::$city;
+        $affiliates_address = Affiliates::$address;
+
         $users = Users::$table;
         $users_id = Users::$id;
         $users_name = Users::$name;
         $users_surname = Users::$surname;
+        $users_email = Users::$email;
 
         $services = Services::$table;
         $services_id = Services::$id;
         $services_serviceName = Services::$name;
+        $services_depId = Services::$department_id;
 
         $workers = Workers::$table;
         $workers_id = Workers::$id;
         $workers_name = Workers::$name;
         $workers_surname = Workers::$surname;
+        $workers_email = Workers::$email;
 
         $workersServicePricing = WorkersServicePricing::$table;
 
@@ -717,6 +730,8 @@ abstract class DataSource
                 INNER JOIN $services ON $pricing_service_id = $services_id
                 INNER JOIN $workers ON $pricing_worker_id = $workers_id 
                 INNER JOIN $users ON $order_user_id = $users_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                INNER JOIN $departments ON $services_depId = $departments_id
             
             WHERE 0=0
                 {$departmentFilter['where']}
@@ -742,11 +757,16 @@ abstract class DataSource
                    $workers_id as worker_id, 
                    $workers_name as worker_name,
                    $workers_surname as worker_surname,
+                   $workers_email as worker_email,
                    $order_user_id as user_id,
                    $users_name as user_name,
                    $users_surname as user_surname,
+                   $users_email as user_email,
                    $schedule_day, 
                    $schedule_start_time, $schedule_end_time,
+                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
+                   $departments_id as department_id,
+                   $departments_name as department_name,
                    $pricing_price, $pricing_currency,
                    $orders_status
             
@@ -756,6 +776,8 @@ abstract class DataSource
                 INNER JOIN $services ON $pricing_service_id = $services_id
                 INNER JOIN $workers ON $pricing_worker_id = $workers_id 
                 INNER JOIN $users ON $order_user_id = $users_id 
+                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
+                INNER JOIN $departments ON $services_depId = $departments_id
             
             WHERE 0=0
                 {$departmentFilter['where']}
@@ -804,6 +826,7 @@ abstract class DataSource
             ->andSet(OrdersService::$status, ':status', $completed)
             ->whereIn(OrdersService::$id, $ids)
             ->andEqual(OrdersService::$status, ':old_status', $upcoming)
+            ->andLess(OrdersService::$start_datetime, ':start', $now)
         ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
@@ -814,12 +837,22 @@ abstract class DataSource
 
     public function deleteOrdersByIds(array $ids)
     {
+        $now = date('Y-m-d H:i:s');
+
         $upcoming = 0;
+
+        $completed = 1;
+        $canceled = -1;
 
         $this->builder->delete(OrdersService::$table)
                 ->from(OrdersService::$table)
                 ->whereIn(OrdersService::$id,  $ids)
-                ->andNotEqual(OrdersService::$status, ':status', $upcoming)
+                ->andEqual(OrdersService::$status, ':completed_status', $completed)
+                ->or()->equal(OrdersService::$status, ':canceled_status', $canceled)
+                ->or()->subqueryBegin()
+                    ->equal(OrdersService::$status, ':status', $upcoming)
+                    ->andLess(OrdersService::$end_datetime, ':end', $now)
+                ->subqueryEnd()
             ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
@@ -831,7 +864,7 @@ abstract class DataSource
     public function updateCanceledDatetimeByOrderIds(array $ids)
     {
         $now = date('Y-m-d H:i:s');
-        $canceled = 1;
+        $canceled = -1;
 
         $upcoming = 0;
 
@@ -840,11 +873,24 @@ abstract class DataSource
             ->andSet(OrdersService::$status, ':status', $canceled)
             ->whereIn(OrdersService::$id, $ids)
             ->andEqual(OrdersService::$status, ':old_status', $upcoming)
-            ->build();
+        ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;
         }
         return false;
+    }
+
+    public function selectScheduleIdByOrderId(int $orderId) {
+        $this->builder->select([OrdersService::$schedule_id])
+            ->from(OrdersService::$table)
+            ->whereEqual(OrdersService::$id, ':id', $orderId)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return $result[explode('.', OrdersService::$schedule_id)[1]];
+        }
+        return $result;
     }
 }

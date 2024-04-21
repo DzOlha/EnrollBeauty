@@ -311,20 +311,6 @@ class UserDataSource extends DataSource
         return false;
     }
 
-
-    public function selectScheduleIdByOrderId(int $orderId) {
-        $this->builder->select([OrdersService::$schedule_id])
-                ->from(OrdersService::$table)
-                ->whereEqual(OrdersService::$id, ':id', $orderId)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if($result) {
-            return $result[explode('.', OrdersService::$schedule_id)[1]];
-        }
-        return $result;
-    }
-
     public function selectScheduleForUserByTimeInterval(
         string $email, string $startDatetime, string $endDatetime
     ) {
