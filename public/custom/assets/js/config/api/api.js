@@ -66,6 +66,9 @@ const API = {
                     cancel: {
                         one: '/api/user/order/service/cancel/one',
                         many: '/api/user/order/service/cancel/many'
+                    },
+                    delete: {
+                        many: '/api/user/order/service/delete/many'
                     }
                 }
             },

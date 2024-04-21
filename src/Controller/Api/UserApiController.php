@@ -194,6 +194,21 @@ class UserApiController extends ApiController
                     }
 
                     /**
+                     * url = /api/user/order/service/delete
+                     */
+                    if($this->url[4] === 'delete')
+                    {
+                        if(!empty($this->url[5])) {
+                            /**
+                             * url = /api/user/order/service/delete/many
+                             */
+                            if($this->url[5] === 'many') {
+                                $this->_deleteOrders();
+                            }
+                        }
+                    }
+
+                    /**
                      * url = /api/user/order/service/get/
                      */
                     if($this->url[4] === 'get')
@@ -1007,58 +1022,11 @@ class UserApiController extends ApiController
 
             $id = $request->get('order_id');
 
-            $this->dataMapper->beginTransaction();
-
-            /**
-             * Changed the cancellation time of the service order
-             */
-            $canceled = $this->dataMapper->updateServiceOrderCanceledDatetimeById($id);
-            if($canceled === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'The error occurred while updating cancellation datetime of the order!'
-                ], HttpCode::notFound());
+            $canceled = $this->_processOrderServiceCancellation($id);
+            if(isset($canceled['error'])) {
+                $this->returnJson($canceled);
             }
 
-            /**
-             * Check if the canceled order has been created by choosing
-             * available schedule for specific service/worker
-             */
-            $scheduleId = $this->dataMapper->selectScheduleIdByOrderId($id);
-            if($scheduleId === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'The error occurred while getting schedule id'
-                ], HttpCode::notFound());
-            }
-
-            if($scheduleId === null) {
-                /**
-                 * If not set -> return success message
-                 */
-                $this->dataMapper->commitTransaction();
-                $this->returnJson([
-                    'success' => 'You successfully canceled the appointment!'
-                ]);
-            }
-
-            /**
-             * Update the order_id in 'workers_service_schedule' table
-             * to mark the schedule as available for choosing
-             * (because previous person, who ordered it, canceled appointment)
-             */
-            $updatedOrderId = $this->dataMapper->updateOrderIdByScheduleId($scheduleId);
-            if($updatedOrderId === false) {
-                $this->dataMapper->rollBackTransaction();
-                $this->returnJson([
-                    'error' => 'The error occurred while updating order id!'
-                ], HttpCode::notFound());
-            }
-
-            /**
-             * Return success
-             */
-            $this->dataMapper->commitTransaction();
             $this->returnJson([
                 'success' => 'You successfully canceled the appointment!',
                 'data' => [
@@ -1069,6 +1037,70 @@ class UserApiController extends ApiController
         else {
             $this->_methodNotAllowed(['POST']);
         }
+    }
+
+    protected function _processOrderServiceCancellation($id)
+    {
+        $this->dataMapper->beginTransaction();
+
+        /**
+         * Changed the cancellation time of the service order
+         */
+        $canceled = $this->dataMapper->updateServiceOrderCanceledDatetimeById($id);
+        if($canceled === false) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'The error occurred while updating cancellation datetime of the order!',
+                'code' => HttpCode::notFound()
+            ];
+        }
+
+        /**
+         * Check if the canceled order has been created by choosing
+         * available schedule for specific service/worker
+         */
+        $scheduleId = $this->dataMapper->selectScheduleIdByOrderId($id);
+        if($scheduleId === false) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'The error occurred while getting schedule id',
+                'code' => HttpCode::notFound()
+            ];
+        }
+
+        if($scheduleId === null) {
+            /**
+             * If not set -> return success message
+             */
+            $this->dataMapper->commitTransaction();
+            return [
+                'success' => 'You successfully canceled the appointment!',
+                'code' => HttpCode::ok()
+            ];
+        }
+
+        /**
+         * Update the order_id in 'workers_service_schedule' table
+         * to mark the schedule as available for choosing
+         * (because previous person, who ordered it, canceled appointment)
+         */
+        $updatedOrderId = $this->dataMapper->updateOrderIdByScheduleId($scheduleId);
+        if($updatedOrderId === false) {
+            $this->dataMapper->rollBackTransaction();
+            return [
+                'error' => 'The error occurred while updating order id!',
+                'code' => HttpCode::notFound()
+            ];
+        }
+
+        /**
+         * Return success
+         */
+        $this->dataMapper->commitTransaction();
+
+        return [
+            'success' => true,
+        ];
     }
 
     /**
@@ -1124,6 +1156,40 @@ class UserApiController extends ApiController
         }
         else {
             $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * @return void
+     * /**
+     *  url = /api/user/order/service/cancel/many
+     * /
+     */
+    public function _cancelOrders()
+    {
+        if(HttpRequest::method() === 'POST')
+        {
+            $request = new HttpRequest();
+            $DATA = $request->getData();
+
+            if(!isset($DATA['ids'])) {
+                $this->_missingRequestFields();
+            }
+
+            $ids = $DATA['ids'];
+
+            foreach ($ids as $orderId) {
+                $canceled = $this->_processOrderServiceCancellation($orderId);
+                if(isset($canceled['error'])) {
+                    $this->returnJson($canceled);
+                }
+            }
+            $this->returnJson([
+                'success' => 'You successfully cancelled the selected orders',
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['POST']);
         }
     }
 }

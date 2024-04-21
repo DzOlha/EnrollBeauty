@@ -11,12 +11,12 @@ import ActionManyOrders from "../ActionManyOrders.js";
 class DeleteManyOrders extends ActionManyOrders
 {
     constructor(
-        requester, table, apiAction
+        requester, table, apiAction, width = ''
     ) {
         super(requester, table);
         this.apiAction = apiAction;
         this.actionButtonId = 'delete-orders-btn';
-        this.actionButtonClass = 'bg-warning';
+        this.actionButtonClass = `bg-warning ${width}`;
         this.actionButtonText = 'Delete';
         this.listenerAttr = 'data-listener-set';
 
