@@ -1185,7 +1185,7 @@ class UserApiController extends ApiController
                 }
             }
             $this->returnJson([
-                'success' => 'You successfully cancelled the selected orders',
+                'success' => 'You successfully cancelled the order.',
             ]);
         }
         else {

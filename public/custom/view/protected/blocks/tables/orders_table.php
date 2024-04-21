@@ -28,14 +28,26 @@
                      data-order="">
             </span>
         </th>
-        <th class="wd-lg-20p">
-            <span class="arrow_column">
-                User
-                <img src="" id="login_arrow" class="sort_arrow"
-                     data-column="<?=\Src\Model\Table\Users::$email?>"
-                     data-order="">
-            </span>
-        </th>
+
+        <?php if($role !== 'user') {?>
+            <th class="wd-lg-20p">
+                <span class="arrow_column">
+                    User
+                    <img src="" id="login_arrow" class="sort_arrow"
+                         data-column="<?=\Src\Model\Table\Users::$email?>"
+                         data-order="">
+                </span>
+            </th>
+        <?php } else {?>
+            <th class="wd-lg-20p">
+                <span class="arrow_column">
+                    Address
+                    <img src="" id="login_arrow" class="sort_arrow"
+                         data-column="<?=\Src\Model\Table\Affiliates::$address?>"
+                         data-order="">
+                </span>
+            </th>
+        <?php }?>
 
         <th class="wd-lg-10p">
             <span class="arrow_column">

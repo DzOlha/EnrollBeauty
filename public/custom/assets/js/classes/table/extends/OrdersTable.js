@@ -9,9 +9,11 @@ import AddressRenderer from "../../renderer/extends/AddressRenderer.js";
 
 class OrdersTable extends Table
 {
-    constructor(requester, apiUrl)
+    constructor(requester, apiUrl, applyTooltipOnHover = true)
     {
         super(requester, apiUrl + '?');
+
+        this.applyTooltipOnHover = applyTooltipOnHover;
 
         this.tableId = 'table-body';
         this.extraModalTrigger = 'show-extra-modal';
@@ -83,15 +85,21 @@ class OrdersTable extends Table
 
         row.append(`<td data-worker-id="${item.worker_id}" 
                         ${this.tooltipData}="${item.worker_email}" class="${this.tooltipClass}">
-                        <a href="${profileUrl}" target="_blank">
+                        <a href="${profileUrl}" target="_blank" class="link-a">
                             ${item.worker_name} ${item.worker_surname}
                         </a>
                     </td>`);
 
-        row.append(`<td data-user-id="${item.user_id}" 
-                        ${this.tooltipData}="${item.worker_email}" class="${this.tooltipClass}">
+        if(this.applyTooltipOnHover) {
+            row.append(`<td data-user-id="${item.user_id}" 
+                        ${this.tooltipData}="${item.user_email}" class="${this.tooltipClass}">
                             ${item.user_name} ${item.user_surname}
                     </td>`);
+        } else {
+            row.append(`<td data-affiliate-id="${item.affiliate_id}">
+                            ${AddressRenderer.render(item.city, item.address)}
+                    </td>`);
+        }
 
         row.append(`<td>
                             ${item.price} ${item?.currency}
@@ -194,7 +202,9 @@ class OrdersTable extends Table
             //     this.manageCallback(item.id);
             // }
         });
-        this.showTooltipEmailOnHover();
+        if(this.applyTooltipOnHover) {
+            this.showTooltipEmailOnHover();
+        }
         this.massActionCallback();
     }
 

@@ -90,7 +90,7 @@
                 </div>
                 <div class="row row-xs mt-10 gx-20 cards-wrapper">
                     <div class="col-lg-3">
-                        <a href="/web/worker/profile/settings">
+                        <a href="<?=API['WORKER']['WEB']['PROFILE']['settings']?>">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
                                     <i class="si si-settings" data-bs-toggle="tooltip" title=""
@@ -105,13 +105,14 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <a href="/web/worker/profile/orders">
+                        <a href="<?=API['WORKER']['WEB']['PROFILE']['schedule']?>">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="fa fa-history" data-bs-toggle="tooltip" title=""
+                                    <i class="ti-receipt sidemenu-icon menu-icon"
+                                       data-bs-toggle="tooltip" title=""
                                        data-bs-original-title="fa fa-history"
                                        aria-label="fa fa-history"></i>
-                                    Orders
+                                    Schedule
                                 </div>
                                 <div class="card-body">
                                     <p class="mg-b-0"></p>
@@ -121,11 +122,11 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <a href="/web/worker/profile/statistics">
+                        <a href="<?=API['WORKER']['WEB']['PROFILE']['orders']?>">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="ti-bar-chart-alt sidemenu-icon menu-icon "></i>
-                                    Statistics
+                                    <i class="ti-shopping-cart-full sidemenu-icon menu-icon"></i>
+                                    Orders
                                 </div>
                                 <div class="card-body">
                                     <p class="mg-b-0"></p>

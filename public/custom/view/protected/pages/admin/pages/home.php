@@ -95,12 +95,12 @@
                 </div>
                 <div class="row row-xs mt-10 gx-20 cards-wrapper">
                     <div class="col-lg-3">
-                        <a href="/web/admin/profile/settings">
+                        <a href="<?=API['ADMIN']['WEB']['PROFILE']['workers']?>">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="si si-settings" data-bs-toggle="tooltip" title=""
+                                    <i class="fe fe-user-check" data-bs-toggle="tooltip" title=""
                                        data-bs-original-title="si-settings" aria-label="si-settings"></i>
-                                    Settings
+                                    Workers
                                 </div>
                                 <div class="card-body">
                                     <p class="mg-b-0"></p>
@@ -110,12 +110,10 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <a href="/web/admin/profile/orders">
+                        <a href="<?=API['ADMIN']['WEB']['PROFILE']['orders']?>">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="fa fa-history" data-bs-toggle="tooltip" title=""
-                                       data-bs-original-title="fa fa-history"
-                                       aria-label="fa fa-history"></i>
+                                    <i class="ti-shopping-cart-full sidemenu-icon menu-icon"></i>
                                     Orders
                                 </div>
                                 <div class="card-body">
@@ -126,11 +124,11 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <a href="/web/admin/profile/statistics">
+                        <a href="<?=API['ADMIN']['WEB']['PROFILE']['services']?>">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="ti-bar-chart-alt sidemenu-icon menu-icon "></i>
-                                    Statistics
+                                    <i class="ti-palette sidemenu-icon menu-icon "></i>
+                                    Services
                                 </div>
                                 <div class="card-body">
                                     <p class="mg-b-0"></p>

@@ -12,7 +12,7 @@ $(function () {
     user.getUserInfo();
 
     let table = new OrdersTable(
-        requester, API.USER.API.ORDER.service.get["all-limited"]
+        requester, API.USER.API.ORDER.service.get["all-limited"], false
     );
 
     /**

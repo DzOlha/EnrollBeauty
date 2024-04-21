@@ -111,7 +111,7 @@
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-2">
             <div class="form-group status-wrapper">
                 <p class="mg-b-0">Status</p>
                 <select class="form-control select2 col-lg-2"

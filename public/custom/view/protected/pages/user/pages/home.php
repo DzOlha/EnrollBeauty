@@ -93,8 +93,8 @@
                     </div>
                 </div>
                 <div class="row row-xs mt-10 gx-20 cards-wrapper">
-                    <div class="col-lg-3">
-                        <a href="/web/user/profile/settings">
+                    <div class="col-lg-4">
+                        <a href="<?=API['USER']['WEB']['PROFILE']['settings']?>">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
                                     <i class="si si-settings" data-bs-toggle="tooltip" title=""
@@ -108,14 +108,12 @@
                         </a>
                     </div>
 
-                    <div class="col-lg-3">
-                        <a href="/web/user/profile/history">
+                    <div class="col-lg-4">
+                        <a href="<?=API['USER']['WEB']['PROFILE']['orders']?>">
                             <div class="card custom-card">
                                 <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="fa fa-history" data-bs-toggle="tooltip" title=""
-                                       data-bs-original-title="fa fa-history"
-                                       aria-label="fa fa-history"></i>
-                                    History
+                                    <i class="ti-shopping-cart-full sidemenu-icon menu-icon"></i>
+                                    Orders History
                                 </div>
                                 <div class="card-body">
                                     <p class="mg-b-0"></p>
@@ -124,19 +122,19 @@
                         </a>
                     </div>
 
-                    <div class="col-lg-3">
-                        <a href="/web/user/profile/statistics">
-                            <div class="card custom-card">
-                                <div class="card-header p-3 tx-medium my-auto tx-white">
-                                    <i class="ti-bar-chart-alt sidemenu-icon menu-icon "></i>
-                                    Statistics
-                                </div>
-                                <div class="card-body">
-                                    <p class="mg-b-0"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+<!--                    <div class="col-lg-3">-->
+<!--                        <a href="/web/user/profile/statistics">-->
+<!--                            <div class="card custom-card">-->
+<!--                                <div class="card-header p-3 tx-medium my-auto tx-white">-->
+<!--                                    <i class="ti-bar-chart-alt sidemenu-icon menu-icon "></i>-->
+<!--                                    Statistics-->
+<!--                                </div>-->
+<!--                                <div class="card-body">-->
+<!--                                    <p class="mg-b-0"></p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </a>-->
+<!--                    </div>-->
                     </div>
 
                 <div class="row row-sm appointments-wrapper mt-40">
