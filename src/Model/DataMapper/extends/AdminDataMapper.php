@@ -251,9 +251,4 @@ class AdminDataMapper extends WorkerDataMapper
             $limit, $offset, $orderByField, $orderDirection
         );
     }
-
-    public function selectUsersByEmailPart(string $emailPart)
-    {
-        return $this->dataSource->selectUsersByEmailPart($emailPart);
-    }
 }

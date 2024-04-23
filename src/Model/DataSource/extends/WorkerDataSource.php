@@ -1476,4 +1476,14 @@ class WorkerDataSource extends DataSource
 
         return $this->db->manyRows();
     }
+
+    public function selectUsersByEmailPart(string $emailPart)
+    {
+        $this->builder->select([Users::$id, Users::$email])
+            ->from(Users::$table)
+            ->whereLikeInner(Users::$email, ':email', $emailPart)
+            ->build();
+
+        return $this->db->manyRows();
+    }
 }

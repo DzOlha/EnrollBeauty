@@ -14,7 +14,7 @@
                 </div>
             </div>
         <?php }?>
-        <?php if(isset($role) && $role === 'admin') {?>
+        <?php if(isset($role) && $role !== 'user') {?>
             <div class="col-lg-4">
                 <div class="form-group user-email-wrapper">
                     <p class="mg-b-0">User Email</p>
@@ -27,7 +27,7 @@
                 </div>
             </div>
         <?php }?>
-        <?php if(isset($role) && $role !== 'user') {?>
+        <?php if(isset($role) && $role === 'admin') {?>
             <div class="col-lg-4">
                 <div class="form-group department-wrapper">
                     <p class="mg-b-0">Department Name</p>

@@ -201,6 +201,11 @@ const API = [
                            'one' => '/api/worker/role/get/one'
                 ]
             ],
+            'USER'       => [
+                'get' => [
+                    'all-by-email' => '/api/worker/user/get/all-by-email'
+                ]
+            ]
         ]
     ],
     'ADMIN'  => [

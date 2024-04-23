@@ -23,11 +23,11 @@ $(function () {
      */
     let form = new SearchOrdersForm(
         requester, API.WORKER.API.ORDER.service.get["all-limited"], table,
-        API.WORKER.API.SERVICE.get.all,
+        API.WORKER.API.SERVICE.get["all-by-worker"],
         null,
-        API.WORKER.API.DEPARTMENT.get.all,
+        API.WORKER.API.DEPARTMENT.get["all-by-worker"],
         API.WORKER.API.AFFILIATE.get.all,
-        null
+        API.WORKER.API.USER.get["all-by-email"]
     );
     form.init();
 

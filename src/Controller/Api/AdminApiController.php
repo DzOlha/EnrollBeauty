@@ -2086,36 +2086,4 @@ class AdminApiController extends WorkerApiController
             $this->_methodNotAllowed(['GET']);
         }
     }
-
-    /**
-     * url = /api/admin/user/get/all-by-email
-     * @return void
-     */
-    public function _getAllUsersByEmail()
-    {
-        if(HttpRequest::method() === 'GET')
-        {
-            $request = new HttpRequest();
-            $DATA = $request->getData();
-
-            if(!isset($DATA['email'])) {
-                $this->_missingRequestFields();
-            }
-            $email = $request->get('email');
-
-            $result = $this->dataMapper->selectUsersByEmailPart($email);
-            if($result === false) {
-                $this->returnJson([
-                    'error' => 'An error occurred while getting users!'
-                ], HttpCode::notFound());
-            }
-            $this->returnJson([
-                'success' => true,
-                'data' => $result
-            ]);
-        }
-        else {
-            $this->_methodNotAllowed(['GET']);
-        }
-    }
 }

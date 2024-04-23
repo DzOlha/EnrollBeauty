@@ -504,4 +504,9 @@ class WorkerDataMapper extends DataMapper
     {
         return $this->dataSource->selectDepartmentsByWorkerId($workerId);
     }
+
+    public function selectUsersByEmailPart(string $emailPart)
+    {
+        return $this->dataSource->selectUsersByEmailPart($emailPart);
+    }
 }

@@ -520,6 +520,32 @@ class WorkerApiController extends ApiController
         }
     }
 
+    /**
+     * @param $request
+     * @return void
+     */
+    public function user()
+    {
+        if(!empty($this->url[3]))
+        {
+            /**
+             * url = /api/worker/user/get/
+             */
+            if($this->url[3] === 'get')
+            {
+                if(!empty($this->url[4]))
+                {
+                    /**
+                     * url = /api/worker/user/get/all-by-email
+                     */
+                    if($this->url[4] === 'all-by-email') {
+                        $this->_getAllUsersByEmail();
+                    }
+                }
+            }
+        }
+    }
+
     private function _getWorkerId($request)
     {
         return SessionHelper::getWorkerSession() ?? $request->get('worker_id');
@@ -2449,7 +2475,7 @@ class WorkerApiController extends ApiController
                 'service_id'   => $request->get('service_id'),
                 'department_id'   => $request->get('department_id'),
                 'worker_id'    => $workerId,
-                'user_id'    => '',
+                'user_id'    => $request->get('user_id'),
                 'affiliate_id' => $request->get('affiliate_id'),
                 'start_date'   => $request->get('start_date'),
                 'end_date'     => $request->get('end_date'),
@@ -2472,6 +2498,39 @@ class WorkerApiController extends ApiController
             if($result === false) {
                 $this->returnJson([
                     'error' => 'An error occurred while getting orders!'
+                ], HttpCode::notFound());
+            }
+            $this->returnJson([
+                'success' => true,
+                'data' => $result
+            ]);
+        }
+        else {
+            $this->_methodNotAllowed(['GET']);
+        }
+    }
+
+    /**
+     * url = /api/worker/user/get/all-by-email
+     * url = /api/admin/user/get/all-by-email
+     * @return void
+     */
+    public function _getAllUsersByEmail()
+    {
+        if(HttpRequest::method() === 'GET')
+        {
+            $request = new HttpRequest();
+            $DATA = $request->getData();
+
+            if(!isset($DATA['email'])) {
+                $this->_missingRequestFields();
+            }
+            $email = $request->get('email');
+
+            $result = $this->dataMapper->selectUsersByEmailPart($email);
+            if($result === false) {
+                $this->returnJson([
+                    'error' => 'An error occurred while getting users!'
                 ], HttpCode::notFound());
             }
             $this->returnJson([

@@ -175,8 +175,8 @@ const API = {
                         many: '/api/worker/order/service/delete/many',
                     },
                     complete: {
-                        one: '/api/worker/order/service/cancel/one',
-                        many: '/api/worker/order/service/cancel/many'
+                        one: '/api/worker/order/service/complete/one',
+                        many: '/api/worker/order/service/complete/many'
                     },
                     cancel: {
                         one: '/api/worker/order/service/cancel/one',
@@ -198,6 +198,11 @@ const API = {
             ROLE: {
                 get: {
                     one: '/api/worker/role/get/one'
+                }
+            },
+            USER: {
+                get: {
+                    'all-by-email': '/api/worker/user/get/all-by-email'
                 }
             }
         }
@@ -285,7 +290,7 @@ const API = {
                         many: '/api/admin/order/service/delete/many',
                     },
                     complete: {
-                        many: '/api/admin/order/service/cancel/many'
+                        many: '/api/admin/order/service/complete/many'
                     },
                     cancel: {
                         many: '/api/admin/order/service/cancel/many'
