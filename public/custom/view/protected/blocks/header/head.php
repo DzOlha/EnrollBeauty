@@ -24,11 +24,7 @@
     <link href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/css/style.css" rel="stylesheet">
 
     <!-- Select2 css -->
-    <link href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/select2/css/select2.min.css" rel="stylesheet">
-
-    <!-- Fullcalendar css-->
-    <link href='/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fullcalendar/fullcalendar.css' rel='stylesheet' />
-    <link href='/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fullcalendar/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+<!--    <link href="/--><?php //=MOCKUP_PROTECTED_FOLDER?><!--/assets/plugins/select2/css/select2.min.css" rel="stylesheet">-->
 
     <link rel="shortcut icon" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/img/logo/favicon.png" />
 

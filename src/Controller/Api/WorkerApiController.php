@@ -988,7 +988,6 @@ class WorkerApiController extends ApiController
              */
             $updated = $this->dataMapper->updateCompletedDatetimeByOrderId($orderId);
             if ($updated === false) {
-                $this->dataMapper->rollBackTransaction();
                 $this->returnJson([
                     'error' => 'The error occurred while updating completed datetime of the order!'
                 ], HttpCode::notFound());
