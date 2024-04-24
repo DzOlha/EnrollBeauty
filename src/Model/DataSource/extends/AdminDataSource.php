@@ -2,24 +2,16 @@
 
 namespace Src\Model\DataSource\extends;
 
-use http\Client\Curl\User;
 use Src\DB\IDatabase;
-use Src\Helper\Builder\impl\SqlBuilder;
-use Src\Model\DataSource\DataSource;
 use Src\Model\DTO\Write\AdminWriteDTO;
-use Src\Model\Table\Admins;
-use Src\Model\Table\AdminsSetting;
-use Src\Model\Table\Affiliates;
-use Src\Model\Table\Departments;
-use Src\Model\Table\OrdersService;
-use Src\Model\Table\Positions;
-use Src\Model\Table\Roles;
-use Src\Model\Table\Services;
-use Src\Model\Table\Users;
-use Src\Model\Table\Workers;
-use Src\Model\Table\WorkersPhoto;
-use Src\Model\Table\WorkersServicePricing;
-use Src\Model\Table\WorkersServiceSchedule;
+use Src\Model\Repository\impl\extend\AdminRepository;
+use Src\Model\Repository\impl\extend\AffiliateRepository;
+use Src\Model\Repository\impl\extend\DepartmentRepository;
+use Src\Model\Repository\impl\extend\OrderRepository;
+use Src\Model\Repository\impl\extend\PositionRepository;
+use Src\Model\Repository\impl\extend\RoleRepository;
+use Src\Model\Repository\impl\extend\ServiceRepository;
+use Src\Model\Repository\impl\extend\WorkerRepository;
 
 class AdminDataSource extends WorkerDataSource
 {
@@ -28,97 +20,46 @@ class AdminDataSource extends WorkerDataSource
         parent::__construct($db);
     }
 
-    public function selectAllAdminsRows() {
-        $this->builder->selectCount('*', 'number')
-                ->from(Admins::$table)
-            ->build();
+    public function selectAllAdminsRows()
+    {
+        $adminRepository = AdminRepository::getInstance();
 
-        $result = $this->db->singleRow();
-        if($result) {
-            return $result['number'];
-        }
-        return $result;
+        return $adminRepository->selectCount();
     }
 
-    public function selectAdminIdByEmail(string $email) {
-        $this->builder->select([Admins::$id])
-                ->from(Admins::$table)
-                ->whereEqual(Admins::$email, ':email', $email)
-            ->build();
+    public function selectAdminIdByEmail(string $email)
+    {
+        $adminRepository = AdminRepository::getInstance();
 
-        $result = $this->db->singleRow();
-        if ($result) {
-            // admins.id -> id
-            $key = explode('.', Admins::$id)[1];
-            return $result[$key];
-        }
-        return $result;
+        return $adminRepository->selectIdByEmail($email);
     }
 
-    public function insertAdmin(AdminWriteDTO $admin) {
-        $currentDatetime = date('Y-m-d H:i:s');
-        $this->builder->insertInto(Admins::$table,
-                    [Admins::$name, Admins::$surname, Admins::$password,
-                     Admins::$email, Admins::$created_date, Admins::$role_id])
-                ->values(
-                    [':name', ':surname', ':password', ':email', ':created_datetime'],
-                    [$admin->getName(), $admin->getSurname(), $admin->getPasswordHash(),
-                     $admin->getEmail(), $currentDatetime],
-                    true
-                )   ->subqueryBegin()
-                        ->select([Roles::$id])
-                        ->from(Roles::$table)
-                        ->whereEqual(Roles::$name, ':admin_role', $admin->getRole())
-                    ->subqueryEnd()
-                ->queryEnd()
-            ->build();
+    public function insertAdmin(AdminWriteDTO $admin)
+    {
+        $adminRepository = AdminRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
-    }
-    public function insertAdminSetting(int $adminId) {
-        $this->builder->insertInto(AdminsSetting::$table, [AdminsSetting::$admin_id])
-                ->values([':admin_id'], [$adminId])
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
+        return $adminRepository->insert($admin);
     }
 
-    public function updateAdmin(AdminWriteDTO $admin) {
-        $this->builder->update(Admins::$table)
-                ->set(Admins::$name, ':name', $admin->getName())
-                ->andSet(Admins::$surname, ':surname', $admin->getSurname())
-                ->andSet(Admins::$email, ':email', $admin->getEmail())
-                ->andSet(Admins::$password, ':password', $admin->getPasswordHash())
-                ->andSet(Admins::$status, ':status', $admin->getStatus())
-            ->build();
+    public function insertAdminSetting(int $adminId)
+    {
+        $adminRepository = AdminRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $adminRepository->insertSettings($adminId);
     }
+
+    public function updateAdmin(AdminWriteDTO $admin)
+    {
+        $adminRepository = AdminRepository::getInstance();
+
+        return $adminRepository->update($admin);
+    }
+
     public function selectAdminPasswordByEmail(string $email)
     {
-        $this->builder->select([Admins::$password])
-                ->from(Admins::$table)
-                ->whereEqual(Admins::$email, ':email', $email)
-            ->build();
+        $adminRepository = AdminRepository::getInstance();
 
-        $this->db->bind(':email', $email);
-
-        $result = $this->db->singleRow();
-        if ($result) {
-            // admins.password -> password
-            $key = explode('.', Admins::$password)[1];
-            return $result[$key];
-        }
-        return false;
+        return $adminRepository->selectPasswordByEmail($email);
     }
 
     /**
@@ -131,13 +72,11 @@ class AdminDataSource extends WorkerDataSource
      *      'email' =>
      * ]
      */
-    public function selectAdminInfoById(int $adminId) {
-        $this->builder->select([Admins::$id, Admins::$name, Admins::$surname, Admins::$email])
-                ->from(Admins::$table)
-                ->whereEqual(Admins::$id, ':id', $adminId)
-            ->build();
+    public function selectAdminInfoById(int $adminId)
+    {
+        $adminRepository = AdminRepository::getInstance();
 
-        return $this->db->singleRow();
+        return $adminRepository->selectProfile($adminId);
     }
 
 
@@ -165,577 +104,256 @@ class AdminDataSource extends WorkerDataSource
         int $limit, int $offset,
         string $orderByField = 'workers.id', string $orderDirection = 'asc'
     ) {
-        $workers = Workers::$table;
-        $_position_id = Workers::$position_id;
-        $experience = Workers::$years_of_experience;
+        $workerRepository = WorkerRepository::getInstance();
 
-        $positions = Positions::$table;
-        $position_id = Positions::$id;
-        $position_name = Positions::$name;
-
-        $queryFrom = "
-            $workers INNER JOIN $positions ON $_position_id = $position_id
-        ";
-
-        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email,
-                         "$position_name as position", Workers::$salary, "$experience as experience"])
-                ->from(Workers::$table)
-                ->innerJoin(Positions::$table)
-                    ->on(Workers::$position_id, Positions::$id)
-                ->orderBy($orderByField, $orderDirection)
-                ->limit($limit)
-                ->offset($offset)
-            ->build();
-
-
-        $result = $this->db->manyRows();
-        if($result == null) {
-            return $result;
-        }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $workerRepository->selectAll($limit, $offset, $orderByField, $orderDirection);
     }
 
-    public function selectAllPositions() {
-        $this->builder->select([Positions::$id, Positions::$name])
-                ->from(Positions::$table)
-            ->build();
+    public function selectAllPositions()
+    {
+        $positionRepository = PositionRepository::getInstance();
 
-        return $this->db->manyRows();
+        return $positionRepository->selectAll();
     }
 
-    public function selectAllRoles() {
-        $this->builder->select([Roles::$id, Roles::$name])
-                ->from(Roles::$table)
-            ->build();
+    public function selectAllRoles()
+    {
+        $roleRepository = RoleRepository::getInstance();
 
-        return $this->db->manyRows();
+        return $roleRepository->selectAll();
     }
 
     public function selectServicesAllByDepartmentId(int $departmentId)
     {
-        $this->builder->select([Services::$id, Services::$name])
-                ->from(Services::$table)
-                ->whereEqual(Services::$department_id, ':department_id', $departmentId)
-            ->build();
+        $serviceRepository = ServiceRepository::getInstance();
 
-        return $this->db->manyRows();
+        return $serviceRepository->selectAllByDepartmentId($departmentId);
     }
 
     public function selectDepartmentsAllForAdmin(
         int $limit, int $offset,
         string $orderByField = 'departments.id', string $orderDirection = 'asc'
     ) {
-        $departments = Departments::$table;
-        $queryFrom = " $departments ";
+        $departmentRepository = DepartmentRepository::getInstance();
 
-        $this->builder->select([Departments::$id, Departments::$name])
-                ->from(Departments::$table)
-                ->orderBy($orderByField, $orderDirection)
-                ->limit($limit)
-                ->offset($offset)
-        ->build();
-
-        $result = $this->db->manyRows();
-        if($result == null) {
-            return $result;
-        }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $departmentRepository->selectAllLimited(
+            $limit, $offset, $orderByField, $orderDirection
+        );
     }
 
     public function insertDepartment(
         string $name, string $description, string $photoFilename
     ){
-        $this->builder->insertInto(Departments::$table,
-            [Departments::$name, Departments::$description, Departments::$photo_filename])
-                    ->values([':name', ':description', ':photo'],
-                            [$name, $description, $photoFilename])
-            ->build();
+        $departmentRepository = DepartmentRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
+        return $departmentRepository->insert($name, $description, $photoFilename);
     }
 
     public function updateDepartment(int $id, string $name, string $description)
     {
-        $this->builder->update(Departments::$table)
-                    ->set(Departments::$name, ':name', $name)
-                    ->andSet(Departments::$description, ':description', $description)
-                    ->whereEqual(Departments::$id, ':id', $id)
-            ->build();
+        $departmentRepository = DepartmentRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $departmentRepository->update($id, $name, $description);
     }
 
     public function selectDepartmentPhotoById(int $id)
     {
-        $this->builder->select([Departments::$photo_filename])
-                    ->from(Departments::$table)
-                    ->whereEqual(Departments::$id, ':id', $id)
-            ->build();
+        $departmentRepository = DepartmentRepository::getInstance();
 
-        $result = $this->db->singleRow();
-        if($result) {
-            return $result[explode('.', Departments::$photo_filename)[1]];
-        }
-        return $result;
+        return $departmentRepository->selectPhoto($id);
     }
 
     public function updateDepartmentPhotoById(int $id, string $photoFilename)
     {
-        $this->builder->update(Departments::$table)
-                    ->set(Departments::$photo_filename, ':photo', $photoFilename)
-                    ->whereEqual(Departments::$id, ':id', $id)
-            ->build();
+        $departmentRepository = DepartmentRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $departmentRepository->updatePhoto($id, $photoFilename);
     }
 
     public function deleteDepartmentById(int $id)
     {
-        $this->builder->delete()
-                    ->from(Departments::$table)
-                    ->whereEqual(Departments::$id, ':id', $id)
-            ->build();
+        $departmentRepository = DepartmentRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $departmentRepository->delete($id);
     }
 
     public function selectFutureOrdersByDepartmentId(int $departmentId)
     {
-        $now = date('Y-m-d H:i:s');
+       $orderRepository = OrderRepository::getInstance();
 
-        $this->builder->select([OrdersService::$id])
-            ->from(OrdersService::$table)
-            ->innerJoin(WorkersServicePricing::$table)
-                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
-            ->innerJoin(Services::$table)
-                ->on(WorkersServicePricing::$service_id, Services::$id)
-            ->whereEqual(Services::$department_id, ':id', $departmentId)
-            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
-            ->andIsNull(OrdersService::$completed_datetime)
-            ->andIsNull(OrdersService::$canceled_datetime)
-        ->build();
-
-        return $this->db->manyRows();
+       return $orderRepository->selectAllUpcomingByDepartmentId($departmentId);
     }
 
     public function selectFutureOrdersByWorkerId(int $workerId)
     {
-        $now = date('Y-m-d H:i:s');
+        $orderRepository = OrderRepository::getInstance();
 
-        $this->builder->select([OrdersService::$id])
-            ->from(OrdersService::$table)
-            ->innerJoin(WorkersServicePricing::$table)
-                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
-            ->whereEqual(WorkersServicePricing::$worker_id, ':id', $workerId)
-            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
-            ->andIsNull(OrdersService::$completed_datetime)
-            ->andIsNull(OrdersService::$canceled_datetime)
-        ->build();
-
-        return $this->db->manyRows();
+        return $orderRepository->selectAllUpcomingByWorkerId($workerId);
     }
 
     public function selectPositionsAllWithDepartments(
         int $limit, int $offset,
         string $orderByField = 'positions.id', string $orderDirection = 'asc'
     ){
-        $positions = Positions::$table;
-        $queryFrom = " $positions ";
+        $positionRepository = PositionRepository::getInstance();
 
-        $this->builder->select([Positions::$id, Positions::$name,
-                                Positions::$department_id, Departments::$name],
-                                [Departments::$name => 'department_name'])
-            ->from(Positions::$table)
-            ->innerJoin(Departments::$table)
-                ->on(Positions::$department_id, Departments::$id)
-            ->orderBy($orderByField, $orderDirection)
-            ->limit($limit)
-            ->offset($offset)
-            ->build();
-
-        $result = $this->db->manyRows();
-        if($result == null) {
-            return $result;
-        }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $positionRepository->selectAllLimited(
+            $limit, $offset, $orderByField, $orderDirection
+        );
     }
 
     public function insertPosition(string $name, int $departmentId)
     {
-        $this->builder->insertInto(Positions::$table,
-                                  [Positions::$name, Positions::$department_id],)
-                         ->values([':name', ':department_id'], [$name, $departmentId])
-            ->build();
+        $positionRepository = PositionRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
+        return $positionRepository->insert($name, $departmentId);
     }
 
     public function selectPositionIdByNameAndDepartment(string $name, int $departmentId)
     {
-        $this->builder->select([Positions::$id])
-                    ->from(Positions::$table)
-                    ->whereEqual(Positions::$name, ':name', $name)
-                    ->andEqual(Positions::$department_id, ':department_id', $departmentId)
-            ->build();
+        $positionRepository = PositionRepository::getInstance();
 
-        $result = $this->db->singleRow();
-        if($result) {
-            // positions.id -> id
-            return $result[explode('.', Positions::$id)[1]];
-        }
-        return $result;
+        return $positionRepository->selectIdByNameAndDepartment($name, $departmentId);
     }
 
     public function selectPositionById(int $id)
     {
-        $this->builder->select([Positions::$id, Positions::$name, Positions::$department_id])
-                    ->from(Positions::$table)
-                    ->whereEqual(Positions::$id, ':id', $id)
-            ->build();
+        $positionRepository = PositionRepository::getInstance();
 
-        return $this->db->singleRow();
+        return $positionRepository->select($id);
     }
 
     public function updatePositionById(int $id, string $name, int $departmentId)
     {
-        $this->builder->update(Positions::$table)
-                    ->set(Positions::$name, ':name', $name)
-                    ->andSet(Positions::$department_id, ':department_id', $departmentId)
-                    ->whereEqual(Positions::$id, ':id', $id)
-            ->build();
+        $positionRepository = PositionRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $positionRepository->update($id, $name, $departmentId);
     }
 
     public function selectPositionWithDepartmentById(int $id)
     {
-        $this->builder->select([Positions::$id, Positions::$name, Positions::$department_id,
-                                Departments::$name],
-                            [Departments::$name => 'department_name'])
-                    ->from(Positions::$table)
-                    ->innerJoin(Departments::$table)
-                        ->on(Positions::$department_id, Departments::$id)
-                    ->whereEqual(Positions::$id, ':id', $id)
-            ->build();
+        $positionRepository = PositionRepository::getInstance();
 
-        return $this->db->singleRow();
+        return $positionRepository->selectWithDepartment($id);
     }
 
     public function selectFutureOrdersByPositionId(int $positionId)
     {
-        $now = date('Y-m-d H:i:s');
+        $orderRepository = OrderRepository::getInstance();
 
-        $this->builder->select([OrdersService::$id])
-            ->from(OrdersService::$table)
-            ->innerJoin(WorkersServicePricing::$table)
-                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
-            ->innerJoin(Workers::$table)
-                ->on(WorkersServicePricing::$worker_id, Workers::$id)
-            ->whereEqual(Workers::$position_id, ':position_id', $positionId)
-            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
-            ->andIsNull(OrdersService::$completed_datetime)
-            ->andIsNull(OrdersService::$canceled_datetime)
-            ->build();
-
-        return $this->db->manyRows();
+        return $orderRepository->selectAllUpcomingByPositionId($positionId);
     }
 
     public function deletePositionById(int $id)
     {
-        $this->builder->delete()
-                    ->from(Positions::$table)
-                    ->whereEqual(Positions::$id, ':id', $id)
-            ->build();
+        $positionRepository = PositionRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $positionRepository->delete($id);
     }
 
     public function selectAllAffiliatesForAdminTable(
         int $limit, int $offset,
         string $orderByField = 'affiliates.id', string $orderDirection = 'asc'
     ){
-        $affiliates = Affiliates::$table;
-        $queryFrom = " $affiliates ";
+        $affiliateRepository = AffiliateRepository::getInstance();
 
-        $this->builder->select([Affiliates::$id, Affiliates::$name, Affiliates::$country,
-                                Affiliates::$city, Affiliates::$address, Affiliates::$created_date,
-                                Workers::$id, Workers::$name, Workers::$surname],
-                        [Workers::$id => 'manager_id',
-                         Workers::$name => 'manager_name',
-                         Workers::$surname => 'manager_surname'])
-            ->from(Affiliates::$table)
-            ->leftJoin(Workers::$table)
-                ->on(Affiliates::$worker_manager_id, Workers::$id)
-            ->orderBy($orderByField, $orderDirection)
-            ->limit($limit)
-            ->offset($offset)
-        ->build();
-
-        $result = $this->db->manyRows();
-        if($result == null) {
-            return $result;
-        }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $affiliateRepository->selectAllLimited(
+            $limit, $offset, $orderByField, $orderDirection
+        );
     }
 
     public function insertAffiliate(
         string $name, string $country, string $city, string $address, ?int $managerId = null
     ) {
-        $this->builder->insertInto(Affiliates::$table,
-                        [Affiliates::$name, Affiliates::$country,
-                         Affiliates::$city, Affiliates::$worker_manager_id,
-                         Affiliates::$address])
-                    ->values([':name', ':country', ':city', ':manager_id', ':address'],
-                            [$name, $country, $city, $managerId, $address])
-            ->build();
+        $affiliateRepository = AffiliateRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
+        return $affiliateRepository->insert($name, $country, $city, $address, $managerId);
     }
 
     public function selectAffiliateById(int $id)
     {
-        $this->builder->select([Affiliates::$id, Affiliates::$name, Affiliates::$country,
-                                Affiliates::$city, Affiliates::$address,
-                                Affiliates::$worker_manager_id],
-                        [Affiliates::$worker_manager_id => 'manager_id'])
-                        ->from(Affiliates::$table)
-                        ->whereEqual(Affiliates::$id, ':id', $id)
-            ->build();
+        $affiliateRepository = AffiliateRepository::getInstance();
 
-        return $this->db->singleRow();
+        return $affiliateRepository->select($id);
     }
 
     public function selectAffiliateByIdForTable(int $id)
     {
-        $this->builder->select([Affiliates::$id, Affiliates::$name, Affiliates::$country,
-                                Affiliates::$city, Affiliates::$address, Affiliates::$created_date,
-                                Workers::$id, Workers::$name, Workers::$surname],
-            [
-                Workers::$id => 'manager_id',
-                Workers::$name => 'manager_name',
-                Workers::$surname => 'manager_surname'
-            ])
-            ->from(Affiliates::$table)
-            ->leftJoin(Workers::$table)
-                ->on(Affiliates::$worker_manager_id, Workers::$id)
-            ->whereEqual(Affiliates::$id, ':id', $id)
-        ->build();
+        $affiliateRepository = AffiliateRepository::getInstance();
 
-        return $this->db->singleRow();
+        return $affiliateRepository->selectRow($id);
     }
 
     public function selectAffiliateByAddressAndNotId(
         int $id, string $country, string $city, string $address
     ) {
-        $this->builder->select([Affiliates::$id])
-                    ->from(Affiliates::$table)
-                    ->whereEqual(Affiliates::$country, ':country', $country)
-                    ->andEqual(Affiliates::$city, ':city', $city)
-                    ->andEqual(Affiliates::$address, ':address', $address)
-                    ->andNotEqual(Affiliates::$id, ':id', $id)
-            ->build();
+        $affiliateRepository = AffiliateRepository::getInstance();
 
-        return $this->db->singleRow();
+        return $affiliateRepository->selectIdByAddressAndNotId($id, $country, $city, $address);
     }
 
     public function selectAffiliateByCountryCityAndAddress(
         string $country, string $city, string $address
     ) {
-        $this->builder->select([Affiliates::$id])
-            ->from(Affiliates::$table)
-            ->whereEqual(Affiliates::$country, ':country', $country)
-            ->andEqual(Affiliates::$city, ':city', $city)
-            ->andEqual(Affiliates::$address, ':address', $address)
-        ->build();
+        $affiliateRepository = AffiliateRepository::getInstance();
 
-        return $this->db->singleRow();
+        return $affiliateRepository->selectIdByAddress($country, $city, $address);
     }
 
     public function updateAffiliateById(
         int $id, string $name, string $country,
         string $city, string $address, ?int $managerId = null
     ) {
-        $this->builder->update(Affiliates::$table)
-                    ->set(Affiliates::$name, ':name', $name)
-                    ->andSet(Affiliates::$country, ':country', $country)
-                    ->andSet(Affiliates::$city, ':city', $city)
-                    ->andSet(Affiliates::$address, ':address', $address)
-                    ->andSet(Affiliates::$worker_manager_id, ':manager_id', $managerId)
-                ->whereEqual(Affiliates::$id, ':id', $id)
-        ->build();
+        $affiliateRepository = AffiliateRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $affiliateRepository->update($id, $name, $country, $city, $address, $managerId);
     }
 
     public function selectFutureOrdersByAffiliateId(int $affiliateId)
     {
-        $now = date('Y-m-d H:i:s');
+        $orderRepository = OrderRepository::getInstance();
 
-        $this->builder->select([OrdersService::$id])
-                ->from(OrdersService::$table)
-                ->whereEqual(OrdersService::$affiliate_id, ':affiliate_id', $affiliateId)
-                ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
-                ->andIsNull(OrdersService::$completed_datetime)
-                ->andIsNull(OrdersService::$canceled_datetime)
-        ->build();
-
-        return $this->db->manyRows();
+        return $orderRepository->selectAllUpcomingByAffiliateId($affiliateId);
     }
 
     public function deleteAffiliateById(int $id)
     {
-        $this->builder->delete()
-                    ->from(Affiliates::$table)
-                    ->whereEqual(Affiliates::$id, ':id', $id)
-            ->build();
+        $affiliateRepository = AffiliateRepository::getInstance();
 
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $affiliateRepository->delete($id);
     }
 
     public function selectWorkersByDepartmentId(
         int $departmentId, int $limit, int $offset
     ) {
-        $workers = Workers::$table;
-        $workersPositionId = Workers::$position_id;
+        $workerRepository = WorkerRepository::getInstance();
 
-        $positions = Positions::$table;
-        $positionsId = Positions::$id;
-        $positionsDepartmentId = Positions::$department_id;
-
-        $queryFrom = " $workers INNER JOIN $positions ON $workersPositionId = $positionsId 
-                        WHERE $positionsDepartmentId = :department_id ";
-        $params = [
-            ':department_id' => $departmentId
-        ];
-
-        $isMain = 1;
-        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
-                                Workers::$email, WorkersPhoto::$filename, Positions::$name],
-                [Positions::$name => 'position'])
-                ->from(Workers::$table)
-                ->innerJoin(Positions::$table)
-                    ->on(Workers::$position_id, Positions::$id)
-                ->leftJoin(WorkersPhoto::$table)
-                    ->on(Workers::$id, WorkersPhoto::$worker_id)
-                ->whereEqual(Positions::$department_id, ':department_id', $departmentId)
-                ->andEqual(WorkersPhoto::$is_main, ':is_main', $isMain)
-                ->limit($limit)
-                ->offset($offset)
-        ->build();
-
-        $result = $this->db->manyRows();
-        if($result == null) {
-            return $result;
-        }
-
-        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
+        return $workerRepository->selectAllLimitedByDepartmentId($departmentId, $limit, $offset);
     }
 
     public function selectWorkersByServiceId(
         int $serviceId, int $limit, int $offset
     ){
-        $workers = Workers::$table;
-        $workersId = Workers::$id;
+        $workerRepository = WorkerRepository::getInstance();
 
-        $pricing = WorkersServicePricing::$table;
-        $pricingServiceId = WorkersServicePricing::$service_id;
-        $pricingWorkerId = WorkersServicePricing::$worker_id;
-
-        $queryFrom = " $workers LEFT JOIN $pricing ON $workersId = $pricingWorkerId 
-                        WHERE $pricingServiceId = :service_id ";
-        $params = [
-            ':service_id' => $serviceId
-        ];
-
-        $isMain = 1;
-        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
-                                Workers::$email, WorkersPhoto::$filename, Positions::$name],
-            [Positions::$name => 'position'])
-            ->from(Workers::$table)
-            ->innerJoin(Positions::$table)
-                ->on(Workers::$position_id, Positions::$id)
-            ->leftJoin(WorkersPhoto::$table)
-                ->on(Workers::$id, WorkersPhoto::$worker_id)
-            ->leftJoin(WorkersServicePricing::$table)
-                ->on(Workers::$id, WorkersServicePricing::$worker_id)
-            ->whereEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
-            ->andEqual(WorkersPhoto::$is_main, ':is_main', $isMain)
-            ->limit($limit)
-            ->offset($offset)
-        ->build();
-
-        $result = $this->db->manyRows();
-        if($result == null) {
-            return $result;
-        }
-        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
+        return $workerRepository->selectAllLimitedByServiceId($serviceId, $limit, $offset);
     }
 
     public function selectDepartmentFullById(int $id)
     {
-        $this->builder->select([Departments::$id, Departments::$name,
-                                Departments::$description, Departments::$photo_filename])
-                        ->from(Departments::$table)
-                    ->whereEqual(Departments::$id, ':id', $id)
-            ->build();
+        $departmentRepository = DepartmentRepository::getInstance();
 
-        return $this->db->singleRow();
+        return $departmentRepository->selectWithPhoto($id);
     }
 
     public function selectAllServicesWithDepartmentsInfo(
         int $limit, int $offset,
         string $orderByField = 'services.id', string $orderDirection = 'asc'
     ){
-        $queryFrom = "
-            ".Services::$table." 
-                INNER JOIN ".Departments::$table." ON ".Services::$department_id." = ".Departments::$id."
-        ";
+        $serviceRepository = ServiceRepository::getInstance();
 
-        $this->builder->select([Services::$id, Services::$name,
-                                Departments::$name." as department_name",
-                                Departments::$id." as department_id"])
-            ->from(Services::$table)
-            ->innerJoin(Departments::$table)
-                ->on(Services::$department_id, Departments::$id)
-            ->orderBy($orderByField, $orderDirection)
-            ->limit($limit)
-            ->offset($offset)
-        ->build();
-
-        $result = $this->db->manyRows();
-        if($result == null) {
-            return $result;
-        }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $serviceRepository->selectAllLimited(
+            $limit, $offset, $orderByField, $orderDirection
+        );
     }
 }
