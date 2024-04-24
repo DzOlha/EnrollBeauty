@@ -9,8 +9,11 @@
                     <div id="site-navigation" class="site-navigation d-flex flex-row">
                         <div class="site-branding mr-auto">
                             <!-- site-branding -->
-                            <a class="home-link" href="<?=COMPANY['url_https']?>" title="Sylin Beauty" rel="home">
-                                <img id="logo-img" class="img-center lazyload" src="/<?=MOCKUP_OPEN_FOLDER?>/assets/img/logo/logo.png" alt="logo">
+                            <a class="home-link" href="<?=COMPANY['url_https']?>" title="Sylin Beauty" rel="home"
+                                aria-label="Beauty Logo">
+                                <img id="logo-img" class="img-center"
+                                     src="/<?=MOCKUP_OPEN_FOLDER?>/assets/img/logo/logo.png"
+                                     alt="logo">
                             </a>
                             <!-- site-branding end -->
                         </div>
@@ -67,48 +70,54 @@
                                         || SessionHelper::getWorkerSession()
                                         || SessionHelper::getAdminSession()) { ?>
                                 <li class="logout-button">
-                                    <a href="#">
+                                    <a href="#" aria-label="Logout Link">
                                         Log Out
                                     </a>
                                     <ul>
                                         <?php if(SessionHelper::getUserSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['USER']['logout']?>">
+                                            <li><a href="<?=API['AUTH']['WEB']['USER']['logout']?>"
+                                                   aria-label="Logout User Link">
                                                     Log out from <b>User</b> account
                                                 </a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getWorkerSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['WORKER']['logout']?>">
+                                            <li><a href="<?=API['AUTH']['WEB']['WORKER']['logout']?>"
+                                                   aria-label="Logout Worker Link">
                                                     Log out from <b>Worker</b> account
                                                 </a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getAdminSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['ADMIN']['logout']?>">
+                                            <li><a href="<?=API['AUTH']['WEB']['ADMIN']['logout']?>"
+                                                   aria-label="Logout Admin Link">
                                                     Log out from <b>Admin</b> account
                                                 </a></li>
                                         <?php }?>
                                     </ul>
                                 </li>
                                 <li class="profile-button">
-                                    <a href="#">
+                                    <a href="#" aria-label="Profile Link">
                                         Profile
                                     </a>
                                     <ul>
                                         <?php if(SessionHelper::getUserSession()) {?>
-                                            <li><a href="<?=API['USER']['WEB']['PROFILE']['home']?>">
+                                            <li><a href="<?=API['USER']['WEB']['PROFILE']['home']?>"
+                                                   aria-label="Profile User Link">
                                                     User profile
                                                 </a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getWorkerSession()) {?>
-                                            <li><a href="<?=API['WORKER']['WEB']['PROFILE']['home']?>">
+                                            <li><a href="<?=API['WORKER']['WEB']['PROFILE']['home']?>"
+                                                   aria-label="Profile Worker Link">
                                                     Worker profile
                                                 </a></li>
                                         <?php }?>
 
                                         <?php if(SessionHelper::getAdminSession()) {?>
-                                            <li><a href="<?=API['ADMIN']['WEB']['PROFILE']['home']?>">
+                                            <li><a href="<?=API['ADMIN']['WEB']['PROFILE']['home']?>"
+                                                   aria-label="Profile Admin Link">
                                                     Admin profile
                                                 </a></li>
                                         <?php }?>
@@ -118,7 +127,8 @@
 
                                 <?php if(!SessionHelper::getUserSession()) {?>
                                     <li class="register-button">
-                                        <a href="<?=API['AUTH']['WEB']['USER']['registration']?>">
+                                        <a href="<?=API['AUTH']['WEB']['USER']['registration']?>"
+                                            aria-label="Register Link">
                                             Register
                                         </a>
                                     </li>
@@ -126,24 +136,27 @@
                                         || !SessionHelper::getWorkerSession()
                                         || !SessionHelper::getAdminSession()) {?>
                                         <li class="login-button">
-                                    <a href="#">
+                                    <a href="#" aria-label="Login Link">
                                         Log In
                                     </a>
                                     <ul>
                                         <?php if(!SessionHelper::getUserSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['USER']['login']?>">
+                                            <li><a href="<?=API['AUTH']['WEB']['USER']['login']?>"
+                                                   aria-label="Login User Link">
                                                     Log In as a <b>User</b>
                                                 </a></li>
                                         <?php }?>
 
                                         <?php if(!SessionHelper::getWorkerSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['WORKER']['login']?>">
+                                            <li><a href="<?=API['AUTH']['WEB']['WORKER']['login']?>"
+                                                   aria-label="Login Worker Link">
                                                     Log In as a <b>Worker</b>
                                                 </a></li>
                                         <?php }?>
 
                                         <?php if(!SessionHelper::getAdminSession()) {?>
-                                            <li><a href="<?=API['AUTH']['WEB']['ADMIN']['login']?>">
+                                            <li><a href="<?=API['AUTH']['WEB']['ADMIN']['login']?>"
+                                                   aria-label="Login Admin Link">
                                                     Log In as an <b>Admin</b>
                                                 </a></li>
                                         <?php }?>

@@ -9,7 +9,7 @@
                      id="id_arrow"
                      class="sort_arrow"
                      data-column="<?=\Src\Model\Table\OrdersService::$id?>"
-                     data-order="asc">
+                     data-order="asc" alt="">
             </span>
         </th>
         <th class="wd-lg-8p">
@@ -17,7 +17,7 @@
                 Service
                 <img src="" id="img_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Services::$name?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
         <th class="wd-lg-20p">
@@ -25,7 +25,7 @@
                 Worker
                 <img src="" id="login_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Workers::$name?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 
@@ -35,7 +35,7 @@
                     User
                     <img src="" id="login_arrow" class="sort_arrow"
                          data-column="<?=\Src\Model\Table\Users::$email?>"
-                         data-order="">
+                         data-order="" alt="">
                 </span>
             </th>
         <?php } else {?>
@@ -44,7 +44,7 @@
                     Address
                     <img src="" id="login_arrow" class="sort_arrow"
                          data-column="<?=\Src\Model\Table\Affiliates::$address?>"
-                         data-order="">
+                         data-order="" alt="">
                 </span>
             </th>
         <?php }?>
@@ -54,7 +54,7 @@
                 Price
                 <img src="" id="created_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\WorkersServicePricing::$price?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 
@@ -63,7 +63,7 @@
                 Date
                 <img src="" id="email_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\OrdersService::$start_datetime?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 
@@ -72,7 +72,7 @@
                 Status
                 <img src="" id="email_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\OrdersService::$status?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 

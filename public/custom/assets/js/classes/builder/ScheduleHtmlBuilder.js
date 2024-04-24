@@ -44,7 +44,8 @@ class ScheduleHtmlBuilder {
                             <div>
                                 <span>Master: </span>
                                 <span>
-                                    <a href="${workerProfileUrl}" target="_blank"
+                                    <a href="${workerProfileUrl}" target="_blank" 
+                                    aria-label="Worker Public Profile"
                                     class="profile-url text-default text-decoration-underline">
                                         ${workerName + ' ' + workerSurname}
                                     </a>
@@ -157,6 +158,7 @@ class ScheduleHtmlBuilder {
                        data-bs-toggle="tab"
                        data-date="${date}"
                        id="${menuItemId}"
+                       aria-label="Weekday"
                        >
                         ${weekday}
                     </a>
@@ -210,6 +212,7 @@ class ScheduleHtmlBuilder {
                        data-bs-toggle="tab"
                        data-id="${departmentId}"
                        id="${menuItemId}"
+                       aria-label="Department Tab"
                        >
                        ${departmentName}
                     </a>

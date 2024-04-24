@@ -5,7 +5,14 @@ class Requester {
 
     get(apiUrl, successCallback, errorCallback, dataToSend = null)
     {
-        let queryString = dataToSend !== null ? `?${$.param(dataToSend)}` : '';
+        let queryString = '';
+
+        if(dataToSend !== null) {
+            let query = $.param(dataToSend);
+            if(query) {
+                queryString = `?${query}`
+            }
+        }
 
         $.ajax({
             url: apiUrl + queryString,

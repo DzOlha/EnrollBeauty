@@ -172,9 +172,7 @@
         <!--footer end-->
 
         <!--back-to-top start-->
-        <a id="totop" href="#top">
-            <i class="fa fa-angle-up"></i>
-        </a>
+        <?php require_once VIEW_OPEN_BLOCKS . '/units/totop.php'?>
         <!--back-to-top end-->
     </div><!-- page end -->
 </div>
@@ -183,7 +181,26 @@
 </div>
 <!-- End Page -->
 
-<?php require_once VIEW_PROTECTED_BLOCKS . '/footer/full_footer.php'?>
+<script src="/<?=MOCKUP_OPEN_FOLDER?>/assets/js/jquery.min.js"></script>
+
+<!-- Bootstrap js-->
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/bootstrap.min.js" defer></script>
+
+<!-- Perfect-scrollbar js -->
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js" defer></script>
+
+<!-- Sidemenu js -->
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/sidemenu/sidemenu.js" id="leftmenu" defer></script>
+
+<!-- Custom js -->
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/custom.js" defer></script>
+
+<script src="/<?=CUSTOM_ASSETS?>/js/libs/alertify.min.js" async></script>
+<script src="/<?=MOCKUP_OPEN_FOLDER?>/assets/js/lazysizes.min.js" async=""></script>
+<script src="/<?=MOCKUP_OPEN_FOLDER?>/assets/js/main.js" async></script>
+
+<!-- Sticky js -->
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/sticky.js" defer></script>
 
 <!--Mine scripts-->
 <script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/protected/worker/ui/home.js"></script>

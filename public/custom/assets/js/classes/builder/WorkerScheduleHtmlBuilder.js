@@ -14,7 +14,7 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
             : '<span class="text-success">Available for order!</span>';
 
         let userLink = userId !== null ? `<span>
-                                                    <a href="#" 
+                                                    <a href="#" aria-label="User Email"
                                                          class="profile-url text-default" target="_blank">
                                                         ${userEmail}
                                                     </a>

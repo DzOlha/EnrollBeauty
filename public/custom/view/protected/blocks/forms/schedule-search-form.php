@@ -6,9 +6,12 @@
                 <div class="row row-sm">
                     <div class="col-lg-3">
                         <div class="form-group service-wrapper">
-                            <p class="mg-b-0">Service Name</p>
+                            <p class="mg-b-0" id="service-name-label">
+                                Service Name
+                            </p>
                             <select class="form-control select2-with-search"
-                                    id="service-name"
+                                    id="service-name" aria-label="Service Select"
+                                    aria-labelledby="service-name-label"
                             >
                                 <option label="Choose one">
                                 </option>
@@ -17,9 +20,12 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="form-group worker-wrapper">
-                            <p class="mg-b-0">Worker Name</p>
+                            <p class="mg-b-0" id="worker-name-label">
+                                Worker Name
+                            </p>
                             <select class="form-control select2-with-search"
-                                    id="worker-name"
+                                    id="worker-name" aria-label="Worker Select"
+                                    aria-labelledby="worker-name-label"
                             >
                                 <option label="Choose one">
                                 </option>
@@ -28,9 +34,13 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="form-group">
-                            <p class="mg-b-0">Affiliate</p>
+                            <p class="mg-b-0" id="affiliate-name-label">
+                                Affiliate
+                            </p>
                             <select class="form-control select2-with-search"
                                     id="affiliate-name-address"
+                                    aria-label="Affiliate Select"
+                                    aria-labelledby="affiliate-name-label"
                             >
                                 <option label="Choose one">
                                 </option>
@@ -38,7 +48,9 @@
                         </div>
                     </div>
                     <div class="col-lg-3">
-                        <p class="mg-b-0">Dates</p>
+                        <p class="mg-b-0" id="dates-label">
+                            Dates
+                        </p>
                         <div class="input-group dates">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
@@ -47,7 +59,8 @@
                             </div>
                             <input type="text"
                                    class="form-control pull-right date-range"
-                                   id="date-range-input"
+                                   id="date-range-input" aria-label="Dates Select"
+                                   aria-labelledby="dates-label"
                                    required>
                         </div>
                         <div class="error" id="date-range-input-error"></div>
@@ -56,9 +69,12 @@
                         <div class="row row-sm time-range">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <p class="mg-b-0">Start time</p>
+                                    <p class="mg-b-0" id="start-time-label">
+                                        Start time
+                                    </p>
                                     <select class="form-control select2 col-lg-2"
-                                            id="start-time"
+                                            id="start-time"  aria-label="Start time select"
+                                            aria-labelledby="start-time-label"
                                     >
                                         <option label="Choose one">
                                         </option>
@@ -108,9 +124,12 @@
 
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <p class="mg-b-0">End time</p>
+                                    <p class="mg-b-0" id="end-time-label">
+                                        End time
+                                    </p>
                                     <select class="form-control select2 col-lg-2"
-                                            id="end-time"
+                                            id="end-time" aria-label="End time select"
+                                            aria-labelledby="end-time-label"
                                     >
                                         <option label="Choose one">
                                         </option>
@@ -162,12 +181,15 @@
 
                     <div class="col-lg-3">
                         <div class="form-group">
-                            <p class="mg-b-0">Price from</p>
+                            <p class="mg-b-0" id="price-from-label">
+                                Price from
+                            </p>
                             <div class="input-group mb-3">
                                 <div class="price-d-flex">
-                                    <input aria-label="Amount (to the nearest dollar)"
-                                           class="form-control" type="number"
+                                    <input class="form-control" type="number"
                                            id="price-from"
+                                           aria-label="Price from amount"
+                                           aria-labelledby="price-from-label"
                                     >
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bd-r">грн</span>
@@ -179,12 +201,14 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="form-group">
-                            <p class="mg-b-0">Price to</p>
+                            <p class="mg-b-0" id="price-to-label">
+                                Price to
+                            </p>
                             <div class="input-group mb-3">
                                 <div class="price-d-flex">
-                                    <input aria-label="Amount (to the nearest dollar)"
-                                           class="form-control" type="number"
-                                           id="price-to"
+                                    <input class="form-control" type="number"
+                                           id="price-to" aria-label="Price to amount"
+                                           aria-labelledby="price-to-label"
                                     >
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bd-r">грн</span>

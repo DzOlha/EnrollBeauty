@@ -9,7 +9,7 @@
                      id="id_arrow"
                      class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Affiliates::$id?>"
-                     data-order="asc">
+                     data-order="asc" alt="">
             </span>
         </th>
         <th class="wd-lg-8p">
@@ -17,7 +17,7 @@
                 Name
                 <img src="" id="name_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Affiliates::$name?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
         <th class="wd-lg-15p">
@@ -25,7 +25,7 @@
                 Country
                 <img src="" id="country_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Affiliates::$country?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
         <th class="wd-lg-10p">
@@ -33,7 +33,7 @@
                 City
                 <img src="" id="city_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Affiliates::$city?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
         <th class="wd-lg-15p">
@@ -41,7 +41,7 @@
                 Street Address
                 <img src="" id="address_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Affiliates::$address?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 
@@ -50,7 +50,7 @@
                 Manager
                 <img src="" id="manager_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Affiliates::$worker_manager_id?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 
@@ -59,7 +59,7 @@
                 Created At
                 <img src="" id="email_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Affiliates::$created_date?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 

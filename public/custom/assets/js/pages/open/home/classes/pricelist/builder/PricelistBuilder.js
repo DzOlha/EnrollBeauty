@@ -10,7 +10,7 @@ class PricelistBuilder
 
     _createMenuLi(department, active = '') {
         return `<li class="${this.menuTabClass} pricing-tab ${active}" id="menu-pricing-item-${department.id}">
-                    <a href="#pricelist-content-block-${department.id}">
+                    <a href="#pricelist-content-block-${department.id}" aria-label="Department">
                         ${department.name}
                     </a>
                 </li>`

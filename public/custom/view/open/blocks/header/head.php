@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="HTML5 Template" />
-    <meta name="description" content="Sylin - Beauty salon and Spa HTML Template" />
-    <meta name="author" content="https://www.themetechmount.com/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Beauty salon" />
+    <meta name="author" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3" />
     <title><?=$data['title']?></title>
 
     <!-- favicon icon -->
@@ -16,27 +16,18 @@
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/bootstrap.min.css"/>
 
     <!-- Bootstrap css-->
-    <link  id="style" href="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+<!--    <link  id="style" href="/--><?php //=MOCKUP_PROTECTED_FOLDER?><!--/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>-->
 
     <!-- animate -->
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/animate.css"/>
 
-    <!-- owl-carousel -->
-<!--    <link rel="stylesheet" type="text/css" href="/--><?php //=MOCKUP_OPEN_FOLDER?><!--/assets/css/owl.carousel.css">-->
-
     <!-- fontawesome -->
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/font-awesome.css"/>
 
-    <!-- themify -->
-<!--    <link rel="stylesheet" type="text/css" href="/--><?php //=MOCKUP_OPEN_FOLDER?><!--/assets/css/themify-icons.css"/>-->
 
     <!-- flaticon -->
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/flaticon.css"/>
 
-
-    <!-- REVOLUTION LAYERS STYLES -->
-
-<!--    <link rel="stylesheet" type="text/css" href="/--><?php //=MOCKUP_OPEN_FOLDER?><!--/assets/revolution/css/rs6.css">-->
 
     <!-- prettyphoto -->
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/prettyPhoto.css">
@@ -51,9 +42,6 @@
     <link rel="stylesheet" type="text/css" href="/<?=MOCKUP_OPEN_FOLDER?>/assets/css/responsive.css"/>
     <!--    Alertify css-->
     <link rel="stylesheet" href="/<?=CUSTOM_ASSETS?>/css/libs/alertify.min.css"/>
-
-<!--    PowerTip-->
-    <link rel="stylesheet" href="/<?=CUSTOM_ASSETS?>/css/libs/jquery.powertip.min.css"/>
 
     <!--    CUSTOM CSS-->
     <link rel="stylesheet" type="text/css" href="/<?=CUSTOM_ASSETS?>/css/pages/index.css"/>

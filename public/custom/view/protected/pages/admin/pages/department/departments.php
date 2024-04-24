@@ -134,9 +134,7 @@
         <!--footer end-->
 
         <!--back-to-top start-->
-        <a id="totop" href="#top">
-            <i class="fa fa-angle-up"></i>
-        </a>
+        <?php require_once VIEW_OPEN_BLOCKS . '/units/totop.php'?>
         <!--back-to-top end-->
     </div><!-- page end -->
 </div>
@@ -146,8 +144,8 @@
 <?php require_once VIEW_PROTECTED_BLOCKS . '/footer/full_footer.php'?>
 
 <!-- Internal Fileuploads js-->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/fileupload.js"></script>
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/file-upload.js"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/fileupload.js" async></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/fileuploads/js/file-upload.js" async></script>
 
 
 <!--Mine scripts-->

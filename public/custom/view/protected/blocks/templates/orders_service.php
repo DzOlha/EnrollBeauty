@@ -119,9 +119,7 @@
         <!--footer end-->
 
         <!--back-to-top start-->
-        <a id="totop" href="#top">
-            <i class="fa fa-angle-up"></i>
-        </a>
+        <?php require_once VIEW_OPEN_BLOCKS . '/units/totop.php'?>
         <!--back-to-top end-->
     </div>
     <!-- End Main Content-->
@@ -132,15 +130,15 @@
     <?php require_once VIEW_PROTECTED_BLOCKS . '/footer/full_footer.php'?>
 
     <!-- Bootstrap js-->
-    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/popper.min.js"></script>
+<!--    <script src="/--><?php //=MOCKUP_PROTECTED_FOLDER?><!--/assets/plugins/bootstrap/js/popper.min.js"></script>-->
 
     <!-- Internal Daternagepicker js-->
     <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
     <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 
     <!--Moment-->
-    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/moment.js"></script>
-    <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/min/moment.min.js"></script>
+<!--    <script src="/--><?php //=MOCKUP_PROTECTED_FOLDER?><!--/assets/plugins/moment/moment.js"></script>-->
+<!--    <script src="/--><?php //=MOCKUP_PROTECTED_FOLDER?><!--/assets/plugins/moment/min/moment.min.js"></script>-->
 
     <!--Datepicker plugin-->
     <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/date-month-year-picker/js/date-picker.js"></script>

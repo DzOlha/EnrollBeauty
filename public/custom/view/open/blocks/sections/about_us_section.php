@@ -2,8 +2,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 res-767-center">
-                <img src="/<?=MOCKUP_OPEN_FOLDER?>/assets/img/bg-image/col-bgimage-1.jpg"
-                     class="img-fluid" alt="bg-image">
+                <img data-src="/<?=MOCKUP_OPEN_FOLDER?>/assets/img/bg-image/col-bgimage-1.jpg"
+                     class="lazyload img-fluid" alt="bg-image">
             </div>
             <div class="col-md-6 res-767-pt-40">
                 <!--  featured-icon-box -->

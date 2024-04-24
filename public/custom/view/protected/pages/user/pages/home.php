@@ -168,9 +168,7 @@
                 <!--footer end-->
 
                 <!--back-to-top start-->
-                <a id="totop" href="#top">
-                    <i class="fa fa-angle-up"></i>
-                </a>
+                <?php require_once VIEW_OPEN_BLOCKS . '/units/totop.php'?>
                 <!--back-to-top end-->
         </div><!-- page end -->
     </div>
@@ -180,20 +178,13 @@
 <!--</div>-->
 <!-- End Page -->
 
-<!-- Bootstrap js-->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap/js/popper.min.js"></script>
-
 <?php require_once VIEW_PROTECTED_BLOCKS . '/footer/full_footer.php'?>
 
 <!-- Internal Daternagepicker js-->
 <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
 <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 
-<!--Moment-->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/moment/moment.js"></script>
-
 <!--Mine scripts-->
-
 <script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/protected/user/ui/home.js"></script>
 
 </body>

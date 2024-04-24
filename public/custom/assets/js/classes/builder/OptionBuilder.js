@@ -21,7 +21,8 @@ class OptionBuilder {
     ) {
         return `<td class="${classTdWithCheckbox} td-row-${objectId}" 
                     ${dataAttributeId}="${objectId}">
-                    <input type="checkbox" class="form-check-input ${checkboxClass}">
+                    <input type="checkbox" class="form-check-input ${checkboxClass}"
+                        aria-label="Checkbox">
                     <span>${objectId}</span>
                 </td>`;
     }

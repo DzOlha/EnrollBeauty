@@ -2,7 +2,4 @@
 /.idea
 /logs/
 /public/custom/assets/img/uploads/
-/config/credentials/.htaccess
-/config/credentials/api_credentials.php
-/config/credentials/db_credentials.php
-/config/credentials/default_admin_credentials.php
+/config/credentials/

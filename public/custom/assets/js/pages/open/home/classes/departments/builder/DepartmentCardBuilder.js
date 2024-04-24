@@ -18,7 +18,7 @@ class DepartmentCardBuilder
                       id="department-card-${department?.id}">
                     <div class="featured-imagebox featured-imagebox-post style1 res-767-mb-15">
                         <div class="ttm-post-thumbnail featured-thumbnail">
-                            <img class="img-fluid" src="${photo}" alt="image">
+                            <img class="lazyload img-fluid" data-src="${photo}" alt="image">
                         </div>
                         <div class="featured-content box-shadow">
                             <div class="featured-title"><!-- featured-title -->

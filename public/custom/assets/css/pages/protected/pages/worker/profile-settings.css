@@ -48,7 +48,7 @@
 }
 
 #settings-menu a.active {
-    background-color: #bf9456;
+    background-color: var(--middle-brown-color);
     color: white !important;
 }
 

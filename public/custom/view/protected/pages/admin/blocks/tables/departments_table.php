@@ -9,7 +9,7 @@
                      id="id_arrow"
                      class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Departments::$id?>"
-                     data-order="asc">
+                     data-order="asc" alt="">
             </span>
         </th>
         <th class="wd-lg-40p">
@@ -17,7 +17,7 @@
                 Department Name
                 <img src="" id="s_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Departments::$name?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
         <th class="wd-lg-10p ">

@@ -1,0 +1,4 @@
+User-agent: Googlebot
+Allow: /public/
+Disallow: /src/
+Disallow: /config/

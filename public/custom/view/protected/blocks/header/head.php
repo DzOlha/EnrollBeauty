@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="/<?=CUSTOM_ASSETS?>/css/libs/alertify.min.css"/>
 
     <!--    PowerTip-->
-    <link rel="stylesheet" href="/<?=CUSTOM_ASSETS?>/css/libs/jquery.powertip.min.css"/>
+<!--    <link rel="stylesheet" href="/--><?php //=CUSTOM_ASSETS?><!--/css/libs/jquery.powertip.min.css"/>-->
 
     <!--    CUSTOM CSS-->
     <link rel="stylesheet" type="text/css" href="/<?=CUSTOM_ASSETS?>/css/pages/index.css"/>

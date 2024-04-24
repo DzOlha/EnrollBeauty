@@ -38,7 +38,7 @@ class WorkerCardBuilder
 
         return `<div class="featured-imagebox featured-imagebox-team style1 ${classes}">
                     <div class="featured-thumbnail">
-                        <img class="img-fluid" src="${workerImg}" alt="image">
+                        <img class="lazyload img-fluid" data-src="${workerImg}" alt="image">
                         <div class="media-block">
                             <ul class="social-icons list-inline">
                                 ${socials.instagram}
@@ -53,7 +53,7 @@ class WorkerCardBuilder
                     </div>
                     <div class="featured-content box-shadow">
                         <div class="featured-title">
-                            <h5><a href="${profileLink}" target="_blank">
+                            <h5><a href="${profileLink}" target="_blank" aria-label="Worker Profile">
                                     ${workerFullName}
                                 </a>
                             </h5>

@@ -11,9 +11,7 @@
 <!--footer end-->
 
 <!--back-to-top start-->
-<a id="totop" href="#top">
-    <i class="fa fa-angle-up"></i>
-</a>
+<?php require_once VIEW_OPEN_BLOCKS . '/units/totop.php'?>
 <!--back-to-top end-->
 
 </div><!-- page end -->

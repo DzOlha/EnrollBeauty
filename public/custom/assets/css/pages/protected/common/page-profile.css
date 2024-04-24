@@ -8,11 +8,11 @@
 .main-header-menu-icon span::before,
 .main-header-menu-icon span::after
 {
-    background-color: var(--light-brown-color);
+    background-color: var(--light-b-color);
     width: 30px;
 }
 .main-header-menu-icon span {
-    background-color: var(--light-brown-color);
+    background-color: var(--light-b-color);
     width: 25px;
 }
 .jumps-prevent {

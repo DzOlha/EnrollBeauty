@@ -9,7 +9,7 @@
                      id="id_arrow"
                      class="sort_arrow"
                      data-column="<?=\Src\Model\Table\WorkersServicePricing::$id?>"
-                     data-order="asc">
+                     data-order="asc" alt="">
             </span>
         </th>
         <th class="wd-lg-35p">
@@ -17,7 +17,7 @@
                 Service Name
                 <img src="" id="img_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\Services::$name?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
         <th class="wd-lg-30p">
@@ -25,7 +25,7 @@
                 Price
                 <img src="" id="login_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\WorkersServicePricing::$price?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 
@@ -34,7 +34,7 @@
                 Last Updated
                 <img src="" id="email_arrow" class="sort_arrow"
                      data-column="<?=\Src\Model\Table\WorkersServicePricing::$updated_datetime?>"
-                     data-order="">
+                     data-order="" alt="">
             </span>
         </th>
 

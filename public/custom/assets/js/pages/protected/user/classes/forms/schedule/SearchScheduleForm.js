@@ -350,7 +350,6 @@ class SearchScheduleForm extends Form {
                 this.requester.get(
                     this.apiUrlGetWorkersAll,
                     this.successCallbackGetWorkers.bind(this),
-                    this.errorCallbackSubmit.bind(this),
                     this.errorCallbackSubmit.bind(this)
                 )
             }
@@ -363,7 +362,6 @@ class SearchScheduleForm extends Form {
                 this.requester.get(
                     `${this.apiUrlGetWorkers}?service_id=${value}`,
                     this.successCallbackGetWorkers.bind(this),
-                    this.errorCallbackSubmit.bind(this),
                     this.errorCallbackSubmit.bind(this)
                 )
             }
@@ -414,7 +412,6 @@ class SearchScheduleForm extends Form {
                 this.requester.get(
                     this.apiUrlGetServicesAll,
                     this.successCallbackGetServices.bind(this),
-                    this.errorCallbackSubmit.bind(this),
                     this.errorCallbackSubmit.bind(this)
                 )
             }
@@ -428,7 +425,6 @@ class SearchScheduleForm extends Form {
                     `${this.apiUrlGetServices}
                         worker_id=${value.trim()}`,
                     this.successCallbackGetServices.bind(this),
-                    this.errorCallbackSubmit.bind(this),
                     this.errorCallbackSubmit.bind(this)
                 )
             }
@@ -448,7 +444,6 @@ class SearchScheduleForm extends Form {
         this.requester.get(
             this.apiUrlGetServicesAll,
             this.successCallbackGetAllServices.bind(this),
-            this.errorCallbackSubmit.bind(this),
             this.errorCallbackSubmit.bind(this)
         )
     }
@@ -474,7 +469,6 @@ class SearchScheduleForm extends Form {
         this.requester.get(
             this.apiUrlGetWorkersAll,
             this.successCallbackGetAllWorkers.bind(this),
-            this.errorCallbackSubmit.bind(this),
             this.errorCallbackSubmit.bind(this)
         )
     }
@@ -500,7 +494,6 @@ class SearchScheduleForm extends Form {
         this.requester.get(
             this.apiUrlGetAffiliatesAll,
             this.successCallbackGetAllAffiliates.bind(this),
-            this.errorCallbackSubmit.bind(this),
             this.errorCallbackSubmit.bind(this)
         )
     }
