@@ -633,7 +633,10 @@ class AdminDataSource extends WorkerDataSource
         $positionsDepartmentId = Positions::$department_id;
 
         $queryFrom = " $workers INNER JOIN $positions ON $workersPositionId = $positionsId 
-                        WHERE $positionsDepartmentId = $departmentId ";
+                        WHERE $positionsDepartmentId = :department_id ";
+        $params = [
+            ':department_id' => $departmentId
+        ];
 
         $isMain = 1;
         $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
@@ -654,7 +657,8 @@ class AdminDataSource extends WorkerDataSource
         if($result == null) {
             return $result;
         }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+
+        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
     }
 
     public function selectWorkersByServiceId(
@@ -668,7 +672,10 @@ class AdminDataSource extends WorkerDataSource
         $pricingWorkerId = WorkersServicePricing::$worker_id;
 
         $queryFrom = " $workers LEFT JOIN $pricing ON $workersId = $pricingWorkerId 
-                        WHERE $pricingServiceId = $serviceId ";
+                        WHERE $pricingServiceId = :service_id ";
+        $params = [
+            ':service_id' => $serviceId
+        ];
 
         $isMain = 1;
         $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
@@ -691,7 +698,7 @@ class AdminDataSource extends WorkerDataSource
         if($result == null) {
             return $result;
         }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
     }
 
     public function selectDepartmentFullById(int $id)

@@ -237,7 +237,8 @@ class WorkerDataSource extends DataSource
     protected function _timeFilter($timeFrom, $timeTo)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
         $schedule_start_time = WorkersServiceSchedule::$start_time;
         $schedule_end_time = WorkersServiceSchedule::$end_time;
@@ -246,11 +247,18 @@ class WorkerDataSource extends DataSource
         $setTo = ($timeTo !== null && $timeTo !== '');
 
         if($setFrom) {
-            $result['where'] = " AND $schedule_start_time >= '$timeFrom' ";
+            $result['where'] = " AND $schedule_start_time >= :time_from ";
+            $result['toBind'] += [
+                ':time_from' => $timeFrom
+            ];
         }
         if($setTo) {
-            $result['where'] .= " AND $schedule_end_time <= '$timeTo' ";
+            $result['where'] .= " AND $schedule_end_time <= :time_to ";
+            $result['toBind'] += [
+                ':time_to' => $timeTo
+            ];
         }
+
         return $result;
     }
 
@@ -402,6 +410,14 @@ class WorkerDataSource extends DataSource
               
                 {$priceFilter['where']}
         ");
+
+        $params = [
+            ...$departmentFilter['toBind'], ...$serviceFilter['toBind'],
+            ...$workerFilter['toBind'], ...$affiliateFilter['toBind'],
+            ...$dateFilter['toBind'], ...$timeFilter['toBind'], ...$priceFilter['toBind']
+        ];
+
+        $this->db->bindAll($params);
 
         return $this->db->manyRows();
     }
@@ -614,6 +630,14 @@ class WorkerDataSource extends DataSource
                 {$priceFilter['where']}
         ");
 
+        $params = [
+            ...$departmentFilter['toBind'], ...$serviceFilter['toBind'],
+            ...$workerFilter['toBind'], ...$affiliateFilter['toBind'],
+            ...$dateFilter['toBind'], ...$timeFilter['toBind'], ...$priceFilter['toBind']
+        ];
+
+        $this->db->bindAll($params);
+
         return $this->db->manyRows();
     }
 
@@ -754,8 +778,11 @@ class WorkerDataSource extends DataSource
 
         $queryFrom = "
             $pricingTable INNER JOIN $servicesTable ON $pricing_service_id = $service_id
-            WHERE $worker_id = $workerId
+            WHERE $worker_id = :worker_id
         ";
+        $params = [
+            ':worker_id' => $workerId
+        ];
 
         $this->builder->select([
             WorkersServicePricing::$id, "$service_id as service_id", Services::$name,
@@ -764,18 +791,18 @@ class WorkerDataSource extends DataSource
         ])
             ->from(WorkersServicePricing::$table)
             ->innerJoin(Services::$table)
-            ->on(WorkersServicePricing::$service_id, Services::$id)
+                ->on(WorkersServicePricing::$service_id, Services::$id)
             ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
             ->orderBy($orderByField, $orderDirection)
             ->limit($limit)
             ->offset($offset)
-            ->build();
+        ->build();
 
         $result = $this->db->manyRows();
         if ($result == null) {
             return $result;
         }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
     }
 
     /**
@@ -905,8 +932,11 @@ class WorkerDataSource extends DataSource
                 INNER JOIN ".Departments::$table." ON ".Services::$department_id." = ".Departments::$id."
                 INNER JOIN ".Positions::$table." ON ".Departments::$id." = ".Positions::$department_id."
                 INNER JOIN ".Workers::$table." ON ".Positions::$id." = ".Workers::$position_id."
-            WHERE ".Workers::$id." = $workerId
+            WHERE ".Workers::$id." = :worker_id
         ";
+        $params = [
+            ':worker_id' => $workerId
+        ];
 
         $this->builder->select([Services::$id, Services::$name,
                                 Departments::$name." as department_name",
@@ -928,7 +958,7 @@ class WorkerDataSource extends DataSource
         if($result == null) {
             return $result;
         }
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
     }
 
     public function selectServiceIdByNameAndDepartmentId(
@@ -1205,11 +1235,14 @@ class WorkerDataSource extends DataSource
                     AND $end_time > :start_time AND $end_time >= :end_time)
             )
         ");
-        $this->db->bind(':worker_id', $workerId);
-        $this->db->bind(':day', $day);
-        $this->db->bind(':schedule_id', $scheduleId);
-        $this->db->bind(':start_time', $startTime);
-        $this->db->bind(':end_time', $endTime);
+
+        $this->db->bindAll([
+            ':worker_id' => $workerId,
+            ':day' => $day,
+            ':schedule_id' => $scheduleId,
+            ':start_time' => $startTime,
+            ':end_time' => $endTime
+        ]);
 
         return $this->db->manyRows();
     }

@@ -176,11 +176,15 @@ class UserDataSource extends DataSource
                 INNER JOIN $affiliates ON $affiliate_id = $affiliateId
                 INNER JOIN $services ON $workersPricingServiceId = $serviceId
                                          
-            WHERE $user_id = $userId
+            WHERE $user_id = :user_id
                 AND $canceled IS NULL
                 AND $completed IS NULL
-                AND $start_datetime >= '$now'
+                AND $start_datetime >= :now
         ";
+        $params = [
+            ':user_id' => $userId,
+            ':now' => $now
+        ];
 
         $currentDatetime = date('Y-m-d H:i:s');
         $this->builder->select(
@@ -222,7 +226,7 @@ class UserDataSource extends DataSource
             return $result;
         }
 
-        return $this->_appendTotalRowsCount($queryFrom, $result);
+        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
     }
 
     public function selectWorkerScheduleItemById(int $scheduleId) {
@@ -332,9 +336,11 @@ class UserDataSource extends DataSource
                 :start_datetime >= $end_datetime
             );
         ");
-        $this->db->bind(':email', $email);
-        $this->db->bind(':start_datetime', $startDatetime);
-        $this->db->bind(':end_datetime', $endDatetime);
+        $this->db->bindAll([
+            ':email' => $email,
+            ':start_datetime' => $startDatetime,
+            ':end_datetime' => $endDatetime
+        ]);
 
         return $this->db->manyRows();
     }

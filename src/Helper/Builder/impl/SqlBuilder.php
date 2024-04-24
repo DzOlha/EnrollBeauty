@@ -361,18 +361,32 @@ class SqlBuilder implements IBuilder
         return $this;
     }
 
-    public function orderBy(string $column, string $order) {
-        $this->query .= "ORDER BY $column $order ";
+    public function orderBy(
+        string $fieldValue, string $directionValue,
+        string $fieldPlaceholder = ':order_by',
+        string $directionPlaceholder = ':order_dir',
+    ) {
+        $this->query .= "ORDER BY $fieldPlaceholder $directionPlaceholder ";
+        $this->placeholders += [
+            $fieldPlaceholder => $fieldValue,
+            $directionPlaceholder => $directionValue
+        ];
         return $this;
     }
 
-    public function limit(int $limit) {
-        $this->query .= "LIMIT $limit ";
+    public function limit(int $value, string $placeholder = ':limit_') {
+        $this->query .= "LIMIT $placeholder ";
+        $this->placeholders += [
+            $placeholder => $value
+        ];
         return $this;
     }
 
-    public function offset(int $offset) {
-        $this->query .= "OFFSET $offset ";
+    public function offset(int $value, string $placeholder = ':offset_') {
+        $this->query .= "OFFSET $placeholder ";
+        $this->placeholders += [
+            $placeholder => $value
+        ];
         return $this;
     }
 

@@ -44,10 +44,13 @@ abstract class DataSource
         $this->db->rollBackTransaction();
     }
 
-    protected function _getTotalRowsCountQuery(string $queryFrom) {
+    protected function _getTotalRowsCountQuery(
+        string $queryFrom, array $toBind
+    ) {
         $this->db->query(
             "SELECT COUNT(*) as totalRowsCount FROM $queryFrom"
         );
+        $this->db->bindAll($toBind);
 
         $result = $this->db->singleRow();
         if($result) {
@@ -56,11 +59,13 @@ abstract class DataSource
             return false;
         }
     }
-    protected function _getTotalSumQuery(string $queryFrom, string $columnName)
-    {
+    protected function _getTotalSumQuery(
+        string $queryFrom, string $columnName, array $toBind
+    ){
         $this->db->query(
             "SELECT SUM($columnName) as totalSum FROM $queryFrom"
         );
+        $this->db->bindAll($toBind);
 
         $result = $this->db->singleRow();
 
@@ -70,9 +75,11 @@ abstract class DataSource
             return false;
         }
     }
-    protected function _appendTotalRowsCount(string $queryFrom, array $result) {
+    protected function _appendTotalRowsCount(
+        string $queryFrom, array $result, array $toBind = []
+    ) {
         if($result) {
-            $totalRowsCount = $this->_getTotalRowsCountQuery($queryFrom);
+            $totalRowsCount = $this->_getTotalRowsCountQuery($queryFrom, $toBind);
             if($totalRowsCount !== false) {
                 $result += [
                     'totalRowsCount' => $totalRowsCount
@@ -86,10 +93,10 @@ abstract class DataSource
         }
     }
     protected function _appendTotalRowsSum(
-        string $queryFrom, array $result, string $columnName
+        string $queryFrom, array $result, string $columnName, array $toBind = []
     ) {
         if($result) {
-            $totalRowsCount = $this->_getTotalSumQuery($queryFrom, $columnName);
+            $totalRowsCount = $this->_getTotalSumQuery($queryFrom, $columnName, $toBind);
             if($totalRowsCount !== false) {
                 $result += [
                     'totalSum' => $totalRowsCount
@@ -306,11 +313,15 @@ abstract class DataSource
     protected function _serviceFilter($serviceId, $columnToJoin)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
 
         if ($serviceId !== null && $serviceId !== '') {
-            $result['where'] = " AND $columnToJoin = $serviceId ";
+            $result['where'] = " AND $columnToJoin = :service_id ";
+            $result['toBind'] += [
+                ':service_id' => $serviceId
+            ];
         }
         return $result;
     }
@@ -318,11 +329,15 @@ abstract class DataSource
     protected function _workerFilter($workerId, $columnToJoin)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
 
         if ($workerId !== null && $workerId !== '') {
-            $result['where'] = " AND $columnToJoin = $workerId ";
+            $result['where'] = " AND $columnToJoin = :worker_id ";
+            $result['toBind'] += [
+                ':worker_id' => $workerId
+            ];
         }
         return $result;
     }
@@ -330,11 +345,15 @@ abstract class DataSource
     protected function _userFilter($userId, $columnToJoin)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
 
         if ($userId !== null && $userId !== '') {
-            $result['where'] = " AND $columnToJoin = $userId ";
+            $result['where'] = " AND $columnToJoin = :user_id ";
+            $result['toBind'] += [
+                ':user_id' => $userId
+            ];
         }
         return $result;
     }
@@ -342,11 +361,15 @@ abstract class DataSource
     protected function _statusFilter($status, $columnToJoin)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
 
         if ($status !== null && $status !== '') {
-            $result['where'] = " AND $columnToJoin = $status ";
+            $result['where'] = " AND $columnToJoin = :status ";
+            $result['toBind'] += [
+                ':status' => $status
+            ];
         }
         return $result;
     }
@@ -354,11 +377,15 @@ abstract class DataSource
     protected function _affiliateFilter($affiliateId, $columnToJoin)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
 
         if ($affiliateId !== null && $affiliateId !== '') {
-            $result['where'] = " AND $columnToJoin = $affiliateId ";
+            $result['where'] = " AND $columnToJoin = :affiliate_id ";
+            $result['toBind'] += [
+                ':affiliate_id' => $affiliateId
+            ];
         }
         return $result;
     }
@@ -366,7 +393,8 @@ abstract class DataSource
     protected function _dateFilter($dateFrom, $dateTo)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
         $schedule_day = WorkersServiceSchedule::$day;
 
@@ -374,10 +402,16 @@ abstract class DataSource
         $setTo = ($dateTo !== null && $dateTo !== '');
 
         if($setFrom) {
-            $result['where'] = " AND $schedule_day >= '$dateFrom' ";
+            $result['where'] = " AND $schedule_day >= :date_from ";
+            $result['toBind'] += [
+                ':date_from' => $dateFrom
+            ];
         }
         if($setTo) {
-            $result['where'] .= " AND $schedule_day <= '$dateTo' ";
+            $result['where'] .= " AND $schedule_day <= :date_to ";
+            $result['toBind'] += [
+                ':date_to' => $dateTo
+            ];
         }
         return $result;
     }
@@ -385,7 +419,8 @@ abstract class DataSource
     protected function _timeFilter($timeFrom, $timeTo)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
         $schedule_start_time = WorkersServiceSchedule::$start_time;
         $schedule_end_time = WorkersServiceSchedule::$end_time;
@@ -395,12 +430,18 @@ abstract class DataSource
         $setTo = ($timeTo !== null && $timeTo !== '');
 
         if($setFrom) {
-            $result['where'] = " AND $schedule_start_time >= '$timeFrom' ";
+            $result['where'] = " AND $schedule_start_time >= :time_from ";
+            $result['toBind'] += [
+                ':time_from' => $timeFrom
+            ];
         } else {
             $result['where'] = " AND ($schedule_day > CURDATE() OR ($schedule_day = CURDATE() AND $schedule_start_time > CURTIME())) ";
         }
         if($setTo) {
-            $result['where'] .= " AND $schedule_end_time <= '$timeTo' ";
+            $result['where'] .= " AND $schedule_end_time <= :time_to ";
+            $result['toBind'] += [
+                ':time_to' => $timeTo
+            ];
         }
         return $result;
     }
@@ -408,7 +449,8 @@ abstract class DataSource
     protected function _priceFilter($priceFrom, $priceTo)
     {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
         $pricing_price = WorkersServicePricing::$price;
 
@@ -416,23 +458,33 @@ abstract class DataSource
         $setTo = ($priceTo !== null && $priceTo !== '');
 
         if($setFrom) {
-            $result['where'] = " AND $pricing_price >= '$priceFrom' ";
+            $result['where'] = " AND $pricing_price >= :price_from ";
+            $result['toBind'] += [
+                ':price_from' => $priceFrom
+            ];
         }
         if($setTo) {
-            $result['where'] .= " AND $pricing_price <= '$priceTo' ";
+            $result['where'] .= " AND $pricing_price <= :price_to ";
+            $result['toBind'] += [
+                ':price_to' => $priceTo
+            ];
         }
         return $result;
     }
 
     protected function _departmentFilter($departmentId) {
         $result = [
-            'where' => ''
+            'where' => '',
+            'toBind' => []
         ];
         $services_depId = Services::$department_id;
 
         $set = ($departmentId !== null && $departmentId !== '');
         if($set) {
-            $result['where'] = " AND $services_depId = $departmentId ";
+            $result['where'] = " AND $services_depId = :department_id ";
+            $result['toBind'] += [
+                ':department_id' => $departmentId
+            ];
         }
         return $result;
     }
@@ -582,6 +634,14 @@ abstract class DataSource
               
                 {$priceFilter['where']}
         ");
+
+        $params = [
+            ...$departmentFilter['toBind'], ...$serviceFilter['toBind'],
+            ...$workerFilter['toBind'], ...$affiliateFilter['toBind'],
+            ...$dateFilter['toBind'], ...$timeFilter['toBind'], ...$priceFilter['toBind']
+        ];
+
+        $this->db->bindAll($params);
 
         return $this->db->manyRows();
     }
@@ -795,21 +855,39 @@ abstract class DataSource
                 {$statusFilter['where']}
             
             ORDER BY 
-                $orderField $orderDirection
+                :order_by :order_dir
             
             LIMIT 
-                $limit
+                :limit_
             OFFSET 
-                $offset;
+                :offset_;
             ");
+
+        $params = [
+            ...$departmentFilter['toBind'], ...$serviceFilter['toBind'],
+            ...$workerFilter['toBind'], ...$affiliateFilter['toBind'],
+            ...$dateFilter['toBind'], ...$userFilter['toBind'],
+            ...$priceFilter['toBind'], ...$statusFilter['toBind']
+        ];
+
+        $this->db->bindAll(
+            array_merge($params, [
+                ':order_by' => $orderField,
+                ':order_dir' => $orderDirection,
+                ':limit_' => $limit,
+                ':offset_' => $offset
+            ])
+        );
 
         $result = $this->db->manyRows();
         if($result == null) {
             return $result;
         }
-        $result = $this->_appendTotalRowsCount($queryFrom, $result);
+        $result = $this->_appendTotalRowsCount($queryFrom, $result, $params);
         if($result) {
-            return $this->_appendTotalRowsSum($queryFrom, $result, WorkersServicePricing::$price);
+            return $this->_appendTotalRowsSum(
+                $queryFrom, $result, WorkersServicePricing::$price, $params
+            );
         }
         return false;
     }

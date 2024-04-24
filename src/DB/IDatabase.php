@@ -6,6 +6,7 @@ interface IDatabase
 {
     public function query($sql): void;
     public function bind($parameter, $value, $type = null): void;
+    public function bindAll(array $params);
     public function execute(): bool;
     public function beginTransaction(): void;
     public function rollBackTransaction(): void;

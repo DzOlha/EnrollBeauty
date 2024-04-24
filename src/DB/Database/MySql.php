@@ -61,6 +61,22 @@ class MySql implements IDatabase
         $this->statement->bindValue($parameter, $value, $type);
     }
 
+    /**
+     * @param array $params = [
+     *      ':user_id' => 123,
+     *      ':worker_name' => 'abcd'
+     * ...............................
+     * ]
+     * @return void
+     */
+    public function bindAll(array $params)
+    {
+        foreach ($params as $placeholder => $value)
+        {
+            $this->bind($placeholder, $value);
+        }
+    }
+
     //Execute prepared statement
     public function execute(): bool
     {
