@@ -1,12 +1,13 @@
 <?php
 
-namespace Src\Model\Repository\impl\extend;
+namespace Src\Model\Repository\Instance\impl\extend;
 
 use Src\DB\IDatabase;
 use Src\Helper\Builder\impl\SqlBuilder;
-use Src\Model\Repository\impl\Repository;
+use Src\Model\Repository\Instance\impl\Repository;
 use Src\Model\Table\Departments;
 use Src\Model\Table\Services;
+use Src\Model\Table\WorkersServicePricing;
 
 class ServiceRepository extends Repository
 {
@@ -34,7 +35,7 @@ class ServiceRepository extends Repository
         $this->builder->select([Services::$id, Services::$name])
             ->from(Services::$table)
             ->whereEqual(Services::$department_id, ':department_id', $departmentId)
-            ->build();
+        ->build();
 
         return $this->db->manyRows();
     }
@@ -68,16 +69,58 @@ class ServiceRepository extends Repository
                                 Departments::$id." as department_id"])
             ->from(Services::$table)
             ->innerJoin(Departments::$table)
-            ->on(Services::$department_id, Departments::$id)
+                ->on(Services::$department_id, Departments::$id)
             ->orderBy($orderByField, $orderDirection)
             ->limit($limit)
             ->offset($offset)
-            ->build();
+        ->build();
 
         $result = $this->db->manyRows();
         if($result == null) {
             return $result;
         }
         return $this->_appendTotalRowsCount($queryFrom, $result);
+    }
+
+    /**
+     * @param int $workerId
+     * @return array|false
+     * [
+     *       0 => [
+     *           'id' => ,
+     *           'name' => ,
+     *       ]
+     *  .............................
+     *  ]
+     */
+    public function selectAllByWorkerId(int $workerId): array | false
+    {
+        $this->builder->select([Services::$id, Services::$name])
+            ->from(WorkersServicePricing::$table)
+            ->innerJoin(Services::$table)
+                ->on(WorkersServicePricing::$service_id, Services::$id)
+            ->whereEqual(WorkersServicePricing::$worker_id, ":id", $workerId)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    /**
+     * @return array|false
+     * [
+     *        0 => [
+     *            'id' => ,
+     *            'name' => ,
+     *        ]
+     *   .............................
+     *   ]
+     */
+    public function selectAll(): array | false
+    {
+        $this->builder->select([Services::$id, Services::$name])
+            ->from(Services::$table)
+        ->build();
+
+        return $this->db->manyRows();
     }
 }

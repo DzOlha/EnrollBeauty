@@ -1,10 +1,10 @@
 <?php
 
-namespace Src\Model\Repository\impl\extend;
+namespace Src\Model\Repository\Instance\impl\extend;
 
 use Src\DB\IDatabase;
 use Src\Helper\Builder\impl\SqlBuilder;
-use Src\Model\Repository\impl\Repository;
+use Src\Model\Repository\Instance\impl\Repository;
 use Src\Model\Table\Positions;
 use Src\Model\Table\Workers;
 use Src\Model\Table\WorkersPhoto;
@@ -44,7 +44,7 @@ class WorkerRepository extends Repository
      *      totalRowsCount =>
      * ]
      */
-    public function selectAll(
+    public function selectAllLimited(
         int $limit, int $offset,
         string $orderByField = 'workers.id', string $orderDirection = 'asc'
     ): array | false
@@ -252,6 +252,50 @@ class WorkerRepository extends Repository
             ->whereNotNull(WorkersPhoto::$filename)
             ->andEqual(WorkersPhoto::$is_main, ':is_main', 1)
             ->limit($limit)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    /**
+     * @param int $serviceId
+     * @return array|false
+     * [
+     *       0 => [
+     *           'id' => ,
+     *           'name' => ,
+     *           'surname' => ,
+     *       ]
+     *  .......
+     *  ]
+     */
+    public function selectAllByServiceId(int $serviceId): array | false
+    {
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname])
+            ->from(WorkersServicePricing::$table)
+            ->innerJoin(Workers::$table)
+                ->on(WorkersServicePricing::$worker_id, Workers::$id)
+            ->whereEqual(WorkersServicePricing::$service_id, ":id", $serviceId)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    /**
+     * @return array|false
+     * [
+     *      0 => [
+     *       'id' =>,
+     *       'name' =>,
+     *       'surname' =>
+     *     ]
+     *  ........
+     *  ]
+     */
+    public function selectAll(): array | false
+    {
+        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname])
+            ->from(Workers::$table)
         ->build();
 
         return $this->db->manyRows();

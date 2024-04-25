@@ -1,11 +1,11 @@
 <?php
 
-namespace Src\Model\Repository\impl\extend;
+namespace Src\Model\Repository\Instance\impl\extend;
 
 use Src\DB\IDatabase;
 use Src\Helper\Builder\impl\SqlBuilder;
 use Src\Model\DTO\Write\AdminWriteDTO;
-use Src\Model\Repository\impl\Repository;
+use Src\Model\Repository\Instance\impl\Repository;
 use Src\Model\Table\Admins;
 use Src\Model\Table\AdminsSetting;
 use Src\Model\Table\Roles;

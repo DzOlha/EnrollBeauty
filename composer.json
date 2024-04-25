@@ -3,7 +3,7 @@
       "phpunit/phpunit": ">=9"
     },
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "monolog/monolog": "^3.3",
         "ext-pdo": "*",
         "mailgun/mailgun-php": "^3.6",

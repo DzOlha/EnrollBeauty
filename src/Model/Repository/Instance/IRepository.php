@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Model\Repository;
+namespace Src\Model\Repository\Instance;
 
 use Src\DB\IDatabase;
 use Src\Helper\Builder\impl\SqlBuilder;

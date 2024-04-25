@@ -4,14 +4,6 @@ namespace Src\Model\DataSource\extends;
 
 use Src\DB\IDatabase;
 use Src\Model\DTO\Write\AdminWriteDTO;
-use Src\Model\Repository\impl\extend\AdminRepository;
-use Src\Model\Repository\impl\extend\AffiliateRepository;
-use Src\Model\Repository\impl\extend\DepartmentRepository;
-use Src\Model\Repository\impl\extend\OrderRepository;
-use Src\Model\Repository\impl\extend\PositionRepository;
-use Src\Model\Repository\impl\extend\RoleRepository;
-use Src\Model\Repository\impl\extend\ServiceRepository;
-use Src\Model\Repository\impl\extend\WorkerRepository;
 
 class AdminDataSource extends WorkerDataSource
 {
@@ -22,44 +14,32 @@ class AdminDataSource extends WorkerDataSource
 
     public function selectAllAdminsRows()
     {
-        $adminRepository = AdminRepository::getInstance();
-
-        return $adminRepository->selectCount();
+        return $this->repositoryPool->admin()->selectCount();
     }
 
     public function selectAdminIdByEmail(string $email)
     {
-        $adminRepository = AdminRepository::getInstance();
-
-        return $adminRepository->selectIdByEmail($email);
+        return $this->repositoryPool->admin()->selectIdByEmail($email);
     }
 
     public function insertAdmin(AdminWriteDTO $admin)
     {
-        $adminRepository = AdminRepository::getInstance();
-
-        return $adminRepository->insert($admin);
+        return $this->repositoryPool->admin()->insert($admin);
     }
 
     public function insertAdminSetting(int $adminId)
     {
-        $adminRepository = AdminRepository::getInstance();
-
-        return $adminRepository->insertSettings($adminId);
+        return $this->repositoryPool->admin()->insertSettings($adminId);
     }
 
     public function updateAdmin(AdminWriteDTO $admin)
     {
-        $adminRepository = AdminRepository::getInstance();
-
-        return $adminRepository->update($admin);
+        return $this->repositoryPool->admin()->update($admin);
     }
 
     public function selectAdminPasswordByEmail(string $email)
     {
-        $adminRepository = AdminRepository::getInstance();
-
-        return $adminRepository->selectPasswordByEmail($email);
+        return $this->repositoryPool->admin()->selectPasswordByEmail($email);
     }
 
     /**
@@ -74,9 +54,7 @@ class AdminDataSource extends WorkerDataSource
      */
     public function selectAdminInfoById(int $adminId)
     {
-        $adminRepository = AdminRepository::getInstance();
-
-        return $adminRepository->selectProfile($adminId);
+        return $this->repositoryPool->admin()->selectProfile($adminId);
     }
 
 
@@ -104,39 +82,29 @@ class AdminDataSource extends WorkerDataSource
         int $limit, int $offset,
         string $orderByField = 'workers.id', string $orderDirection = 'asc'
     ) {
-        $workerRepository = WorkerRepository::getInstance();
-
-        return $workerRepository->selectAll($limit, $offset, $orderByField, $orderDirection);
+        return $this->repositoryPool->worker()->selectAllLimited($limit, $offset, $orderByField, $orderDirection);
     }
 
     public function selectAllPositions()
     {
-        $positionRepository = PositionRepository::getInstance();
-
-        return $positionRepository->selectAll();
+        return $this->repositoryPool->position()->selectAll();
     }
 
     public function selectAllRoles()
     {
-        $roleRepository = RoleRepository::getInstance();
-
-        return $roleRepository->selectAll();
+        return $this->repositoryPool->role()->selectAll();
     }
 
     public function selectServicesAllByDepartmentId(int $departmentId)
     {
-        $serviceRepository = ServiceRepository::getInstance();
-
-        return $serviceRepository->selectAllByDepartmentId($departmentId);
+        return $this->repositoryPool->service()->selectAllByDepartmentId($departmentId);
     }
 
     public function selectDepartmentsAllForAdmin(
         int $limit, int $offset,
         string $orderByField = 'departments.id', string $orderDirection = 'asc'
     ) {
-        $departmentRepository = DepartmentRepository::getInstance();
-
-        return $departmentRepository->selectAllLimited(
+        return $this->repositoryPool->department()->selectAllLimited(
             $limit, $offset, $orderByField, $orderDirection
         );
     }
@@ -144,120 +112,88 @@ class AdminDataSource extends WorkerDataSource
     public function insertDepartment(
         string $name, string $description, string $photoFilename
     ){
-        $departmentRepository = DepartmentRepository::getInstance();
-
-        return $departmentRepository->insert($name, $description, $photoFilename);
+        return $this->repositoryPool->department()->insert($name, $description, $photoFilename);
     }
 
     public function updateDepartment(int $id, string $name, string $description)
     {
-        $departmentRepository = DepartmentRepository::getInstance();
-
-        return $departmentRepository->update($id, $name, $description);
+        return $this->repositoryPool->department()->update($id, $name, $description);
     }
 
     public function selectDepartmentPhotoById(int $id)
     {
-        $departmentRepository = DepartmentRepository::getInstance();
-
-        return $departmentRepository->selectPhoto($id);
+        return $this->repositoryPool->department()->selectPhoto($id);
     }
 
     public function updateDepartmentPhotoById(int $id, string $photoFilename)
     {
-        $departmentRepository = DepartmentRepository::getInstance();
-
-        return $departmentRepository->updatePhoto($id, $photoFilename);
+        return $this->repositoryPool->department()->updatePhoto($id, $photoFilename);
     }
 
     public function deleteDepartmentById(int $id)
     {
-        $departmentRepository = DepartmentRepository::getInstance();
-
-        return $departmentRepository->delete($id);
+        return $this->repositoryPool->department()->delete($id);
     }
 
     public function selectFutureOrdersByDepartmentId(int $departmentId)
     {
-       $orderRepository = OrderRepository::getInstance();
-
-       return $orderRepository->selectAllUpcomingByDepartmentId($departmentId);
+       return $this->repositoryPool->orderService()->selectAllUpcomingByDepartmentId($departmentId);
     }
 
     public function selectFutureOrdersByWorkerId(int $workerId)
     {
-        $orderRepository = OrderRepository::getInstance();
-
-        return $orderRepository->selectAllUpcomingByWorkerId($workerId);
+        return $this->repositoryPool->orderService()->selectAllUpcomingByWorkerId($workerId);
     }
 
     public function selectPositionsAllWithDepartments(
         int $limit, int $offset,
         string $orderByField = 'positions.id', string $orderDirection = 'asc'
     ){
-        $positionRepository = PositionRepository::getInstance();
-
-        return $positionRepository->selectAllLimited(
+        return $this->repositoryPool->position()->selectAllLimited(
             $limit, $offset, $orderByField, $orderDirection
         );
     }
 
     public function insertPosition(string $name, int $departmentId)
     {
-        $positionRepository = PositionRepository::getInstance();
-
-        return $positionRepository->insert($name, $departmentId);
+        return $this->repositoryPool->position()->insert($name, $departmentId);
     }
 
     public function selectPositionIdByNameAndDepartment(string $name, int $departmentId)
     {
-        $positionRepository = PositionRepository::getInstance();
-
-        return $positionRepository->selectIdByNameAndDepartment($name, $departmentId);
+        return $this->repositoryPool->position()->selectIdByNameAndDepartment($name, $departmentId);
     }
 
     public function selectPositionById(int $id)
     {
-        $positionRepository = PositionRepository::getInstance();
-
-        return $positionRepository->select($id);
+        return $this->repositoryPool->position()->select($id);
     }
 
     public function updatePositionById(int $id, string $name, int $departmentId)
     {
-        $positionRepository = PositionRepository::getInstance();
-
-        return $positionRepository->update($id, $name, $departmentId);
+        return $this->repositoryPool->position()->update($id, $name, $departmentId);
     }
 
     public function selectPositionWithDepartmentById(int $id)
     {
-        $positionRepository = PositionRepository::getInstance();
-
-        return $positionRepository->selectWithDepartment($id);
+        return $this->repositoryPool->position()->selectWithDepartment($id);
     }
 
     public function selectFutureOrdersByPositionId(int $positionId)
     {
-        $orderRepository = OrderRepository::getInstance();
-
-        return $orderRepository->selectAllUpcomingByPositionId($positionId);
+        return $this->repositoryPool->orderService()->selectAllUpcomingByPositionId($positionId);
     }
 
     public function deletePositionById(int $id)
     {
-        $positionRepository = PositionRepository::getInstance();
-
-        return $positionRepository->delete($id);
+        return $this->repositoryPool->position()->delete($id);
     }
 
     public function selectAllAffiliatesForAdminTable(
         int $limit, int $offset,
         string $orderByField = 'affiliates.id', string $orderDirection = 'asc'
     ){
-        $affiliateRepository = AffiliateRepository::getInstance();
-
-        return $affiliateRepository->selectAllLimited(
+        return $this->repositoryPool->affiliate()->selectAllLimited(
             $limit, $offset, $orderByField, $orderDirection
         );
     }
@@ -265,94 +201,72 @@ class AdminDataSource extends WorkerDataSource
     public function insertAffiliate(
         string $name, string $country, string $city, string $address, ?int $managerId = null
     ) {
-        $affiliateRepository = AffiliateRepository::getInstance();
-
-        return $affiliateRepository->insert($name, $country, $city, $address, $managerId);
+        return $this->repositoryPool->affiliate()->insert($name, $country, $city, $address, $managerId);
     }
 
     public function selectAffiliateById(int $id)
     {
-        $affiliateRepository = AffiliateRepository::getInstance();
-
-        return $affiliateRepository->select($id);
+        return $this->repositoryPool->affiliate()->select($id);
     }
 
     public function selectAffiliateByIdForTable(int $id)
     {
-        $affiliateRepository = AffiliateRepository::getInstance();
-
-        return $affiliateRepository->selectRow($id);
+        return $this->repositoryPool->affiliate()->selectRow($id);
     }
 
     public function selectAffiliateByAddressAndNotId(
         int $id, string $country, string $city, string $address
     ) {
-        $affiliateRepository = AffiliateRepository::getInstance();
-
-        return $affiliateRepository->selectIdByAddressAndNotId($id, $country, $city, $address);
+        return $this->repositoryPool->affiliate()->selectIdByAddressAndNotId($id, $country, $city, $address);
     }
 
     public function selectAffiliateByCountryCityAndAddress(
         string $country, string $city, string $address
     ) {
-        $affiliateRepository = AffiliateRepository::getInstance();
-
-        return $affiliateRepository->selectIdByAddress($country, $city, $address);
+        return $this->repositoryPool->affiliate()->selectIdByAddress($country, $city, $address);
     }
 
     public function updateAffiliateById(
         int $id, string $name, string $country,
         string $city, string $address, ?int $managerId = null
     ) {
-        $affiliateRepository = AffiliateRepository::getInstance();
-
-        return $affiliateRepository->update($id, $name, $country, $city, $address, $managerId);
+        return $this->repositoryPool->affiliate()->update($id, $name, $country, $city, $address, $managerId);
     }
 
     public function selectFutureOrdersByAffiliateId(int $affiliateId)
     {
-        $orderRepository = OrderRepository::getInstance();
-
-        return $orderRepository->selectAllUpcomingByAffiliateId($affiliateId);
+        return $this->repositoryPool->orderService()->selectAllUpcomingByAffiliateId($affiliateId);
     }
 
     public function deleteAffiliateById(int $id)
     {
-        $affiliateRepository = AffiliateRepository::getInstance();
-
-        return $affiliateRepository->delete($id);
+        return $this->repositoryPool->affiliate()->delete($id);
     }
 
     public function selectWorkersByDepartmentId(
         int $departmentId, int $limit, int $offset
     ) {
-        $workerRepository = WorkerRepository::getInstance();
-
-        return $workerRepository->selectAllLimitedByDepartmentId($departmentId, $limit, $offset);
+        return $this->repositoryPool->worker()
+            ->selectAllLimitedByDepartmentId($departmentId, $limit, $offset);
     }
 
     public function selectWorkersByServiceId(
         int $serviceId, int $limit, int $offset
     ){
-        $workerRepository = WorkerRepository::getInstance();
-
-        return $workerRepository->selectAllLimitedByServiceId($serviceId, $limit, $offset);
+        return $this->repositoryPool->worker()
+            ->selectAllLimitedByServiceId($serviceId, $limit, $offset);
     }
 
     public function selectDepartmentFullById(int $id)
     {
-        $departmentRepository = DepartmentRepository::getInstance();
-
-        return $departmentRepository->selectWithPhoto($id);
+        return $this->repositoryPool->department()->selectWithPhoto($id);
     }
 
     public function selectAllServicesWithDepartmentsInfo(
         int $limit, int $offset,
         string $orderByField = 'services.id', string $orderDirection = 'asc'
     ){
-        $serviceRepository = ServiceRepository::getInstance();
-
-        return $serviceRepository->selectAllLimited(
+        return $this->repositoryPool->service()->selectAllLimited(
             $limit, $offset, $orderByField, $orderDirection
         );
     }

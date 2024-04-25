@@ -1,10 +1,10 @@
 <?php
 
-namespace Src\Model\Repository\impl\extend;
+namespace Src\Model\Repository\Instance\impl\extend;
 
 use Src\DB\IDatabase;
 use Src\Helper\Builder\impl\SqlBuilder;
-use Src\Model\Repository\impl\Repository;
+use Src\Model\Repository\Instance\impl\Repository;
 use Src\Model\Table\Departments;
 use Src\Model\Table\Services;
 use Src\Model\Table\WorkersServicePricing;

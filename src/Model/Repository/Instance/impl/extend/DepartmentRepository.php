@@ -1,11 +1,12 @@
 <?php
 
-namespace Src\Model\Repository\impl\extend;
+namespace Src\Model\Repository\Instance\impl\extend;
 
 use Src\DB\IDatabase;
 use Src\Helper\Builder\impl\SqlBuilder;
-use Src\Model\Repository\impl\Repository;
+use Src\Model\Repository\Instance\impl\Repository;
 use Src\Model\Table\Departments;
+use Src\Model\Table\Services;
 
 class DepartmentRepository extends Repository
 {
@@ -164,5 +165,40 @@ class DepartmentRepository extends Repository
         ->build();
 
         return $this->db->manyRows();
+    }
+
+    /**
+     * @return array|false
+     * [
+     *      0 => [ id =>, name => ]
+     *      1 => [ id =>, name => ]
+     * .............................
+     * ]
+     */
+    public function selectAll(): array | false
+    {
+        $this->builder->select([Departments::$id, Departments::$name])
+            ->from(Departments::$table)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    /**
+     * @param int $serviceId
+     * @return array|false
+     *
+     * [ id =>, name => ]
+     */
+    public function selectByServiceId(int $serviceId): array | false
+    {
+        $this->builder->select([Departments::$id, Departments::$name])
+            ->from(Departments::$table)
+            ->innerJoin(Services::$table)
+                ->on(Departments::$id, Services::$department_id)
+            ->whereEqual(Services::$id, ':service_id', $serviceId)
+        ->build();
+
+        return $this->db->singleRow();
     }
 }
