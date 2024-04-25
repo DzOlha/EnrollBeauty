@@ -21,7 +21,7 @@ class WebController extends AbstractController
     /**
      * Load the view (checks for the file).
      */
-    public function view($view, $data = [], $arr = []): bool
+    public function view(string $view, array $data = []): bool
     {
         $viewPath = $view.'.php';
 

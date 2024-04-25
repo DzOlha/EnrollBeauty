@@ -14,11 +14,9 @@ use Src\Model\DataMapper\extends\AdminDataMapper;
 use Src\Model\DataMapper\extends\UserDataMapper;
 use Src\Model\DataSource\extends\AdminDataSource;
 use Src\Model\DataSource\extends\UserDataSource;
-use Src\Model\Entity\Gender;
 use Src\Service\Auth\Admin\AdminAuthService;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\User\UserAuthService;
-use Src\Service\Validator\impl\EmailValidator;
 use Src\Service\Validator\impl\NameValidator;
 use Src\Service\Validator\impl\PhotoValidator;
 use Src\Service\Validator\impl\StreetAddressValidator;
@@ -512,7 +510,7 @@ class AdminApiController extends WorkerApiController
     }
 
 
-    private function _getAdminId($request)
+    protected function _getAdminId($request)
     {
         return SessionHelper::getAdminSession() ?? $request->get('admin_id');
     }

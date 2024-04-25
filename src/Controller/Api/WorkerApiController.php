@@ -546,7 +546,7 @@ class WorkerApiController extends ApiController
         }
     }
 
-    private function _getWorkerId($request)
+    protected function _getWorkerId($request)
     {
         return SessionHelper::getWorkerSession() ?? $request->get('worker_id');
     }
@@ -590,26 +590,6 @@ class WorkerApiController extends ApiController
         else {
             $this->_methodNotAllowed(['GET']);
         }
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/worker/affiliate/get/all
-     */
-    protected function _getAffiliatesAll()
-    {
-        parent::_getAffiliatesAll();
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/worker/departments/get/all
-     */
-    protected function _getDepartmentsAll()
-    {
-        parent::_getDepartmentsAll();
     }
 
     /**
@@ -1013,7 +993,7 @@ class WorkerApiController extends ApiController
      *
      * url = /api/worker/service/get/one
      */
-    public function _getServiceById()
+    protected function _getServiceById()
     {
         if(HttpRequest::method() === 'GET')
         {

@@ -741,66 +741,6 @@ class UserApiController extends ApiController
 
     /**
      * @return void
-     *
-     * url = /api/user/service/get/workers/all
-     */
-    protected function _getWorkersForService()
-    {
-        parent::_getWorkersForService();
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/user/worker/get/services/all
-     */
-    protected function _getServicesForWorker()
-    {
-        parent::_getServicesForWorker();
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/user/worker/get/all
-     */
-    protected function _getWorkersAll()
-    {
-       parent::_getWorkersAll();
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/user/service/get/all
-     */
-    protected function _getServicesAll()
-    {
-        parent::_getServicesAll();
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/user/affiliate/get/all
-     */
-    protected function _getAffiliatesAll()
-    {
-        parent::_getAffiliatesAll();
-    }
-
-    /**
-     * @return void
-     *
-     * url = /api/user/schedule/search
-     */
-    protected function _searchSchedule()
-    {
-        parent::_searchSchedule();
-    }
-
-    /**
-     * @return void
      * @throws \Exception
      *
      * url = /api/user/order/service/add

@@ -111,7 +111,7 @@ class WorkerWebController extends WebController
      *
      * url = /web/worker/profile/home
      */
-    public function _home()
+    protected function _home()
     {
         $this->view(
             WORKER_PAGES['home']['path'],
@@ -124,7 +124,7 @@ class WorkerWebController extends WebController
      *
      * url = /web/worker/profile/schedule
      */
-    private function _schedule() {
+    protected function _schedule() {
         $this->view(
             WORKER_PAGES['schedule']['path'],
             WORKER_PAGES['schedule']['data']
@@ -136,7 +136,7 @@ class WorkerWebController extends WebController
      *
      * url = /web/worker/profile/services
      */
-    private function _services() {
+    protected function _services() {
         $this->view(
             WORKER_PAGES['services']['path'],
             WORKER_PAGES['services']['data'],
@@ -148,7 +148,7 @@ class WorkerWebController extends WebController
      *
      * url = /web/worker/profile/pricing
      */
-    private function _pricing() {
+    protected function _pricing() {
         $this->view(
             WORKER_PAGES['pricing']['path'],
             WORKER_PAGES['pricing']['data']
@@ -160,7 +160,7 @@ class WorkerWebController extends WebController
      *
      * url = /web/worker/profile/settings
      */
-    private function _settings() {
+    protected function _settings() {
         $this->view(
             WORKER_PAGES['settings']['path'],
             WORKER_PAGES['settings']['data']
@@ -172,7 +172,7 @@ class WorkerWebController extends WebController
      *
      * url = /web/worker/profile/orders
      */
-    private function _orders() {
+    protected function _orders() {
         $this->view(
             WORKER_PAGES['orders']['path'],
             WORKER_PAGES['orders']['data']

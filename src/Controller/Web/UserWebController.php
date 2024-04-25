@@ -49,7 +49,7 @@ class UserWebController extends WebController
         );
     }
 
-    private function _accessDenied() {
+    protected function _accessDenied() {
         $this->error(
             'Access Denied!',
             'The requested page not found! Please, log in as an User to visit your account!'
@@ -62,7 +62,7 @@ class UserWebController extends WebController
      * url = /web/user/profile/...
      *         0    1       2
      */
-    public function profile()
+    protected function profile()
     {
 //        if(!isset($this->url[3]) && isset($_GET['user_id']) && $_GET['user_id'] !== '') {
 //            if(SessionHelper::getAdminSession() || SessionHelper::getWorkerSession()) {
@@ -109,7 +109,7 @@ class UserWebController extends WebController
      *
      * url = /web/user/profile/settings
      */
-    private function _settings() {
+    protected function _settings() {
         $this->view(
             USER_PAGES['settings']['path'],
             USER_PAGES['settings']['data']
@@ -121,7 +121,7 @@ class UserWebController extends WebController
      *
      * url = /web/user/profile/orders
      */
-    private function _orders() {
+    protected function _orders() {
         $this->view(
             USER_PAGES['orders']['path'],
             USER_PAGES['orders']['data']

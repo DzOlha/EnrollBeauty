@@ -204,7 +204,7 @@ class AdminWebController extends WebController
      *
      * url = /web/admin/profile/positions
      */
-    public function _positions() {
+    protected function _positions() {
         $this->view(
             ADMIN_PAGES['positions']['path'],
             ADMIN_PAGES['positions']['data'],
@@ -216,7 +216,7 @@ class AdminWebController extends WebController
      *
      * url = /web/admin/profile/affiliates
      */
-    public function _affiliates() {
+    protected function _affiliates() {
         $this->view(
             ADMIN_PAGES['affiliates']['path'],
             ADMIN_PAGES['affiliates']['data']
@@ -228,7 +228,7 @@ class AdminWebController extends WebController
      *
      * url = /web/admin/profile/orders
      */
-    private function _orders() {
+    protected function _orders() {
         $this->view(
             ADMIN_PAGES['orders']['path'],
             ADMIN_PAGES['orders']['data']
