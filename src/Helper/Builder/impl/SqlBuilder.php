@@ -4,12 +4,18 @@ namespace Src\Helper\Builder\impl;
 
 use Src\DB\IDatabase;
 use Src\Helper\Builder\IBuilder;
+use Src\Helper\Trimmer\impl\RequestTrimmer;
 
 class SqlBuilder implements IBuilder
 {
     private string $query;
     private array $placeholders;
     private IDatabase $database;
+
+    protected array $balcklist = [
+        'DROP', 'UPDATE', 'INSERT', 'TABLE',
+        'drop', 'update', 'insert', 'table'
+    ];
 
     public function __construct(IDatabase $database)
     {
@@ -362,15 +368,36 @@ class SqlBuilder implements IBuilder
     }
 
     public function orderBy(
-        string $fieldValue, string $directionValue,
-        string $fieldPlaceholder = ':order_by',
-        string $directionPlaceholder = ':order_dir',
+        string $fieldValue, string $directionValue
     ) {
-        $this->query .= "ORDER BY $fieldPlaceholder $directionPlaceholder ";
-        $this->placeholders += [
-            $fieldPlaceholder => $fieldValue,
-            $directionPlaceholder => $directionValue
-        ];
+        $trimmedField = htmlspecialchars(trim($fieldValue));
+
+        /**
+         * asc or ASC
+         * desc or DESC
+         */
+        $trimmedDirection = htmlspecialchars(trim($directionValue));
+
+        /**
+         * If name of the column contains whitespaces
+         * or is one of the reserved words, just set it equal to 'id'
+         */
+        if(str_contains($trimmedField, ' ') || in_array($trimmedField, $this->balcklist)) {
+            $trimmedField = 'id';
+        }
+
+        /**
+         * If invalid direction has been provided,
+         * just set it equal to ASC
+         */
+        if($trimmedDirection !== 'ASC' && $trimmedDirection !== 'DESC'
+        && $trimmedDirection !== 'asc' && $trimmedDirection !== 'desc')
+        {
+            $trimmedDirection = 'ASC';
+        }
+
+        $this->query .= "ORDER BY $trimmedField $trimmedDirection ";
+
         return $this;
     }
 

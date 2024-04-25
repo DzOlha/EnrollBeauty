@@ -85,25 +85,25 @@ class ScheduleHtmlBuilder {
         return ` <div class="tab-pane weekday-tab-pane ${active}" id="${tabId}">
                     <div class="row row-sm time-separation-wrapper">
                         <div class="row row-sm">
-                            <div class="col-lg-3 col-md-3 time-interval-value"
+                            <div class="col-lg-3 col-md-6 time-interval-value"
                                  data-start-interval="9"
                                  data-end-interval="12"
                             >
                                 9:00
                             </div>
-                            <div class="col-lg-3 col-md-3 time-interval-value"
+                            <div class="col-lg-3 col-md-6 time-interval-value"
                                  data-start-interval="12"
                                  data-end-interval="15"
                             >
                                 12:00
                             </div>
-                            <div class="col-lg-3 col-md-3 time-interval-value"
+                            <div class="col-lg-3 col-md-6 time-interval-value"
                                  data-start-interval="15"
                                  data-end-interval="18"
                             >
                                 15:00
                             </div>
-                            <div class="col-lg-3 col-md-3 time-interval-value"
+                            <div class="col-lg-3 col-md-6 time-interval-value"
                                  data-start-interval="18"
                                  data-end-interval="21"
                             >
@@ -111,7 +111,7 @@ class ScheduleHtmlBuilder {
                             </div>
                         </div>
                         <div class="row row-sm time-interval-wrapper">
-                            <div class="col-lg-3 col-md-3 time-interval _9_12"
+                            <div class="col-lg-3 col-md-6 time-interval _9_12"
                                  data-start-interval="9"
                                  data-end-interval="12"
                             >
@@ -119,14 +119,14 @@ class ScheduleHtmlBuilder {
 <!--                            Schedule Card-->
 <!--                            Schedule Card-->
                             </div>
-                            <div class="col-lg-3 col-md-3 time-interval _12_15"
+                            <div class="col-lg-3 col-md-6 time-interval _12_15"
                                  data-start-interval="12"
                                  data-end-interval="15"
                             >
 <!--                            Schedule Card-->
 <!--                            Schedule Card-->
                             </div>
-                            <div class="col-lg-3 col-md-3 time-interval _15_18"
+                            <div class="col-lg-3 col-md-6 time-interval _15_18"
                                  data-start-interval="15"
                                  data-end-interval="18"
                             >
@@ -135,7 +135,7 @@ class ScheduleHtmlBuilder {
 <!--                            Schedule Card-->
 <!--                            Schedule Card-->
                             </div>
-                            <div class="col-lg-3 col-md-3 time-interval _18_21"
+                            <div class="col-lg-3 col-md-6 time-interval _18_21"
                                  data-start-interval="18"
                                  data-end-interval="21"
                             >

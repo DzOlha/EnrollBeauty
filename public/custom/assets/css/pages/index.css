@@ -308,7 +308,7 @@ i.fa-heart {
 }
 
 /*Schedule set up form*/
-@media(max-width: 768px) {
+@media(max-width: 992px) {
     .time-interval-value
     {
         display: none;
@@ -373,4 +373,44 @@ i.fa-heart {
 .registration-form span,
 .login-form span{
     color: red;
+}
+
+.card-body {
+    max-width: 100%;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+.full-width-block {
+    max-width: 100%;
+}
+.width-restricted {
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
+    overflow: hidden;
+    text-wrap: wrap;
+}
+.width-restricted:hover {
+    cursor: pointer;
+}
+
+@media (max-width: 769px) {
+    .tabs-style-2 .main-nav-line .nav-link {
+        margin: 0;
+    },
+    .time-interval-wrapper {
+        width: 100% !important;
+    }
+    .card-body, .time-separation-wrapper .time-interval .card {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+@media (min-width: 992px) {
+    .main-sidebar.side-menu {
+        width: 200px !important;
+    }
+    .main-content.side-content {
+        margin-left: 200px !important;
+    }
 }

@@ -239,6 +239,8 @@ th, td {
     box-shadow: rgba(21, 21, 21, 0.2) 0px 5px 5px;
     padding: 0px !important;
     font-size: 16px;
+    max-width: 100%;
+    overflow: auto;
 }
 .time-interval .card:hover {
     box-shadow: rgba(21, 21, 21, 0.5) 0px 5px 5px;
@@ -290,4 +292,14 @@ Search Schedule Form
 .search-btn-schedule {
     align-self: start;
     margin-top: 5px;
+}
+
+@media (max-width: 992px) {
+    .button-wrapper {
+        margin-top: 20px;
+        width: 200px;
+    }
+    .button-wrapper button {
+        margin-right: 10px;
+    }
 }

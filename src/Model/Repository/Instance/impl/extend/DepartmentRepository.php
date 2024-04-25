@@ -6,7 +6,10 @@ use Src\DB\IDatabase;
 use Src\Helper\Builder\impl\SqlBuilder;
 use Src\Model\Repository\Instance\impl\Repository;
 use Src\Model\Table\Departments;
+use Src\Model\Table\Positions;
 use Src\Model\Table\Services;
+use Src\Model\Table\Workers;
+use Src\Model\Table\WorkersServicePricing;
 
 class DepartmentRepository extends Repository
 {
@@ -200,5 +203,64 @@ class DepartmentRepository extends Repository
         ->build();
 
         return $this->db->singleRow();
+    }
+
+    /**
+     * @param int $workerId
+     * @return array|false
+     * [
+     *       0 => [
+     *           'id' =>,
+     *           'name' =>,
+     *       ]
+     *       ......
+     *  ]
+     */
+    public function selectAllByWorkerId(int $workerId)
+    {
+        $this->builder->select([Departments::$id, Departments::$name])
+            ->from(Departments::$table)
+            ->innerJoin(Services::$table)
+                ->on(Departments::$id, Services::$department_id)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(Services::$id, WorkersServicePricing::$service_id)
+            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    public function selectIdByName(string $name): int | false
+    {
+        $this->builder->select([Departments::$id])
+            ->from(Departments::$table)
+            ->whereEqual(Departments::$name, ':name', $name)
+            ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return $result[explode('.', Departments::$id)[1]];
+        }
+        return false;
+    }
+
+    /**
+     * [
+     *      0 => [ id =>, name => ]
+     * ................................
+     * ]
+     */
+    public function selectAllInWorkerDepartment(int $workerId): array | false
+    {
+        $this->builder->select([Departments::$id, Departments::$name])
+            ->from(Departments::$table)
+            ->innerJoin(Positions::$table)
+                ->on(Departments::$id, Positions::$department_id)
+            ->innerJoin(Workers::$table)
+                ->on(Positions::$id, Workers::$position_id)
+            ->whereEqual(Workers::$id, ':id', $workerId)
+        ->build();
+
+        return $this->db->manyRows();
     }
 }

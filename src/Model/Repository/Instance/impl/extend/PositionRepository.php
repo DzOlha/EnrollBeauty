@@ -7,6 +7,7 @@ use Src\Helper\Builder\impl\SqlBuilder;
 use Src\Model\Repository\Instance\impl\Repository;
 use Src\Model\Table\Departments;
 use Src\Model\Table\Positions;
+use Src\Model\Table\Workers;
 
 class PositionRepository extends Repository
 {
@@ -148,5 +149,20 @@ class PositionRepository extends Repository
             return true;
         }
         return false;
+    }
+
+    /**
+     * [ id =>, name => ]
+     */
+    public function selectByWorkerId(int $workerId): array | false
+    {
+        $this->builder->select([Positions::$id, Positions::$name])
+            ->from(Positions::$table)
+            ->innerJoin(Workers::$table)
+                ->on(Positions::$id, Workers::$position_id)
+            ->whereEqual(Workers::$id, ':id', $workerId)
+        ->build();
+
+        return $this->db->singleRow();
     }
 }

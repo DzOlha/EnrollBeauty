@@ -619,4 +619,88 @@ class OrderServiceRepository extends Repository
 
         return $this->db->singleRow();
     }
+
+    /**
+     * @param int $orderId
+     * @return array|false
+     *
+     * [ user_id => can be null, email =>, ]
+     */
+    public function selectUserIdAndEmail(int $orderId): array | false
+    {
+        $this->builder->select([OrdersService::$user_id, OrdersService::$email])
+            ->from(OrdersService::$table)
+            ->whereEqual(OrdersService::$id, ':order_id', $orderId)
+        ->build();
+
+        return $this->db->singleRow();
+    }
+
+    /**
+     * @param int $id
+     * @return array|false
+     *
+     * [ 'name' =>, 'start_datetime' => ]
+     */
+    public function selectStartDatetimeAndServiceName(int $id): array | false
+    {
+        $this->builder->select([OrdersService::$start_datetime, Services::$name])
+            ->from(OrdersService::$table)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+            ->innerJoin(Services::$table)
+                ->on(WorkersServicePricing::$service_id, Services::$id)
+            ->whereEqual(OrdersService::$id, ':order_id', $id)
+        ->build();
+
+        return $this->db->singleRow();
+    }
+
+    /**
+     * [
+     *      0 => [id =>]
+     *      1 => [id =>]
+     * ......................
+     * ]
+     */
+    public function selectAllUpcomingByPricingId(int $pricingId): array | false
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $this->builder->select([OrdersService::$id])
+            ->from(OrdersService::$table)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+            ->whereEqual(WorkersServicePricing::$id, ':id', $pricingId)
+            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
+            ->andIsNull(OrdersService::$completed_datetime)
+            ->andIsNull(OrdersService::$canceled_datetime)
+        ->build();
+
+        return $this->db->manyRows();
+    }
+
+    /**
+     * [
+     *      0 => [ id => ]
+     *      1 => [ id => ]
+     * ........................
+     * ]
+     */
+    public function selectAllUpcomingByServiceId(int $serviceId): array | false
+    {
+        $now = date('Y-m-d H:i:s');
+
+        $this->builder->select([OrdersService::$id])
+            ->from(OrdersService::$table)
+            ->innerJoin(WorkersServicePricing::$table)
+                ->on(OrdersService::$price_id, WorkersServicePricing::$id)
+            ->whereEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
+            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
+            ->andIsNull(OrdersService::$completed_datetime)
+            ->andIsNull(OrdersService::$canceled_datetime)
+        ->build();
+
+        return $this->db->manyRows();
+    }
 }

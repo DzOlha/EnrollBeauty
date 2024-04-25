@@ -151,7 +151,7 @@ class UserRepository extends Repository
      *
      * [ id =>, user_id =>, YouTube =>, TikTok =>, Facebook =>, Instagram => ]
      */
-    public function selectSocials(int $id): UserSocialReadDto | false
+    public function selectSocials(int $id): array | false
     {
         $this->builder->select([UsersSocial::$id, UsersSocial::$user_id,
                                 UsersSocial::$YouTube, UsersSocial::$TikTok,
@@ -160,11 +160,7 @@ class UserRepository extends Repository
             ->whereEqual(UsersSocial::$user_id, ':id', $id)
             ->build();
 
-        $result = $this->db->singleRow();
-        if ($result) {
-            return new UserSocialReadDto($result);
-        }
-        return false;
+        return $this->db->singleRow();
     }
 
     public function selectEmail(int $id): string | false
@@ -249,5 +245,18 @@ class UserRepository extends Repository
             return true;
         }
         return false;
+    }
+
+    /**
+     * [ id =>, email => ]
+     */
+    public function selectByEmailPart(string $emailPart): array | false
+    {
+        $this->builder->select([Users::$id, Users::$email])
+            ->from(Users::$table)
+            ->whereLikeInner(Users::$email, ':email', $emailPart)
+        ->build();
+
+        return $this->db->manyRows();
     }
 }

@@ -47,3 +47,11 @@
     background-color: var(--dark-brown-color);
     color: white;
 }
+
+@media (max-width: 992px) {
+    .icons-wrapper-right {
+        left: 0.3rem;
+        top: 0.3rem;
+        right: unset;
+    }
+}

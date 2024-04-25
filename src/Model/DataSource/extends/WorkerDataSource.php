@@ -3,23 +3,8 @@
 namespace Src\Model\DataSource\extends;
 
 use Src\DB\IDatabase;
-use Src\Helper\Builder\impl\SqlBuilder;
 use Src\Model\DataSource\DataSource;
 use Src\Model\DTO\Write\WorkerWriteDTO;
-use Src\Model\Table\Affiliates;
-use Src\Model\Table\Departments;
-use Src\Model\Table\OrdersService;
-use Src\Model\Table\Positions;
-use Src\Model\Table\Roles;
-use Src\Model\Table\Services;
-use Src\Model\Table\Users;
-use Src\Model\Table\Workers;
-use Src\Model\Table\WorkersPhoto;
-use Src\Model\Table\WorkersServicePricing;
-use Src\Model\Table\WorkersServiceSchedule;
-use Src\Model\Table\WorkersSetting;
-use Src\Model\Table\WorkersSocial;
-use function Symfony\Component\String\b;
 
 
 class WorkerDataSource extends DataSource
@@ -31,236 +16,99 @@ class WorkerDataSource extends DataSource
 
     public function selectWorkerByEmail(string $email)
     {
-        $id = Workers::$id;
-
-        $this->builder->select([Workers::$id])
-            ->from(Workers::$table)
-            ->whereEqual(Workers::$email, ':email', $email)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if ($result) {
-            /**
-             * workers.id -> id
-             */
-            return $result[explode('.', $id)[1]];
-        }
-        return false;
+        return $this->repositoryPool->worker()->selectIdByEmail($email);
     }
 
     public function insertWorker(WorkerWriteDTO $worker)
     {
-        $currentDatetime = date('Y-m-d H:i:s');
-
-        $this->builder->insertInto(Workers::$table,
-            [
-                Workers::$name, Workers::$surname, Workers::$password, Workers::$email,
-                Workers::$gender, Workers::$age, Workers::$years_of_experience,
-                Workers::$position_id, Workers::$salary, Workers::$role_id,
-                Workers::$created_date
-            ]
-        )->values(
-            [':name', ':surname', ':password', ':email',
-             ':gender', ':age', ':experience', ':position_id',
-             ':salary', ':role_id', ':created_date'],
-            [
-                $worker->getName(), $worker->getSurname(), $worker->getPassword(),
-                $worker->getEmail(), $worker->getGender(), $worker->getAge(),
-                $worker->getYearsOfExperience(), $worker->getPositionId(),
-                $worker->getSalary(), $worker->getRoleId(), $currentDatetime
-            ]
-        )->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
+        return $this->repositoryPool->worker()->insert($worker);
     }
 
     public function insertWorkerSettings(int $workerId, string $recoveryCode)
     {
-        $this->builder->insertInto(WorkersSetting::$table,
-            [
-                WorkersSetting::$worker_id,
-                WorkersSetting::$recovery_code
-            ]
-        )->values([':worker_id', ':recovery_code'], [$workerId, $recoveryCode])
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
+       return $this->repositoryPool->worker()->insertSettings($workerId, $recoveryCode);
     }
 
     public function insertWorkerSocial(int $workerId)
     {
-        $this->builder->insertInto(WorkersSocial::$table, [WorkersSocial::$worker_id])
-            ->values([':worker_id'], [$workerId])
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->insertSocials($workerId);
     }
 
     public function insertWorkerPhoto(int $workerId, int $isMain = 0)
     {
-        $this->builder->insertInto(WorkersPhoto::$table,
-            [WorkersPhoto::$worker_id, WorkersPhoto::$is_main])
-            ->values([':worker_id', ':is_main'], [$workerId, $isMain])
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->insertPhoto($workerId, $isMain);
     }
 
     public function updateWorkerSettingDateOfSendingRecoveryCode(
         int $id, string $recoveryCode
     )
     {
-        $currentDateTime = date("Y-m-d H:i:s");
-
-        $this->builder->update(WorkersSetting::$table)
-            ->set(WorkersSetting::$recovery_code, ':recovery_code', $recoveryCode)
-            ->andSet(WorkersSetting::$date_of_sending, ':date_of_sending', $currentDateTime)
-            ->whereEqual(WorkersSetting::$id, ':id', $id)
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->updateRecoveryCodeSendingDate(
+            $id, $recoveryCode
+        );
     }
 
     public function selectWorkerDateSendingByRecoveryCode(
         string $recoveryCode
-    )
+    ): string | false
     {
-        $this->builder->select([WorkersSetting::$date_of_sending])
-            ->from(WorkersSetting::$table)
-            ->whereEqual(WorkersSetting::$recovery_code, ':recovery_code', $recoveryCode)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if ($result) {
-            return $result[explode('.', WorkersSetting::$date_of_sending)[1]];
-        } else {
-            return false;
-        }
+        return $this->repositoryPool->worker()->selectRecoveryCodeSendingDate($recoveryCode);
     }
 
     public function updateWorkerPasswordByRecoveryCode(
         string $recoveryCode, string $passwordHash
     )
     {
-        $this->builder->update(Workers::$table)
-            ->innerJoin(WorkersSetting::$table)
-            ->on(Workers::$id, WorkersSetting::$worker_id)
-            ->set(Workers::$password, ':password', $passwordHash)
-            ->whereEqual(WorkersSetting::$recovery_code, ':recovery_code', $recoveryCode)
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->updatePassword($recoveryCode, $passwordHash);
     }
 
     public function selectWorkerPasswordByEmail(string $email)
     {
-        $this->builder->select([Workers::$password])
-            ->from(Workers::$table)
-            ->whereEqual(Workers::$email, ':email', $email)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if ($result) {
-            // workers.password -> password
-            return $result[explode('.', Workers::$password)[1]];
-        } else {
-            return false;
-        }
+        return $this->repositoryPool->worker()->selectPasswordByEmail($email);
     }
 
     public function selectWorkerIdByEmail(string $email)
     {
-        $this->builder->select([Workers::$id])
-            ->from(Workers::$table)
-            ->whereEqual(Workers::$email, ':email', $email)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if ($result) {
-            // workers.id -> id
-            return $result[explode('.', Workers::$id)[1]];
-        } else {
-            return false;
-        }
+       return $this->repositoryPool->worker()->selectIdByEmail($email);
     }
 
     public function updateRecoveryCodeByRecoveryCode(string $recoveryCode)
     {
-        $this->builder->update(WorkersSetting::$table)
-            ->setNull(WorkersSetting::$recovery_code)
-            ->whereEqual(
-                WorkersSetting::$recovery_code,
-                ':recovery_code',
-                $recoveryCode
-            )
-            ->build();
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->updateRecoveryCodeToNull($recoveryCode);
     }
 
     public function selectWorkerInfoById(int $workerId)
     {
-        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname,
-                                Workers::$email, WorkersPhoto::$filename, Positions::$name],
-                                [Positions::$name => 'position'])
-            ->from(Workers::$table)
-            ->leftJoin(WorkersPhoto::$table)
-                ->on(Workers::$id, WorkersPhoto::$worker_id)
-            ->innerJoin(Positions::$table)
-                ->on(Workers::$position_id, Positions::$id)
-            ->whereEqual(Workers::$id, ':id', $workerId)
-        ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->worker()->selectWithPhoto($workerId);
     }
 
-    protected function _timeFilter($timeFrom, $timeTo)
-    {
-        $result = [
-            'where' => '',
-            'toBind' => []
-        ];
-        $schedule_start_time = WorkersServiceSchedule::$start_time;
-        $schedule_end_time = WorkersServiceSchedule::$end_time;
-
-        $setFrom = ($timeFrom !== null && $timeFrom !== '');
-        $setTo = ($timeTo !== null && $timeTo !== '');
-
-        if($setFrom) {
-            $result['where'] = " AND $schedule_start_time >= :time_from ";
-            $result['toBind'] += [
-                ':time_from' => $timeFrom
-            ];
-        }
-        if($setTo) {
-            $result['where'] .= " AND $schedule_end_time <= :time_to ";
-            $result['toBind'] += [
-                ':time_to' => $timeTo
-            ];
-        }
-
-        return $result;
-    }
+//    protected function _timeFilter($timeFrom, $timeTo)
+//    {
+//        $result = [
+//            'where' => '',
+//            'toBind' => []
+//        ];
+//        $schedule_start_time = WorkersServiceSchedule::$start_time;
+//        $schedule_end_time = WorkersServiceSchedule::$end_time;
+//
+//        $setFrom = ($timeFrom !== null && $timeFrom !== '');
+//        $setTo = ($timeTo !== null && $timeTo !== '');
+//
+//        if($setFrom) {
+//            $result['where'] = " AND $schedule_start_time >= :time_from ";
+//            $result['toBind'] += [
+//                ':time_from' => $timeFrom
+//            ];
+//        }
+//        if($setTo) {
+//            $result['where'] .= " AND $schedule_end_time <= :time_to ";
+//            $result['toBind'] += [
+//                ':time_to' => $timeTo
+//            ];
+//        }
+//
+//        return $result;
+//    }
 
     /**
      * @param $departmentId
@@ -305,121 +153,10 @@ class WorkerDataSource extends DataSource
         $priceFrom = null, $priceTo = null,
     )
     {
-        $workerServiceSchedule = WorkersServiceSchedule::$table;
-        $schedule_id = WorkersServiceSchedule::$id;
-        $schedule_price_id = WorkersServiceSchedule::$price_id;
-        $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
-        $schedule_day = WorkersServiceSchedule::$day;
-        $schedule_start_time = WorkersServiceSchedule::$start_time;
-        $schedule_end_time = WorkersServiceSchedule::$end_time;
-        $schedule_order_id = WorkersServiceSchedule::$order_id;
-
-        $services = Services::$table;
-        $services_id = Services::$id;
-        $services_serviceName = Services::$name;
-        $services_departmentId = Services::$department_id;
-
-        $workers = Workers::$table;
-        $workers_id = Workers::$id;
-
-        $orders = OrdersService::$table;
-        $ordersOrderId = OrdersService::$id;
-        $ordersUserId = OrdersService::$user_id;
-        $ordersUserEmail = OrdersService::$email;
-        $completedTime = OrdersService::$completed_datetime;
-
-        $affiliates = Affiliates::$table;
-        $affiliates_id = Affiliates::$id;
-        $affiliates_city = Affiliates::$city;
-        $affiliates_address = Affiliates::$address;
-
-        $workersServicePricing = WorkersServicePricing::$table;
-        $pricing_id = WorkersServicePricing::$id;
-        $pricing_service_id = WorkersServicePricing::$service_id;
-        $pricing_worker_id = WorkersServicePricing::$worker_id;
-        $pricing_price = WorkersServicePricing::$price;
-        $pricing_currency = WorkersServicePricing::$currency;
-
-        $departmentFilter = $this->_departmentFilter($departmentId);
-        $serviceFilter = $this->_serviceFilter($serviceId, $pricing_service_id);
-        $workerFilter = $this->_workerFilter($workerId, $pricing_worker_id);
-        $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
-        $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
-        $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
-        $priceFilter = $this->_priceFilter(
-            $priceFrom, $priceTo
+        return $this->repositoryPool->schedule()->selectAllOrdered(
+            $departmentId, $serviceId, $workerId, $affiliateId, $dateFrom,
+            $dateTo, $timeFrom, $timeTo, $priceFrom, $priceTo
         );
-
-        $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
-                   $services_serviceName as service_name,
-                   $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
-                   $services_departmentId as department_id, 
-                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
-                   $schedule_day, 
-                   $schedule_start_time, $schedule_end_time,
-                   $pricing_price, $pricing_currency
-            
-            FROM $workerServiceSchedule 
-                 INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
-                INNER JOIN $services ON $pricing_service_id = $services_id
-                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
-                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-                INNER JOIN $orders ON $schedule_order_id = $ordersOrderId
-            
-            WHERE $schedule_order_id IS NOT NULL AND $completedTime IS NULL
-                {$departmentFilter['where']}
-                    
-                {$serviceFilter['where']}
-                {$workerFilter['where']}
-                {$affiliateFilter['where']}
-              
-                {$dateFilter['where']}
-              
-                {$timeFilter['where']}
-              
-                {$priceFilter['where']}
-        ";
-        //echo $q;
-        $this->db->query("
-            SELECT $schedule_id as schedule_id, $services_id as service_id,
-                   $services_serviceName as service_name,
-                   $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
-                   $services_departmentId as department_id, 
-                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
-                   $schedule_day, 
-                   $schedule_start_time, $schedule_end_time,
-                   $pricing_price, $pricing_currency
-            
-            FROM $workerServiceSchedule 
-                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
-                INNER JOIN $services ON $pricing_service_id = $services_id
-                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
-                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-                INNER JOIN $orders ON $schedule_order_id = $ordersOrderId
-            
-            WHERE $schedule_order_id IS NOT NULL AND $completedTime IS NULL
-                {$departmentFilter['where']}
-                    
-                {$serviceFilter['where']}
-                {$workerFilter['where']}
-                {$affiliateFilter['where']}
-              
-                {$dateFilter['where']}
-              
-                {$timeFilter['where']}
-              
-                {$priceFilter['where']}
-        ");
-
-        $params = [
-            ...$departmentFilter['toBind'], ...$serviceFilter['toBind'],
-            ...$workerFilter['toBind'], ...$affiliateFilter['toBind'],
-            ...$dateFilter['toBind'], ...$timeFilter['toBind'], ...$priceFilter['toBind']
-        ];
-
-        $this->db->bindAll($params);
-
-        return $this->db->manyRows();
     }
 
     /**
@@ -446,83 +183,7 @@ class WorkerDataSource extends DataSource
      */
     public function selectWorkerScheduleById(int $scheduleId)
     {
-        $workerServiceSchedule = WorkersServiceSchedule::$table;
-        $workerServiceScheduleId = WorkersServiceSchedule::$id;
-
-        $schedule_id = WorkersServiceSchedule::$id;
-        $schedule_price_id = WorkersServiceSchedule::$price_id;
-        $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
-        $schedule_day = WorkersServiceSchedule::$day;
-        $schedule_start_time = WorkersServiceSchedule::$start_time;
-        $schedule_end_time = WorkersServiceSchedule::$end_time;
-        $schedule_order_id = WorkersServiceSchedule::$order_id;
-
-        $services = Services::$table;
-        $services_id = Services::$id;
-        $services_serviceName = Services::$name;
-        $services_departmentId = Services::$department_id;
-
-        $workers = Workers::$table;
-        $workers_id = Workers::$id;
-
-        $orders = OrdersService::$table;
-        $ordersOrderId = OrdersService::$id;
-        $ordersUserId = OrdersService::$user_id;
-        $ordersUserEmail = OrdersService::$email;
-
-        $affiliates = Affiliates::$table;
-        $affiliates_id = Affiliates::$id;
-        $affiliates_city = Affiliates::$city;
-        $affiliates_address = Affiliates::$address;
-
-        $workersServicePricing = WorkersServicePricing::$table;
-        $pricing_id = WorkersServicePricing::$id;
-        $pricing_service_id = WorkersServicePricing::$service_id;
-        $pricing_worker_id = WorkersServicePricing::$worker_id;
-        $pricing_price = WorkersServicePricing::$price;
-        $pricing_currency = WorkersServicePricing::$currency;
-
-        $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
-                   $services_serviceName as service_name,
-                   $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
-                   $services_departmentId as department_id, 
-                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
-                   $schedule_day, 
-                   $schedule_start_time, $schedule_end_time,
-                   $pricing_price, $pricing_currency
-            
-            FROM $workerServiceSchedule 
-                 INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
-                INNER JOIN $services ON $pricing_service_id = $services_id
-                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
-                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-                LEFT JOIN $orders ON $schedule_order_id = $ordersOrderId
-            
-            WHERE $workerServiceScheduleId = $scheduleId
-        ";
-        //echo $q;
-        $this->db->query("
-            SELECT $schedule_id as schedule_id, $services_id as service_id,
-                   $services_serviceName as service_name,
-                   $ordersOrderId as order_id, $ordersUserId as user_id, $ordersUserEmail as user_email,
-                   $services_departmentId as department_id, 
-                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
-                   $schedule_day, 
-                   $schedule_start_time, $schedule_end_time,
-                   $pricing_price, $pricing_currency
-            
-            FROM $workerServiceSchedule 
-                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
-                INNER JOIN $services ON $pricing_service_id = $services_id
-                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
-                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-                LEFT JOIN $orders ON $schedule_order_id = $ordersOrderId
-            
-            WHERE $workerServiceScheduleId = :id
-        ");
-        $this->db->bind(':id', $scheduleId);
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->schedule()->selectWorkerCard($scheduleId);
     }
 
 
@@ -534,111 +195,10 @@ class WorkerDataSource extends DataSource
         $priceFrom = null, $priceTo = null,
     )
     {
-        $workerServiceSchedule = WorkersServiceSchedule::$table;
-        $schedule_id = WorkersServiceSchedule::$id;
-        $schedule_price_id = WorkersServiceSchedule::$price_id;
-        $schedule_affiliate_id = WorkersServiceSchedule::$affiliate_id;
-        $schedule_day = WorkersServiceSchedule::$day;
-        $schedule_start_time = WorkersServiceSchedule::$start_time;
-        $schedule_end_time = WorkersServiceSchedule::$end_time;
-        $schedule_order_id = WorkersServiceSchedule::$order_id;
-
-        $services = Services::$table;
-        $services_id = Services::$id;
-        $services_serviceName = Services::$name;
-        $services_departmentId = Services::$department_id;
-
-        $workers = Workers::$table;
-        $workers_id = Workers::$id;
-
-        $affiliates = Affiliates::$table;
-        $affiliates_id = Affiliates::$id;
-        $affiliates_city = Affiliates::$city;
-        $affiliates_address = Affiliates::$address;
-
-        $workersServicePricing = WorkersServicePricing::$table;
-        $pricing_id = WorkersServicePricing::$id;
-        $pricing_service_id = WorkersServicePricing::$service_id;
-        $pricing_worker_id = WorkersServicePricing::$worker_id;
-        $pricing_price = WorkersServicePricing::$price;
-        $pricing_currency = WorkersServicePricing::$currency;
-
-        $departmentFilter = $this->_departmentFilter($departmentId);
-        $serviceFilter = $this->_serviceFilter($serviceId, $pricing_service_id);
-        $workerFilter = $this->_workerFilter($workerId, $pricing_worker_id);
-        $affiliateFilter = $this->_affiliateFilter($affiliateId, $schedule_affiliate_id);
-        $dateFilter = $this->_dateFilter($dateFrom, $dateTo);
-        $timeFilter = $this->_timeFilter($timeFrom, $timeTo);
-        $priceFilter = $this->_priceFilter(
-            $priceFrom, $priceTo
+        return $this->repositoryPool->schedule()->selectAllFree(
+            $departmentId, $serviceId, $workerId, $affiliateId, $dateFrom,
+            $dateTo, $timeFrom, $timeTo, $priceFrom, $priceTo
         );
-
-        $q = "SELECT $schedule_id as schedule_id, $services_id as service_id,
-                   $services_serviceName as service_name,
-                   $services_departmentId as department_id, 
-                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
-                   $schedule_day, 
-                   $schedule_start_time, $schedule_end_time,
-                   $pricing_price, $pricing_currency
-            
-            FROM $workerServiceSchedule 
-                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
-                INNER JOIN $services ON $pricing_service_id = $services_id
-                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
-                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-            
-            WHERE $schedule_order_id IS NULL
-                {$departmentFilter['where']}
-                    
-                {$serviceFilter['where']}
-                {$workerFilter['where']}
-                {$affiliateFilter['where']}
-              
-                {$dateFilter['where']}
-              
-                {$timeFilter['where']}
-              
-                {$priceFilter['where']}
-        ";
-        //echo $q;
-        $this->db->query("
-            SELECT $schedule_id as schedule_id, $services_id as service_id,
-                   $services_serviceName as service_name,
-                   $services_departmentId as department_id,
-                   $affiliates_id as affiliate_id, $affiliates_city, $affiliates_address,
-                   $schedule_day, 
-                   $schedule_start_time, $schedule_end_time,
-                   $pricing_price, $pricing_currency
-            
-            FROM $workerServiceSchedule 
-                INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
-                INNER JOIN $services ON $pricing_service_id = $services_id
-                INNER JOIN $workers ON $pricing_worker_id = $workers_id 
-                INNER JOIN $affiliates ON $schedule_affiliate_id = $affiliates_id
-            
-            WHERE $schedule_order_id IS NULL
-                {$departmentFilter['where']}
-                    
-                {$serviceFilter['where']}
-                {$workerFilter['where']}
-                {$affiliateFilter['where']}
-              
-                {$dateFilter['where']}
-              
-                {$timeFilter['where']}
-              
-                {$priceFilter['where']}
-        ");
-
-        $params = [
-            ...$departmentFilter['toBind'], ...$serviceFilter['toBind'],
-            ...$workerFilter['toBind'], ...$affiliateFilter['toBind'],
-            ...$dateFilter['toBind'], ...$timeFilter['toBind'], ...$priceFilter['toBind']
-        ];
-
-        $this->db->bindAll($params);
-
-        return $this->db->manyRows();
     }
 
     /**
@@ -654,16 +214,7 @@ class WorkerDataSource extends DataSource
      */
     public function selectDepartmentsForWorker(int $workerId)
     {
-        $this->builder->select([Departments::$id, Departments::$name])
-            ->from(Departments::$table)
-            ->innerJoin(Services::$table)
-            ->on(Departments::$id, Services::$department_id)
-            ->innerJoin(WorkersServicePricing::$table)
-            ->on(Services::$id, WorkersServicePricing::$service_id)
-            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-            ->build();
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->department()->selectAllByWorkerId($workerId);
     }
 
     /**
@@ -677,12 +228,7 @@ class WorkerDataSource extends DataSource
      */
     public function selectUserByOrderId(int $orderId)
     {
-        $this->builder->select([OrdersService::$user_id, OrdersService::$email])
-            ->from(OrdersService::$table)
-            ->whereEqual(OrdersService::$id, ':order_id', $orderId)
-            ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->orderService()->selectUserIdAndEmail($orderId);
     }
 
     /**
@@ -696,50 +242,23 @@ class WorkerDataSource extends DataSource
      */
     public function selectOrderDetails(int $orderId)
     {
-        $this->builder->select([OrdersService::$start_datetime, Services::$name])
-            ->from(OrdersService::$table)
-                ->innerJoin(WorkersServicePricing::$table)
-                    ->on(OrdersService::$price_id, WorkersServicePricing::$id)
-                ->innerJoin(Services::$table)
-                    ->on(WorkersServicePricing::$service_id, Services::$id)
-            ->whereEqual(OrdersService::$id, ':order_id', $orderId)
-            ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->orderService()->selectStartDatetimeAndServiceName($orderId);
     }
 
     public function selectWorkerServicePricingByIds(int $workerId, $serviceId)
     {
-        $this->builder->select([WorkersServicePricing::$id])
-            ->from(WorkersServicePricing::$table)
-            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if ($result) {
-            // workers_service_pricing.id -> id
-            return $result[explode('.', WorkersServicePricing::$id)[1]];
-        }
-        return false;
+        return $this->repositoryPool->servicePricing()->selectIdByWorkerAndService(
+            $workerId, $serviceId
+        );
     }
 
     public function insertWorkerServicePricing(
         int $workerId, int $serviceId, $price
     )
     {
-        $this->builder->insertInto(WorkersServicePricing::$table, [
-            WorkersServicePricing::$worker_id, WorkersServicePricing::$service_id,
-            WorkersServicePricing::$price
-        ])
-            ->values([':worker_id', ':service_id', ':price'],
-                [$workerId, $serviceId, $price])
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
+        return $this->repositoryPool->servicePricing()->insert(
+            $workerId, $serviceId, $price
+        );
     }
 
     /**
@@ -768,41 +287,9 @@ class WorkerDataSource extends DataSource
         string $orderByField = 'workers_service_pricing.id', string $orderDirection = 'asc'
     )
     {
-        $pricingTable = WorkersServicePricing::$table;
-        $servicesTable = Services::$table;
-
-        $worker_id = WorkersServicePricing::$worker_id;
-
-        $service_id = Services::$id;
-        $pricing_service_id = WorkersServicePricing::$service_id;
-
-        $queryFrom = "
-            $pricingTable INNER JOIN $servicesTable ON $pricing_service_id = $service_id
-            WHERE $worker_id = :worker_id
-        ";
-        $params = [
-            ':worker_id' => $workerId
-        ];
-
-        $this->builder->select([
-            WorkersServicePricing::$id, "$service_id as service_id", Services::$name,
-            WorkersServicePricing::$price,
-            WorkersServicePricing::$currency, WorkersServicePricing::$updated_datetime
-        ])
-            ->from(WorkersServicePricing::$table)
-            ->innerJoin(Services::$table)
-                ->on(WorkersServicePricing::$service_id, Services::$id)
-            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-            ->orderBy($orderByField, $orderDirection)
-            ->limit($limit)
-            ->offset($offset)
-        ->build();
-
-        $result = $this->db->manyRows();
-        if ($result == null) {
-            return $result;
-        }
-        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
+        return $this->repositoryPool->servicePricing()->selectAllLimitedByWorkerId(
+            $workerId, $limit, $offset, $orderByField, $orderDirection
+        );
     }
 
     /**
@@ -821,81 +308,26 @@ class WorkerDataSource extends DataSource
     public function selectFilledTimeIntervalsByWorkerIdAndDay(
         int $workerId, string $day
     ){
-        $this->builder->select([WorkersServiceSchedule::$start_time,
-                                WorkersServiceSchedule::$end_time])
-            ->from(WorkersServiceSchedule::$table)
-                ->innerJoin(WorkersServicePricing::$table)
-                    ->on(WorkersServiceSchedule::$price_id, WorkersServicePricing::$id)
-                ->leftJoin(OrdersService::$table)
-                    ->on(WorkersServiceSchedule::$order_id, OrdersService::$id)
-                ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-                ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
-                ->andIsNull(OrdersService::$completed_datetime)
-                ->andIsNull(OrdersService::$canceled_datetime)
-            ->build();
-
-        return $this->db->manyRows();
+       return $this->repositoryPool->schedule()->selectBusyIntervalsByWorkerId(
+           $workerId, $day
+       );
     }
 
     public function selectScheduleForWorkerByDayAndTime(
         int $workerId, string $day, string $startTime, string $endTime
     )
     {
-        $pricing = WorkersServicePricing::$table;
-        $pricing_id = WorkersServicePricing::$id;
-        $pricing_worker_id = WorkersServicePricing::$worker_id;
-
-        $orders = OrdersService::$table;
-        $orders_id = OrdersService::$id;
-        $orders_completed = OrdersService::$completed_datetime;
-        $orders_canceled = OrdersService::$canceled_datetime;
-
-        $schedule = WorkersServiceSchedule::$table;
-        $schedule_price_id = WorkersServiceSchedule::$price_id;
-        $schedule_order_id = WorkersServiceSchedule::$order_id;
-        $start_time = WorkersServiceSchedule::$start_time;
-        $end_time = WorkersServiceSchedule::$end_time;
-        $day_column = WorkersServiceSchedule::$day;
-        $id = WorkersServiceSchedule::$id;
-
-        $this->db->query("
-            SELECT $id FROM $schedule
-            INNER JOIN $pricing ON $schedule_price_id = $pricing_id
-            LEFT JOIN $orders ON $schedule_order_id = $orders_id
-            WHERE $pricing_worker_id = :worker_id
-            AND $day_column = :day
-            AND $orders_canceled IS NULL
-            AND $orders_completed IS NULL
-            AND NOT (
-                :end_time <= $start_time OR
-                :start_time >= $end_time
-            );
-        ");
-        $this->db->bind(':worker_id', $workerId);
-        $this->db->bind(':day', $day);
-        $this->db->bind(':start_time', $startTime);
-        $this->db->bind(':end_time', $endTime);
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->schedule()->selectAllByWorkerDayTime(
+            $workerId, $day, $startTime, $endTime
+        );
     }
 
     public function selectPriceIdByWorkerIdServiceId(
         int $workerId, int $serviceId
     ) {
-        $this->builder->select([WorkersServicePricing::$id])
-            ->from(WorkersServicePricing::$table)
-            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
-        ->build();
-
-        $result = $this->db->singleRow();
-        if($result) {
-            /**
-             * workers_service_pricing.id -> id
-             */
-            return $result[explode('.', WorkersServicePricing::$id)[1]];
-        }
-        return $result;
+        return $this->repositoryPool->servicePricing()->selectIdByWorkerService(
+            $workerId, $serviceId
+        );
     }
 
     public function insertWorkerServiceSchedule(
@@ -903,23 +335,9 @@ class WorkerDataSource extends DataSource
         string $day, string $startTime, string $endTime
     )
     {
-        $this->builder->insertInto(WorkersServiceSchedule::$table,
-            [
-                WorkersServiceSchedule::$price_id,
-                WorkersServiceSchedule::$affiliate_id, WorkersServiceSchedule::$day,
-                WorkersServiceSchedule::$start_time, WorkersServiceSchedule::$end_time
-            ])
-            ->values(
-                [':price_id', ':affiliate_id',
-                 ':day', ':start_time', ':end_time'],
-                [$priceId, $affiliateId, $day, $startTime, $endTime]
-            )
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+       return $this->repositoryPool->schedule()->insert(
+           $priceId, $affiliateId, $day, $startTime, $endTime
+       );
     }
 
     public function selectAllServicesWithDepartments(
@@ -927,215 +345,81 @@ class WorkerDataSource extends DataSource
         string $orderByField = 'services.id', string $orderDirection = 'asc'
     )
     {
-        $queryFrom = "
-            ".Services::$table." 
-                INNER JOIN ".Departments::$table." ON ".Services::$department_id." = ".Departments::$id."
-                INNER JOIN ".Positions::$table." ON ".Departments::$id." = ".Positions::$department_id."
-                INNER JOIN ".Workers::$table." ON ".Positions::$id." = ".Workers::$position_id."
-            WHERE ".Workers::$id." = :worker_id
-        ";
-        $params = [
-            ':worker_id' => $workerId
-        ];
-
-        $this->builder->select([Services::$id, Services::$name,
-                                Departments::$name." as department_name",
-                                Departments::$id." as department_id"])
-            ->from(Services::$table)
-                ->innerJoin(Departments::$table)
-                    ->on(Services::$department_id, Departments::$id)
-                ->innerJoin(Positions::$table)
-                    ->on(Departments::$id, Positions::$department_id)
-                ->innerJoin(Workers::$table)
-                    ->on(Positions::$id, Workers::$position_id)
-                ->whereEqual(Workers::$id, ':id', $workerId)
-            ->orderBy($orderByField, $orderDirection)
-            ->limit($limit)
-            ->offset($offset)
-        ->build();
-
-        $result = $this->db->manyRows();
-        if($result == null) {
-            return $result;
-        }
-        return $this->_appendTotalRowsCount($queryFrom, $result, $params);
+        return $this->repositoryPool->service()->selectAllLimitedByWorkerId(
+            $workerId, $limit, $offset, $orderByField, $orderDirection
+        );
     }
 
     public function selectServiceIdByNameAndDepartmentId(
         string $serviceName, int $departmentId
     ) {
-        $this->builder->select([Services::$id])
-                    ->from(Services::$table)
-                    ->whereEqual(Services::$name, ':name', $serviceName)
-                    ->andEqual(Services::$department_id, ':department_id', $departmentId)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if($result) {
-            // services.id -> id
-            return $result[explode('.', Services::$id)[1]];
-        }
-        return $result;
+        return $this->repositoryPool->service()->selectIdByNameAndDepartment(
+            $serviceName, $departmentId
+        );
     }
 
     public function insertNewService(string $serviceName, int $departmentId)
     {
-        $this->builder->insertInto(Services::$table, [Services::$name, Services::$department_id])
-                    ->values([':name', ":department_id"], [$serviceName, $departmentId])
-                ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return $this->db->lastInsertedId();
-        }
-        return false;
+        return $this->repositoryPool->service()->insert($serviceName, $departmentId);
     }
 
     public function updateWorkerServicePricing(int $workerId, int $serviceId, $price)
     {
-        $this->builder->update(WorkersServicePricing::$table)
-            ->set(WorkersServicePricing::$price, ':price', $price)
-            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->servicePricing()->update(
+            $workerId, $serviceId, $price
+        );
     }
 
     public function selectActiveOrdersByPricingId(int $pricingId)
     {
-        $now = date('Y-m-d H:i:s');
-
-        $this->builder->select([OrdersService::$id])
-            ->from(OrdersService::$table)
-                ->innerJoin(WorkersServicePricing::$table)
-                    ->on(OrdersService::$price_id, WorkersServicePricing::$id)
-            ->whereEqual(WorkersServicePricing::$id, ':id', $pricingId)
-            ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
-            ->andIsNull(OrdersService::$completed_datetime)
-            ->andIsNull(OrdersService::$canceled_datetime)
-        ->build();
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->orderService()->selectAllUpcomingByPricingId($pricingId);
     }
 
     public function deleteWorkerServicePricingById(int $pricingId)
     {
-        $this->builder->delete()
-            ->from(WorkersServicePricing::$table)
-            ->whereEqual(WorkersServicePricing::$id, ':id', $pricingId)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->servicePricing()->delete($pricingId);
     }
 
     public function selectServiceById(int $id)
     {
-        $this->builder->select([Services::$id, Services::$name, Services::$department_id])
-                ->from(Services::$table)
-                ->whereEqual(Services::$id, ':id', $id)
-            ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->service()->select($id);
     }
 
     public function updateServiceById(
         int $id, string $name, int $departmentId
     ) {
-        $this->builder->update(Services::$table)
-                ->set(Services::$name, ':name', $name)
-                ->andSet(Services::$department_id, ':department_id', $departmentId)
-            ->whereEqual(Services::$id, ':id', $id)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->service()->update($id, $name, $departmentId);
     }
 
     public function selectActiveOrdersByServiceId(int $serviceId)
     {
-        $now = date('Y-m-d H:i:s');
-
-        $this->builder->select([OrdersService::$id])
-            ->from(OrdersService::$table)
-                ->innerJoin(WorkersServicePricing::$table)
-                    ->on(OrdersService::$price_id, WorkersServicePricing::$id)
-                ->whereEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
-                ->andGreaterEqual(OrdersService::$start_datetime, ':start', $now)
-                ->andIsNull(OrdersService::$completed_datetime)
-                ->andIsNull(OrdersService::$canceled_datetime)
-            ->build();
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->orderService()->selectAllUpcomingByServiceId($serviceId);
     }
 
     public function deleteServiceById(int $serviceId)
     {
-        $this->builder->delete()
-            ->from(Services::$table)
-            ->whereEqual(Services::$id, ':id', $serviceId)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->service()->delete($serviceId);
     }
 
     public function selectServiceWithDepartmentById(int $id)
     {
-        $this->builder->select([Services::$id, Services::$name,
-                                Services::$department_id,
-                                Departments::$name],
-                    [Departments::$name => 'department_name'])
-                    ->from(Services::$table)
-                    ->innerJoin(Departments::$table)
-                        ->on(Services::$department_id, Departments::$id)
-                    ->whereEqual(Services::$id, ':id', $id)
-            ->build();
-
-        return $this->db->singleRow();
+       return $this->repositoryPool->service()->selectRow($id);
     }
 
     public function selectWorkerServicePricing(int $workerId, int $serviceId)
     {
-        $this->builder->select([WorkersServicePricing::$id, Services::$name,
-            WorkersServicePricing::$price, WorkersServicePricing::$currency,
-            WorkersServicePricing::$updated_datetime, WorkersServicePricing::$service_id])
-            ->from(WorkersServicePricing::$table)
-            ->innerJoin(Services::$table)
-                ->on(WorkersServicePricing::$service_id, Services::$id)
-            ->whereEqual(WorkersServicePricing::$worker_id, ":worker_id", $workerId)
-            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
-        ->build();
-
-        return $this->db->singleRow();
+       return $this->repositoryPool->servicePricing()->selectByWorkerAndService(
+           $workerId, $serviceId
+       );
     }
 
     public function updateWorkerServiceSchedule(
         int $id, int $priceId, int $affiliateId,
         string $day, string $startTime, string $endTime
     ) {
-        $this->builder->update(WorkersServiceSchedule::$table)
-                ->set(WorkersServiceSchedule::$price_id, ':price_id', $priceId)
-                ->andSet(WorkersServiceSchedule::$affiliate_id, ':affiliate_id', $affiliateId)
-                ->andSet(WorkersServiceSchedule::$day, ':day', $day)
-                ->andSet(WorkersServiceSchedule::$start_time, ':start', $startTime)
-                ->andSet(WorkersServiceSchedule::$end_time, ':end', $endTime)
-            ->whereEqual(WorkersServiceSchedule::$id, ':id', $id)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->schedule()->update(
+            $id, $priceId, $affiliateId, $day, $startTime, $endTime
+        );
     }
 
     /**
@@ -1155,154 +439,38 @@ class WorkerDataSource extends DataSource
     public function selectEditFilledTimeIntervalsByWorkerIdAndDay(
         int $workerId, string $day, int $scheduleId
     ){
-        $this->builder->select([WorkersServiceSchedule::$start_time,
-                                WorkersServiceSchedule::$end_time])
-            ->from(WorkersServiceSchedule::$table)
-            ->innerJoin(WorkersServicePricing::$table)
-                ->on(WorkersServiceSchedule::$price_id, WorkersServicePricing::$id)
-            ->leftJoin(OrdersService::$table)
-                ->on(WorkersServiceSchedule::$order_id, OrdersService::$id)
-            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-            ->andEqual(WorkersServiceSchedule::$day, ':day', $day)
-            ->andNotEqual(WorkersServiceSchedule::$id, ':id', $scheduleId)
-            ->andIsNull(OrdersService::$completed_datetime)
-            ->andIsNull(OrdersService::$canceled_datetime)
-        ->build();
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->schedule()->selectBusyIntervalsByWorkerDayNotId(
+            $workerId, $day, $scheduleId
+        );
     }
 
     public function selectEditScheduleForWorkerByDayAndTime(
         int $workerId, string $day, string $startTime,
         string $endTime, int $scheduleId
     ) {
-        $pricing = WorkersServicePricing::$table;
-        $pricing_id = WorkersServicePricing::$id;
-        $pricing_worker_id = WorkersServicePricing::$worker_id;
-
-        $orders = OrdersService::$table;
-        $orders_id = OrdersService::$id;
-        $orders_completed = OrdersService::$completed_datetime;
-        $orders_canceled = OrdersService::$canceled_datetime;
-
-        $schedule = WorkersServiceSchedule::$table;
-        $schedule_price_id = WorkersServiceSchedule::$price_id;
-        $schedule_order_id = WorkersServiceSchedule::$order_id;
-        $start_time = WorkersServiceSchedule::$start_time;
-        $end_time = WorkersServiceSchedule::$end_time;
-        $day_column = WorkersServiceSchedule::$day;
-        $id = WorkersServiceSchedule::$id;
-
-        $q = "
-            SELECT $id FROM $schedule
-            INNER JOIN $pricing ON $schedule_price_id = $pricing_id
-            LEFT JOIN $orders ON $schedule_order_id = $orders_id
-            WHERE $pricing_worker_id = :worker_id
-            AND $day_column = :day
-            AND $id != :schedule_id
-            AND $orders_canceled IS NULL
-            AND $orders_completed IS NULL
-            AND (
-                 ($start_time <= :start_time AND $start_time < :end_time 
-                    AND $end_time > :start_time AND $end_time >= :end_time)
-                
-                OR ($start_time <= :start_time AND $start_time < :end_time 
-                    AND $end_time > :start_time AND $end_time <= :end_time)
-                
-                OR ($start_time >= :start_time AND  $start_time < :end_time
-                    AND $end_time > :start_time AND $end_time >= :end_time)
-            )
-        ";
-        //echo $q;
-
-        $this->db->query("
-            SELECT $id FROM $schedule
-            INNER JOIN $pricing ON $schedule_price_id = $pricing_id
-            LEFT JOIN $orders ON $schedule_order_id = $orders_id
-            WHERE $pricing_worker_id = :worker_id
-            AND $day_column = :day
-            AND $id != :schedule_id
-            AND $orders_canceled IS NULL
-            AND $orders_completed IS NULL
-            AND (
-                 ($start_time <= :start_time AND $start_time < :end_time 
-                    AND $end_time > :start_time AND $end_time >= :end_time)
-                
-                OR ($start_time <= :start_time AND $start_time < :end_time 
-                    AND $end_time > :start_time AND $end_time <= :end_time)
-                
-                OR ($start_time >= :start_time AND  $start_time < :end_time
-                    AND $end_time > :start_time AND $end_time >= :end_time)
-            )
-        ");
-
-        $this->db->bindAll([
-            ':worker_id' => $workerId,
-            ':day' => $day,
-            ':schedule_id' => $scheduleId,
-            ':start_time' => $startTime,
-            ':end_time' => $endTime
-        ]);
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->schedule()->selectAllByWorkerAndTimeNotId(
+            $workerId, $day, $startTime, $endTime, $scheduleId
+        );
     }
 
     public function deleteWorkerScheduleItemById(int $id)
     {
-        $this->builder->delete()
-            ->from(WorkersServiceSchedule::$table)
-            ->whereEqual(WorkersServiceSchedule::$id, ':id', $id)
-            ->andIsNull(WorkersServiceSchedule::$order_id)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->schedule()->delete($id);
     }
 
     public function selectWorkerByIdForEdit(int $id)
     {
-        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email,
-                            Workers::$position_id, Workers::$role_id, Workers::$gender,
-                            Workers::$age, Workers::$years_of_experience, Workers::$salary])
-                    ->from(Workers::$table)
-                    ->whereEqual(Workers::$id, ':id', $id)
-            ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->worker()->select($id);
     }
 
     public function selectWorkerByEmailAndNotId(int $id, string $email)
     {
-        $this->builder->select([Workers::$id])
-                    ->from(Workers::$table)
-                    ->whereEqual(Workers::$email, ':email', $email)
-                    ->andNotEqual(Workers::$id, ':id', $id)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if($result) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->selectAllByEmailNotId($id, $email);
     }
 
     public function selectWorkerRowById(int $id)
     {
-        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email,
-                                Positions::$name, Workers::$salary, Workers::$years_of_experience],
-                        [
-                            Positions::$name => 'position',
-                            Workers::$years_of_experience => 'experience'
-                        ])
-                    ->from(Workers::$table)
-                    ->innerJoin(Positions::$table)
-                        ->on(Workers::$position_id, Positions::$id)
-                    ->whereEqual(Workers::$id, ':id', $id)
-            ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->worker()->selectRow($id);
     }
 
     public function updateWorkerById(
@@ -1310,213 +478,78 @@ class WorkerDataSource extends DataSource
         int $positionId, int $roleId, ?string $gender, int $age,
         float $experience, ?float $salary
     ) {
-        $this->builder->update(Workers::$table)
-                ->set(Workers::$name, ':name', $name)
-                ->andSet(Workers::$surname, ':surname', $surname)
-                ->andSet(Workers::$email, ':email', $email)
-                ->andSet(Workers::$position_id, ":position_id", $positionId)
-                ->andSet(Workers::$role_id, ':role_id', $roleId)
-                ->andSet(Workers::$gender, ':gender', $gender)
-                ->andSet(Workers::$age, ':age', $age)
-                ->andSet(Workers::$years_of_experience, ':years', $experience)
-                ->andSet(Workers::$salary, ':salary', $salary)
-            ->whereEqual(Workers::$id, ':id', $id)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->updateFull(
+            $id, $name, $surname, $email, $positionId, $roleId,
+            $gender, $age, $experience, $salary
+        );
     }
 
     public function deleteWorkerById(int $id)
     {
-        $this->builder->delete()
-                    ->from(Workers::$table)
-                    ->whereEqual(Workers::$id, ':id', $id)
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+       return $this->repositoryPool->worker()->delete($id);
     }
 
     public function selectDepartmentByName(string $name)
     {
-        $this->builder->select([Departments::$id])
-                ->from(Departments::$table)
-                ->whereEqual(Departments::$name, ':name', $name)
-        ->build();
-
-        $result = $this->db->singleRow();
-        if($result) {
-            return $result[explode('.', Departments::$id)[1]];
-        }
-        return false;
+        return $this->repositoryPool->department()->selectIdByName($name);
     }
 
     public function selectWorkerPersonalInformationById(int $workerId)
     {
-        $this->builder->select([Workers::$id, Workers::$name, Workers::$surname, Workers::$email,
-                                Workers::$position_id, Workers::$role_id, Workers::$gender,
-                                Workers::$age, Workers::$years_of_experience, Workers::$salary,
-                                Workers::$description, WorkersPhoto::$filename])
-            ->from(Workers::$table)
-            ->leftJoin(WorkersPhoto::$table)
-                ->on(Workers::$id, WorkersPhoto::$worker_id)
-            ->whereEqual(Workers::$id, ':id', $workerId)
-            ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->worker()->selectFullWithPhoto($workerId);
     }
 
     public function selectPositionIdNameByWorkerId(int $workerId)
     {
-        $this->builder->select([Positions::$id, Positions::$name])
-            ->from(Positions::$table)
-            ->innerJoin(Workers::$table)
-                ->on(Positions::$id, Workers::$position_id)
-            ->whereEqual(Workers::$id, ':id', $workerId)
-        ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->position()->selectByWorkerId($workerId);
     }
 
     public function selectRoleIdNameByWorkerId(int $workerId)
     {
-        $this->builder->select([Roles::$id, Roles::$name])
-            ->from(Roles::$table)
-            ->innerJoin(Workers::$table)
-                ->on(Roles::$id, Workers::$role_id)
-            ->whereEqual(Workers::$id, ':id', $workerId)
-        ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->role()->selectByWorkerId($workerId);
     }
 
     public function updateWorkerPersonalInfoById(
         int $id, string $name, string $surname, string $email, string $gender,
         int $age, $experience, string $description
     ) {
-        $this->builder->update(Workers::$table)
-                ->set(Workers::$name, ':name', $name)
-                ->andSet(Workers::$surname, ':surname', $surname)
-                ->andSet(Workers::$email, ':email', $email)
-                ->andSet(Workers::$gender, ':gender', $gender)
-                ->andSet(Workers::$age, ':age', $age)
-                ->andSet(Workers::$years_of_experience, ":experience", $experience)
-                ->andSet(Workers::$description, ':description', $description)
-            ->whereEqual(Workers::$id, ':id', $id)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->update(
+            $id, $name, $surname, $email, $gender, $age, $experience, $description
+        );
     }
 
     public function updateWorkerMainPhotoByWorkerId(int $workerId, string $filename)
     {
-        $isMain = 1;
-        $this->builder->update(WorkersPhoto::$table)
-                    ->set(WorkersPhoto::$filename, ':filename', $filename)
-                    ->whereEqual(WorkersPhoto::$worker_id, ':id', $workerId)
-                    ->andEqual(WorkersPhoto::$is_main, ':is_main', $isMain)
-                    ->limit(1)
-            ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->updatePhoto($workerId, $filename);
     }
 
     public function selectWorkerMainPhotoByWorkerId(int $workerId)
     {
-        $isMain = 1;
-        $this->builder->select([WorkersPhoto::$filename])
-                    ->from(WorkersPhoto::$table)
-                    ->whereEqual(WorkersPhoto::$worker_id, ':worker_id', $workerId)
-                    ->andEqual(WorkersPhoto::$is_main, ':is_main', $isMain)
-                ->build();
-
-        $result = $this->db->singleRow();
-        if($result) {
-            // workers_photo.filename -> filename
-            return $result[explode('.', WorkersPhoto::$filename)[1]];
-        }
-        return $result;
+        return $this->repositoryPool->worker()->selectPhoto($workerId);
     }
 
     public function selectWorkerSocialNetworksByWorkerId(int $workerId)
     {
-        $this->builder->select([WorkersSocial::$id, WorkersSocial::$Instagram,
-                WorkersSocial::$TikTok, WorkersSocial::$Facebook, WorkersSocial::$LinkedIn,
-                WorkersSocial::$Github, WorkersSocial::$YouTube, WorkersSocial::$Telegram])
-            ->from(WorkersSocial::$table)
-            ->whereEqual(WorkersSocial::$worker_id, ':worker_id', $workerId)
-        ->build();
-
-        return $this->db->singleRow();
+        return $this->repositoryPool->worker()->selectSocials($workerId);
     }
 
     public function updateWorkerSocialById(int $id, array $data)
     {
-        $this->builder->update(WorkersSocial::$table)
-                ->set(WorkersSocial::$Instagram, ':instagram', $data['Instagram'])
-                ->andSet(WorkersSocial::$Facebook, ':facebook', $data['Facebook'])
-                ->andSet(WorkersSocial::$TikTok, ':tiktok', $data['TikTok'])
-                ->andSet(WorkersSocial::$Telegram, ':telegram', $data['Telegram'])
-                ->andSet(WorkersSocial::$YouTube, ':youtube', $data['YouTube'])
-                ->andSet(WorkersSocial::$LinkedIn, ':linkedin', $data['LinkedIn'])
-                ->andSet(WorkersSocial::$Github, ':github', $data['Github'])
-            ->whereEqual(WorkersSocial::$id, ':id', $id)
-        ->build();
-
-        if ($this->db->affectedRowsCount() > 0) {
-            return true;
-        }
-        return false;
+        return $this->repositoryPool->worker()->updateSocials($id, $data);
     }
 
     public function selectServicesInDepartmentByWorkerId(int $workerId)
     {
-        $this->builder->select([Services::$id, Services::$name])
-                    ->from(Services::$table)
-                    ->innerJoin(Departments::$table)
-                        ->on(Services::$department_id, Departments::$id)
-                    ->innerJoin(Positions::$table)
-                        ->on(Departments::$id, Positions::$department_id)
-                    ->innerJoin(Workers::$table)
-                        ->on(Positions::$id, Workers::$position_id)
-                ->whereEqual(Workers::$id, ':id', $workerId)
-            ->build();
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->service()->selectAllInWorkerDepartment($workerId);
     }
 
     public function selectDepartmentsByWorkerId(int $workerId)
     {
-        $this->builder->select([Departments::$id, Departments::$name])
-                    ->from(Departments::$table)
-                    ->innerJoin(Positions::$table)
-                        ->on(Departments::$id, Positions::$department_id)
-                    ->innerJoin(Workers::$table)
-                        ->on(Positions::$id, Workers::$position_id)
-                    ->whereEqual(Workers::$id, ':id', $workerId)
-            ->build();
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->department()->selectAllInWorkerDepartment($workerId);
     }
 
     public function selectUsersByEmailPart(string $emailPart)
     {
-        $this->builder->select([Users::$id, Users::$email])
-            ->from(Users::$table)
-            ->whereLikeInner(Users::$email, ':email', $emailPart)
-            ->build();
-
-        return $this->db->manyRows();
+        return $this->repositoryPool->user()->selectByEmailPart($emailPart);
     }
 }

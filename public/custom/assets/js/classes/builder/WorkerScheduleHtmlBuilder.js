@@ -10,14 +10,11 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
         userEmail, date, startTime, endTime, address, orderId
     )
     {
-        let userLabel = userId !== null ? 'User: '
+        let userLabel = userId !== null ? ''
             : '<span class="text-success">Available for order!</span>';
 
-        let userLink = userId !== null ? `<span>
-                                                    <a href="#" aria-label="User Email"
-                                                         class="profile-url text-default" target="_blank">
-                                                        ${userEmail}
-                                                    </a>
+        let userLink = userId !== null ? `<span class="width-restricted" title="${userEmail}">
+                                                        ${userEmail} ssssssssssssssssssss
                                                   </span>`
             : '';
 
@@ -50,7 +47,7 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
                     </div>
                     <div class="d-flex align-items-center pt-1 mt-auto
                                card-worker-wrapper">                        
-                        <div>
+                        <div class="full-width-block">
                             <div class="pt-1 pb-1">
                                 <b>                         
                                     ${ID}

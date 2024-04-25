@@ -49,7 +49,7 @@ class UserDataSource extends DataSource
      */
     public function selectUserSocialById(int $userId): array | false
     {
-        return $this->repositoryPool->user()->insertSocials($userId);
+        return $this->repositoryPool->user()->selectSocials($userId);
     }
 
     public function selectUserComingAppointments(
@@ -62,9 +62,9 @@ class UserDataSource extends DataSource
         );
     }
 
-    public function selectWorkerScheduleItemById(int $scheduleId): string | false
+    public function selectWorkerScheduleItemById(int $scheduleId): array | false
     {
-        return $this->repositoryPool->schedule()->select($scheduleId);
+        return $this->repositoryPool->schedule()->selectDetails($scheduleId);
     }
 
     public function selectUserEmailById(int $userId): string | false

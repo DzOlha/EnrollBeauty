@@ -24,7 +24,6 @@ class FormBuilder {
 
         return `<div class="icons-wrapper-right" id="modal-icons-menu">
                     ${_delete}
-                    ${block}
                 </div>`
     }
     createModalForm(modalId) {

@@ -933,7 +933,7 @@ class WorkerApiController extends ApiController
          * the cancellation of their appointment
          */
         $emailSent = UserEmailHelper::sendLetterToInformUserAboutCancellation(
-            $user['email'], $userNameSurname->name, $userNameSurname->surname, $order
+            $user['email'], $userNameSurname['name'], $userNameSurname['surname'], $order
         );
         if ($emailSent !== true) {
             $this->dataMapper->rollBackTransaction();
