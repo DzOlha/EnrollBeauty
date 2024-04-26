@@ -10,7 +10,6 @@ use Src\Helper\Session\SessionHelper;
 use Src\Helper\Trimmer\impl\RequestTrimmer;
 use Src\Model\DataMapper\DataMapper;
 use Src\Model\DTO\Write\AdminWriteDTO;
-use Src\Model\DTO\Write\UserWriteDto;
 use Src\Model\Entity\Roles;
 use Src\Service\Auth\AuthService;
 use Src\Service\Auth\Worker\WorkerAuthService;
