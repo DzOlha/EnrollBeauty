@@ -29,51 +29,51 @@ abstract class DataMapper
         $this->dataSource->rollBackTransaction();
     }
 
-    public function selectUserPasswordByEmail(string $email)
+    public function selectUserPasswordByEmail(string $email): string | false
     {
         return $this->dataSource->selectUserPasswordByEmail($email);
     }
 
     /**
      * @param int $userId
-     * @return UserReadDto|false
+     * @return array|false
      */
-    public function selectUserInfoById(int $userId)
+    public function selectUserInfoById(int $userId) : array | false
     {
         return $this->dataSource->selectUserInfoById($userId);
     }
 
-    public function selectUserIdByEmail(string $email)
+    public function selectUserIdByEmail(string $email): int | false
     {
         return $this->dataSource->selectUserIdByEmail($email);
     }
 
-    public function selectWorkersForService(int $serviceId)
+    public function selectWorkersForService(int $serviceId): array | false
     {
         return $this->dataSource->selectWorkersForService($serviceId);
     }
 
-    public function selectServicesForWorker(int $workerId)
+    public function selectServicesForWorker(int $workerId): array | false
     {
         return $this->dataSource->selectServicesForWorker($workerId);
     }
 
-    public function selectAllServices()
+    public function selectAllServices(): array | false
     {
         return $this->dataSource->selectAllServices();
     }
 
-    public function selectAllWorkers()
+    public function selectAllWorkers(): array | false
     {
         return $this->dataSource->selectAllWorkers();
     }
 
-    public function selectAllAffiliates()
+    public function selectAllAffiliates(): array | false
     {
         return $this->dataSource->selectAllAffiliates();
     }
 
-    public function selectAllDepartments()
+    public function selectAllDepartments(): array | false
     {
         return $this->dataSource->selectAllDepartments();
     }
@@ -130,22 +130,22 @@ abstract class DataMapper
         );
     }
 
-    public function selectDepartmentByServiceId(int $serviceId)
+    public function selectDepartmentByServiceId(int $serviceId): array | false
     {
         return $this->dataSource->selectDepartmentByServiceId($serviceId);
     }
 
-    public function updateServiceOrderCanceledDatetimeById(int $orderId)
+    public function updateServiceOrderCanceledDatetimeById(int $orderId): bool
     {
         return $this->dataSource->updateServiceOrderCanceledDatetimeById($orderId);
     }
 
-    public function updateOrderIdByScheduleId(int $scheduleId)
+    public function updateOrderIdByScheduleId(int $scheduleId): bool
     {
         return $this->dataSource->updateOrderIdByScheduleId($scheduleId);
     }
 
-    public function updateCompletedDatetimeByOrderId(int $orderId)
+    public function updateCompletedDatetimeByOrderId(int $orderId): bool
     {
         return $this->dataSource->updateCompletedDatetimeByOrderId($orderId);
     }

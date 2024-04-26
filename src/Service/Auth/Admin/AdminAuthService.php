@@ -427,6 +427,17 @@ class AdminAuthService extends WorkerAuthService
             }
 
             /**
+             * Select admin status
+             */
+            $status = $this->dataMapper->selectAdminStatus($adminId);
+            if($status === 0) {
+                return [
+                    'error' => 'The requested Admin account is inactive. Please, change the default credentials to yours to be able to login.',
+                    'code' => HttpCode::forbidden()
+                ];
+            }
+
+            /**
              * Redirect the user to the requested page (if such was attempted to be accessed)
              */
             $rememberUrl = SessionHelper::getRememberUrlSession('admin');

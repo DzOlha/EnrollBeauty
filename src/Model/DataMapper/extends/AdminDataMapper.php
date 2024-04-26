@@ -23,6 +23,12 @@ class AdminDataMapper extends WorkerDataMapper
         return $this->dataSource->selectAdminIdByEmail($email);
     }
 
+    public function selectAdminStatus(int $id)
+    {
+        return $this->dataSource->selectAdminStatus($id);
+    }
+
+
     public function insertAdmin(AdminWriteDTO $admin)
     {
         return $this->dataSource->insertAdmin($admin);

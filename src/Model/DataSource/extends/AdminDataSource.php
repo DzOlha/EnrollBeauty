@@ -32,6 +32,11 @@ class AdminDataSource extends WorkerDataSource
         return $this->repositoryPool->admin()->insertSettings($adminId);
     }
 
+    public function selectAdminStatus(int $id)
+    {
+        return $this->repositoryPool->admin()->selectStatus($id);
+    }
+
     public function updateAdmin(AdminWriteDTO $admin)
     {
         return $this->repositoryPool->admin()->update($admin);

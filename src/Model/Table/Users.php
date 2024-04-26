@@ -11,7 +11,6 @@ class Users
     public static string $password = 'users.password';
     public static string $email = 'users.email';
     public static string $created_date = 'users.created_date';
-    public static string $referral_parent_id = 'users.referral_parent_id';
     public static string $last_login_date = 'users.last_login_date';
     public static string $role_id = 'users.role_id';
 }

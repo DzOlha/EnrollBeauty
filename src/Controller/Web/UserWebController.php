@@ -62,7 +62,7 @@ class UserWebController extends WebController
      * url = /web/user/profile/...
      *         0    1       2
      */
-    protected function profile()
+    public function profile()
     {
 //        if(!isset($this->url[3]) && isset($_GET['user_id']) && $_GET['user_id'] !== '') {
 //            if(SessionHelper::getAdminSession() || SessionHelper::getWorkerSession()) {

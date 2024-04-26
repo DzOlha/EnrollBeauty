@@ -849,7 +849,7 @@ class WorkerApiController extends ApiController
         ];
         if ($user['user_id'] !== null) {
             /**
-             * @var UserReadDto $userNameSurname
+             * @var array $userNameSurname
              */
             $userNameSurname = $this->dataMapper->selectUserInfoById($user['user_id']);
             if ($userNameSurname === false) {

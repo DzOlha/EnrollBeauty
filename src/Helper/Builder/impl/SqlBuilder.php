@@ -12,7 +12,7 @@ class SqlBuilder implements IBuilder
     private array $placeholders;
     private IDatabase $database;
 
-    protected array $balcklist = [
+    private array $balcklist = [
         'DROP', 'UPDATE', 'INSERT', 'TABLE',
         'drop', 'update', 'insert', 'table'
     ];

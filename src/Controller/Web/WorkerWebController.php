@@ -13,15 +13,9 @@ use Src\Service\Auth\Worker\WorkerAuthService;
 
 class WorkerWebController extends WebController
 {
-    protected AuthService $authService;
-
-    /**
-     * @param ?AuthService $authService
-     */
-    public function __construct(array $url, AuthService $authService = null)
+    public function __construct(array $url)
     {
         parent::__construct($url);
-        $this->authService = $authService ?? new WorkerAuthService($this->dataMapper);
     }
 
     public function getTypeDataMapper(): WorkerDataMapper

@@ -99,10 +99,24 @@ class AdminRepository extends Repository
             ->andSet(Admins::$email, ':email', $admin->getEmail())
             ->andSet(Admins::$password, ':password', $admin->getPasswordHash())
             ->andSet(Admins::$status, ':status', $admin->getStatus())
-            ->build();
+        ->build();
 
         if ($this->db->affectedRowsCount() > 0) {
             return true;
+        }
+        return false;
+    }
+
+    public function selectStatus(int $id): int | false
+    {
+        $this->builder->select([Admins::$status])
+                ->from(Admins::$table)
+                ->whereEqual(Admins::$id, ':id', $id)
+        ->build();
+
+        $result = $this->db->singleRow();
+        if($result) {
+            return $result[explode('.', Admins::$status)[1]];
         }
         return false;
     }

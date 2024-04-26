@@ -169,26 +169,6 @@ class ServicePricingRepository extends Repository
         return $this->_appendTotalRowsCount($queryFrom, $result, $params);
     }
 
-    public function selectIdByWorkerService(
-        int $workerId, int $serviceId
-    ): int | false
-    {
-        $this->builder->select([WorkersServicePricing::$id])
-            ->from(WorkersServicePricing::$table)
-            ->whereEqual(WorkersServicePricing::$worker_id, ':worker_id', $workerId)
-            ->andEqual(WorkersServicePricing::$service_id, ':service_id', $serviceId)
-            ->build();
-
-        $result = $this->db->singleRow();
-        if($result) {
-            /**
-             * workers_service_pricing.id -> id
-             */
-            return $result[explode('.', WorkersServicePricing::$id)[1]];
-        }
-        return $result;
-    }
-
     public function update(
         int $workerId, int $serviceId, $price
     ): bool

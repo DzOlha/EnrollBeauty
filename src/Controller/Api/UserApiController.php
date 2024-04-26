@@ -378,7 +378,7 @@ class UserApiController extends ApiController
     {
         $userId = $this->_getUserId();
         /**
-         * @var UserReadDto|false $result
+         * @var array|false $result
          */
         $result = $this->dataMapper->selectUserInfoById($userId);
 

@@ -61,7 +61,7 @@ class UserRepository extends Repository
 
     /**
      * @param int $id
-     * @return UserReadDto|false
+     * @return array | false
      *
      * [ 'id' =>, 'name' =>, 'surname' =>, 'email' =>, 'filename' => ]
      */
@@ -69,7 +69,7 @@ class UserRepository extends Repository
     {
         $this->builder->select(
             [Users::$id, Users::$name, Users::$surname,
-             Users::$email, UsersPhoto::$name]
+             Users::$email, UsersPhoto::$filename]
         )
             ->from(Users::$table)
             ->leftJoin(UsersPhoto::$table)
@@ -218,7 +218,7 @@ class UserRepository extends Repository
 
     public function selectPhoto(int $id): string | false
     {
-        $this->builder->select([UsersPhoto::$name])
+        $this->builder->select([UsersPhoto::$filename])
             ->from(UsersPhoto::$table)
             ->whereEqual(UsersPhoto::$user_id, ':user_id', $id)
             ->andEqual(UsersPhoto::$is_main, ':is_main', 1)
@@ -228,7 +228,7 @@ class UserRepository extends Repository
 
         if($result) {
             // users_photo.filename -> filename
-            return $result[explode('.', UsersPhoto::$name)[1]];
+            return $result[explode('.', UsersPhoto::$filename)[1]];
         }
         return $result;
     }
@@ -236,7 +236,7 @@ class UserRepository extends Repository
     public function updatePhoto(int $id, string $filename): bool
     {
         $this->builder->update(UsersPhoto::$table)
-            ->set(UsersPhoto::$name, ':filename', $filename)
+            ->set(UsersPhoto::$filename, ':filename', $filename)
             ->whereEqual(UsersPhoto::$user_id, ':user_id', $id)
             ->andEqual(UsersPhoto::$is_main, ':is_main', 1)
         ->build();

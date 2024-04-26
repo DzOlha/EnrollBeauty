@@ -325,7 +325,7 @@ class WorkerDataSource extends DataSource
     public function selectPriceIdByWorkerIdServiceId(
         int $workerId, int $serviceId
     ) {
-        return $this->repositoryPool->servicePricing()->selectIdByWorkerService(
+        return $this->repositoryPool->servicePricing()->selectIdByWorkerAndService(
             $workerId, $serviceId
         );
     }

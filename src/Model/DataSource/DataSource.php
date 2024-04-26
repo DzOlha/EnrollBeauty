@@ -12,16 +12,12 @@ use Src\Model\Repository\Pool\IRepositoryPool;
 abstract class DataSource
 {
     protected ?IDatabase $db = null;
-    protected IBuilder $builder;
     protected IRepositoryPool $repositoryPool;
 
     /**
      * @param IDatabase $db
      * @param IBuilder|null $builder
-     * @param array|null $repositoryPool =
-     * ['user' => UserRepository,
-     *  'position' => PositionRepository
-     * ]
+     * @param IRepositoryPool|null $repositoryPool
      */
     public function __construct(
         IDatabase $db, IBuilder $builder = null,
@@ -30,8 +26,8 @@ abstract class DataSource
         if (!$this->db) {
             $this->db = $db;
         }
-        $this->builder = $builder ?? new SqlBuilder($this->db);
-        $this->repositoryPool = $repositoryPool ?? new RepositoryPool();
+        $this->repositoryPool = $repositoryPool ??
+            new RepositoryPool($this->db, $builder ?? new SqlBuilder($this->db));
     }
 
     public function setRepositoryPool(IRepositoryPool $pool): void
@@ -52,72 +48,6 @@ abstract class DataSource
     public function rollBackTransaction(): void
     {
         $this->db->rollBackTransaction();
-    }
-
-    protected function _getTotalRowsCountQuery(
-        string $queryFrom, array $toBind
-    ) {
-        $this->db->query(
-            "SELECT COUNT(*) as totalRowsCount FROM $queryFrom"
-        );
-        $this->db->bindAll($toBind);
-
-        $result = $this->db->singleRow();
-        if($result) {
-            return $result['totalRowsCount'];
-        } else {
-            return false;
-        }
-    }
-    protected function _getTotalSumQuery(
-        string $queryFrom, string $columnName, array $toBind
-    ){
-        $this->db->query(
-            "SELECT SUM($columnName) as totalSum FROM $queryFrom"
-        );
-        $this->db->bindAll($toBind);
-
-        $result = $this->db->singleRow();
-
-        if ($result && isset($result['totalSum'])) {
-            return $result['totalSum'];
-        } else {
-            return false;
-        }
-    }
-    protected function _appendTotalRowsCount(
-        string $queryFrom, array $result, array $toBind = []
-    ) {
-        if($result) {
-            $totalRowsCount = $this->_getTotalRowsCountQuery($queryFrom, $toBind);
-            if($totalRowsCount !== false) {
-                $result += [
-                    'totalRowsCount' => $totalRowsCount
-                ];
-                return $result;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-    protected function _appendTotalRowsSum(
-        string $queryFrom, array $result, string $columnName, array $toBind = []
-    ) {
-        if($result) {
-            $totalRowsCount = $this->_getTotalSumQuery($queryFrom, $columnName, $toBind);
-            if($totalRowsCount !== false) {
-                $result += [
-                    'totalSum' => $totalRowsCount
-                ];
-                return $result;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 
     public function selectUserPasswordByEmail(string $email): string | false
