@@ -68,23 +68,6 @@
         </div>
     </div>
     <div class="form-group">
-        <p class="mg-b-0" id="Github-label">
-            Github
-        </p>
-        <div class="input-group mb-3">
-            <div class="social-input-wrapper">
-                <a href="#" target="_blank" class="icon tooltip-top" id="icon-github-input">
-                    <i class="fa fa-github"></i>
-                </a>
-                <input name="Github" type="text" placeholder="Link to your Github profile" autocomplete="off"
-                       data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                       class="form-control" id="github-input" aria-label="Github input"
-                       aria-labelledby="Github-label">
-            </div>
-            <div class="error text-danger" id="github-input-error"></div>
-        </div>
-    </div>
-    <div class="form-group">
         <p class="mg-b-0" id="Telegram-label">
             Telegram
         </p>

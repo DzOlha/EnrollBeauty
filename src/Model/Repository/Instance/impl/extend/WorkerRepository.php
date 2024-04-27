@@ -197,7 +197,7 @@ class WorkerRepository extends Repository
      * [ id =>, name =>, surname =>, email =>, description =>,
      *  age =>, years_of_experience =>, position =>, filename =>,
      *  Instagram =>, TikTok =>, LinkedIn =>, Facebook =>,
-     *  Github =>, Telegram =>, YouTube =>]
+     *  Telegram =>, YouTube =>]
      */
     public function selectPublicProfile(int $id): array | false
     {
@@ -206,8 +206,7 @@ class WorkerRepository extends Repository
                                 Workers::$years_of_experience, Positions::$name, WorkersPhoto::$filename,
                                 WorkersSocial::$Instagram, WorkersSocial::$TikTok,
                                 WorkersSocial::$LinkedIn, WorkersSocial::$Facebook,
-                                WorkersSocial::$Github, WorkersSocial::$Telegram,
-                                WorkersSocial::$YouTube],
+                                WorkersSocial::$Telegram, WorkersSocial::$YouTube],
             [Positions::$name => 'position'])
             ->from(Workers::$table)
             ->innerJoin(Positions::$table)
@@ -231,7 +230,7 @@ class WorkerRepository extends Repository
      *      0 => [ id =>, name =>, surname =>, email =>, description =>,
      *             age =>, years_of_experience =>, position =>, filename =>,
      *             Instagram =>, TikTok =>, LinkedIn =>, Facebook =>,
-     *             Github =>, Telegram =>, YouTube =>]
+     *             Telegram =>, YouTube =>]
      * .......................................................................
      * ]
      */
@@ -242,8 +241,7 @@ class WorkerRepository extends Repository
                                 Workers::$years_of_experience, Positions::$name, WorkersPhoto::$filename,
                                 WorkersSocial::$Instagram, WorkersSocial::$TikTok,
                                 WorkersSocial::$LinkedIn, WorkersSocial::$Facebook,
-                                WorkersSocial::$Github, WorkersSocial::$Telegram,
-                                WorkersSocial::$YouTube],
+                                WorkersSocial::$Telegram, WorkersSocial::$YouTube],
             [Positions::$name => 'position'])
             ->from(Workers::$table)
             ->innerJoin(Positions::$table)
@@ -660,13 +658,13 @@ class WorkerRepository extends Repository
 
     /**
      * [ id =>, Instagram =>, TikTok =>, Facebook =>,
-     *   LinkedIn =>, Github =>, YouTube =>, Telegram => ]
+     *   LinkedIn =>, YouTube =>, Telegram => ]
      */
     public function selectSocials(int $workerId): array | false
     {
         $this->builder->select([WorkersSocial::$id, WorkersSocial::$Instagram,
                                 WorkersSocial::$TikTok, WorkersSocial::$Facebook, WorkersSocial::$LinkedIn,
-                                WorkersSocial::$Github, WorkersSocial::$YouTube, WorkersSocial::$Telegram])
+                                WorkersSocial::$YouTube, WorkersSocial::$Telegram])
             ->from(WorkersSocial::$table)
             ->whereEqual(WorkersSocial::$worker_id, ':worker_id', $workerId)
         ->build();
@@ -683,7 +681,6 @@ class WorkerRepository extends Repository
             ->andSet(WorkersSocial::$Telegram, ':telegram', $data['Telegram'])
             ->andSet(WorkersSocial::$YouTube, ':youtube', $data['YouTube'])
             ->andSet(WorkersSocial::$LinkedIn, ':linkedin', $data['LinkedIn'])
-            ->andSet(WorkersSocial::$Github, ':github', $data['Github'])
             ->whereEqual(WorkersSocial::$id, ':id', $id)
         ->build();
 

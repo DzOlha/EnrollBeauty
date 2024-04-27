@@ -20,7 +20,6 @@ class EditWorkerSocialNetworks
         this.tikTokId = 'tikTok-input';
         this.linkedInId = 'linkedIn-input';
         this.facebookId = 'facebook-input';
-        this.githubId = 'github-input';
         this.telegramId = 'telegram-input';
         this.youTubeId = 'youTube-input';
 
@@ -126,16 +125,6 @@ class EditWorkerSocialNetworks
         this.addListenerInputEnd(this.facebookId);
 
         /**
-         * Github
-         */
-        $(`#${this.githubId}`).val(
-            (data.Github !== null && data.Github !== '')
-                ? CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Github + data.Github
-                : ''
-        );
-        this.addListenerInputEnd(this.githubId);
-
-        /**
          * Telegram
          */
         $(`#${this.telegramId}`).val(
@@ -226,11 +215,10 @@ class EditWorkerSocialNetworks
         let tiktok = this.validateSocialNetworkLink(this.tikTokId);
         let youtube = this.validateSocialNetworkLink(this.youTubeId);
         let linkedin = this.validateSocialNetworkLink(this.linkedInId);
-        let github = this.validateSocialNetworkLink(this.githubId);
         let telegram = this.validateSocialNetworkLink(this.telegramId);
 
         if(instagram !== false && facebook !== false && tiktok !== false && youtube !== false
-            && linkedin !== false && github !== false && telegram !== false)
+            && linkedin !== false && telegram !== false)
         {
             return {
                 'Instagram': instagram,
@@ -238,7 +226,6 @@ class EditWorkerSocialNetworks
                 'TikTok': tiktok,
                 'YouTube': youtube,
                 'LinkedIn': linkedin,
-                'Github': github,
                 'Telegram': telegram
             }
         }

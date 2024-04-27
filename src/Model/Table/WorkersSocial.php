@@ -10,7 +10,6 @@ class WorkersSocial
     public static string $Instagram = 'workers_social.Instagram';
     public static string $LinkedIn = 'workers_social.LinkedIn';
     public static string $Facebook = 'workers_social.Facebook';
-    public static string $Github = 'workers_social.Github';
     public static string $Telegram = 'workers_social.Telegram';
     public static string $YouTube = 'workers_social.YouTube';
     public static string $TikTok = 'workers_social.TikTok';

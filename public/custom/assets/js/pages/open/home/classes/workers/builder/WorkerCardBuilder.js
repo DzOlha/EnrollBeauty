@@ -45,7 +45,6 @@ class WorkerCardBuilder
                                 ${socials.tiktok}
                                 ${socials.linkedin}
                                 ${socials.facebook}
-                                ${socials.github}
                                 ${socials.telegram}
                                 ${socials.youtube}
                             </ul>

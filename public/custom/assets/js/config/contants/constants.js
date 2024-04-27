@@ -21,7 +21,7 @@ const CONST = {
         TikTok: 'https://www.tiktok.com/',
         YouTube: 'https://youtube.com/',
         LinkedIn: 'https://www.linkedin.com/',
-        Github: 'https://github.com/',
+        // Github: 'https://github.com/',
         Telegram: 'https://t.me/'
     },
 
@@ -32,7 +32,7 @@ const CONST = {
         TikTok: /^https:\/\/www\.tiktok\.com\/@[\w.-]+(\?_t=.+)?$/,
         YouTube: /^https:\/\/youtube\.com\/@[\w.-]+(?:\?si=[a-zA-Z0-9_-]+)?$/,
         LinkedIn: /^https:\/\/www\.linkedin\.com\/in\/[a-zA-Z0-9_-]+(\?.*)?$/,
-        Github: /^https:\/\/github\.com\/[a-zA-Z0-9-]+$/,
+        // Github: /^https:\/\/github\.com\/[a-zA-Z0-9-]+$/,
         Telegram:  /^https:\/\/t\.me\/[a-zA-Z0-9_]+$/
     }
 }

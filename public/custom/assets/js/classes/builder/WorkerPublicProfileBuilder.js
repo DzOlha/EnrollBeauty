@@ -55,7 +55,6 @@ class WorkerPublicProfileBuilder
                                             ${socials.tiktok}
                                             ${socials.linkedin}
                                             ${socials.facebook}
-                                            ${socials.github}
                                             ${socials.telegram}
                                             ${socials.youtube}
                                         </ul>
@@ -109,16 +108,6 @@ class WorkerPublicProfileBuilder
                                    </li>`
                                 : '';
 
-        let github = worker.Github !== null
-                                ? `<li>
-                                        <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Github}${worker.Github}" 
-                                        target="_blank" class="${tooltipPlace}" ${dataTooltip}="Github"
-                                        aria-label="Github">
-                                            <i class="fa fa-github"></i>
-                                        </a>
-                                   </li>`
-                                : '';
-
         let telegram = worker.Telegram !== null
                                 ? `<li>
                                         <a href="${CONST.WORKER_SOCIAL_NETWORKS_ROOT_URLS.Telegram}${worker.Telegram}" 
@@ -144,7 +133,6 @@ class WorkerPublicProfileBuilder
             tiktok: tiktok,
             linkedin: linkedin,
             facebook: facebook,
-            github: github,
             telegram: telegram,
             youtube: youtube
         }

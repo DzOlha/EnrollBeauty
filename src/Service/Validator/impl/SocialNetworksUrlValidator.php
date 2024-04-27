@@ -10,7 +10,6 @@ class SocialNetworksUrlValidator
         'TikTok' => '/^https:\/\/www\.tiktok\.com\/@[\w.-]+(\?_t=.+)?$/',
         'YouTube' => '/^https:\/\/youtube\.com\/@[\w.-]+(?:\?si=[a-zA-Z0-9_-]+)?$/',
         'LinkedIn' => '/^https:\/\/www\.linkedin\.com\/in\/[a-zA-Z0-9_-]+(\?.*)?$/',
-        'Github' => '/^https:\/\/github\.com\/[a-zA-Z0-9-]+$/',
         'Telegram' => '/^https:\/\/t\.me\/[a-zA-Z0-9_]+$/',
     ];
 
@@ -21,7 +20,6 @@ class SocialNetworksUrlValidator
      *      'TikTok' => tiktok profile url,
      *      'YouTube' => youtube profile url,
      *      'LinkedIn' => linkedin profile url,
-     *      'Github' => github profile url,
      *      'Telegram' => telegram profile url
      * ]
      * @return string|bool

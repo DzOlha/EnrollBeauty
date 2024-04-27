@@ -113,7 +113,6 @@ CREATE TABLE workers_social (
     Instagram VARCHAR(255),
     LinkedIn VARCHAR(255),
     Facebook VARCHAR(255),
-    Github VARCHAR(255),
     Telegram VARCHAR(255),
     YouTube VARCHAR(255),
     TikTok VARCHAR(255),
