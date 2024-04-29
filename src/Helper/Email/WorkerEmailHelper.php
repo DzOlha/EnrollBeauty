@@ -4,6 +4,7 @@ namespace Src\Helper\Email;
 
 use Src\Service\Sender\impl\email\EmailSender;
 use Src\Service\Sender\impl\email\model\Email;
+use Src\Service\Sender\impl\email\services\impl\BrevoService;
 use Src\Service\Sender\impl\email\services\impl\MailgunService;
 
 class WorkerEmailHelper
@@ -27,7 +28,7 @@ class WorkerEmailHelper
         $recoveryUrl = static::_createRecoveryLink($recoveryCode);
         $email->populateWorkerWelcomeLetter($recoveryUrl, $name, $surname);
 
-        $sender = new EmailSender($email, new MailgunService());
+        $sender = new EmailSender($email, new BrevoService());
 
         return $sender->send();
     }

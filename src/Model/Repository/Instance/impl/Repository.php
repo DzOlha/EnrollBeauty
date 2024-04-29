@@ -50,7 +50,7 @@ class Repository implements IRepository
     }
     protected function _selectTotalSum(
         string $queryFrom, string $columnName, array $toBind
-    ): int | false
+    ): float | false
     {
         $this->db->query(
             "SELECT SUM($columnName) as totalSum FROM $queryFrom"

@@ -4,7 +4,7 @@ namespace Src\Helper\Email;
 
 use Src\Service\Sender\impl\email\EmailSender;
 use Src\Service\Sender\impl\email\model\Email;
-use Src\Service\Sender\impl\email\services\impl\MailgunService;
+use Src\Service\Sender\impl\email\services\impl\BrevoService;
 
 class UserEmailHelper
 {
@@ -32,7 +32,7 @@ class UserEmailHelper
             'Visit my account!'
         );
 
-        $sender = new EmailSender($email, new MailgunService());
+        $sender = new EmailSender($email, new BrevoService());
 
         return $sender->send();
     }
@@ -56,7 +56,7 @@ class UserEmailHelper
         $profileUrl = static::_createLinkToLogin();
         $email->populateUserWelcomeLetter($profileUrl, $name, $surname);
 
-        $sender = new EmailSender($email, new MailgunService());
+        $sender = new EmailSender($email, new BrevoService());
 
         return $sender->send();
     }
@@ -84,7 +84,7 @@ class UserEmailHelper
             'Visit my account!'
         );
 
-        $sender = new EmailSender($email, new MailgunService());
+        $sender = new EmailSender($email, new BrevoService());
 
         return $sender->send();
     }

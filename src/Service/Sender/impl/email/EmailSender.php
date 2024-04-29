@@ -27,15 +27,15 @@ class EmailSender implements Sender
 //            return $this->_sentByAlternateMailer($debug);
 //        }
 
-        //$result = $this->service->sendEmail($this->email, $debug);
+        $result = $this->service->sendEmail($this->email, $debug);
 
         /**
          * If the first attempt with the selected mailer was failed
          */
-        //if($result !== true) {
-        return $this->_sentByAlternateMailer($debug);
-        //}
-        //return true;
+        if($result !== true) {
+            return $this->_sentByAlternateMailer($debug);
+        }
+        return true;
     }
 
     private function _sentByAlternateMailer($debug)
