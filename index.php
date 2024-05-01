@@ -1,3 +1,3 @@
 <?php
     require_once 'vendor/autoload.php';
-    require_once 'require.php';
+    require_once 'config/require.php';

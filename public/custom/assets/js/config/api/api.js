@@ -309,9 +309,6 @@ const API = {
             WORKER: {
                 profile: '/web/open/worker/profile'
             },
-            USER: {
-                profile: '/web/open/user/profile'
-            }
         },
         API: {
             WORKER: {

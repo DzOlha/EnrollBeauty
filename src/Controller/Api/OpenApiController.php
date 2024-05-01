@@ -76,7 +76,7 @@ class OpenApiController extends ApiController
                 if($this->url[4] === 'services') {
                     if(isset($this->url[5])) {
                         /**
-                         *  url = /api/user/worker/get/services/all
+                         *  url = /api/open/worker/get/services/all
                          */
                         if($this->url[5] === 'all') {
                             $this->_getServicesForWorker();

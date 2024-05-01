@@ -1,0 +1,8 @@
+.tiktok-icon
+{
+    fill: var(--light-b-color);
+    width: 16px;
+}
+.tiktok-icon:hover {
+    fill: white;
+}

@@ -2,11 +2,16 @@
   Options -Multiviews
   RewriteEngine On
   RewriteBase /
+
+  # Deny access to the files with the specific extensions
+  RewriteCond %{REQUEST_URI} \.(json|gitignore|xml|lock|js|htaccess)$ [NC]
+  RewriteRule ^ - [F]
+
+  # Deny access to the folders: public, src, test, config, vendor, logs
+  RewriteCond %{REQUEST_URI} ^/(public|src|test|config|vendor|logs)/ [NC]
+  RewriteRule ^ - [F]
+
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule  ^(.+)$ ?url=$1 [QSA,L]
 </IfModule>
-<FilesMatch "\.js$">
-  ForceType application/javascript
-  Header set Content-Type "application/javascript"
-</FilesMatch>

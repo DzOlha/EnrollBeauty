@@ -1,5 +1,5 @@
 <?php require_once VIEW_OPEN_BLOCKS."/header/head.php"?>
-
+<link rel="stylesheet" href="/<?=CUSTOM_ASSETS?>/css/pages/open/pages/worker_profile/worker_profile.css">
 <body>
 
 <!--page start-->

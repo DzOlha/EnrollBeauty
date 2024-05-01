@@ -25,6 +25,8 @@ class ApiController extends AbstractController
 
     public function returnJson(array $array, int $code = 200): void
     {
+        header('Content-Type: application/json');
+        
         if(array_key_exists('code', $array))
         {
             http_response_code($array['code']);

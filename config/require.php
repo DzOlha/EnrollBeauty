@@ -3,15 +3,14 @@ namespace Src;
 
 session_start(); //session_destroy will be in the logout UserController
 use Src\Router\extends\Router;
-use Src\Router\extends\Web\WebRouter;
 
 //Set the character encoding for HTML output
 header('Content-Type: text/html; charset=UTF-8');
 
 // Set the internal character encoding for multibyte string functions
-mb_internal_encoding('UTF-8');
+//mb_internal_encoding('UTF-8');
 
-//set defaul timezone
+//set default timezone
 date_default_timezone_set('Europe/Kiev');
 
 ini_set('max_execution_time', 100000);
@@ -46,5 +45,4 @@ require_once CONFIG . '/api/api.php';
 require_once CONFIG . '/credentials/db_credentials.php';
 
 $router = new Router();
-$url = $router->getUrl();
 $router->route();

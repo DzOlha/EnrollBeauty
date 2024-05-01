@@ -3,3 +3,4 @@
 /logs/
 /public/custom/assets/img/uploads/
 /config/credentials/
+/config/api/api_.php

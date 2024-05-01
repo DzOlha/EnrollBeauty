@@ -28,24 +28,4 @@ class OpenWebController extends WebController
             }
         }
     }
-
-    /**
-     * @return void
-     *
-     * /web/open/user/....
-     */
-    public function user()
-    {
-        if (isset($this->url[3])) {
-            /**
-             * url = /web/open/user/profile
-             */
-            if ($this->url[3] === 'profile') {
-                $this->view(
-                    USER_PAGES['public_profile']['path'],
-                    USER_PAGES['public_profile']['data']
-                );
-            }
-        }
-    }
 }

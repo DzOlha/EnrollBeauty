@@ -187,7 +187,7 @@ const API = [
             ],
             'DEPARTMENT' => [
                 'get' => [ // GET
-                           'all'           => ' /api/worker/department/get/all',
+                           'all'           => '/api/worker/department/get/all',
                            'all-by-worker' => '/api/worker/department/get/all-by-worker',
                 ]
             ],
@@ -225,7 +225,7 @@ const API = [
                 'get' => '/api/admin/profile/get' // GET
             ],
             'WORKER'     => [
-                'edit'     => '/api/admin/worker/edit', // POST
+                'edit'     => '/api/admin/worker/edit', // PUT
                 'delete'   => '/api/admin/worker/delete', // DELETE
                 'get'      => [ // GET
                                 'one'               => '/api/admin/worker/get/one',
@@ -309,9 +309,6 @@ const API = [
         'WEB' => [
             'WORKER' => [
                 'profile' => '/web/open/worker/profile/{name-surname-id}'
-            ],
-            'USER'   => [
-                'profile' => '/web/open/user/profile'
             ]
         ],
         'API' => [

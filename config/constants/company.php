@@ -9,12 +9,12 @@ const COMPANY = [
     'url_https' => 'http://enrollbeauty',
     'ngrok_tunnel' => '',
     'socials' => [
-        'Instagram' => '#',
-        'TikTok' => '#',
-        'YouTube' => '#',
-        'Telegram' => '#',
-        'Facebook' => '#',
-        'Twitter' => '#',
-        'Linkedin' => '#',
+        'Instagram' => '/',
+        'TikTok' => '/',
+        'YouTube' => '/',
+        'Telegram' => '/',
+        'Facebook' => '/',
+        'Twitter' => '/',
+        'Linkedin' => '/',
     ]
 ];
