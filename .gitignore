@@ -4,3 +4,4 @@
 /public/custom/assets/img/uploads/
 /config/credentials/
 /config/api/api_.php
+/.phpunit.result.cache
