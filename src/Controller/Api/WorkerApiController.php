@@ -1753,7 +1753,7 @@ class WorkerApiController extends ApiController
         }
         if (!$validator->validate($items['service_name'])) {
             $this->returnJson([
-                'error' => 'Service name should be between 3-100 characters long and contain only letters with whitespaces!'
+                'error' => 'Service name should be between 3-100 characters long and contain only letters with whitespaces and dashes!'
             ], HttpCode::unprocessableEntity());
         }
     }
@@ -2167,7 +2167,7 @@ class WorkerApiController extends ApiController
         $validName = $nameValidator->validate($items['name']);
         if (!$validName) {
             return [
-                'error' => 'Name must be between 3-50 characters long and contain only letters'
+                'error' => 'Name must be between 3-50 characters long and contain only letters with dashes'
             ];
         }
 
@@ -2177,7 +2177,7 @@ class WorkerApiController extends ApiController
         $validSurname = $nameValidator->validate($items['surname']);
         if (!$validSurname) {
             return [
-                'error' => 'Surname must be between 3-50 characters long and contain only letters'
+                'error' => 'Surname must be between 3-50 characters long and contain only letters with dashes'
             ];
         }
 

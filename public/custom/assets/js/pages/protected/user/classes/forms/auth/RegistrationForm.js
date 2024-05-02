@@ -113,11 +113,11 @@ class RegistrationForm extends Form {
 
         formMessages[this.nameInputId] = {
             required: 'Please enter your name',
-            pattern: 'Name must be between 3-50 characters long and contain only letters'
+            pattern: 'Name must be between 3-50 characters long and contain only letters with dashes'
         };
         formMessages[this.surnameInputId] = {
             required: 'Please enter your surname',
-            pattern: 'Surname must be between 3-50 characters long and contain only letters'
+            pattern: 'Surname must be between 3-50 characters long and contain only letters with dashes'
         };
         formMessages[this.emailInputId] = {
             required: 'Please enter your email address',

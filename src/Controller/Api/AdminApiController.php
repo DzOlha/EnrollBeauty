@@ -739,7 +739,7 @@ class AdminApiController extends WorkerApiController
         $validator = new NameValidator(3, 50, true);
         if (!$validator->validate($items['position_name']) < 3) {
             $this->returnJson([
-                'error' => 'Position name should be between 3-50 characters and contain only letters with whitespaces!'
+                'error' => 'Position name should be between 3-50 characters and contain only letters with whitespaces and dashes!'
             ], HttpCode::unprocessableEntity());
         }
     }
@@ -1267,7 +1267,7 @@ class AdminApiController extends WorkerApiController
         $validator = new NameValidator(3, 50, true);
         if(!$validator->validate($items['name'])) {
             $this->returnJson([
-                'error' => 'Department name should be between 3-50 characters long and contain only letters with whitespaces!'
+                'error' => 'Department name should be between 3-50 characters long and contain only letters with whitespaces and dashes!'
             ], HttpCode::unprocessableEntity());
         }
 
@@ -1777,17 +1777,17 @@ class AdminApiController extends WorkerApiController
         $validator = new NameValidator(3, 100, true);
         if(!$validator->validate($items['name'])) {
             $this->returnJson([
-                'error' => 'Affiliate name should be equal length between 3-100 characters and contain only letters and whitespaces!'
+                'error' => 'Affiliate name should be equal length between 3-100 characters and contain only letters with whitespaces and dashes!'
             ], HttpCode::unprocessableEntity());
         }
 
         /**
          * Validate country
          */
-        $validator = new NameValidator(3, 50);
+        $validator = new NameValidator(3, 50, true);
         if(!$validator->validate($items['country'])) {
             $this->returnJson([
-                'error' => 'Invalid country name format! It must not contain any digits or special chars and has length between 3-50 characters'
+                'error' => 'Invalid country name format! It must not contain any digits or special chars, except whitespaces and dashes, and has length between 3-50 characters'
             ], HttpCode::unprocessableEntity());
         }
 

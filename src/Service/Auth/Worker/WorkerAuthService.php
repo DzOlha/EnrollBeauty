@@ -39,7 +39,7 @@ class WorkerAuthService extends AuthService
         $validName = $nameValidator->validate($items['name']);
         if (!$validName) {
             return [
-                'error' => 'Name must be between 3-50 characters long and contain only letters',
+                'error' => 'Name must be between 3-50 characters long and contain only letters with dashes',
             ];
         }
 
@@ -49,7 +49,7 @@ class WorkerAuthService extends AuthService
         $validSurname = $nameValidator->validate($items['surname']);
         if (!$validSurname) {
             return [
-                'error' => 'Surname must be between 3-50 characters long and contain only letters',
+                'error' => 'Surname must be between 3-50 characters long and contain only letters with dashes',
             ];
         }
 

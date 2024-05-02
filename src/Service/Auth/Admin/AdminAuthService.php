@@ -82,7 +82,7 @@ class AdminAuthService extends WorkerAuthService
         $validName = $nameValidator->validate($admin['name']);
         if (!$validName) {
             return [
-                'error' => 'Name must be at least 3 characters long and contain only letters',
+                'error' => 'Name must be between 3-50 characters long and contain only letters with dashes',
                 'code' => HttpCode::unprocessableEntity()
             ];
         }
@@ -93,7 +93,7 @@ class AdminAuthService extends WorkerAuthService
         $validSurname = $nameValidator->validate($admin['surname']);
         if (!$validSurname) {
             return [
-                'error' => 'Surname must be at least 3 characters long and contain only letters',
+                'error' => 'Surname must be between 3-50 characters long and contain only letters with dashes',
                 'code' => HttpCode::unprocessableEntity()
             ];
         }
@@ -233,7 +233,7 @@ class AdminAuthService extends WorkerAuthService
             $validName = $nameValidator->validate($admin['name']);
             if (!$validName) {
                 return [
-                    'error' => 'Name must be at least 3 characters long and contain only letters',
+                    'error' => 'Name must be between 3-50 characters long and contain only letters with dashes',
                     'code' => HttpCode::unprocessableEntity()
                 ];
             }
@@ -244,7 +244,7 @@ class AdminAuthService extends WorkerAuthService
             $validSurname = $nameValidator->validate($admin['surname']);
             if (!$validSurname) {
                 return [
-                    'error' => 'Surname must be at least 3 characters long and contain only letters',
+                    'error' => 'Surname must be between 3-50 characters long and contain only letters with dashes',
                     'code' => HttpCode::unprocessableEntity()
                 ];
             }

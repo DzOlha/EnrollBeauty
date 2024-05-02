@@ -1,7 +1,8 @@
 <?php
 namespace Src;
+//session_set_cookie_params(3600);
+session_start();
 
-session_start(); //session_destroy will be in the logout UserController
 use Src\Router\extends\Router;
 
 //Set the character encoding for HTML output

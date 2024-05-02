@@ -84,7 +84,7 @@ class AddServiceForm extends Form {
 
         let pattern = new NameRegex(3, 100, true);
         if(!pattern.test(value)) {
-            result.error = "Service name should be between 3-100 characters long and contain only letters with whitespaces!";
+            result.error = "Service name should be between 3-100 characters long and contain only letters with whitespaces and dashes!";
             return result;
         }
 

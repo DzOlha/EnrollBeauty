@@ -242,7 +242,7 @@ class AddWorkerForm extends Form {
 
         let pattern = new NameRegex();
         if(!pattern.test(value)) {
-            result.error = "Name must be between 3-50 characters long and contain only letters"
+            result.error = "Name must be between 3-50 characters long and contain only letters with dashes"
         }
 
         return result;
@@ -258,7 +258,7 @@ class AddWorkerForm extends Form {
 
         let pattern = new NameRegex();
         if(!pattern.test(value)) {
-            result.error = "Surname must be between 3-50 characters long and contain only letters"
+            result.error = "Surname must be between 3-50 characters long and contain only letters with dashes"
         }
 
         return result;

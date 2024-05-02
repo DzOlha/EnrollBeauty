@@ -62,7 +62,7 @@ class AddDepartmentForm extends Form {
 
         let pattern = new NameRegex(3, 50, true);
         if(!pattern.test(value)) {
-            result.error = "Department name should be between 3-50 characters long and contain only letters with whitespaces!";
+            result.error = "Department name should be between 3-50 characters long and contain only letters with whitespaces and dashes!";
             return result;
         }
 
