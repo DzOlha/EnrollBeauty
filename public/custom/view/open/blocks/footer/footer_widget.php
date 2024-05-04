@@ -28,16 +28,16 @@
                     <div class="widget widget_text clearfix">
                         <h3 class="widget-title">About Us</h3>
                         <div class="textwidget widget-text">
-                            <p class="pb-10 res-767-p-0">We consistently showed year on year growth and is now a chain of 118+ branches worldwide</p>
-                            <p class="pb-10 res-767-p-0">The most innovative products tested & approvby the greatest names in beauty industry.</p>
-                            <a class="ttm-color-skincolor" href="">- More About Salone</a>
+                            <p class="pb-10 res-767-p-0">We consistently showed year-on-year growth and are now a chain of 118+ branches worldwide.</p>
+                            <p class="pb-10 res-767-p-0">The most innovative products tested & approved are the greatest names in the beauty industry.</p>
+                            <a class="ttm-color-skincolor" href="">- More About Salon</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 widget-area">
                     <div class="widget flicker_widget clearfix">
-                        <h3 class="widget-title">Get In  Touch</h3>
+                        <h3 class="widget-title">Get In Touch</h3>
                         <div class="textwidget widget-text">
                             <div class="featured-icon-box icon-align-before-content icon-ver_align-top style3">
                                 <div class="featured-icon">

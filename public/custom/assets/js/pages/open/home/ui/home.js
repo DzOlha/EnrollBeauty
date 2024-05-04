@@ -39,7 +39,7 @@ $(function () {
      * @type {ScheduleRenderer}
      */
     let scheduleRenderer = new ScheduleRenderer(
-        requester, null, confirmationModal,
+        requester, confirmationModal,
         new ScheduleHtmlBuilder(), dateRenderer, timeRenderer
     );
     /**

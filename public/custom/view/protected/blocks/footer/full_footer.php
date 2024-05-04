@@ -19,8 +19,8 @@
 
 <?php require_once VIEW_OPEN_BLOCKS."/footer/footer_scripts.php"?>
 <!-- Select2 js-->
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/select2/js/select2.min.js" async></script>
-<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/select2.js" async></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/plugins/select2/js/select2.min.js"></script>
+<script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/select2.js"></script>
 
 <!-- Sticky js -->
 <script src="/<?=MOCKUP_PROTECTED_FOLDER?>/assets/js/sticky.js" async></script>

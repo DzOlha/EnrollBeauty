@@ -4,13 +4,12 @@ import AddressRenderer from "./AddressRenderer.js";
 
 class ScheduleRenderer extends Renderer{
     constructor(
-        requester, appointmentsTable,
+        requester,
         confirmationModal, htmlBuilder,
         dateRenderer, timeRenderer
     ) {
         super();
         this.requester = requester;
-        //this.ordersTable = appointmentsTable;
         this.confirmationModal = confirmationModal;
         this.htmlBuilder = htmlBuilder;
         this.dateRenderer = dateRenderer;
@@ -442,7 +441,14 @@ class ScheduleRenderer extends Renderer{
     ) {
         //console.log('populateActiveDayScheduleTab parent');
         let schedulesForActiveDay = schedules.filter(
-            schedule => schedule.day === activeDayTabId.substring(3)
+            schedule => {
+                /**
+                 * _id_YYYY-MM-DD -> ['', id, YYYY-MM-DD]
+                 */
+                let splitted = activeDayTabId.split('_');
+
+                return schedule.day === splitted[2];
+            }
         );
 
         /**

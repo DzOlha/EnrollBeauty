@@ -737,7 +737,7 @@ class AdminApiController extends WorkerApiController
          * Validate the name
          */
         $validator = new NameValidator(3, 50, true);
-        if (!$validator->validate($items['position_name']) < 3) {
+        if (!$validator->validate($items['position_name'])) {
             $this->returnJson([
                 'error' => 'Position name should be between 3-50 characters and contain only letters with whitespaces and dashes!'
             ], HttpCode::unprocessableEntity());

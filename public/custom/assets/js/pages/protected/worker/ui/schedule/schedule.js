@@ -31,7 +31,7 @@ $(function () {
 
     let scheduleBuilder = new WorkerScheduleHtmlBuilder();
     let scheduleRenderer = new WorkerScheduleRenderer(
-        requester, null, confirmationModal,
+        requester, confirmationModal,
         scheduleBuilder, dateRenderer, timeRenderer
     );
 

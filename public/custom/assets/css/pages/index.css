@@ -100,6 +100,11 @@
     background-color: white;
 }
 
+.registration-form #gif-loader {
+    width: 30px;
+    margin-left: 15px;
+}
+
 button[type="button"] {
     cursor: pointer;
 }
@@ -344,9 +349,7 @@ i.fa-heart {
 {
     color: #333 !important;
 }
-.ttm-tabs.tabs-style-01 ul.tabs li,
-.ttm-tabs.tabs-style-01 ul.tabs li:first-child,
-.ttm-tabs.tabs-style-01 ul.tabs li:last-child,
+
 #totop, .tab.pricing-tab.active,
 .ttm-tabs.tabs-style-01 ul.tabs li.active a,
 .ttm-btn-style-fill.ttm-btn-color-skincolor,

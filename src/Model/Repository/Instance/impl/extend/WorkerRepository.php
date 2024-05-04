@@ -639,7 +639,7 @@ class WorkerRepository extends Repository
         return false;
     }
 
-    public function selectPhoto(int $id): string | false
+    public function selectPhoto(int $id): mixed
     {
         $isMain = 1;
         $this->builder->select([WorkersPhoto::$filename])

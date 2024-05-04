@@ -36,7 +36,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="ttm-appointment align-items-center ttm-textcolor-white d-flex res-991-d-block">
-                    <h4 class="d-flex mb-0"><i class="fa fa-clock-o ttm-textcolor-skincolor"></i>&nbsp;&nbsp;&nbsp;Opening Hours: Monday - Friday: 08.00AM - 6.00PM</h4>
+                    <h4 class="d-flex mb-0"><i class="fa fa-clock-o ttm-textcolor-skincolor"></i>&nbsp;&nbsp;&nbsp;
+                        Opening Hours: <?=COMPANY['working_schedule']['from_day']?>
+                        - <?=COMPANY['working_schedule']['to_day']?>
+                        : <?=COMPANY['working_schedule']['from_time']?>
+                        - <?=COMPANY['working_schedule']['to_time']?>
+                    </h4>
                     <a href="#search-appointment-form"
                        aria-label="Make Appointment"
                        class="ttm-btn ttm-btn-style-fill ttm-btn-color-skincolor ml-auto">

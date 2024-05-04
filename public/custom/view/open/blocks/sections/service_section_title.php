@@ -8,7 +8,7 @@
                         <h5 class="ttm-textcolor-skincolor">Welcome</h5>
                         <h2 class="title">EXPLORE Our Services</h2>
                     </div>
-                    <div class="title-desc">Beauties! we allow enough time in your appointment for complete in-depth consultation with your finished look</div>
+                    <div class="title-desc">Beauties! We allow enough time in your appointment for a complete in-depth consultation with your finished look.</div>
                 </div><!-- section title end -->
             </div>
         </div>

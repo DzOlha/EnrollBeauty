@@ -21,7 +21,7 @@ $(function () {
     let modalForm = new FormModal(formBuilder);
 
     let addNewServiceForm = new AddServiceForm(
-        requester, modalForm, new OptionBuilder(), servicesTable,
+        requester, modalForm, servicesTable,
         API.WORKER.API.SERVICE.add,
         API.WORKER.API.DEPARTMENT.get["all-by-worker"]
     );
@@ -29,7 +29,7 @@ $(function () {
     let editForm = new EditServiceForm(
         requester,
         API.WORKER.API.SERVICE.get.one,
-        modalForm, new OptionBuilder(), servicesTable,
+        modalForm, servicesTable,
         API.WORKER.API.SERVICE.edit,
         API.WORKER.API.DEPARTMENT.get["all-by-worker"],
         false

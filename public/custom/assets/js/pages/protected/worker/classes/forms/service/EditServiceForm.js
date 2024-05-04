@@ -8,13 +8,13 @@ class EditServiceForm extends AddServiceForm
 {
     constructor(
         requester, getServiceApi,
-        modalForm, optionBuilder,
+        modalForm,
         servicesTable, addApiUrl,
         getDepartmentUrl, withDelete
     ) {
         super(
             requester, modalForm,
-            optionBuilder, servicesTable,
+            servicesTable,
             addApiUrl, getDepartmentUrl
         );
 
@@ -27,6 +27,10 @@ class EditServiceForm extends AddServiceForm
         this.departmentId = null;
 
         this.apiGetService = getServiceApi;
+
+        this.headline = 'Edit Service';
+        this.btnText = 'Update';
+        this.modalIdValue = 'modalEditService';
     }
     setDeleteCallback(callback, context) {
         this.deleteCallback = callback.bind(context);
@@ -48,13 +52,13 @@ class EditServiceForm extends AddServiceForm
         e.preventDefault();
         let id = e.currentTarget.getAttribute(this.dataAttributeServiceId);
 
-        this.modalForm.setSelectors('modalEditService');
+        this.modalForm.setSelectors(this.modalIdValue);
         this.submitButtonId = this.modalForm.modalSubmitId;
 
         this.modalForm.show(
-            'Edit Service',
+            this.headline,
             this.modalForm.formBuilder.createEditServiceForm(id, this.withDelete),
-            'Update'
+            this.btnText
         );
 
         this.getServiceData(id);
@@ -99,18 +103,7 @@ class EditServiceForm extends AddServiceForm
     }
     successCallbackGetDepartments(response)
     {
-        let modalBody = $(`#${this.modalForm.modalId} .${this.modalBodyClass}`);
-
-        this.departmentSelect2 = new Select2(
-            this.modalForm.modalContentId,
-            'Department',
-            'Choose department',
-            this.departmentSelectId,
-            true,
-            true,
-            modalBody
-        );
-        this.departmentSelect2.populate(response.data);
+        super.successCallbackGetDepartments(response);
 
         this.departmentSelect2.set(this.departmentId);
     }

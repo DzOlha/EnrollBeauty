@@ -3,6 +3,7 @@ import Form from "./../Form.js";
 import PasswordRegex from "../../../../../../classes/regex/impl/PasswordRegex.js";
 import NameRegex from "../../../../../../classes/regex/impl/NameRegex.js";
 import EmailRegex from "../../../../../../classes/regex/impl/EmailRegex.js";
+import GifLoader from "../../../../../../classes/loader/GifLoader.js";
 
 
 
@@ -27,17 +28,6 @@ class RegistrationForm extends Form {
         $(`#${this.emailInputId}`).tooltip();
         $(`#${this.passwordInputId}`).tooltip();
         $(`#${this.confirmPasswordInputId}`).tooltip();
-    }
-
-    successCallbackSubmit(response) {
-        this.showSuccessMessage(response.success);
-        setTimeout(() => {
-            window.location.href = this.loginUrl;
-        }, 2000)
-    }
-
-    errorCallbackSubmit(response) {
-        this.showErrorMessage(response.error);
     }
 
     collectDataToSend(idAssoc = false) {
@@ -133,6 +123,33 @@ class RegistrationForm extends Form {
             equalTo: 'Passwords do not match'
         };
         return formMessages;
+    }
+
+    handleFormSubmission = () => {
+        let submit =  document.getElementById(this.submitButtonId);
+        if(submit) {
+            this.requestTimeout = GifLoader.showAfterEnd(submit, 800);
+        }
+
+        this.requester.post(
+            this.submitActionUrl,
+            this.collectDataToSend(),
+            this.successCallbackSubmit.bind(this),
+            this.errorCallbackSubmit.bind(this)
+        )
+    }
+
+    successCallbackSubmit(response) {
+        GifLoader.hide(this.requestTimeout)
+        this.showSuccessMessage(response.success);
+        setTimeout(() => {
+            window.location.href = this.loginUrl;
+        }, 2000)
+    }
+
+    errorCallbackSubmit(response) {
+        GifLoader.hide(this.requestTimeout)
+        this.showErrorMessage(response.error);
     }
 }
 export default RegistrationForm;

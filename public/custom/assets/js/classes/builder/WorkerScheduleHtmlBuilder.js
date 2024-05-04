@@ -14,7 +14,7 @@ class WorkerScheduleHtmlBuilder extends ScheduleHtmlBuilder {
             : '<span class="text-success">Available for order!</span>';
 
         let userLink = userId !== null ? `<span class="width-restricted" title="${userEmail}">
-                                                        ${userEmail} ssssssssssssssssssss
+                                                        ${userEmail}
                                                   </span>`
             : '';
 

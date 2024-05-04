@@ -25,7 +25,7 @@
             <p class="mg-b-0" id="confirm-password-label">
                 <span>*</span> Confirm New Password
             </p>
-            <input name="confirm-password" type="password" placeholder="* Confirm New Password" autocomplete="off"
+            <input name="confirm-password" type="password" placeholder="Confirm New Password" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Password confirmation must be equal to the provided password"
                    required="required" class="form-control" id="confirm-password-input"

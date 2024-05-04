@@ -46,6 +46,7 @@ abstract class AbstractRouter
                 [new AdminWebController($url), 'adminDefaultRegistration'],
                 $this->params
             );
+            return;
         }
 
         /**

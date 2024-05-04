@@ -7,8 +7,7 @@ import NameRegex from "../../../../../../classes/regex/impl/NameRegex.js";
 
 class AddServiceForm extends Form {
     constructor(
-        requester, modalForm,
-        optionBuilder, servicesTable,
+        requester, modalForm, servicesTable,
         addApiUrl, getDepartmentUrl
     ) {
         super(
@@ -18,7 +17,6 @@ class AddServiceForm extends Form {
             requester
         );
         this.modalForm = modalForm;
-        this.optionBuilder = optionBuilder;
         this.table = servicesTable;
         this.addServiceTriggerId = 'add-service-trigger';
 
@@ -30,6 +28,12 @@ class AddServiceForm extends Form {
         this.modalBodyClass = 'modal-body';
 
         this.apiGetDepartments = getDepartmentUrl;
+        this.headline = 'Add New Service';
+        this.btnText = 'Add';
+        this.modalIdValue = 'modalAddService';
+
+        this.departmentFieldName = 'Department';
+        this.placeholderDepartment = 'Choose department';
     }
     /**
      * Add listener to the 'Add Service' button
@@ -39,12 +43,12 @@ class AddServiceForm extends Form {
         trigger.addEventListener('click', this.handleShowAddServiceForm);
     }
     handleShowAddServiceForm = () => {
-        this.modalForm.setSelectors('modalAddService');
+        this.modalForm.setSelectors(this.modalIdValue);
         this.submitButtonId = this.modalForm.modalSubmitId;
         this.modalForm.show(
-            'Add New Service',
+            this.headline,
             this.modalForm.formBuilder.createAddServiceForm(),
-            'Add'
+            this.btnText
         );
         this.getDepartments();
         this.modalForm.close();
@@ -65,8 +69,8 @@ class AddServiceForm extends Form {
 
         this.departmentSelect2 = new Select2(
             this.modalForm.modalContentId,
-            'Department',
-            'Choose department',
+            this.departmentFieldName,
+            this.placeholderDepartment,
             this.departmentSelectId,
             true,
             true,

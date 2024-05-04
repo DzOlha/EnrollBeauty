@@ -16,5 +16,11 @@ const COMPANY = [
         'Facebook' => '/',
         'Twitter' => '/',
         'Linkedin' => '/',
+    ],
+    'working_schedule' => [
+        'from_day' => 'Monday',
+        'to_day' => 'Friday',
+        'from_time' => '9:00 AM',
+        'to_time' => '7:00 PM'
     ]
 ];

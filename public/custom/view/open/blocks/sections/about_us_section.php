@@ -14,7 +14,7 @@
                             <h5 class="ttm-textcolor-skincolor">About Us</h5>
                             <h2 class="title">WE UNDERSTAND YOUR STYLE</h2>
                         </div>
-                        <div class="title-desc">Parlour’s talented team specializes in customized haiecuts, color & waxing services to create unique looks for every client. Each of our stylists is commit to expand their skillset world of overall beauty.</div>
+                        <div class="title-desc">Parlour’s talented team specializes in customized haircuts, color & waxing services to create unique looks for every client. Each of our stylists is committed to expanding their skillset world of overall beauty.</div>
                     </div><!-- section title end -->
                     <div class="d-flex res-575-d-block">
                         <div class="ttm-fid inside ttm-fid-view-lefticon style1 border-top border-right res-575-border-right pr-50 res-1199-pr-15">

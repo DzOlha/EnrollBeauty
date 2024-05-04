@@ -41,7 +41,7 @@ $(function () {
      * @type {ScheduleRenderer}
      */
     let scheduleRenderer = new ScheduleRenderer(
-            requester, appointmentsTable, confirmationModal,
+            requester, confirmationModal,
             new ScheduleHtmlBuilder(), dateRenderer, timeRenderer
     );
     /**

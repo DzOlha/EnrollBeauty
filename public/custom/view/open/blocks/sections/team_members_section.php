@@ -16,9 +16,9 @@
                     <div class="section-title with-desc clearfix">
                         <div class="title-header">
                             <h5 class="ttm-textcolor-skincolor">Stylish Team</h5>
-                            <h2 class="title">MEET OUR PROFESIONAL</h2>
+                            <h2 class="title">MEET OUR PROFESSIONAL</h2>
                         </div>
-                        <div class="title-desc">One of the Leading earliest and the finest hair and beauty salons. Through years, we have won the trust of several celebrities and millions of commoner who are our loyal patrons together today.</div>
+                        <div class="title-desc">One of the Leading earliest and the finest hair and beauty salons. Through the years, we have won the trust of several celebrities and millions of commoners who are our loyal patrons together today.</div>
                     </div>
                     <div class="featured-icon-box icon-align-before-content icon-ver_align-top style5">
                         <div class="featured-icon"><!--  featured-icon -->
@@ -31,7 +31,7 @@
                                 <h5>Friendly Behaviour</h5>
                             </div>
                             <div class="featured-desc"><!--  featured-desc -->
-                                <p>Warmly welcome clients for experience in terms of quality Hair & beauty services in comfortable environment</p>
+                                <p>Warmly welcome clients for experience in terms of quality Hair & Beauty services in a comfortable environment</p>
                             </div>
                         </div>
                     </div>
@@ -46,10 +46,10 @@
                         </div>
                         <div class="featured-content"><!--  featured-content -->
                             <div class="featured-title"><!--  featured-title -->
-                                <h5>Always Customer support</h5>
+                                <h5>Always Customer Support</h5>
                             </div>
                             <div class="featured-desc"><!--  featured-desc -->
-                                <p>Our commitment is to always try to master the art of exemplary services & experience; with excellence works.</p>
+                                <p>Our commitment is to always try to master the art of exemplary services & experience; with excellent works</p>
                             </div>
                         </div>
                     </div>

@@ -16,7 +16,7 @@
             </p>
             <input name="name" type="text" placeholder="Name" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                   data-title="Name must be between 3-50 characters long and contain only letters"
+                   data-title="Name must be between 3-50 characters long and contain only letters with dashes"
                    required="required" class="form-control" id="name-input"
                    aria-labelledby="name-label" aria-label="Name Input">
             <div class="error" id="name-input-error"></div>
@@ -27,7 +27,7 @@
             </p>
             <input name="surname" type="text" placeholder="Surname" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                   data-title="Surname must be between 3-50 characters long and contain only letters"
+                   data-title="Surname must be between 3-50 characters long and contain only letters with dashes"
                    required="required" class="form-control" id="surname-input"
                    aria-labelledby="surname-label" aria-label="Surname Input">
             <div class="error" id="surname-input-error"></div>

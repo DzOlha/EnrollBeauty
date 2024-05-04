@@ -17,7 +17,7 @@
             </p>
             <input name="name" type="text" placeholder="Name" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                   data-title="Name must be between 3-50 characters long and contain only letters"
+                   data-title="Name must be between 3-50 characters long and contain only letters with dashes"
                    required="required" class="form-control" id="name-input"
                    aria-labelledby="name-label" aria-label="Name Input">
             <div class="error" id="name-input-error"></div>
@@ -28,7 +28,7 @@
             </p>
             <input name="surname" type="text" placeholder="Surname" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
-                   data-title="Surname must be between 3-50 characters long and contain only letters"
+                   data-title="Surname must be between 3-50 characters long and contain only letters with dashes"
                    required="required" class="form-control" id="surname-input"
                    aria-labelledby="surname-label" aria-label="Surname Input">
             <div class="error" id="surname-input-error"></div>
@@ -72,7 +72,7 @@
             <p class="mg-b-0" id="confirm-password-label">
                 <span>*</span> Confirm New Password
             </p>
-            <input name="confirm-new-password" type="password" placeholder="* Confirm New Password" autocomplete="off"
+            <input name="confirm-new-password" type="password" placeholder="Confirm New Password" autocomplete="off"
                    data-toggle="tooltip" data-trigger="focus" data-placement="left"
                    data-title="Password confirmation must be equal to the provided password"
                    required="required" class="form-control" id="confirm-password-input"
@@ -96,14 +96,6 @@
 <!--footer start-->
 <?php require_once VIEW_OPEN_BLOCKS."/footer/footer.php"?>
 <!--footer end-->
-
-<!--back-to-top start-->
-<?php require_once VIEW_OPEN_BLOCKS . '/units/totop.php'?>
-<!--back-to-top end-->
-
-</div><!-- page end -->
-
-<?php require_once VIEW_OPEN_BLOCKS."/footer_scripts.php"?>
 
 <script type="module" src="/<?=CUSTOM_ASSETS?>/js/pages/protected/admin/ui/auth/change_default.js"></script>
 

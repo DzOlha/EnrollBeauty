@@ -22,14 +22,14 @@ $(function () {
     let modalForm = new FormModal(formBuilder);
 
     let addNewServiceForm = new AddServiceForm(
-        requester, modalForm, new OptionBuilder(), servicesTable,
+        requester, modalForm, servicesTable,
         API.ADMIN.API.SERVICE.add, API.ADMIN.API.DEPARTMENT.get.all
     );
 
     let editForm = new EditServiceForm(
         requester,
         API.ADMIN.API.SERVICE.get.one,
-        modalForm, new OptionBuilder(), servicesTable,
+        modalForm, servicesTable,
         API.ADMIN.API.SERVICE.edit,
         API.ADMIN.API.DEPARTMENT.get.all,
         true

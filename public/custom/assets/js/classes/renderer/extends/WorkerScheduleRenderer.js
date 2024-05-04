@@ -3,11 +3,11 @@ import AddressRenderer from "./AddressRenderer.js";
 
 class WorkerScheduleRenderer extends ScheduleRenderer {
     constructor(
-        requester, appointmentsTable,
+        requester,
         confirmationModal, htmlBuilder,
         dateRenderer, timeRenderer
     ) {
-        super(requester, appointmentsTable,
+        super(requester,
             confirmationModal, htmlBuilder,
             dateRenderer, timeRenderer);
     }
@@ -215,7 +215,14 @@ class WorkerScheduleRenderer extends ScheduleRenderer {
          * Filter schedules to leave only ones that are for the day, which tab is active now
          */
         let schedulesForActiveDay = schedules.filter(
-            schedule => schedule.day === activeDayTabId.substring(3)
+            schedule => {
+                /**
+                 * _id_YYYY-MM-DD -> [0: '', 1: id, 2: YYYY-MM-DD]
+                 */
+                let splitted = activeDayTabId.split('_');
+
+                return schedule.day === splitted[2];
+            }
         );
 
         /**

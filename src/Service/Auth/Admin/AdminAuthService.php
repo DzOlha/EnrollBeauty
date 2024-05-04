@@ -33,11 +33,21 @@ class AdminAuthService extends WorkerAuthService
     {
         $admin = AdminDefault::getAdminDefault();
         $dbContainsAdmins = $this->dataMapper->selectAllAdminsRows();
+        /**
+         * If db already contains administrators
+         */
         if ($dbContainsAdmins) {
-            return [
-                'error' => 'The database already contains administrators! The default admin can be created only if there is no admin users in the database!',
-                'code' => HttpCode::forbidden()
-            ];
+            $registeredBefore = $this->dataMapper->selectAdminIdByEmail($admin['email']);
+
+            /**
+             * If the existing admin is NOT the default admin
+             */
+            if(!$registeredBefore) {
+                return [
+                    'error' => 'The database already contains administrators! The default admin can be created only if there is no admin users in the database!',
+                    'code' => HttpCode::forbidden()
+                ];
+            }
         }
         return $this->registerAdmin($admin);
     }
