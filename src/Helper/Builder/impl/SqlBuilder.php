@@ -13,8 +13,7 @@ class SqlBuilder implements IBuilder
     private IDatabase $database;
 
     private array $balcklist = [
-        'DROP', 'UPDATE', 'INSERT', 'TABLE',
-        'drop', 'update', 'insert', 'table'
+        'DROP', 'UPDATE', 'INSERT', 'TABLE', 'SELECT'
     ];
 
     public function __construct(IDatabase $database)
@@ -370,13 +369,13 @@ class SqlBuilder implements IBuilder
     public function orderBy(
         string $fieldValue, string $directionValue
     ) {
-        $trimmedField = htmlspecialchars(trim($fieldValue));
+        $trimmedField = strtoupper(htmlspecialchars(trim($fieldValue)));
 
         /**
          * asc or ASC
          * desc or DESC
          */
-        $trimmedDirection = htmlspecialchars(trim($directionValue));
+        $trimmedDirection = strtoupper(htmlspecialchars(trim($directionValue)));
 
         /**
          * If name of the column contains whitespaces
@@ -390,8 +389,7 @@ class SqlBuilder implements IBuilder
          * If invalid direction has been provided,
          * just set it equal to ASC
          */
-        if($trimmedDirection !== 'ASC' && $trimmedDirection !== 'DESC'
-        && $trimmedDirection !== 'asc' && $trimmedDirection !== 'desc')
+        if($trimmedDirection !== 'ASC' && $trimmedDirection !== 'DESC')
         {
             $trimmedDirection = 'ASC';
         }
