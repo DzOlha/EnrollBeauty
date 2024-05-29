@@ -423,3 +423,21 @@ i.fa-heart {
     fill: white;
     width: 16px !important;
 }
+
+/**
+    Pricelist rendering
+ */
+.ttm-pricelist-block-wrapper {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/**
+  Menu fix
+ */
+.main-sidebar-body .nav-item.active .nav-link:before,
+.main-sidebar-body .nav-item.active .nav-link:after,
+.main-sidebar-body .nav-item.active .nav-link .shape1,
+.main-sidebar-body .nav-item.active .nav-link .shape2 {
+    display: none;
+}

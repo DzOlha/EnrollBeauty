@@ -91,7 +91,7 @@
                     </h3>
                     <div class="card-body">
                         <div class="row table-filter">
-                            <div class="col-lg-1 mg-l-15 d-lg-flex justify-content-start">
+                            <div class="col-lg-1 d-lg-flex justify-content-start">
                                 <div class="show-entries">
                                     <?php require_once VIEW_PROTECTED_BLOCKS."/units/select_pagination_count.php"?>
                                 </div>

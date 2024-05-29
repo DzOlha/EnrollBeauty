@@ -10,3 +10,18 @@
     background-color: var(--dark-color) !important;
     outline: none;
 }
+@media (max-width: 992px) {
+    .available-schedules .button-wrapper {
+        width: 100%;
+    }
+    #add-schedule-trigger {
+        margin-top: 35px;
+        height: 60px;
+    }
+    .buttons-wrapper {
+        margin-top: 20px;
+    }
+    .tabs-menu li {
+        flex-grow: 1;
+    }
+}

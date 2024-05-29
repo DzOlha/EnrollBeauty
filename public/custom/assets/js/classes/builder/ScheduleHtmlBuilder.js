@@ -175,7 +175,7 @@ class ScheduleHtmlBuilder {
                                 <div class="tab-menu-heading weekday-menu-heading">
                                     <div class="tabs-menu">
                                         <!-- Tabs -->
-                                        <ul class="nav panel-tabs me-3" 
+                                        <ul class="nav panel-tabs" 
                                             id="${menuWrapperId}">
 <!--                                           Weekday menu li-->
 <!--                                           Weekday menu li-->
