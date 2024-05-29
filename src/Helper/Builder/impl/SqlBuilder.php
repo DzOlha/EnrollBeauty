@@ -369,6 +369,16 @@ class SqlBuilder implements IBuilder
     public function orderBy(
         string $fieldValue, string $directionValue
     ) {
+        $trimmed = $this->clearOrderBy($fieldValue, $directionValue);
+
+        $this->query .= "ORDER BY {$trimmed['field']} {$trimmed['dir']} ";
+
+        return $this;
+    }
+
+    public function clearOrderBy(
+        string $fieldValue, string $directionValue
+    ){
         $trimmedField = strtoupper(htmlspecialchars(trim($fieldValue)));
 
         /**
@@ -394,9 +404,10 @@ class SqlBuilder implements IBuilder
             $trimmedDirection = 'ASC';
         }
 
-        $this->query .= "ORDER BY $trimmedField $trimmedDirection ";
-
-        return $this;
+        return [
+            'field' => $trimmedField,
+            'dir' => $trimmedDirection
+        ];
     }
 
     public function limit(int $value, string $placeholder = ':limit_') {

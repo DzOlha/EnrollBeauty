@@ -291,6 +291,9 @@ class OrderServiceRepository extends Repository
             $priceFrom, $priceTo
         );
 
+        // clear order by and order direction to prevent SQL-injection
+        $trimmed = $this->builder->clearOrderBy($orderField, $orderDirection);
+
         $queryFrom = " $ordersTable
                 INNER JOIN $workerServiceSchedule ON $orders_schedule_id = $schedule_id
                 INNER JOIN $workersServicePricing ON $schedule_price_id = $pricing_id
@@ -362,7 +365,7 @@ class OrderServiceRepository extends Repository
                 {$statusFilter['where']}
             
             ORDER BY 
-                :order_by :order_dir
+                {$trimmed['field']} {$trimmed['dir']}
             
             LIMIT 
                 :limit_
@@ -379,8 +382,6 @@ class OrderServiceRepository extends Repository
 
         $this->db->bindAll(
             array_merge($params, [
-                ':order_by' => $orderField,
-                ':order_dir' => $orderDirection,
                 ':limit_' => $limit,
                 ':offset_' => $offset
             ])
