@@ -441,3 +441,33 @@ i.fa-heart {
 .main-sidebar-body .nav-item.active .nav-link .shape2 {
     display: none;
 }
+
+@media (max-width: 992px) {
+    .weekday-menu-heading .tabs-menu li {
+        flex-grow: 1;
+    }
+}
+
+/**
+    Opening hours aligning
+ */
+.ttm-appointment h4 {
+    display: flex !important;
+    align-items: center;
+}
+
+.ttm-appointment .fa-clock-o:before {
+    color: var(--middle-brown-color);
+}
+
+/**
+    Pricelist aligning
+ */
+ul.ttm-pricelist-block li .service-price {
+    top: 16px;
+}
+@media (max-width: 480px) {
+    ul.ttm-pricelist-block li .service-price {
+        top: auto;
+    }
+}
